@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="Models\Action.cs" />
+    <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

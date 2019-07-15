@@ -31,18 +31,24 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.btnZoomOut = new System.Windows.Forms.Button();
+            this.btnZoomIn = new System.Windows.Forms.Button();
+            this.lblUser = new System.Windows.Forms.Label();
             this.txtSearch = new System.Windows.Forms.TextBox();
+            this.btnFind = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.btnRefresh = new System.Windows.Forms.Button();
             this.pnlBrowser = new System.Windows.Forms.Panel();
-            this.btnFind = new System.Windows.Forms.Button();
-            this.lblUser = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlHeader.Controls.Add(this.label1);
+            this.pnlHeader.Controls.Add(this.btnZoomOut);
+            this.pnlHeader.Controls.Add(this.btnZoomIn);
             this.pnlHeader.Controls.Add(this.lblUser);
             this.pnlHeader.Controls.Add(this.txtSearch);
             this.pnlHeader.Controls.Add(this.btnFind);
@@ -53,6 +59,65 @@
             this.pnlHeader.Size = new System.Drawing.Size(1017, 42);
             this.pnlHeader.TabIndex = 2;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Transparent;
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.White;
+            this.label1.Location = new System.Drawing.Point(400, 11);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(49, 20);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Zoom";
+            this.label1.Visible = false;
+            // 
+            // btnZoomOut
+            // 
+            this.btnZoomOut.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnZoomOut.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnZoomOut.FlatAppearance.BorderSize = 0;
+            this.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnZoomOut.ForeColor = System.Drawing.Color.White;
+            this.btnZoomOut.Location = new System.Drawing.Point(498, 3);
+            this.btnZoomOut.Name = "btnZoomOut";
+            this.btnZoomOut.Size = new System.Drawing.Size(34, 35);
+            this.btnZoomOut.TabIndex = 4;
+            this.btnZoomOut.Text = "-";
+            this.btnZoomOut.UseVisualStyleBackColor = true;
+            this.btnZoomOut.Visible = false;
+            this.btnZoomOut.Click += new System.EventHandler(this.BtnZoomOut_Click);
+            // 
+            // btnZoomIn
+            // 
+            this.btnZoomIn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnZoomIn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnZoomIn.FlatAppearance.BorderSize = 0;
+            this.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnZoomIn.ForeColor = System.Drawing.Color.White;
+            this.btnZoomIn.Location = new System.Drawing.Point(455, 4);
+            this.btnZoomIn.Name = "btnZoomIn";
+            this.btnZoomIn.Size = new System.Drawing.Size(34, 35);
+            this.btnZoomIn.TabIndex = 3;
+            this.btnZoomIn.Text = "+";
+            this.btnZoomIn.UseVisualStyleBackColor = true;
+            this.btnZoomIn.Visible = false;
+            this.btnZoomIn.Click += new System.EventHandler(this.BtnZoomIn_Click);
+            // 
+            // lblUser
+            // 
+            this.lblUser.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUser.ForeColor = System.Drawing.Color.White;
+            this.lblUser.Location = new System.Drawing.Point(757, 0);
+            this.lblUser.Name = "lblUser";
+            this.lblUser.Size = new System.Drawing.Size(260, 42);
+            this.lblUser.TabIndex = 0;
+            this.lblUser.Text = "Enrique";
+            this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // txtSearch
             // 
             this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -61,6 +126,23 @@
             this.txtSearch.Size = new System.Drawing.Size(291, 27);
             this.txtSearch.TabIndex = 0;
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtSearch_KeyDown);
+            // 
+            // btnFind
+            // 
+            this.btnFind.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnFind.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnFind.Enabled = false;
+            this.btnFind.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnFind.FlatAppearance.BorderSize = 0;
+            this.btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFind.ImageIndex = 0;
+            this.btnFind.ImageList = this.imageList1;
+            this.btnFind.Location = new System.Drawing.Point(49, 0);
+            this.btnFind.Name = "btnFind";
+            this.btnFind.Size = new System.Drawing.Size(49, 42);
+            this.btnFind.TabIndex = 2;
+            this.btnFind.UseVisualStyleBackColor = true;
+            this.btnFind.Click += new System.EventHandler(this.BtnFind_Click);
             // 
             // imageList1
             // 
@@ -93,35 +175,6 @@
             this.pnlBrowser.Size = new System.Drawing.Size(1017, 475);
             this.pnlBrowser.TabIndex = 2;
             // 
-            // btnFind
-            // 
-            this.btnFind.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnFind.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnFind.Enabled = false;
-            this.btnFind.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnFind.FlatAppearance.BorderSize = 0;
-            this.btnFind.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnFind.ImageIndex = 0;
-            this.btnFind.ImageList = this.imageList1;
-            this.btnFind.Location = new System.Drawing.Point(49, 0);
-            this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(49, 42);
-            this.btnFind.TabIndex = 2;
-            this.btnFind.UseVisualStyleBackColor = true;
-            this.btnFind.Click += new System.EventHandler(this.BtnFind_Click);
-            // 
-            // lblUser
-            // 
-            this.lblUser.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(757, 0);
-            this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(260, 42);
-            this.lblUser.TabIndex = 0;
-            this.lblUser.Text = "Enrique";
-            this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,6 +201,9 @@
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnFind;
         private System.Windows.Forms.Label lblUser;
+        private System.Windows.Forms.Button btnZoomIn;
+        private System.Windows.Forms.Button btnZoomOut;
+        private System.Windows.Forms.Label label1;
     }
 }
 

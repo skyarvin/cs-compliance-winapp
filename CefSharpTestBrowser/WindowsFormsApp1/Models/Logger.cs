@@ -13,11 +13,6 @@ namespace WindowsFormsApp1.Models
         public string url { get; set; }
         public string action { get; set; }
         public string remarks { get; set; }
-    }
-
-    public class Agent {
-        public int id { get; set; }
-        public string  name { get; set; }
-        public string email { get; set; }
+        public int duration { get; set; }
     }
 }

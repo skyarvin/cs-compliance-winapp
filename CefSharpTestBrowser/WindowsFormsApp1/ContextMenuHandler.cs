@@ -9,7 +9,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
     {
         // Remove any existent option using the Clear method of the model
         //
-        //model.Clear();
+        model.Clear();
 
         Console.WriteLine("Context menu opened !");
 

@@ -20,15 +20,21 @@ namespace WindowsFormsApp1
         public   ChromiumWebBrowser chromeBrowser;
         public string CurrentUrl;
         public string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance/";
+        public DateTime StartTime;
+        public Dictionary<string, string> Actions = new Dictionary<string, string>
+        {
+            { "violation-submit", "VR" },
+            { "id-missing", "IM" },
+            { "spammer-submit", "SR" },
+            { "request-review-submit", "RR" },
+            { "approve_button", "AP" },
+        };
         public void InitializeChromium()
         {
             CefSettings settings = new CefSettings();
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
-            // Initialize cef with the provided settings
             Cef.Initialize(settings);
-            // Create a browser component
             chromeBrowser = new ChromiumWebBrowser(CB_COMPLIANCE_URL);
-            // Add it to the form and fill it to the form window.
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
             lblUser.Text = Globals.ComplianceAgent.name;
@@ -56,7 +62,11 @@ namespace WindowsFormsApp1
                 if (sCurrAddress.Contains("https://chaturbate.com/compliance/show/"))
                 {
                     chromeBrowser.ShowDevTools();
-                    CurrentUrl = sCurrAddress;
+                    if(CurrentUrl != sCurrAddress)
+                    {
+                        CurrentUrl = sCurrAddress;
+                        StartTime = DateTime.Now;
+                    }
                 }
             });
             
@@ -66,15 +76,6 @@ namespace WindowsFormsApp1
         {
             this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id));
         }
-
-        public Dictionary<string, string> Actions = new Dictionary<string, string>
-        {
-            { "violation-submit", "VR" },
-            { "id-missing", "IM" },
-            { "spammer-submit", "SR" },
-            { "request-review-submit", "RR" },
-            { "approve_button", "AP" },
-        };
 
         private string myStr(object o) {
             try
@@ -96,7 +97,8 @@ namespace WindowsFormsApp1
                 action = Actions[element_id],
                 url = CurrentUrl,
                 agent_id = Globals.ComplianceAgent.id.ToString(),
-                remarks = !String.IsNullOrEmpty(violation) ? String.Concat(violation, System.Environment.NewLine, notes) : notes
+                remarks = !String.IsNullOrEmpty(violation) ? String.Concat(violation, System.Environment.NewLine, notes) : notes,
+                duration = LoggerServices.GetDuration(StartTime)
             }) ;
         }
         private void Form1_Load(object sender, EventArgs e)
@@ -138,6 +140,17 @@ namespace WindowsFormsApp1
 
             Find(true);
         }
+
+        private void BtnZoomIn_Click(object sender, EventArgs e)
+        {
+            //double zoomLevel = chromeBrowser.GetZoomLevelAsync();
+            //chromeBrowser.SetZoomLevel(zoomLevel + 1);
+        }
+
+        private void BtnZoomOut_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
 
@@ -148,7 +161,6 @@ namespace WindowsFormsApp1
         public delegate void ItemClickedEventHandler(object sender, HtmlItemClickedEventArgs e);
         public event ItemClickedEventHandler HtmlItemClicked;
         public delegate void ItemResponseEventHandler(object sender, GetResponseEventArgs e);
-        public event ItemResponseEventHandler ItemResponse;
         private ChromiumWebBrowser browser;
 
         public BoundObject(ChromiumWebBrowser br) { browser = br; }
@@ -157,14 +169,10 @@ namespace WindowsFormsApp1
         {
             if (e.Frame.IsMain)
             {
-                // browser.EvaluateScriptAsync(@"document.getElementById('u_0_2').onclick = function(e) { e.preventDefault(); bound.onClicked(e.target.outerHTML); }");
-
-
-                //  var script = "document.getElementById('u_0_2').onclick = function(e) { bound.onClicked(); })";
                 var submit_script = @"
                     var violation_interval = setInterval(function(){
                         if(document.getElementById('violation-submit') != undefined){
-                            console.log('binded');
+                            console.log('VR binded');
                             document.getElementById('violation-submit').addEventListener('click', 
                             function(e)
                             {
@@ -177,7 +185,7 @@ namespace WindowsFormsApp1
                     var id_missing = $(`input[value='Report Identification Missing Problem']`)[0];
                     var id_missing_interval = setInterval(function(){
                         if(id_missing != undefined){
-                            console.log('binded');
+                            console.log('IM binded');
                             id_missing.addEventListener('click', 
                             function(e)
                             {
@@ -189,7 +197,7 @@ namespace WindowsFormsApp1
 
                     var spammer_interval = setInterval(function(){
                         if($('#spammer-submit')[0] != undefined){
-                            console.log('binded');
+                            console.log('SR binded');
                             $('#spammer-submit')[0].addEventListener('click', 
                             function(e)
                             {
@@ -201,7 +209,7 @@ namespace WindowsFormsApp1
 
                     var request_review_interval = setInterval(function(){
                         if($('#request-review-submit')[0] != undefined){
-                            console.log('binded');
+                            console.log('RR binded');
                             $('#request-review-submit')[0].addEventListener('click', 
                             function(e)
                             {
@@ -218,15 +226,6 @@ namespace WindowsFormsApp1
                             },false)
                 ";
                 browser.EvaluateScriptAsync(@submit_script);
-
-                //var violation_submit_script = @"
-                //    document.getElementById('violation-submit').addEventListener('click', 
-                //        function(e)
-                //        {
-                //            bound.onClicked(e.target.id);
-                //        },false)
-                //";
-                //browser.EvaluateScriptAsync(violation_submit_script);
             }
         }
         public void OnClicked(string id)

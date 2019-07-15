@@ -41,6 +41,7 @@ namespace WindowsFormsApp1
             }
         }
         private void Login() {
+            //TODO ADD EMAIL VALIDATION
             Globals.ComplianceAgent = LoggerServices.GetAgentId(txtEmail.Text);
             if (Globals.ComplianceAgent != null)
             {
@@ -53,6 +54,5 @@ namespace WindowsFormsApp1
                 MessageBox.Show("Invalid Email", "Error");
             }
         }
-
     }
 }

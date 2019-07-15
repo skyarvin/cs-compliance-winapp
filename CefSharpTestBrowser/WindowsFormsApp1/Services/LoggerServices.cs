@@ -13,7 +13,7 @@ namespace WindowsFormsApp1.Services
 {
     public class LoggerServices
     {
-        public static string baseUrl = "http://10.10.11.233:8000/api";
+        public static string baseUrl = "http://10.10.10.172:8000/api";
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
 
         public static IEnumerable<Logger> Get()
@@ -120,6 +120,11 @@ namespace WindowsFormsApp1.Services
                     log.Write(System.Environment.NewLine);
                 }
             }
+        }
+
+        public static int GetDuration(DateTime startTime)
+        {
+            return Convert.ToInt32((DateTime.Now - startTime).TotalSeconds);
         }
     }
 }

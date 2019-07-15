@@ -48,7 +48,7 @@ namespace WindowsFormsApp1
         static void ShowExceptionDetails(Exception Ex)
         {
             // Do logging of exception details
-            MessageBox.Show(Ex.Message, Ex.TargetSite.ToString(),
+            MessageBox.Show(String.Concat(Ex.Message, System.Environment.NewLine, Ex.InnerException.Message), Ex.TargetSite.ToString(),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             LoggerServices.SaveToLogFile(string.Concat(Ex.Message, Ex.TargetSite.ToString()), true);

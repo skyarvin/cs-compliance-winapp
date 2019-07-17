@@ -21,6 +21,8 @@ namespace WindowsFormsApp1
         public string CurrentUrl;
         public string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance/";
         public DateTime StartTime;
+        private Point loc = new Point(0, 0);
+        private bool bExitApp = true;
         public Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             { "violation-submit", "VR" },
@@ -31,13 +33,22 @@ namespace WindowsFormsApp1
         };
         public void InitializeChromium()
         {
+
+            string path = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
             CefSettings settings = new CefSettings();
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+            settings.CachePath = @path + "/cache/cache/"; ;
+            settings.PersistSessionCookies = true;
             Cef.Initialize(settings);
+            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/cache/cookie/", true);
             chromeBrowser = new ChromiumWebBrowser(CB_COMPLIANCE_URL);
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
             lblUser.Text = Globals.ComplianceAgent.name;
+            loc =  new Point(lblUser.Left, lblUser.Bottom);
+            try{ pbImg.Load(Globals.ComplianceAgent.photo); }
+            catch {}
+          
         }
         public frmMain()
         {
@@ -104,13 +115,16 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             //REMOVE THIS 
-            System.Windows.Forms.Clipboard.SetText("FBBAFyAw%[r{)5z?");
+            //System.Windows.Forms.Clipboard.SetText("FBBAFyAw%[r{)5z?");
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cef.Shutdown();
-            Application.Exit();
+            if (bExitApp) {
+                Application.Exit();
+            }
+         
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)
@@ -151,6 +165,27 @@ namespace WindowsFormsApp1
         {
 
         }
+
+        private void LblUser_Click(object sender, EventArgs e)
+        {
+           
+            contextMenuStrip1.Show(lblUser, loc);
+        }
+        private void PbImg_Click(object sender, EventArgs e)
+        {
+            contextMenuStrip1.Show(lblUser, loc);
+        }
+        private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Cef.GetGlobalCookieManager().DeleteCookies("", "");
+            frmLogin frm = new frmLogin();
+            frm.Show();
+            bExitApp = false;
+            this.Close();
+        }
+
+       
     }
 
 

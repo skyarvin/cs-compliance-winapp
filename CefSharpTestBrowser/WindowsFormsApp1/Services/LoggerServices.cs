@@ -8,12 +8,13 @@ using WindowsFormsApp1.Models;
 using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms;
+using SkydevCSTool.Services;
 
 namespace WindowsFormsApp1.Services
 {
     public class LoggerServices
     {
-        public static string baseUrl = "http://10.10.10.172:8000/api";
+        public static string baseUrl = "https://cscb.skydev.solutions/api";
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
 
         public static IEnumerable<Logger> Get()
@@ -62,7 +63,7 @@ namespace WindowsFormsApp1.Services
             {
                 var uri = string.Concat(baseUrl, "/agents/", username);
                 client.DefaultRequestHeaders.Add("Authorization", apiKey);
-                using (HttpResponseMessage response = client.GetAsync(uri).Result)
+                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -79,9 +80,10 @@ namespace WindowsFormsApp1.Services
             return null;
         }
 
+
         public static bool Save(Logger log)
         {
-            //TODO SAVE THE TRANSACTION IN TRANSACTION LOGS
+            SaveToLogFile(JsonConvert.SerializeObject(log));
             using (var client = new HttpClient())
             {
                 var uri = string.Concat(baseUrl, "/logs/");
@@ -93,7 +95,9 @@ namespace WindowsFormsApp1.Services
                     return true;
                 }
                 else {
-                    SaveToLogFile(JsonConvert.SerializeObject(log));
+                    SaveToLogFile(JsonConvert.SerializeObject(log),true);
+                    MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
+
                 }
             }
 

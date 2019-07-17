@@ -13,6 +13,7 @@ namespace WindowsFormsApp1
 {
     public partial class frmLogin : Form
     {
+        private bool bExitApp = true;
         public frmLogin()
         {
             InitializeComponent();
@@ -45,6 +46,7 @@ namespace WindowsFormsApp1
             Globals.ComplianceAgent = LoggerServices.GetAgentId(txtEmail.Text);
             if (Globals.ComplianceAgent != null)
             {
+                bExitApp = false;
                 frmMain Mainform = new frmMain();
                 Mainform.Show();
                 this.Close();
@@ -52,6 +54,13 @@ namespace WindowsFormsApp1
             else
             {
                 MessageBox.Show("Invalid Email", "Error");
+            }
+        }
+
+        private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (bExitApp) {
+                Application.Exit();
             }
         }
     }

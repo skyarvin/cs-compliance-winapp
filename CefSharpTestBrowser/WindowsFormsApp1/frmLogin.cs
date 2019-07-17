@@ -43,17 +43,22 @@ namespace WindowsFormsApp1
         }
         private void Login() {
             //TODO ADD EMAIL VALIDATION
-            Globals.ComplianceAgent = LoggerServices.GetAgentId(txtEmail.Text);
-            if (Globals.ComplianceAgent != null)
-            {
-                bExitApp = false;
-                frmMain Mainform = new frmMain();
-                Mainform.Show();
-                this.Close();
-            }
+            if (string.IsNullOrEmpty(txtEmail.Text.Trim()))
+                MessageBox.Show("Email required", "Error");
             else
             {
-                MessageBox.Show("Invalid Email", "Error");
+                Globals.ComplianceAgent = LoggerServices.GetAgentId(txtEmail.Text);
+                if (Globals.ComplianceAgent != null)
+                {
+                    bExitApp = false;
+                    frmMain Mainform = new frmMain();
+                    Mainform.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Invalid Email", "Error");
+                }
             }
         }
 

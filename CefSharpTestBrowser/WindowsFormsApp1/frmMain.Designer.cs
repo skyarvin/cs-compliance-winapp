@@ -217,6 +217,7 @@
             this.ClientSize = new System.Drawing.Size(1017, 517);
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.pnlHeader);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmMain";
             this.Text = "Skydev Browser";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

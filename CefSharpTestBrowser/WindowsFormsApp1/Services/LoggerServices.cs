@@ -107,11 +107,11 @@ namespace WindowsFormsApp1.Services
         public static void SaveToLogFile(string logText, bool error=false)
         {
             string logFilePath = "";
-            string path = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
-            if(error)
-                logFilePath = @path + "/logs/error_log.txt";
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            if (error)
+                logFilePath = @path + "/SkydevCsTool/logs/error_log.txt";
             else
-                logFilePath = @path + "/logs/log.txt";
+                logFilePath = @path + "/SkydevCsTool/logs/log.txt";
             FileInfo logFileInfo = new FileInfo(logFilePath);
             DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
              if (!logDirInfo.Exists) logDirInfo.Create();

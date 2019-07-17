@@ -74,7 +74,7 @@ namespace WindowsFormsApp1
                 string sCurrAddress = e.Address;
                 if (sCurrAddress.Contains("https://chaturbate.com/compliance/show/"))
                 {
-                    chromeBrowser.ShowDevTools();
+                    //chromeBrowser.ShowDevTools();
                     if(CurrentUrl != sCurrAddress)
                     {
                         CurrentUrl = sCurrAddress;

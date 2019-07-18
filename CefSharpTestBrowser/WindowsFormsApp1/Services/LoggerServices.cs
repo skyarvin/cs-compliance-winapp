@@ -83,7 +83,7 @@ namespace WindowsFormsApp1.Services
 
         public static bool Save(Logger log)
         {
-            SaveToLogFile(JsonConvert.SerializeObject(log));
+            SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Action);
             using (var client = new HttpClient())
             {
                 var uri = string.Concat(baseUrl, "/logs/");
@@ -95,7 +95,7 @@ namespace WindowsFormsApp1.Services
                     return true;
                 }
                 else {
-                    SaveToLogFile(JsonConvert.SerializeObject(log),true);
+                    SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Error);
                     MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
 
                 }
@@ -104,14 +104,23 @@ namespace WindowsFormsApp1.Services
             return false;
         }
 
-        public static void SaveToLogFile(string logText, bool error=false)
+        public static void SaveToLogFile(string logText, int logtype)
         {
             string logFilePath = "";
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            if (error)
-                logFilePath = @path + "/SkydevCsTool/logs/error_log.txt";
-            else
-                logFilePath = @path + "/SkydevCsTool/logs/log.txt";
+            string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/SkydevCsTool/logs/");
+            switch(logtype)
+            {
+                case (int)LogType.Action:
+                    logFilePath = @path + "log.txt";
+                    break;
+                case (int)LogType.Url_Change:
+                    logFilePath = @path + "url_log.txt";
+                    break;
+                case (int)LogType.Error:
+                    logFilePath = @path + "error_log.txt";
+                    break;
+            }
+                
             FileInfo logFileInfo = new FileInfo(logFilePath);
             DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
              if (!logDirInfo.Exists) logDirInfo.Create();

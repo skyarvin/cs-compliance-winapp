@@ -60,7 +60,7 @@ namespace WindowsFormsApp1
             MessageBox.Show(String.Concat(Ex.Message, System.Environment.NewLine, Ex.InnerException.Message), Ex.TargetSite.ToString(),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-            LoggerServices.SaveToLogFile(string.Concat(Ex.Message, Ex.TargetSite.ToString()), true);
+            LoggerServices.SaveToLogFile(string.Concat(Ex.Message, Ex.TargetSite.ToString()), (int)LogType.Error);
         }
     }
 }

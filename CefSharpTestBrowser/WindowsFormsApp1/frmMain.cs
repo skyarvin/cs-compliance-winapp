@@ -19,7 +19,7 @@ namespace WindowsFormsApp1
     {
         public   ChromiumWebBrowser chromeBrowser;
         public string CurrentUrl;
-        public string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance/";
+        public string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
         public DateTime StartTime;
         private Point loc = new Point(0, 0);
         public Dictionary<string, string> Actions = new Dictionary<string, string>
@@ -72,12 +72,14 @@ namespace WindowsFormsApp1
         {
             this.InvokeOnUiThreadIfRequired(() => {
                 string sCurrAddress = e.Address;
-                if (sCurrAddress.Contains("https://chaturbate.com/compliance/show/"))
+                if (sCurrAddress.Contains(string.Concat(CB_COMPLIANCE_URL,"/show")) && !String.IsNullOrEmpty(sCurrAddress))
                 {
-                    //chromeBrowser.ShowDevTools();
-                    if(CurrentUrl != sCurrAddress)
+                    var splitAddress = sCurrAddress.Split('#');
+                    chromeBrowser.ShowDevTools();
+                    if(CurrentUrl != splitAddress[0])
                     {
-                        CurrentUrl = sCurrAddress;
+                        LoggerServices.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
+                        CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                     }
                 }

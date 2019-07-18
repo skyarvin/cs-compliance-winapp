@@ -11,4 +11,11 @@ namespace WindowsFormsApp1
     {
         public static Agent ComplianceAgent = new Agent();
     }
+
+    public enum LogType:int
+    {
+        Action = 1,
+        Url_Change = 2,
+        Error = 3,
+    }
 }

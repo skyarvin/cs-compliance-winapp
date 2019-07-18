@@ -32,17 +32,17 @@ namespace WindowsFormsApp1
         };
         public void InitializeChromium()
         {
-
-            string path = System.IO.Path.GetDirectoryName(Application.ExecutablePath);
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
             settings.CachePath = @path + "/cache/cache/"; ;
             settings.PersistSessionCookies = true;
-            if (!Cef.IsInitialized) {
+            if (!Cef.IsInitialized)
+            {
                 Cef.Initialize(settings);
                 Cef.GetGlobalCookieManager().SetStoragePath(@path + "/cache/cookie/", true);
             }
-          
+
             chromeBrowser = new ChromiumWebBrowser(CB_COMPLIANCE_URL);
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;

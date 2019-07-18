@@ -117,13 +117,13 @@
             this.lblUser.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(849, 0);
+            this.lblUser.Location = new System.Drawing.Point(734, 0);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(123, 42);
+            this.lblUser.Size = new System.Drawing.Size(238, 42);
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Enrique";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblUser.Click += new System.EventHandler(this.LblUser_Click);
+            this.lblUser.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LblUser_MouseDown);
             // 
             // txtSearch
             // 
@@ -223,6 +223,7 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.SizeChanged += new System.EventHandler(this.FrmMain_SizeChanged);
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();

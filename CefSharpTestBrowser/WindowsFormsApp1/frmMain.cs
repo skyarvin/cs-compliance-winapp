@@ -17,19 +17,23 @@ namespace WindowsFormsApp1
 {
     public partial class frmMain : Form
     {
-        public   ChromiumWebBrowser chromeBrowser;
-        public string CurrentUrl;
-        public string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
-        public DateTime StartTime;
+        public ChromiumWebBrowser chromeBrowser;
+        private string CurrentUrl;
+        private string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
+        private DateTime StartTime;
         private Point loc = new Point(0, 0);
-        public Dictionary<string, string> Actions = new Dictionary<string, string>
+        private string reply_message;
+        private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             { "violation-submit", "VR" },
             { "id-missing", "IM" },
             { "spammer-submit", "SR" },
             { "request-review-submit", "RR" },
             { "approve_button", "AP" },
+            { "agree_button", "BSA" },
+            { "disagree_button", "BSD" },
         };
+
         public void InitializeChromium()
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -64,7 +68,6 @@ namespace WindowsFormsApp1
             chromeBrowser.RegisterJsObject("bound", obj);
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
-            
         }
 
 
@@ -81,6 +84,7 @@ namespace WindowsFormsApp1
                         LoggerServices.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                         CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
+                        reply_message = "";
                     }
                 }
             });
@@ -92,10 +96,10 @@ namespace WindowsFormsApp1
             this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id));
         }
 
-        private string myStr(object o) {
+        private string myStr(object o, string label="") {
             try
             {
-                return o.ToString();
+                return string.Concat(label, o.ToString(), System.Environment.NewLine);
             }
             catch {
                 return "";
@@ -106,13 +110,18 @@ namespace WindowsFormsApp1
             string notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
             if (element_id == "violation-submit")
                 violation = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
+            if (element_id == "reply_button")
+            {
+                reply_message = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+                return;
+            }
 
             LoggerServices.Save(new Logger()
             {
                 action = Actions[element_id],
                 url = CurrentUrl,
                 agent_id = Globals.ComplianceAgent.id.ToString(),
-                remarks = !String.IsNullOrEmpty(violation) ? String.Concat(violation, System.Environment.NewLine, notes) : notes,
+                remarks = String.Concat(reply_message, violation, notes),
                 duration = LoggerServices.GetDuration(StartTime)
             }) ;
         }
@@ -168,11 +177,6 @@ namespace WindowsFormsApp1
 
         }
 
-        private void LblUser_Click(object sender, EventArgs e)
-        {
-           
-            contextMenuStrip1.Show(lblUser, loc);
-        }
         private void PbImg_Click(object sender, EventArgs e)
         {
             contextMenuStrip1.Show(lblUser, loc);
@@ -184,12 +188,13 @@ namespace WindowsFormsApp1
             this.Close();
 
         }
-
-       
+        private void LblUser_MouseDown(object sender, MouseEventArgs e)
+        {
+            Label control = (Label)sender;
+            Point loc = control.PointToScreen(Point.Empty);
+            contextMenuStrip1.Show(new Point(loc.X+52, loc.Y+41));
+        }
     }
-
-
-
 
     public class BoundObject
     {
@@ -200,6 +205,7 @@ namespace WindowsFormsApp1
 
         public BoundObject(ChromiumWebBrowser br) { browser = br; }
 
+        
         public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
             if (e.Frame.IsMain)
@@ -251,6 +257,42 @@ namespace WindowsFormsApp1
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(request_review_interval);
+                        }
+                    }, 1000);
+
+                    var bs_agree = setInterval(function(){
+                        if($('#agree_button')[0] != undefined){
+                            console.log('BSA binded');
+                            $('#agree_button')[0].addEventListener('click', 
+                            function(e)
+                            {
+                                bound.onClicked(e.target.id);
+                            },false)
+                            clearInterval(bs_agree);
+                        }
+                    }, 1000);
+
+                    var bs_disagree = setInterval(function(){
+                        if($('#disagree_button')[0] != undefined){
+                            console.log('BSD binded');
+                            $('#disagree_button')[0].addEventListener('click', 
+                            function(e)
+                            {
+                                bound.onClicked(e.target.id);
+                            },false)
+                            clearInterval(bs_disagree);
+                        }
+                    }, 1000);
+
+                    var request_review_reply = setInterval(function(){
+                        if($('#reply_button')[0] != undefined){
+                            console.log('RRR binded');
+                            $('#reply_button')[0].addEventListener('click', 
+                            function(e)
+                            {
+                                bound.onClicked(e.target.id);
+                            },false)
+                            clearInterval(request_review_reply);
                         }
                     }, 1000);
 

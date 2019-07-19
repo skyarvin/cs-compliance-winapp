@@ -223,7 +223,6 @@
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
-            this.SizeChanged += new System.EventHandler(this.FrmMain_SizeChanged);
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();

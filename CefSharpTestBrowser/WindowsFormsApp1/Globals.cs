@@ -10,6 +10,9 @@ namespace WindowsFormsApp1
     static class Globals
     {
         public static Agent ComplianceAgent = new Agent();
+        public static string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
+        public static string CB_COMPLIANCE_SET_ID_EXP_URL = "https://chaturbate.com/compliance/update_expiration_date_form";
+        public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=";
     }
 
     public enum LogType:int

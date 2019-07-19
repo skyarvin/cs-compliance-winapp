@@ -2,6 +2,8 @@
 using CefSharp;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Web;
+using WindowsFormsApp1;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -28,6 +30,8 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         model.AddItem((CefMenuCommand)26502, "Open room in Chrome");
 
+        model.AddSeparator();
+        model.AddItem((CefMenuCommand)26504, "Translate");
     }
 
     public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -38,7 +42,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
             if (parameters.MediaType == CefSharp.ContextMenuMediaType.Image) {
                 browserControl.EvaluateScriptAsync(string.Concat("window.open('",parameters.SourceUrl,"', '_blank');"));
             }
-           // browserControl.EvaluateScriptAsync(@"alert(e.target.outerHTML);");
             return true;
         }
 
@@ -48,7 +51,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
             {
                 Process.Start("chrome.exe", parameters.LinkUrl);
             }
-            // browserControl.EvaluateScriptAsync(@"alert(e.target.outerHTML);");
             return true;
         }
 
@@ -58,7 +60,13 @@ public class MyCustomMenuHandler : IContextMenuHandler
             {
                 System.Windows.Forms.Clipboard.SetText(parameters.PageUrl) ;
             }
-            // browserControl.EvaluateScriptAsync(@"alert(e.target.outerHTML);");
+            return true;
+        }
+
+        if (commandId == (CefMenuCommand)26504)
+        {
+            var surl = string.Concat(Globals.GOOGLE_TRANSLATE_URL, HttpUtility.UrlEncode(parameters.SelectionText));
+            browserControl.EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
             return true;
         }
 

@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
+using SkydevCSTool.Handlers;
 using WindowsFormsApp1.Models;
 using WindowsFormsApp1.Services;
 
@@ -19,7 +20,6 @@ namespace WindowsFormsApp1
     {
         public ChromiumWebBrowser chromeBrowser;
         private string CurrentUrl;
-        private string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
         private DateTime StartTime;
         private Point loc = new Point(0, 0);
         private string reply_message;
@@ -30,8 +30,9 @@ namespace WindowsFormsApp1
             { "spammer-submit", "SR" },
             { "request-review-submit", "RR" },
             { "approve_button", "AP" },
-            { "agree_button", "BSA" },
-            { "disagree_button", "BSD" },
+            { "agree_button", "BA" },
+            { "disagree_button", "BD" },
+            { "set_expr", "SE" },
         };
 
         public void InitializeChromium()
@@ -47,7 +48,7 @@ namespace WindowsFormsApp1
                 Cef.GetGlobalCookieManager().SetStoragePath(@path + "/cache/cookie/", true);
             }
 
-            chromeBrowser = new ChromiumWebBrowser(CB_COMPLIANCE_URL);
+            chromeBrowser = new ChromiumWebBrowser(Globals.CB_COMPLIANCE_URL);
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
             lblUser.Text = Globals.ComplianceAgent.name;
@@ -68,14 +69,14 @@ namespace WindowsFormsApp1
             chromeBrowser.RegisterJsObject("bound", obj);
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
+            chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
         }
-
 
         private void Browser_AddressChanged(object sender, AddressChangedEventArgs e)
         {
             this.InvokeOnUiThreadIfRequired(() => {
                 string sCurrAddress = e.Address;
-                if (sCurrAddress.Contains(string.Concat(CB_COMPLIANCE_URL,"/show")) && !String.IsNullOrEmpty(sCurrAddress))
+                if (sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/show")) && !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
                     chromeBrowser.ShowDevTools();
@@ -110,11 +111,14 @@ namespace WindowsFormsApp1
             string notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
             if (element_id == "violation-submit")
                 violation = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
+            if (element_id == "set_expr")
+                notes = "Set ID Expiration Date";
             if (element_id == "reply_button")
             {
                 reply_message = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
                 return;
             }
+
 
             LoggerServices.Save(new Logger()
             {
@@ -140,7 +144,7 @@ namespace WindowsFormsApp1
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            chromeBrowser.Load(CB_COMPLIANCE_URL);
+            chromeBrowser.Load(Globals.CB_COMPLIANCE_URL);
         }
 
         private void BtnFind_Click(object sender, EventArgs e)
@@ -210,7 +214,28 @@ namespace WindowsFormsApp1
         {
             if (e.Frame.IsMain)
             {
-                var submit_script = @"
+
+                if(e.Frame.Url.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
+                {
+                    var submit_script = @"
+                        var set_expr = document.querySelectorAll(`input[value='Update Expiration Date']`)[0];
+                        var expr_date = setInterval(function(){
+                            if(set_expr != undefined){
+                                console.log('EXPR binded');
+                                set_expr.addEventListener('click', 
+                                function(e)
+                                {
+                                    bound.onClicked('set_expr');
+                                },false)
+                                clearInterval(expr_date);
+                            }
+                        }, 1000);
+                    ";
+                        browser.EvaluateScriptAsync(@submit_script);
+                }
+                else
+                {
+                    var submit_script = @"
                     var violation_interval = setInterval(function(){
                         if(document.getElementById('violation-submit') != undefined){
                             console.log('VR binded');
@@ -223,7 +248,7 @@ namespace WindowsFormsApp1
                         }
                     }, 1000);
 
-                    var id_missing = $(`input[value='Report Identification Missing Problem']`)[0];
+                    var id_missing = $(`[value='Report Identification Missing Problem']`)[0];
                     var id_missing_interval = setInterval(function(){
                         if(id_missing != undefined){
                             console.log('IM binded');
@@ -301,8 +326,9 @@ namespace WindowsFormsApp1
                             {
                                 bound.onClicked(e.target.id);
                             },false)
-                ";
-                browser.EvaluateScriptAsync(@submit_script);
+                    ";
+                    browser.EvaluateScriptAsync(@submit_script);
+                }
             }
         }
         public void OnClicked(string id)

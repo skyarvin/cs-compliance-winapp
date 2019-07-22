@@ -19,6 +19,7 @@ namespace WindowsFormsApp1
     public partial class frmMain : Form
     {
         public ChromiumWebBrowser chromeBrowser;
+        private string LastSuccessUrl;
         private string CurrentUrl;
         private DateTime StartTime;
         private Point loc = new Point(0, 0);
@@ -52,20 +53,20 @@ namespace WindowsFormsApp1
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
             lblUser.Text = Globals.ComplianceAgent.name;
-            loc =  new Point(lblUser.Left, lblUser.Bottom);
-            try{ pbImg.Load(Globals.ComplianceAgent.photo); }
-            catch {}
-          
+            loc = new Point(lblUser.Left, lblUser.Bottom);
+            try { pbImg.Load(Globals.ComplianceAgent.photo); }
+            catch { }
+
         }
         public frmMain()
         {
             InitializeComponent();
             InitializeChromium();
-            
+
             chromeBrowser.AddressChanged += Browser_AddressChanged;
             var obj = new BoundObject(chromeBrowser);
             obj.HtmlItemClicked += Obj_HtmlItemClicked;
-          
+
             chromeBrowser.RegisterJsObject("bound", obj);
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
@@ -80,7 +81,7 @@ namespace WindowsFormsApp1
                 {
                     var splitAddress = sCurrAddress.Split('#');
                     chromeBrowser.ShowDevTools();
-                    if(CurrentUrl != splitAddress[0])
+                    if (CurrentUrl != splitAddress[0])
                     {
                         LoggerServices.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                         CurrentUrl = splitAddress[0];
@@ -89,7 +90,7 @@ namespace WindowsFormsApp1
                     }
                 }
             });
-            
+
         }
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
@@ -97,7 +98,7 @@ namespace WindowsFormsApp1
             this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id));
         }
 
-        private string myStr(object o, string label="") {
+        private string myStr(object o, string label = "") {
             try
             {
                 return string.Concat(label, o.ToString(), System.Environment.NewLine);
@@ -119,16 +120,29 @@ namespace WindowsFormsApp1
                 return;
             }
 
-
-            LoggerServices.Save(new Logger()
+            if (CurrentUrl == LastSuccessUrl)
             {
-                action = Actions[element_id],
-                url = CurrentUrl,
-                agent_id = Globals.ComplianceAgent.id.ToString(),
-                remarks = String.Concat(reply_message, violation, notes),
-                duration = LoggerServices.GetDuration(StartTime)
-            }) ;
+                if (new[] { "agree_button", "disagree_button" }.Contains(element_id))
+                    LoggerServices.Update(new Logger { id = Globals.LastSuccessId, action = Actions[element_id], duration = LoggerServices.GetDuration(StartTime) });
+                else
+                    throw new Exception(string.Concat("Unhandled action ", element_id));
+            }
+            else
+            {
+                var result = LoggerServices.Save(new Logger()
+                {
+                    action = Actions[element_id],
+                    url = CurrentUrl,
+                    agent_id = Globals.ComplianceAgent.id.ToString(),
+                    remarks = String.Concat(reply_message, violation, notes),
+                    duration = LoggerServices.GetDuration(StartTime)
+                });
+
+                Globals.LastSuccessId = result.id;
+            }
+            LastSuccessUrl = CurrentUrl;
         }
+        
         private void Form1_Load(object sender, EventArgs e)
         {
             //REMOVE THIS 
@@ -204,7 +218,6 @@ namespace WindowsFormsApp1
     {
         public delegate void ItemClickedEventHandler(object sender, HtmlItemClickedEventArgs e);
         public event ItemClickedEventHandler HtmlItemClicked;
-        public delegate void ItemResponseEventHandler(object sender, GetResponseEventArgs e);
         private ChromiumWebBrowser browser;
 
         public BoundObject(ChromiumWebBrowser br) { browser = br; }
@@ -326,10 +339,19 @@ namespace WindowsFormsApp1
                             {
                                 bound.onClicked(e.target.id);
                             },false)
+                    
+                    var bounce = $(`body:contains('locked to another bouncer')`).length;
+                    if(bounce > 0){
+                        bound.saveAsBounce();
+                    }
                     ";
                     browser.EvaluateScriptAsync(@submit_script);
                 }
             }
+        }
+
+        public void SaveAsBounce() {
+            LoggerServices.Update(new Logger { id = Globals.LastSuccessId, action = "BN" });
         }
         public void OnClicked(string id)
         {          
@@ -343,13 +365,5 @@ namespace WindowsFormsApp1
             public string Id { get; set; }
         }
 
-        public class GetResponseEventArgs : EventArgs
-        {
-            public string ProjectId { get; set; }
-            public string AutomationTaskId { get; set; }
-            public string ResponseText { get; set; }
-        }
-
-        
     }
 }

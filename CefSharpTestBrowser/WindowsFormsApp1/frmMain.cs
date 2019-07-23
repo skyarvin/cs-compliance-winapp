@@ -101,43 +101,41 @@ namespace WindowsFormsApp1
         private string myStr(object o, string label = "") {
             try
             {
-                return string.Concat(label, o.ToString(), System.Environment.NewLine);
+                if (o.ToString() != "--" && !string.IsNullOrEmpty(o.ToString()))
+                    return string.Concat(label, o.ToString(), System.Environment.NewLine, " ");
+                else
+                    return "";
             }
             catch {
                 return "";
             }
         }
         private void ProcessActionButtons(string element_id) {
-            string violation = "";
+            string violation = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
             string notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
-            if (element_id == "violation-submit")
-                violation = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
-            if (element_id == "set_expr")
-                notes = "Set ID Expiration Date";
-            if (element_id == "reply_button")
+            reply_message += myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+            if (element_id == "set_expr") notes = "Set ID Expiration Date";
+            if (element_id != "approve_button" && string.IsNullOrEmpty(notes)) return;
+            if (element_id == "violation-submit" && string.IsNullOrEmpty(violation)) return;
+            if (element_id == "reply_button") return;
+
+            var logData = new Logger
             {
-                reply_message = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
-                return;
-            }
+                url = CurrentUrl,
+                agent_id = Globals.ComplianceAgent.id.ToString(),
+                action = Actions[element_id],
+                remarks = String.Concat(reply_message, violation, notes),
+                duration = LoggerServices.GetDuration(StartTime)
+            };
 
             if (CurrentUrl == LastSuccessUrl)
             {
-                if (new[] { "agree_button", "disagree_button" }.Contains(element_id))
-                    LoggerServices.Update(new Logger { id = Globals.LastSuccessId, action = Actions[element_id], duration = LoggerServices.GetDuration(StartTime) });
-                else
-                    throw new Exception(string.Concat("Unhandled action ", element_id));
+                logData.id = Globals.LastSuccessId;
+                LoggerServices.Update(logData);
             }
             else
             {
-                var result = LoggerServices.Save(new Logger()
-                {
-                    action = Actions[element_id],
-                    url = CurrentUrl,
-                    agent_id = Globals.ComplianceAgent.id.ToString(),
-                    remarks = String.Concat(reply_message, violation, notes),
-                    duration = LoggerServices.GetDuration(StartTime)
-                });
-
+                var result = LoggerServices.Save(logData);
                 Globals.LastSuccessId = result.id;
             }
             LastSuccessUrl = CurrentUrl;
@@ -344,7 +342,7 @@ namespace WindowsFormsApp1
                     if(bounce > 0){
                         bound.saveAsBounce();
                     }
-                    ";
+                        ";
                     browser.EvaluateScriptAsync(@submit_script);
                 }
             }

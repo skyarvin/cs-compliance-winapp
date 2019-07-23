@@ -138,7 +138,11 @@ namespace WindowsFormsApp1
                 var result = LoggerServices.Save(logData);
                 Globals.LastSuccessId = result.id;
             }
-            LastSuccessUrl = CurrentUrl;
+
+            if (element_id == "request-review-submit")
+                LastSuccessUrl = "";
+            else
+                LastSuccessUrl = CurrentUrl;
         }
         
         private void Form1_Load(object sender, EventArgs e)
@@ -258,9 +262,9 @@ namespace WindowsFormsApp1
                             clearInterval(violation_interval);
                         }
                     }, 1000);
-
-                    var id_missing = $(`[value='Report Identification Missing Problem']`)[0];
+ 
                     var id_missing_interval = setInterval(function(){
+                        var id_missing = document.querySelectorAll(`input[value='Report Identification Missing Problem']`)[0];
                         if(id_missing != undefined){
                             console.log('IM binded');
                             id_missing.addEventListener('click', 

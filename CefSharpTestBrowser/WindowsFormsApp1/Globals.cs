@@ -14,6 +14,7 @@ namespace WindowsFormsApp1
         public static string CB_COMPLIANCE_SET_ID_EXP_URL = "https://chaturbate.com/compliance/update_expiration_date_form";
         public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=";
         public static int LastSuccessId;
+        public static DateTime StartTime = DateTime.Now;
     }
 
     public enum LogType:int
@@ -21,5 +22,6 @@ namespace WindowsFormsApp1
         Action = 1,
         Url_Change = 2,
         Error = 3,
+        Activity = 4,
     }
 }

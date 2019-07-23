@@ -6,11 +6,13 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows.Forms;
 using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
 using SkydevCSTool.Handlers;
+using UserInactivityMonitoring;
 using WindowsFormsApp1.Models;
 using WindowsFormsApp1.Services;
 
@@ -35,6 +37,7 @@ namespace WindowsFormsApp1
             { "disagree_button", "BD" },
             { "set_expr", "SE" },
         };
+        private IInactivityMonitor inactivityMonitor = null;
 
         public void InitializeChromium()
         {
@@ -77,6 +80,7 @@ namespace WindowsFormsApp1
         {
             this.InvokeOnUiThreadIfRequired(() => {
                 string sCurrAddress = e.Address;
+                lblUrl.Text = sCurrAddress;
                 if (sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/show")) && !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
@@ -149,6 +153,14 @@ namespace WindowsFormsApp1
         {
             //REMOVE THIS 
             //System.Windows.Forms.Clipboard.SetText("FBBAFyAw%[r{)5z?");
+            inactivityMonitor = MonitorCreator.CreateInstance(MonitorType.LastInputMonitor);
+            inactivityMonitor.MonitorKeyboardEvents = true;
+            inactivityMonitor.MonitorMouseEvents = true;
+            inactivityMonitor.Interval = 5000; //‭300000‬
+            inactivityMonitor.Elapsed += new ElapsedEventHandler(TimeElapsed);
+            inactivityMonitor.Reactivated += new EventHandler(Reactivated);
+            inactivityMonitor.SynchronizingObject = this;
+            inactivityMonitor.Enabled = true;
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -157,7 +169,40 @@ namespace WindowsFormsApp1
             Application.Exit();
              
         }
+        private void TimeElapsed(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
+                    , (int)LogType.Activity);
+                //if (this.InvokeRequired)
+                //    Console.WriteLine("Event 'Elapsed' occured (Invoke() would have been required)");
+                //else
+                //    Console.WriteLine("Event 'Elapsed' occured (synchronized call)");
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Exception occured: " + exception.Message);
+            }
+        }
 
+        private void Reactivated(object sender, EventArgs e)
+        {
+            try
+            {
+                Globals.StartTime = DateTime.Now;
+                LoggerServices.SaveToLogFile(String.Concat("User Activity detected : ", Globals.StartTime.ToString())
+                    , (int)LogType.Activity);
+                //if (this.InvokeRequired)  
+                //    Console.WriteLine("Event 'Reactivated' occured (Invoke() would have been required)");
+                //else
+                //    Console.WriteLine("Event 'Reactivated' occured (synchronized call)");
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Exception occured: " + exception.Message);
+            }
+        }
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             chromeBrowser.Load(Globals.CB_COMPLIANCE_URL);

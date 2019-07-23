@@ -31,11 +31,11 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.btnZoomOut = new System.Windows.Forms.Button();
-            this.btnZoomIn = new System.Windows.Forms.Button();
-            this.lblUser = new System.Windows.Forms.Label();
+            this.lblUrl = new System.Windows.Forms.Label();
+            this.pnlSplitter = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
+            this.lblUser = new System.Windows.Forms.Label();
             this.btnFind = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.btnRefresh = new System.Windows.Forms.Button();
@@ -44,6 +44,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlHeader.SuspendLayout();
+            this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -51,11 +52,10 @@
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlHeader.Controls.Add(this.label1);
-            this.pnlHeader.Controls.Add(this.btnZoomOut);
-            this.pnlHeader.Controls.Add(this.btnZoomIn);
+            this.pnlHeader.Controls.Add(this.lblUrl);
+            this.pnlHeader.Controls.Add(this.pnlSplitter);
+            this.pnlHeader.Controls.Add(this.panel1);
             this.pnlHeader.Controls.Add(this.lblUser);
-            this.pnlHeader.Controls.Add(this.txtSearch);
             this.pnlHeader.Controls.Add(this.btnFind);
             this.pnlHeader.Controls.Add(this.btnRefresh);
             this.pnlHeader.Controls.Add(this.pbImg);
@@ -65,52 +65,43 @@
             this.pnlHeader.Size = new System.Drawing.Size(1017, 42);
             this.pnlHeader.TabIndex = 2;
             // 
-            // label1
+            // lblUrl
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(400, 11);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(49, 20);
-            this.label1.TabIndex = 5;
-            this.label1.Text = "Zoom";
-            this.label1.Visible = false;
+            this.lblUrl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblUrl.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUrl.ForeColor = System.Drawing.Color.White;
+            this.lblUrl.Location = new System.Drawing.Point(397, 0);
+            this.lblUrl.Name = "lblUrl";
+            this.lblUrl.Size = new System.Drawing.Size(337, 42);
+            this.lblUrl.TabIndex = 9;
+            this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnZoomOut
+            // pnlSplitter
             // 
-            this.btnZoomOut.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnZoomOut.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnZoomOut.FlatAppearance.BorderSize = 0;
-            this.btnZoomOut.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnZoomOut.ForeColor = System.Drawing.Color.White;
-            this.btnZoomOut.Location = new System.Drawing.Point(498, 3);
-            this.btnZoomOut.Name = "btnZoomOut";
-            this.btnZoomOut.Size = new System.Drawing.Size(34, 35);
-            this.btnZoomOut.TabIndex = 4;
-            this.btnZoomOut.Text = "-";
-            this.btnZoomOut.UseVisualStyleBackColor = true;
-            this.btnZoomOut.Visible = false;
-            this.btnZoomOut.Click += new System.EventHandler(this.BtnZoomOut_Click);
+            this.pnlSplitter.BackColor = System.Drawing.Color.White;
+            this.pnlSplitter.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlSplitter.Location = new System.Drawing.Point(396, 0);
+            this.pnlSplitter.Name = "pnlSplitter";
+            this.pnlSplitter.Size = new System.Drawing.Size(1, 42);
+            this.pnlSplitter.TabIndex = 8;
             // 
-            // btnZoomIn
+            // panel1
             // 
-            this.btnZoomIn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnZoomIn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnZoomIn.FlatAppearance.BorderSize = 0;
-            this.btnZoomIn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnZoomIn.ForeColor = System.Drawing.Color.White;
-            this.btnZoomIn.Location = new System.Drawing.Point(455, 4);
-            this.btnZoomIn.Name = "btnZoomIn";
-            this.btnZoomIn.Size = new System.Drawing.Size(34, 35);
-            this.btnZoomIn.TabIndex = 3;
-            this.btnZoomIn.Text = "+";
-            this.btnZoomIn.UseVisualStyleBackColor = true;
-            this.btnZoomIn.Visible = false;
-            this.btnZoomIn.Click += new System.EventHandler(this.BtnZoomIn_Click);
+            this.panel1.Controls.Add(this.txtSearch);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel1.Location = new System.Drawing.Point(98, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(298, 42);
+            this.panel1.TabIndex = 7;
+            // 
+            // txtSearch
+            // 
+            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearch.Location = new System.Drawing.Point(3, 8);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(291, 27);
+            this.txtSearch.TabIndex = 0;
+            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtSearch_KeyDown);
             // 
             // lblUser
             // 
@@ -124,15 +115,6 @@
             this.lblUser.Text = "Enrique";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lblUser.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LblUser_MouseDown);
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSearch.Location = new System.Drawing.Point(104, 7);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(291, 27);
-            this.txtSearch.TabIndex = 0;
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtSearch_KeyDown);
             // 
             // btnFind
             // 
@@ -224,7 +206,8 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlHeader.ResumeLayout(false);
-            this.pnlHeader.PerformLayout();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -239,12 +222,12 @@
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnFind;
         private System.Windows.Forms.Label lblUser;
-        private System.Windows.Forms.Button btnZoomIn;
-        private System.Windows.Forms.Button btnZoomOut;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pbImg;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
+        private System.Windows.Forms.Label lblUrl;
+        private System.Windows.Forms.Panel pnlSplitter;
+        private System.Windows.Forms.Panel panel1;
     }
 }
 

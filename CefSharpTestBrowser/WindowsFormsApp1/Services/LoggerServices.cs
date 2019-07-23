@@ -146,6 +146,9 @@ namespace WindowsFormsApp1.Services
                 case (int)LogType.Error:
                     logFilePath = @path + "error_log.txt";
                     break;
+                case (int)LogType.Activity:
+                    logFilePath = @path + "activity_log.txt";
+                    break;
             }
                 
             FileInfo logFileInfo = new FileInfo(logFilePath);

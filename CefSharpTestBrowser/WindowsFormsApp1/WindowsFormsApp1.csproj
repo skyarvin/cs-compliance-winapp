@@ -86,6 +86,9 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="UserInactivityMonitoring">
+      <HintPath>..\..\..\..\Downloads\uim_lib\bin\Debug\UserInactivityMonitoring.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextMenuHandler.cs" />

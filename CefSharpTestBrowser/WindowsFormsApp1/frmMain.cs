@@ -282,8 +282,9 @@ namespace WindowsFormsApp1
         {
             if (e.Frame.IsMain)
             {
-
-                if(e.Frame.Url.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
+                browser.EvaluateScriptAsync(@"window.onclick = function(e) { e.preventDefault(); bound.onBrowserEvent(); }");
+                browser.EvaluateScriptAsync(@"window.onscroll = function(e) { e.preventDefault(); bound.onBrowserEvent(); }");
+                if (e.Frame.Url.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
                 {
                     var submit_script = @"
                         var set_expr = document.querySelectorAll(`input[value='Update Expiration Date']`)[0];
@@ -417,19 +418,21 @@ namespace WindowsFormsApp1
                 }
             }
         }
+        public void OnBrowserEvent(){
 
-        public void SaveAsBounce() {
+            frmMain.ActiveForm.InvokeOnUiThreadIfRequired(() => frmMain.ActiveForm.Focus());
+
+        }
+        public void SaveAsBounce(){
             LoggerServices.Update(new Logger { id = Globals.LastSuccessId, action = "BN" });
         }
-        public void OnClicked(string id)
-        {          
+        public void OnClicked(string id) {          
             if (HtmlItemClicked != null)
             {
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });
             }
         }
-        public class HtmlItemClickedEventArgs : EventArgs
-        {
+        public class HtmlItemClickedEventArgs : EventArgs {
             public string Id { get; set; }
         }
 

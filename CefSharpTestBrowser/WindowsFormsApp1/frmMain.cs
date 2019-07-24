@@ -169,7 +169,7 @@ namespace WindowsFormsApp1
             inactivityMonitor = MonitorCreator.CreateInstance(MonitorType.ApplicationMonitor);
             inactivityMonitor.MonitorKeyboardEvents = true;
             inactivityMonitor.MonitorMouseEvents = true;
-            inactivityMonitor.Interval = 5000; //‭300000‬
+            inactivityMonitor.Interval = 300000; //‭300000‬
             inactivityMonitor.Elapsed += new ElapsedEventHandler(TimeElapsed);
             inactivityMonitor.Reactivated += new EventHandler(Reactivated);
             inactivityMonitor.SynchronizingObject = this;
@@ -189,8 +189,9 @@ namespace WindowsFormsApp1
             {
                 LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
                     , (int)LogType.Activity);
-                // this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
+                  this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
                 //Globals.ShowMessage();
+               // MessageBox.Show("Exception occured: ");
             }
             catch (Exception exception)
             {
@@ -283,8 +284,9 @@ namespace WindowsFormsApp1
         {
             if (e.Frame.IsMain)
             {
-                browser.EvaluateScriptAsync(@"window.onclick = function(e) { e.preventDefault(); bound.onBrowserEvent(); }");
-                browser.EvaluateScriptAsync(@"window.onscroll = function(e) { e.preventDefault(); bound.onBrowserEvent(); }");
+                browser.EvaluateScriptAsync(@"window.onmousemove = function(e) { bound.onBrowserEvent(); }");
+                //browser.EvaluateScriptAsync(@"window.onclick = function(e) { bound.onBrowserEvent(); }");
+                //browser.EvaluateScriptAsync(@"window.onscroll = function(e) { bound.onBrowserEvent(); }");
                 if (e.Frame.Url.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
                 {
                     var submit_script = @"

@@ -18,9 +18,12 @@ namespace WindowsFormsApp1
         public static int LastSuccessId;
         public static DateTime StartTime = DateTime.Now;
         private static frmMessage frm = new frmMessage();
-        public static void ShowMessage()
+        public static void ShowMessage(Form parent)
         {
-            frm.Show();
+            if (frm.Visible != true){
+                frm.ShowDialog(parent);
+            }
+           
         }
     }
 

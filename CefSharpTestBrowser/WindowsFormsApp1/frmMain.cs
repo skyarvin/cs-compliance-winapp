@@ -169,7 +169,7 @@ namespace WindowsFormsApp1
             inactivityMonitor = MonitorCreator.CreateInstance(MonitorType.ApplicationMonitor);
             inactivityMonitor.MonitorKeyboardEvents = true;
             inactivityMonitor.MonitorMouseEvents = true;
-            inactivityMonitor.Interval = 300000; //‭300000‬
+            inactivityMonitor.Interval = 5000; //‭300000‬
             inactivityMonitor.Elapsed += new ElapsedEventHandler(TimeElapsed);
             inactivityMonitor.Reactivated += new EventHandler(Reactivated);
             inactivityMonitor.SynchronizingObject = this;
@@ -189,7 +189,8 @@ namespace WindowsFormsApp1
             {
                 LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
                     , (int)LogType.Activity);
-                MessageBox.Show("You have been idle for too long","");
+                // this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
+                //Globals.ShowMessage();
             }
             catch (Exception exception)
             {
@@ -420,7 +421,13 @@ namespace WindowsFormsApp1
         }
         public void OnBrowserEvent(){
 
-            frmMain.ActiveForm.InvokeOnUiThreadIfRequired(() => frmMain.ActiveForm.Focus());
+            // Application.OpenForms.Cast<Form>().Last().InvokeOnUiThreadIfRequired(() => Application.OpenForms.Cast<Form>().Last().Focus());
+            try
+            {
+                frmMain.ActiveForm.InvokeOnUiThreadIfRequired(() => frmMain.ActiveForm.Focus());
+            }
+            catch {
+            }
 
         }
         public void SaveAsBounce(){

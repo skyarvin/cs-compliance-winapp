@@ -32,12 +32,22 @@ namespace WindowsFormsApp1
             { "id-missing", "IM" },
             { "spammer-submit", "SR" },
             { "request-review-submit", "RR" },
-            { "approve_button", "AP" },
             { "agree_button", "BA" },
             { "disagree_button", "BD" },
             { "set_expr", "SE" },
+            { "change_gender", "CG" },
+            { "approve_button", "AP" },
+            { "reply_button", "AP" },
         };
-        private IInactivityMonitor inactivityMonitor = null;
+        private List<string> Violations = new List<string>
+        {
+            "violation-submit",
+            "id-missing",
+            "spammer-submit",
+            "request-review-submit"
+        };
+
+    private IInactivityMonitor inactivityMonitor = null;
 
         public void InitializeChromium()
         {
@@ -114,14 +124,16 @@ namespace WindowsFormsApp1
                 return "";
             }
         }
+        
         private void ProcessActionButtons(string element_id) {
+            LoggerServices.SaveToLogFile(String.Concat("Process Action: ", element_id) , (int)LogType.Activity);
             string violation = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
             string notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
-            reply_message += myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
-            if (element_id == "set_expr") notes = "Set ID Expiration Date";
-            if (element_id != "approve_button" && string.IsNullOrEmpty(notes)) return;
+            if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
             if (element_id == "violation-submit" && string.IsNullOrEmpty(violation)) return;
-            if (element_id == "reply_button") return;
+
+            if (element_id == "reply_button") notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+            if (element_id == "set_expr") notes = "Set ID Expiration Date";
 
             var logData = new Logger
             {
@@ -144,19 +156,20 @@ namespace WindowsFormsApp1
             }
 
             if (element_id == "request-review-submit")
-                LastSuccessUrl = "";
+                LastSuccessUrl = "requestreview";
             else
                 LastSuccessUrl = CurrentUrl;
         }
         
         private void Form1_Load(object sender, EventArgs e)
         {
+            LoggerServices.SaveToLogFile("Application START", (int)LogType.Activity);
             //REMOVE THIS 
             //System.Windows.Forms.Clipboard.SetText("FBBAFyAw%[r{)5z?");
-            inactivityMonitor = MonitorCreator.CreateInstance(MonitorType.LastInputMonitor);
+            inactivityMonitor = MonitorCreator.CreateInstance(MonitorType.ApplicationMonitor);
             inactivityMonitor.MonitorKeyboardEvents = true;
             inactivityMonitor.MonitorMouseEvents = true;
-            inactivityMonitor.Interval = 5000; //‭300000‬
+            inactivityMonitor.Interval = 300000; //‭300000‬
             inactivityMonitor.Elapsed += new ElapsedEventHandler(TimeElapsed);
             inactivityMonitor.Reactivated += new EventHandler(Reactivated);
             inactivityMonitor.SynchronizingObject = this;
@@ -165,6 +178,7 @@ namespace WindowsFormsApp1
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
+            LoggerServices.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
             Cef.Shutdown();
             Application.Exit();
              
@@ -175,10 +189,7 @@ namespace WindowsFormsApp1
             {
                 LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
                     , (int)LogType.Activity);
-                //if (this.InvokeRequired)
-                //    Console.WriteLine("Event 'Elapsed' occured (Invoke() would have been required)");
-                //else
-                //    Console.WriteLine("Event 'Elapsed' occured (synchronized call)");
+                MessageBox.Show("You have been idle for too long","");
             }
             catch (Exception exception)
             {
@@ -193,10 +204,6 @@ namespace WindowsFormsApp1
                 Globals.StartTime = DateTime.Now;
                 LoggerServices.SaveToLogFile(String.Concat("User Activity detected : ", Globals.StartTime.ToString())
                     , (int)LogType.Activity);
-                //if (this.InvokeRequired)  
-                //    Console.WriteLine("Event 'Reactivated' occured (Invoke() would have been required)");
-                //else
-                //    Console.WriteLine("Event 'Reactivated' occured (synchronized call)");
             }
             catch (Exception exception)
             {
@@ -205,6 +212,7 @@ namespace WindowsFormsApp1
         }
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
+            LoggerServices.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             chromeBrowser.Load(Globals.CB_COMPLIANCE_URL);
         }
 
@@ -378,6 +386,19 @@ namespace WindowsFormsApp1
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(request_review_reply);
+                        }
+                    }, 1000);
+
+                    var change_gender = setInterval(function(){
+                        var chg = document.querySelectorAll(`input[value='Change Gender']`)[0]; 
+                        if (chg != undefined){
+                            console.log('CG binded');
+                            chg.addEventListener('click', 
+                            function(e)
+                            {
+                                bound.onClicked('change_gender');
+                            },false)
+                            clearInterval(change_gender);
                         }
                     }, 1000);
 

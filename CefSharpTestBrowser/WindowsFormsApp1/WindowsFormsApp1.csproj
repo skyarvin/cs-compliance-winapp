@@ -87,7 +87,7 @@
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="UserInactivityMonitoring">
-      <HintPath>..\..\..\..\Downloads\uim_lib\bin\Debug\UserInactivityMonitoring.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Desktop\uim_lib\bin\Debug\UserInactivityMonitoring.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

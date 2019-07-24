@@ -81,23 +81,29 @@ namespace WindowsFormsApp1.Services
 
         public static bool Update(Logger log)
         {
-            SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Action);
-            using (var client = new HttpClient())
+            SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(log)), (int)LogType.Action);
+            try
             {
-                var uri = string.Concat(baseUrl, "/logs/", log.id);
-                client.DefaultRequestHeaders.Add("Authorization", apiKey);
-                var content = new StringContent(JsonConvert.SerializeObject(log), Encoding.UTF8, "application/json");
-                var response = client.PutAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    return true;
+                    var uri = string.Concat(baseUrl, "/logs/", log.id);
+                    client.DefaultRequestHeaders.Add("Authorization", apiKey);
+                    var content = new StringContent(JsonConvert.SerializeObject(log), Encoding.UTF8, "application/json");
+                    var response = client.PutAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Error);
+                        MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
+                    }
                 }
-                else
-                {
-                    SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Error);
-                    MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
-
-                }
+            }
+            catch(Exception e)
+            {
+                SaveToLogFile(e.Message, (int)LogType.Error);
             }
 
             return false;
@@ -105,27 +111,35 @@ namespace WindowsFormsApp1.Services
 
         public static Logger Save(Logger log)
         {
-            SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Action);
-            using (var client = new HttpClient())
+            SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(log)), (int)LogType.Action);
+            try
             {
-                var uri = string.Concat(baseUrl, "/logs/");
-                client.DefaultRequestHeaders.Add("Authorization", apiKey);
-                var content = new StringContent(JsonConvert.SerializeObject(log), Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                using (var client = new HttpClient())
                 {
-                    using (HttpContent data = response.Content)
+                    var uri = string.Concat(baseUrl, "/logs/");
+                    client.DefaultRequestHeaders.Add("Authorization", apiKey);
+                    var content = new StringContent(JsonConvert.SerializeObject(log), Encoding.UTF8, "application/json");
+                    var response = client.PostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        var jsonString = data.ReadAsStringAsync();
-                        jsonString.Wait();
-                        return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                        }
+                    }
+                    else
+                    {
+                        SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Error);
+                        MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
+
                     }
                 }
-                else {
-                    SaveToLogFile(JsonConvert.SerializeObject(log), (int)LogType.Error);
-                    MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
-
-                }
+            }
+            catch (Exception e)
+            {
+                SaveToLogFile(e.Message, (int)LogType.Error);
             }
 
             return null;

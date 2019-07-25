@@ -194,8 +194,8 @@ namespace WindowsFormsApp1
                 Globals.LastSuccessId = result.id;
             }
 
-            if (element_id == "request-review-submit")
-                LastSuccessUrl = "requestreview";
+            if (element_id == "request-review-submit" && element_id == "set_expr" && element_id == "change_gender")
+                LastSuccessUrl = ""; //Clear last success
             else
                 LastSuccessUrl = CurrentUrl;
         }

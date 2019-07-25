@@ -14,5 +14,7 @@ namespace WindowsFormsApp1.Models
         public string action { get; set; }
         public string remarks { get; set; }
         public int duration { get; set; }
+
+        public int followers { get; set; }
     }
 }

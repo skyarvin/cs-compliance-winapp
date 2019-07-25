@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -135,13 +136,18 @@ namespace WindowsFormsApp1
             if (element_id == "reply_button") notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
             if (element_id == "set_expr") notes = "Set ID Expiration Date";
 
+            int followers;
+            string followRaw = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
+            int.TryParse(Regex.Match(followRaw, @"\d+").Value, out followers);
+
             var logData = new Logger
             {
                 url = CurrentUrl,
                 agent_id = Globals.ComplianceAgent.id.ToString(),
                 action = Actions[element_id],
                 remarks = String.Concat(reply_message, violation, notes),
-                duration = LoggerServices.GetDuration(StartTime)
+                duration = LoggerServices.GetDuration(StartTime),
+                followers = followers
             };
 
             if (CurrentUrl == LastSuccessUrl)

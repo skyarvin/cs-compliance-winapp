@@ -13,14 +13,17 @@ using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
 using SkydevCSTool.Handlers;
-using UserInactivityMonitoring;
 using WindowsFormsApp1.Models;
 using WindowsFormsApp1.Services;
+using Timer = System.Windows.Forms.Timer;
 
 namespace WindowsFormsApp1
 {
     public partial class frmMain : Form
     {
+        private Timer _timer;
+
+
         public ChromiumWebBrowser chromeBrowser;
         private string LastSuccessUrl;
         private string CurrentUrl;
@@ -48,7 +51,7 @@ namespace WindowsFormsApp1
             "request-review-submit"
         };
 
-    private IInactivityMonitor inactivityMonitor = null;
+    
 
         public void InitializeChromium()
         {
@@ -72,8 +75,21 @@ namespace WindowsFormsApp1
             catch { }
 
         }
+
+
+
         public frmMain()
         {
+
+            Application.Idle += new EventHandler(Application_OnIdle);
+
+            // use a simple timer to watch for the idle state
+            _timer = new Timer();
+            _timer.Tick += new EventHandler(Timer_Exipred);
+            _timer.Interval = 1000;
+            _timer.Start();
+
+
             InitializeComponent();
             InitializeChromium();
 
@@ -85,6 +101,23 @@ namespace WindowsFormsApp1
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
+        }
+        private void Timer_Exipred(object sender, EventArgs e)
+        {
+            TimeSpan diff = DateTime.Now - Globals._wentIdle;
+
+            if (++Globals._idleTicks >= 5)
+            {
+                LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
+                   , (int)LogType.Activity);
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
+            }
+        }
+
+        private void Application_OnIdle(object sender, EventArgs e)
+        {
+            // keep track of the last time we went idle
+            Globals._wentIdle = DateTime.Now;
         }
 
         private void Browser_AddressChanged(object sender, AddressChangedEventArgs e)
@@ -172,14 +205,7 @@ namespace WindowsFormsApp1
             LoggerServices.SaveToLogFile("Application START", (int)LogType.Activity);
             //REMOVE THIS 
             //System.Windows.Forms.Clipboard.SetText("FBBAFyAw%[r{)5z?");
-            inactivityMonitor = MonitorCreator.CreateInstance(MonitorType.ApplicationMonitor);
-            inactivityMonitor.MonitorKeyboardEvents = true;
-            inactivityMonitor.MonitorMouseEvents = true;
-            inactivityMonitor.Interval = 300000; //‭300000‬
-            inactivityMonitor.Elapsed += new ElapsedEventHandler(TimeElapsed);
-            inactivityMonitor.Reactivated += new EventHandler(Reactivated);
-            inactivityMonitor.SynchronizingObject = this;
-            inactivityMonitor.Enabled = true;
+
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -188,35 +214,6 @@ namespace WindowsFormsApp1
             Cef.Shutdown();
             Application.Exit();
              
-        }
-        private void TimeElapsed(object sender, ElapsedEventArgs e)
-        {
-            try
-            {
-                LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
-                    , (int)LogType.Activity);
-                  this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
-                //Globals.ShowMessage();
-               // MessageBox.Show("Exception occured: ");
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show("Exception occured: " + exception.Message);
-            }
-        }
-
-        private void Reactivated(object sender, EventArgs e)
-        {
-            try
-            {
-                Globals.StartTime = DateTime.Now;
-                LoggerServices.SaveToLogFile(String.Concat("User Activity detected : ", Globals.StartTime.ToString())
-                    , (int)LogType.Activity);
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show("Exception occured: " + exception.Message);
-            }
         }
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
@@ -290,7 +287,7 @@ namespace WindowsFormsApp1
         {
             if (e.Frame.IsMain)
             {
-                browser.EvaluateScriptAsync(@"window.onmousemove = function(e) { bound.onBrowserEvent(); }");
+                 browser.EvaluateScriptAsync(@"window.onmousemove = function(e) { bound.onBrowserEvent(); }");
                 //browser.EvaluateScriptAsync(@"window.onclick = function(e) { bound.onBrowserEvent(); }");
                 //browser.EvaluateScriptAsync(@"window.onscroll = function(e) { bound.onBrowserEvent(); }");
                 if (e.Frame.Url.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
@@ -427,15 +424,10 @@ namespace WindowsFormsApp1
                 }
             }
         }
-        public void OnBrowserEvent(){
 
-            // Application.OpenForms.Cast<Form>().Last().InvokeOnUiThreadIfRequired(() => Application.OpenForms.Cast<Form>().Last().Focus());
-            try
-            {
-                frmMain.ActiveForm.InvokeOnUiThreadIfRequired(() => frmMain.ActiveForm.Focus());
-            }
-            catch {
-            }
+        public void OnBrowserEvent(){
+            Globals._wentIdle = DateTime.MaxValue;
+            Globals._idleTicks = 0;
 
         }
         public void SaveAsBounce(){

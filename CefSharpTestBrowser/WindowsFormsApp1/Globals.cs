@@ -1,7 +1,9 @@
 ﻿using SkydevCSTool;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,6 +19,8 @@ namespace WindowsFormsApp1
         public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=";
         public static int LastSuccessId;
         public static DateTime StartTime = DateTime.Now;
+        public static DateTime _wentIdle;
+        public static int _idleTicks;
         private static frmMessage frm = new frmMessage();
         public static void ShowMessage(Form parent)
         {

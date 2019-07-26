@@ -145,9 +145,6 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             LoggerServices.SaveToLogFile("Application START", (int)LogType.Activity);
-            //REMOVE THIS 
-            //System.Windows.Forms.Clipboard.SetText("FBBAFyAw%[r{)5z?");
-
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

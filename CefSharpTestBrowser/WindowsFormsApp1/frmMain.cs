@@ -119,7 +119,8 @@ namespace WindowsFormsApp1
             this.InvokeOnUiThreadIfRequired(() => {
                 string sCurrAddress = e.Address;
                 lblUrl.Text = sCurrAddress;
-                if (sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/show")) && !String.IsNullOrEmpty(sCurrAddress))
+                if ((sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/photoset"))) &&
+                    !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
                     chromeBrowser.ShowDevTools();

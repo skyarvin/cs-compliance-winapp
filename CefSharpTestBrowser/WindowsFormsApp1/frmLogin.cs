@@ -7,8 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Deployment;
 using WindowsFormsApp1.Services;
 using WindowsFormsApp1.Models;
+using System.Diagnostics;
+using System.Deployment.Application;
+
 namespace WindowsFormsApp1
 {
     public partial class frmLogin : Form
@@ -26,7 +30,11 @@ namespace WindowsFormsApp1
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-           
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                System.Deployment.Application.ApplicationDeployment cd = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
+                lblVersion.Text = string.Concat("v.", cd.CurrentVersion.ToString());
+            }
         }
 
         private void BtnExit_Click(object sender, EventArgs e)

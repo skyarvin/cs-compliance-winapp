@@ -119,7 +119,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContextMenuHandler.cs" />
+    <Compile Include="Bound.cs" />
+    <Compile Include="Handlers\ContextMenuHandler.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>

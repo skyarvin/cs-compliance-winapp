@@ -17,10 +17,12 @@ namespace WindowsFormsApp1
         public static string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
         public static string CB_COMPLIANCE_SET_ID_EXP_URL = "https://chaturbate.com/compliance/update_expiration_date_form";
         public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=";
-        public static int LastSuccessId;
+        public static int LAST_SUCCESS_ID;
+        public static int FIVE_MINUTES_IDLE_TIME = 300000;
         public static DateTime StartTime = DateTime.Now;
         public static DateTime _wentIdle;
         public static int _idleTicks;
+
         private static frmMessage frm = new frmMessage();
         public static void ShowMessage(Form parent)
         {
@@ -28,6 +30,20 @@ namespace WindowsFormsApp1
                 frm.ShowDialog(parent);
             }
            
+        }
+        public static string myStr(object o, string label = "")
+        {
+            try
+            {
+                if (o.ToString() != "--" && !string.IsNullOrEmpty(o.ToString()))
+                    return string.Concat(label, o.ToString(), System.Environment.NewLine, " ");
+                else
+                    return "";
+            }
+            catch
+            {
+                return "";
+            }
         }
     }
 

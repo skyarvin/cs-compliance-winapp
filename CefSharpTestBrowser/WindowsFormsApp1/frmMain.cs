@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
+using SkydevCSTool;
 using SkydevCSTool.Handlers;
 using WindowsFormsApp1.Models;
 using WindowsFormsApp1.Services;
@@ -22,37 +23,32 @@ namespace WindowsFormsApp1
     public partial class frmMain : Form
     {
         private Timer _timer;
-
-
         public ChromiumWebBrowser chromeBrowser;
         private string LastSuccessUrl;
         private string CurrentUrl;
         private DateTime StartTime;
-        private Point loc = new Point(0, 0);
-        private string reply_message;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
-            { "violation-submit", "VR" },
-            { "id-missing", "IM" },
-            { "spammer-submit", "SR" },
-            { "request-review-submit", "RR" },
-            { "agree_button", "BA" },
-            { "disagree_button", "BD" },
-            { "set_expr", "SE" },
-            { "change_gender", "CG" },
-            { "approve_button", "AP" },
-            { "reply_button", "AP" },
+            {Action.Violation.Value, "VR" },
+            {Action.IdMissing.Value, "IM" },
+            {Action.SpammerSubmit.Value, "SR" },
+            {Action.RequestReview.Value, "RR" },
+            {Action.Aggree.Value, "BA" },
+            {Action.Disaggree.Value, "BD" },
+            { Action.SetExpiration.Value, "SE" },
+            {Action.ChangeGender.Value, "CG" },
+            { Action.Approve.Value, "AP" },
+            {Action.ChatReply.Value, "AP" },
         };
         private List<string> Violations = new List<string>
         {
-            "violation-submit",
-            "id-missing",
-            "spammer-submit",
-            "request-review-submit"
+           Action.Violation.Value,
+           Action.IdMissing.Value,
+           Action.SpammerSubmit.Value,
+           Action.RequestReview.Value
         };
 
-    
-
+        #region Init
         public void InitializeChromium()
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -70,20 +66,14 @@ namespace WindowsFormsApp1
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
             lblUser.Text = Globals.ComplianceAgent.name;
-            loc = new Point(lblUser.Left, lblUser.Bottom);
             try { pbImg.Load(Globals.ComplianceAgent.photo); }
             catch { }
 
         }
-
-
-
         public frmMain()
         {
 
             Application.Idle += new EventHandler(Application_OnIdle);
-
-            // use a simple timer to watch for the idle state
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Exipred);
             _timer.Interval = 1000;
@@ -102,24 +92,28 @@ namespace WindowsFormsApp1
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
         }
+        #endregion
+
+        #region ActivityMonitor
         private void Timer_Exipred(object sender, EventArgs e)
         {
             TimeSpan diff = DateTime.Now - Globals._wentIdle;
 
-            if (++Globals._idleTicks >= 5)
+            if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME)
             {
                 LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
                    , (int)LogType.Activity);
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
             }
         }
-
         private void Application_OnIdle(object sender, EventArgs e)
         {
-            // keep track of the last time we went idle
             Globals._wentIdle = DateTime.Now;
         }
 
+        #endregion
+
+        #region ChromiumBrowserEvents
         private void Browser_AddressChanged(object sender, AddressChangedEventArgs e)
         {
             this.InvokeOnUiThreadIfRequired(() => {
@@ -134,72 +128,19 @@ namespace WindowsFormsApp1
                         LoggerServices.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                         CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
-                        reply_message = "";
                     }
                 }
             });
 
         }
-
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
             this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id));
         }
 
-        private string myStr(object o, string label = "") {
-            try
-            {
-                if (o.ToString() != "--" && !string.IsNullOrEmpty(o.ToString()))
-                    return string.Concat(label, o.ToString(), System.Environment.NewLine, " ");
-                else
-                    return "";
-            }
-            catch {
-                return "";
-            }
-        }
-        
-        private void ProcessActionButtons(string element_id) {
-            LoggerServices.SaveToLogFile(String.Concat("Process Action: ", element_id) , (int)LogType.Activity);
-            string violation = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
-            string notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
-            if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
-            if (element_id == "violation-submit" && string.IsNullOrEmpty(violation)) return;
+        #endregion
 
-            if (element_id == "reply_button") notes = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
-            if (element_id == "set_expr") notes = "Set ID Expiration Date";
-
-            int followers;
-            string followRaw = myStr(chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
-            int.TryParse(Regex.Match(followRaw, @"\d+").Value, out followers);
-
-            var logData = new Logger
-            {
-                url = CurrentUrl,
-                agent_id = Globals.ComplianceAgent.id.ToString(),
-                action = Actions[element_id],
-                remarks = String.Concat(reply_message, violation, notes),
-                duration = LoggerServices.GetDuration(StartTime),
-                followers = followers
-            };
-
-            if (CurrentUrl == LastSuccessUrl)
-            {
-                logData.id = Globals.LastSuccessId;
-                LoggerServices.Update(logData);
-            }
-            else
-            {
-                var result = LoggerServices.Save(logData);
-                Globals.LastSuccessId = result.id;
-            }
-
-            if (element_id == "request-review-submit" && element_id == "set_expr" && element_id == "change_gender")
-                LastSuccessUrl = ""; //Clear last success
-            else
-                LastSuccessUrl = CurrentUrl;
-        }
-        
+        #region Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
             LoggerServices.SaveToLogFile("Application START", (int)LogType.Activity);
@@ -213,7 +154,7 @@ namespace WindowsFormsApp1
             LoggerServices.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
             Cef.Shutdown();
             Application.Exit();
-             
+
         }
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
@@ -254,194 +195,89 @@ namespace WindowsFormsApp1
         {
 
         }
-
-        private void PbImg_Click(object sender, EventArgs e)
-        {
-            contextMenuStrip1.Show(lblUser, loc);
-        }
         private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-          
+
             Cef.GetGlobalCookieManager().DeleteCookies("", "");
             this.Close();
 
         }
-        private void LblUser_MouseDown(object sender, MouseEventArgs e)
+        private void LblUser_MouseDown_1(object sender, MouseEventArgs e)
         {
             Label control = (Label)sender;
             Point loc = control.PointToScreen(Point.Empty);
-            contextMenuStrip1.Show(new Point(loc.X+52, loc.Y+41));
+            contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
+
+
+        #endregion
+
+        #region Actions
+
+        private void ProcessActionButtons(string element_id)
+        {
+            LoggerServices.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
+            string violation = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
+            string notes = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
+            if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
+            if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
+
+            if (element_id == Action.ChatReply.Value) notes = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+            if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
+
+            int followers;
+            string followRaw = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
+            followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
+            int.TryParse(followRaw, out followers);
+
+            var logData = new Logger
+            {
+                url = CurrentUrl,
+                agent_id = Globals.ComplianceAgent.id.ToString(),
+                action = Actions[element_id],
+                remarks = String.Concat(violation, notes),
+                duration = LoggerServices.GetDuration(StartTime),
+                followers = followers
+            };
+
+            if (CurrentUrl == LastSuccessUrl)
+            {
+                logData.id = Globals.LAST_SUCCESS_ID;
+                LoggerServices.Update(logData);
+            }
+            else
+            {
+                var result = LoggerServices.Save(logData);
+                Globals.LAST_SUCCESS_ID = result.id;
+            }
+
+            if (element_id == "request-review-submit" && element_id == "set_expr" && element_id == "change_gender")
+                LastSuccessUrl = ""; //Clear last success
+            else
+                LastSuccessUrl = CurrentUrl;
+        }
+
+        #endregion
+
+
     }
 
-    public class BoundObject
+    public class Action
     {
-        public delegate void ItemClickedEventHandler(object sender, HtmlItemClickedEventArgs e);
-        public event ItemClickedEventHandler HtmlItemClicked;
-        private ChromiumWebBrowser browser;
+        private Action(string value) { Value = value; }
 
-        public BoundObject(ChromiumWebBrowser br) { browser = br; }
+        public string Value { get; set; }
 
-        
-        public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
-        {
-            if (e.Frame.IsMain)
-            {
-                 browser.EvaluateScriptAsync(@"window.onmousemove = function(e) { bound.onBrowserEvent(); }");
-                //browser.EvaluateScriptAsync(@"window.onclick = function(e) { bound.onBrowserEvent(); }");
-                //browser.EvaluateScriptAsync(@"window.onscroll = function(e) { bound.onBrowserEvent(); }");
-                if (e.Frame.Url.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
-                {
-                    var submit_script = @"
-                        var set_expr = document.querySelectorAll(`input[value='Update Expiration Date']`)[0];
-                        var expr_date = setInterval(function(){
-                            if(set_expr != undefined){
-                                console.log('EXPR binded');
-                                set_expr.addEventListener('click', 
-                                function(e)
-                                {
-                                    bound.onClicked('set_expr');
-                                },false)
-                                clearInterval(expr_date);
-                            }
-                        }, 1000);
-                    ";
-                        browser.EvaluateScriptAsync(@submit_script);
-                }
-                else
-                {
-                    var submit_script = @"
-                    var violation_interval = setInterval(function(){
-                        if(document.getElementById('violation-submit') != undefined){
-                            console.log('VR binded');
-                            document.getElementById('violation-submit').addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                            clearInterval(violation_interval);
-                        }
-                    }, 1000);
- 
-                    var id_missing_interval = setInterval(function(){
-                        var id_missing = document.querySelectorAll(`input[value='Report Identification Missing Problem']`)[0];
-                        if(id_missing != undefined){
-                            console.log('IM binded');
-                            id_missing.addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked('id-missing');
-                            },false)
-                            clearInterval(id_missing_interval);
-                        }
-                    }, 1000);
-
-                    var spammer_interval = setInterval(function(){
-                        if($('#spammer-submit')[0] != undefined){
-                            console.log('SR binded');
-                            $('#spammer-submit')[0].addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                            clearInterval(spammer_interval);
-                        }
-                    }, 1000)
-
-                    var request_review_interval = setInterval(function(){
-                        if($('#request-review-submit')[0] != undefined){
-                            console.log('RR binded');
-                            $('#request-review-submit')[0].addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                            clearInterval(request_review_interval);
-                        }
-                    }, 1000);
-
-                    var bs_agree = setInterval(function(){
-                        if($('#agree_button')[0] != undefined){
-                            console.log('BSA binded');
-                            $('#agree_button')[0].addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                            clearInterval(bs_agree);
-                        }
-                    }, 1000);
-
-                    var bs_disagree = setInterval(function(){
-                        if($('#disagree_button')[0] != undefined){
-                            console.log('BSD binded');
-                            $('#disagree_button')[0].addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                            clearInterval(bs_disagree);
-                        }
-                    }, 1000);
-
-                    var request_review_reply = setInterval(function(){
-                        if($('#reply_button')[0] != undefined){
-                            console.log('RRR binded');
-                            $('#reply_button')[0].addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                            clearInterval(request_review_reply);
-                        }
-                    }, 1000);
-
-                    var change_gender = setInterval(function(){
-                        var chg = document.querySelectorAll(`input[value='Change Gender']`)[0]; 
-                        if (chg != undefined){
-                            console.log('CG binded');
-                            chg.addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked('change_gender');
-                            },false)
-                            clearInterval(change_gender);
-                        }
-                    }, 1000);
-
-                    $('#approve_button')[0].addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                    
-                    var bounce = $(`body:contains('locked to another bouncer')`).length;
-                    if(bounce > 0){
-                        bound.saveAsBounce();
-                    }
-                        ";
-                    browser.EvaluateScriptAsync(@submit_script);
-                }
-            }
-        }
-
-        public void OnBrowserEvent(){
-            Globals._wentIdle = DateTime.MaxValue;
-            Globals._idleTicks = 0;
-
-        }
-        public void SaveAsBounce(){
-            LoggerServices.Update(new Logger { id = Globals.LastSuccessId, action = "BN" });
-        }
-        public void OnClicked(string id) {          
-            if (HtmlItemClicked != null)
-            {
-                HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });
-            }
-        }
-        public class HtmlItemClickedEventArgs : EventArgs {
-            public string Id { get; set; }
-        }
+        public static Action Approve { get { return new Action("approve_button"); } }
+        public static Action ChangeGender { get { return new Action("change_gender"); } }
+        public static Action IdMissing { get { return new Action("id-missing"); } }
+        public static Action SpammerSubmit { get { return new Action("spammer-submit"); } }
+        public static Action RequestReview { get { return new Action("request-review-submit"); } }
+        public static Action Violation { get { return new Action("violation-submit"); } }
+        public static Action Aggree { get { return new Action("agree_button"); } }
+        public static Action Disaggree { get { return new Action("disagree_button"); } }
+        public static Action SetExpiration { get { return new Action("set_expr"); } }
+        public static Action ChatReply { get { return new Action("reply_button"); } }
 
     }
 }

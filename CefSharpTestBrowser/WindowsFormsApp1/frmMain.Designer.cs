@@ -114,7 +114,7 @@
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Enrique";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.lblUser.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LblUser_MouseDown);
+            this.lblUser.MouseDown += new System.Windows.Forms.MouseEventHandler(this.LblUser_MouseDown_1);
             // 
             // btnFind
             // 
@@ -168,7 +168,6 @@
             this.pbImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImg.TabIndex = 6;
             this.pbImg.TabStop = false;
-            this.pbImg.Click += new System.EventHandler(this.PbImg_Click);
             // 
             // pnlBrowser
             // 

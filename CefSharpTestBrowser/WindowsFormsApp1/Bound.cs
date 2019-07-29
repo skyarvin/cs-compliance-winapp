@@ -150,7 +150,29 @@ namespace SkydevCSTool
                     if(bounce > 0){
                         bound.saveAsBounce();
                     }
-                        ";
+                       
+                    var zoomLevel = 1;
+                    window.addEventListener('wheel', function(e) {
+                    if (e.deltaY < 0) {
+                         if(event.ctrlKey && zoomLevel < 2){
+                                console.log('scrolling up');
+                                zoomLevel += 0.1;
+                                 document.body.style.zoom = zoomLevel;
+                         };        
+                    }
+                        
+                    if (e.deltaY > 0) {
+                       if(event.ctrlKey && zoomLevel > 0.5){
+                                console.log('scrolling down');
+                                zoomLevel -= 0.1;
+                                document.body.style.zoom = zoomLevel;
+                         }; 
+                             
+                    }
+                });
+
+
+";
                     browser.EvaluateScriptAsync(@submit_script);
                 }
             }

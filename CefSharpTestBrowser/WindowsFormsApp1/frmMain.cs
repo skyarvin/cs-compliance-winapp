@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -48,6 +49,8 @@ namespace WindowsFormsApp1
            Action.RequestReview.Value
         };
 
+        
+
         #region Init
         public void InitializeChromium()
         {
@@ -91,7 +94,10 @@ namespace WindowsFormsApp1
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
+
         }
+
+
         #endregion
 
         #region ActivityMonitor
@@ -152,17 +158,13 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             Globals.SaveToLogFile("Application START", (int)LogType.Activity);
-            Globals.activity.start_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
+            Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            Globals.activity.end_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
-            Globals.activity.agent_id = Globals.ComplianceAgent.id;
-            Globals.activity.Save();
             Cef.Shutdown();
-            Application.Exit();
+
         }
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
@@ -265,9 +267,17 @@ namespace WindowsFormsApp1
                 LastSuccessUrl = CurrentUrl;
         }
 
+
         #endregion
 
-
+        private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
+            Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Globals.activity.agent_id = Globals.ComplianceAgent.id;
+            Globals.activity.Save();
+            Application.Exit();
+        }
     }
 
     public class Action

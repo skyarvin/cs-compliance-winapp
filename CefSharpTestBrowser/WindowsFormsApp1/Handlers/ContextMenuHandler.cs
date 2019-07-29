@@ -32,6 +32,9 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26504, "Translate");
+
+        model.AddSeparator();
+        model.AddItem((CefMenuCommand)26505, "View User");
     }
 
     public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -68,6 +71,16 @@ public class MyCustomMenuHandler : IContextMenuHandler
             var surl = string.Concat(Globals.GOOGLE_TRANSLATE_URL, HttpUtility.UrlEncode(parameters.SelectionText));
             browserControl.EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
             return true;
+        }
+
+        if (commandId == (CefMenuCommand)26505)
+        {
+            if (!String.IsNullOrEmpty((parameters.SelectionText))){
+                browserControl.Load(String.Concat(Globals.CB_COMPLIANCE_URL, "/show/", parameters.SelectionText));
+                return true;
+            }
+         
+         
         }
 
         // Return false should ignore the selected option of the user !

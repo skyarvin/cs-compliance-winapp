@@ -21,7 +21,7 @@ namespace SkydevCSTool
         private void Button1_Click(object sender, EventArgs e)
         {
             this.Hide();
-            Globals.activity.start_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
+            Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
         }
     }
 }

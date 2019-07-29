@@ -25,5 +25,10 @@ namespace SkydevCSTool
             Globals._wentIdle = DateTime.MaxValue;
             Globals._idleTicks = 0;
         }
+
+        private void FrmMessage_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+        }
     }
 }

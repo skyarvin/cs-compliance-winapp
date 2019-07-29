@@ -1,4 +1,5 @@
-﻿using SkydevCSTool;
+﻿using CefSharp.WinForms;
+using SkydevCSTool;
 using SkydevCSTool.Models;
 using System;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace WindowsFormsApp1
     {
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
+        public static ChromiumWebBrowser chromePopup;
         public static string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
         public static string CB_COMPLIANCE_SET_ID_EXP_URL = "https://chaturbate.com/compliance/update_expiration_date_form";
         public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=";

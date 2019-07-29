@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Diagnostics;
 using System.Web;
 using WindowsFormsApp1;
+using SkydevCSTool;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -43,7 +44,9 @@ public class MyCustomMenuHandler : IContextMenuHandler
         if (commandId == (CefMenuCommand)26501)
         {
             if (parameters.MediaType == CefSharp.ContextMenuMediaType.Image) {
-                browserControl.EvaluateScriptAsync(string.Concat("window.open('",parameters.SourceUrl,"', '_blank');"));
+                frmPopup frmpop = new frmPopup(parameters.SourceUrl);
+                frmpop.Show();
+
             }
             return true;
         }
@@ -52,7 +55,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             if (parameters.MediaType == CefSharp.ContextMenuMediaType.None && !String.IsNullOrEmpty(parameters.LinkUrl))
             {
-                Process.Start("chrome.exe", parameters.LinkUrl);
+                Process.Start("chrome.exe", string.Concat("--app=", parameters.LinkUrl));
             }
             return true;
         }

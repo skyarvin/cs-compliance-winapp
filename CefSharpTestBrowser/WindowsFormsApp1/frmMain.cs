@@ -14,8 +14,8 @@ using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
 using SkydevCSTool;
 using SkydevCSTool.Handlers;
+using SkydevCSTool.Models;
 using WindowsFormsApp1.Models;
-using WindowsFormsApp1.Services;
 using Timer = System.Windows.Forms.Timer;
 
 namespace WindowsFormsApp1
@@ -75,7 +75,7 @@ namespace WindowsFormsApp1
 
             Application.Idle += new EventHandler(Application_OnIdle);
             _timer = new Timer();
-            _timer.Tick += new EventHandler(Timer_Exipred);
+            _timer.Tick += new EventHandler(Timer_Expired);
             _timer.Interval = 1000;
             _timer.Start();
 
@@ -95,20 +95,27 @@ namespace WindowsFormsApp1
         #endregion
 
         #region ActivityMonitor
-        private void Timer_Exipred(object sender, EventArgs e)
+        private void Timer_Expired(object sender, EventArgs e)
         {
             TimeSpan diff = DateTime.Now - Globals._wentIdle;
 
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME)
             {
-                LoggerServices.SaveToLogFile(String.Concat("User Inactivity detected : ", DateTime.Now, " Total time:", (DateTime.Now - Globals.StartTime).TotalSeconds)
-                   , (int)LogType.Activity);
+                this.SaveActivity();
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
             }
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
             Globals._wentIdle = DateTime.Now;
+        }
+
+
+        private void SaveActivity()
+        {
+            Globals.activity.end_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
+            Globals.activity.agent_id = Globals.ComplianceAgent.id;
+            Globals.activity.Save();
         }
 
         #endregion
@@ -126,7 +133,7 @@ namespace WindowsFormsApp1
                     chromeBrowser.ShowDevTools();
                     if (CurrentUrl != splitAddress[0])
                     {
-                        LoggerServices.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
+                        Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                         CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                     }
@@ -144,19 +151,22 @@ namespace WindowsFormsApp1
         #region Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
-            LoggerServices.SaveToLogFile("Application START", (int)LogType.Activity);
+            Globals.SaveToLogFile("Application START", (int)LogType.Activity);
+            Globals.activity.start_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            LoggerServices.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
+            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
+            Globals.activity.end_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
+            Globals.activity.agent_id = Globals.ComplianceAgent.id;
+            Globals.activity.Save();
             Cef.Shutdown();
             Application.Exit();
-
         }
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            LoggerServices.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
+            Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             chromeBrowser.Load(Globals.CB_COMPLIANCE_URL);
         }
 
@@ -214,7 +224,7 @@ namespace WindowsFormsApp1
 
         private void ProcessActionButtons(string element_id)
         {
-            LoggerServices.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
+            Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
             string violation = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
             string notes = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
             if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
@@ -234,18 +244,18 @@ namespace WindowsFormsApp1
                 agent_id = Globals.ComplianceAgent.id.ToString(),
                 action = Actions[element_id],
                 remarks = String.Concat(violation, notes),
-                duration = LoggerServices.GetDuration(StartTime),
+                duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
                 followers = followers
             };
 
             if (CurrentUrl == LastSuccessUrl)
             {
                 logData.id = Globals.LAST_SUCCESS_ID;
-                LoggerServices.Update(logData);
+                logData.Update();
             }
             else
             {
-                var result = LoggerServices.Save(logData);
+                var result = logData.Save();
                 Globals.LAST_SUCCESS_ID = result.id;
             }
 

@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
-using WindowsFormsApp1.Services;
 
 namespace SkydevCSTool
 {
@@ -161,11 +160,11 @@ namespace SkydevCSTool
         {
             Globals._wentIdle = DateTime.MaxValue;
             Globals._idleTicks = 0;
-
         }
         public void SaveAsBounce()
         {
-            LoggerServices.Update(new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" });
+            Logger log = new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" };
+            log.Update();
         }
         public void OnClicked(string id)
         {

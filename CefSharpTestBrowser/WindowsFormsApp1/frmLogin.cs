@@ -8,10 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Deployment;
-using WindowsFormsApp1.Services;
 using WindowsFormsApp1.Models;
 using System.Diagnostics;
 using System.Deployment.Application;
+using SkydevCSTool.Models;
 
 namespace WindowsFormsApp1
 {
@@ -55,7 +55,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show("Email required", "Error");
             else
             {
-                Globals.ComplianceAgent = LoggerServices.GetAgentId(txtEmail.Text);
+                Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
                 if (Globals.ComplianceAgent != null)
                 {
                     bExitApp = false;
@@ -76,6 +76,5 @@ namespace WindowsFormsApp1
                 Application.Exit();
             }
         }
-
     }
 }

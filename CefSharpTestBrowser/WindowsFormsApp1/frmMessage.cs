@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WindowsFormsApp1;
 
 namespace SkydevCSTool
 {
@@ -20,6 +21,7 @@ namespace SkydevCSTool
         private void Button1_Click(object sender, EventArgs e)
         {
             this.Hide();
+            Globals.activity.start_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
         }
     }
 }

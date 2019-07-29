@@ -25,7 +25,7 @@ namespace WindowsFormsApp1
         public static string baseUrl = "https://cscb.skydev.solutions/api";
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;
-        public static int FIVE_MINUTES_IDLE_TIME = 300000;
+        public static int FIVE_MINUTES_IDLE_TIME = 300;//Seconds
         public static DateTime _wentIdle;
         public static int _idleTicks;
 

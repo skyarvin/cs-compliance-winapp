@@ -110,6 +110,7 @@ namespace WindowsFormsApp1
                 this.SaveActivity();
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
             }
+            Console.WriteLine(string.Concat("LAPSE: ", Globals._idleTicks));
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {

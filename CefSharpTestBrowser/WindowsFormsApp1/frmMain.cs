@@ -105,7 +105,7 @@ namespace WindowsFormsApp1
         {
             TimeSpan diff = DateTime.Now - Globals._wentIdle;
 
-            if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME)
+            if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 this.SaveActivity();
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
@@ -120,9 +120,10 @@ namespace WindowsFormsApp1
 
         private void SaveActivity()
         {
-            Globals.activity.end_time = DateTime.Now.ToString("yyyy/MM/dd hh:mm tt");
+            Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             Globals.activity.agent_id = Globals.ComplianceAgent.id;
             Globals.activity.Save();
+            Globals.activity.start_time = "";
         }
 
         #endregion
@@ -274,9 +275,7 @@ namespace WindowsFormsApp1
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            Globals.activity.agent_id = Globals.ComplianceAgent.id;
-            Globals.activity.Save();
+            this.SaveActivity();
             Application.Exit();
         }
     }

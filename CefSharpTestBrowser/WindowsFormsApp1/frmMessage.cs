@@ -22,6 +22,8 @@ namespace SkydevCSTool
         {
             this.Hide();
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Globals._wentIdle = DateTime.MaxValue;
+            Globals._idleTicks = 0;
         }
     }
 }

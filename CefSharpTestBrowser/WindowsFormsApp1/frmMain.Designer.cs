@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
-            this.lblUrl = new System.Windows.Forms.Label();
+            this.cmbURL = new System.Windows.Forms.ComboBox();
             this.pnlSplitter = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
@@ -52,7 +52,7 @@
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlHeader.Controls.Add(this.lblUrl);
+            this.pnlHeader.Controls.Add(this.cmbURL);
             this.pnlHeader.Controls.Add(this.pnlSplitter);
             this.pnlHeader.Controls.Add(this.panel1);
             this.pnlHeader.Controls.Add(this.lblUser);
@@ -62,27 +62,32 @@
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1017, 42);
+            this.pnlHeader.Size = new System.Drawing.Size(1034, 40);
             this.pnlHeader.TabIndex = 2;
             // 
-            // lblUrl
+            // cmbURL
             // 
-            this.lblUrl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblUrl.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUrl.ForeColor = System.Drawing.Color.White;
-            this.lblUrl.Location = new System.Drawing.Point(397, 0);
-            this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(337, 42);
-            this.lblUrl.TabIndex = 9;
-            this.lblUrl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(310, 7);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(435, 28);
+            this.cmbURL.TabIndex = 9;
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click);
+            this.cmbURL.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CmbURL_KeyDown);
             // 
             // pnlSplitter
             // 
             this.pnlSplitter.BackColor = System.Drawing.Color.White;
             this.pnlSplitter.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSplitter.Location = new System.Drawing.Point(396, 0);
+            this.pnlSplitter.Location = new System.Drawing.Point(306, 0);
             this.pnlSplitter.Name = "pnlSplitter";
-            this.pnlSplitter.Size = new System.Drawing.Size(1, 42);
+            this.pnlSplitter.Size = new System.Drawing.Size(1, 40);
             this.pnlSplitter.TabIndex = 8;
             // 
             // panel1
@@ -91,7 +96,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Left;
             this.panel1.Location = new System.Drawing.Point(98, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(298, 42);
+            this.panel1.Size = new System.Drawing.Size(208, 40);
             this.panel1.TabIndex = 7;
             // 
             // txtSearch
@@ -99,7 +104,7 @@
             this.txtSearch.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSearch.Location = new System.Drawing.Point(3, 8);
             this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(291, 27);
+            this.txtSearch.Size = new System.Drawing.Size(199, 27);
             this.txtSearch.TabIndex = 0;
             this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtSearch_KeyDown);
             // 
@@ -108,9 +113,9 @@
             this.lblUser.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(734, 0);
+            this.lblUser.Location = new System.Drawing.Point(751, 0);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(238, 42);
+            this.lblUser.Size = new System.Drawing.Size(238, 40);
             this.lblUser.TabIndex = 0;
             this.lblUser.Text = "Enrique";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -128,7 +133,7 @@
             this.btnFind.ImageList = this.imageList1;
             this.btnFind.Location = new System.Drawing.Point(49, 0);
             this.btnFind.Name = "btnFind";
-            this.btnFind.Size = new System.Drawing.Size(49, 42);
+            this.btnFind.Size = new System.Drawing.Size(49, 40);
             this.btnFind.TabIndex = 2;
             this.btnFind.UseVisualStyleBackColor = true;
             this.btnFind.Click += new System.EventHandler(this.BtnFind_Click);
@@ -151,7 +156,7 @@
             this.btnRefresh.ImageList = this.imageList1;
             this.btnRefresh.Location = new System.Drawing.Point(0, 0);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(49, 42);
+            this.btnRefresh.Size = new System.Drawing.Size(49, 40);
             this.btnRefresh.TabIndex = 0;
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
@@ -162,9 +167,9 @@
             this.pbImg.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pbImg.ErrorImage")));
             this.pbImg.Image = ((System.Drawing.Image)(resources.GetObject("pbImg.Image")));
             this.pbImg.InitialImage = ((System.Drawing.Image)(resources.GetObject("pbImg.InitialImage")));
-            this.pbImg.Location = new System.Drawing.Point(972, 0);
+            this.pbImg.Location = new System.Drawing.Point(989, 0);
             this.pbImg.Name = "pbImg";
-            this.pbImg.Size = new System.Drawing.Size(45, 42);
+            this.pbImg.Size = new System.Drawing.Size(45, 40);
             this.pbImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbImg.TabIndex = 6;
             this.pbImg.TabStop = false;
@@ -172,9 +177,9 @@
             // pnlBrowser
             // 
             this.pnlBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlBrowser.Location = new System.Drawing.Point(0, 42);
+            this.pnlBrowser.Location = new System.Drawing.Point(0, 40);
             this.pnlBrowser.Name = "pnlBrowser";
-            this.pnlBrowser.Size = new System.Drawing.Size(1017, 475);
+            this.pnlBrowser.Size = new System.Drawing.Size(1034, 477);
             this.pnlBrowser.TabIndex = 2;
             // 
             // contextMenuStrip1
@@ -195,7 +200,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1017, 517);
+            this.ClientSize = new System.Drawing.Size(1034, 517);
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.pnlHeader);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -225,9 +230,9 @@
         private System.Windows.Forms.PictureBox pbImg;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
-        private System.Windows.Forms.Label lblUrl;
         private System.Windows.Forms.Panel pnlSplitter;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ComboBox cmbURL;
     }
 }
 

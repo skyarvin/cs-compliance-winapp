@@ -134,7 +134,7 @@ namespace WindowsFormsApp1
             this.InvokeOnUiThreadIfRequired(() =>
             {
                 string sCurrAddress = e.Address;
-                lblUrl.Text = sCurrAddress;
+                cmbURL.Text = sCurrAddress;
                 if ((sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/photoset"))) &&
                     !String.IsNullOrEmpty(sCurrAddress))
                 {
@@ -142,9 +142,11 @@ namespace WindowsFormsApp1
                     chromeBrowser.ShowDevTools();
                     if (CurrentUrl != splitAddress[0])
                     {
+                        Globals.AddToHistory(splitAddress[0]);
                         Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                         CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
+                        Globals.SKYPE_COMPLIANCE = false;
                     }
                 }
             });
@@ -254,7 +256,8 @@ namespace WindowsFormsApp1
                 action = Actions[element_id],
                 remarks = String.Concat(violation, notes),
                 duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
-                followers = followers
+                followers = followers,
+                sc = Globals.SKYPE_COMPLIANCE
             };
 
             if (CurrentUrl == LastSuccessUrl)
@@ -296,6 +299,25 @@ namespace WindowsFormsApp1
             public static Action SetExpiration { get { return new Action("set_expr"); } }
             public static Action ChatReply { get { return new Action("reply_button"); } }
 
+        }
+
+        private void CmbURL_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
+        }
+
+        private void CmbURL_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            chromeBrowser.Load(cmbURL.SelectedItem.ToString());
+        }
+
+        private void CmbURL_Click(object sender, EventArgs e)
+        {
+            cmbURL.Items.Clear();
+            foreach (var item in Globals.UrlHistory)
+            {
+                cmbURL.Items.Add(item);
+            }
         }
     }
 }

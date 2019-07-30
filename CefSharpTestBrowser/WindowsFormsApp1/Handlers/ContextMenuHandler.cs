@@ -36,6 +36,17 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26505, "View User");
+
+        if(Globals.SKYPE_COMPLIANCE)
+        {
+            model.AddSeparator();
+            model.AddItem((CefMenuCommand)26506, "Unmark Action as SC");
+        }
+        else
+        {
+            model.AddSeparator();
+            model.AddItem((CefMenuCommand)26506, "Mark Action as SC");
+        }
     }
 
     public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -71,7 +82,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)26504)
         {
-            var surl = string.Concat(Globals.GOOGLE_TRANSLATE_URL, HttpUtility.UrlEncode(parameters.SelectionText));
+            var surl = string.Concat(Globals.GOOGLE_TRANSLATE_URL, Uri.EscapeDataString(parameters.SelectionText));
             browserControl.EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
             return true;
         }
@@ -82,8 +93,14 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 browserControl.Load(String.Concat(Globals.CB_COMPLIANCE_URL, "/show/", parameters.SelectionText));
                 return true;
             }
-         
-         
+        }
+
+        if (commandId == (CefMenuCommand)26506)
+        {
+            if (Globals.SKYPE_COMPLIANCE)
+                Globals.SKYPE_COMPLIANCE = false;
+            else
+                Globals.SKYPE_COMPLIANCE = true;
         }
 
         // Return false should ignore the selected option of the user !

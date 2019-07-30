@@ -139,12 +139,14 @@ namespace SkydevCSTool
                             clearInterval(change_gender);
                         }
                     }, 1000);
-
-                    $('#approve_button')[0].addEventListener('click', 
+                    
+                    if($('#approve_button')[0] != undefined){
+                        $('#approve_button')[0].addEventListener('click', 
                             function(e)
                             {
                                 bound.onClicked(e.target.id);
                             },false)
+                    }
                     
                     var bounce = $(`body:contains('locked to another bouncer')`).length;
                     if(bounce > 0){

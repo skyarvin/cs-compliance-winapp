@@ -21,13 +21,15 @@ namespace WindowsFormsApp1
         public static ChromiumWebBrowser chromePopup;
         public static string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
         public static string CB_COMPLIANCE_SET_ID_EXP_URL = "https://chaturbate.com/compliance/update_expiration_date_form";
-        public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com/#view=home&op=translate&sl=auto&tl=en&text=";
+        public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
         public static string baseUrl = "https://cscb.skydev.solutions/api";
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;
-        public static int FIVE_MINUTES_IDLE_TIME = 300;//Seconds
+        public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds
         public static DateTime _wentIdle;
         public static int _idleTicks;
+        public static bool SKYPE_COMPLIANCE;
+        public static List<string> UrlHistory = new List<string>();
 
         private static frmMessage frm = new frmMessage();
         public static void ShowMessage(Form parent)
@@ -50,6 +52,16 @@ namespace WindowsFormsApp1
             {
                 return "";
             }
+        }
+
+        public static void AddToHistory(string url)
+        {
+            if (UrlHistory.Contains(url))
+                return;
+            if (UrlHistory.Count() > 10)
+                UrlHistory.RemoveAt(0);
+
+            UrlHistory.Add(url);
         }
 
         public static void SaveToLogFile(string logText, int logtype)

@@ -12,6 +12,7 @@ using WindowsFormsApp1.Models;
 using System.Diagnostics;
 using System.Deployment.Application;
 using SkydevCSTool.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace WindowsFormsApp1
 {
@@ -21,22 +22,23 @@ namespace WindowsFormsApp1
         public frmLogin()
         {
             InitializeComponent();
-        }
-
-        private void BtnLogin_Click(object sender, EventArgs e)
-        {
-            Login();
-        }
-
-        private void FrmLogin_Load(object sender, EventArgs e)
-        {
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
             {
                 System.Deployment.Application.ApplicationDeployment cd = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
                 lblVersion.Text = string.Concat("v.", cd.CurrentVersion.ToString());
             }
         }
-
+        private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (bExitApp)
+            {
+                Application.Exit();
+            }
+        }
+        private void BtnLogin_Click(object sender, EventArgs e)
+        {
+            Login();
+        }
         private void BtnExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
@@ -49,10 +51,10 @@ namespace WindowsFormsApp1
                 Login();
             }
         }
-        private void Login() {
+            private void Login() {
             //TODO ADD EMAIL VALIDATION
-            if (string.IsNullOrEmpty(txtEmail.Text.Trim()))
-                MessageBox.Show("Email required", "Error");
+            if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || (!(new EmailAddressAttribute().IsValid(txtEmail.Text))))
+                MessageBox.Show("Invalid Email", "Error");
             else
             {
                 Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
@@ -65,16 +67,11 @@ namespace WindowsFormsApp1
                 }
                 else
                 {
-                    MessageBox.Show("Invalid Email", "Error");
+                    MessageBox.Show("We cannot find an account with that email address.", "Error");
                 }
             }
         }
 
-        private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (bExitApp) {
-                Application.Exit();
-            }
-        }
+      
     }
 }

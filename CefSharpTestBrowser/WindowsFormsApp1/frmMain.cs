@@ -49,7 +49,7 @@ namespace WindowsFormsApp1
            Action.RequestReview.Value
         };
 
-        
+
 
         #region Init
         public void InitializeChromium()
@@ -131,7 +131,8 @@ namespace WindowsFormsApp1
         #region ChromiumBrowserEvents
         private void Browser_AddressChanged(object sender, AddressChangedEventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => {
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
                 string sCurrAddress = e.Address;
                 lblUrl.Text = sCurrAddress;
                 if ((sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/photoset"))) &&
@@ -166,8 +167,14 @@ namespace WindowsFormsApp1
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             Cef.Shutdown();
-
         }
+        private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
+            this.SaveActivity();
+            Application.Exit();
+        }
+
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
@@ -196,17 +203,6 @@ namespace WindowsFormsApp1
 
             Find(true);
         }
-
-        private void BtnZoomIn_Click(object sender, EventArgs e)
-        {
-            //double zoomLevel = chromeBrowser.GetZoomLevelAsync();
-            //chromeBrowser.SetZoomLevel(zoomLevel + 1);
-        }
-
-        private void BtnZoomOut_Click(object sender, EventArgs e)
-        {
-
-        }
         private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -220,7 +216,16 @@ namespace WindowsFormsApp1
             Point loc = control.PointToScreen(Point.Empty);
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.F10))
+            {
 
+                chromeBrowser.ShowDevTools();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
 
         #endregion
 
@@ -272,30 +277,25 @@ namespace WindowsFormsApp1
 
         #endregion
 
-        private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
+
+
+        public class Action
         {
-            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            this.SaveActivity();
-            Application.Exit();
+            private Action(string value) { Value = value; }
+
+            public string Value { get; set; }
+
+            public static Action Approve { get { return new Action("approve_button"); } }
+            public static Action ChangeGender { get { return new Action("change_gender"); } }
+            public static Action IdMissing { get { return new Action("id-missing"); } }
+            public static Action SpammerSubmit { get { return new Action("spammer-submit"); } }
+            public static Action RequestReview { get { return new Action("request-review-submit"); } }
+            public static Action Violation { get { return new Action("violation-submit"); } }
+            public static Action Aggree { get { return new Action("agree_button"); } }
+            public static Action Disaggree { get { return new Action("disagree_button"); } }
+            public static Action SetExpiration { get { return new Action("set_expr"); } }
+            public static Action ChatReply { get { return new Action("reply_button"); } }
+
         }
-    }
-
-    public class Action
-    {
-        private Action(string value) { Value = value; }
-
-        public string Value { get; set; }
-
-        public static Action Approve { get { return new Action("approve_button"); } }
-        public static Action ChangeGender { get { return new Action("change_gender"); } }
-        public static Action IdMissing { get { return new Action("id-missing"); } }
-        public static Action SpammerSubmit { get { return new Action("spammer-submit"); } }
-        public static Action RequestReview { get { return new Action("request-review-submit"); } }
-        public static Action Violation { get { return new Action("violation-submit"); } }
-        public static Action Aggree { get { return new Action("agree_button"); } }
-        public static Action Disaggree { get { return new Action("disagree_button"); } }
-        public static Action SetExpiration { get { return new Action("set_expr"); } }
-        public static Action ChatReply { get { return new Action("reply_button"); } }
-
     }
 }

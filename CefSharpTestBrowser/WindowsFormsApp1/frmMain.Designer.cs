@@ -31,7 +31,8 @@
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
-            this.cmbURL = new System.Windows.Forms.ComboBox();
+            this.pnlSearch = new System.Windows.Forms.Panel();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlSplitter = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
@@ -44,6 +45,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlHeader.SuspendLayout();
+            this.pnlSearch.SuspendLayout();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
@@ -52,7 +54,7 @@
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlHeader.Controls.Add(this.cmbURL);
+            this.pnlHeader.Controls.Add(this.pnlSearch);
             this.pnlHeader.Controls.Add(this.pnlSplitter);
             this.pnlHeader.Controls.Add(this.panel1);
             this.pnlHeader.Controls.Add(this.lblUser);
@@ -65,21 +67,33 @@
             this.pnlHeader.Size = new System.Drawing.Size(1034, 40);
             this.pnlHeader.TabIndex = 2;
             // 
+            // pnlSearch
+            // 
+            this.pnlSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.pnlSearch.Controls.Add(this.cmbURL);
+            this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlSearch.Location = new System.Drawing.Point(307, 0);
+            this.pnlSearch.Name = "pnlSearch";
+            this.pnlSearch.Size = new System.Drawing.Size(444, 40);
+            this.pnlSearch.TabIndex = 9;
+            // 
             // cmbURL
             // 
             this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbURL.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
             this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(310, 7);
+            this.cmbURL.Location = new System.Drawing.Point(3, 8);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(435, 28);
-            this.cmbURL.TabIndex = 9;
-            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged);
-            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click);
-            this.cmbURL.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CmbURL_KeyDown);
+            this.cmbURL.Size = new System.Drawing.Size(438, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CmbURL_KeyDown_1);
             // 
             // pnlSplitter
             // 
@@ -89,6 +103,7 @@
             this.pnlSplitter.Name = "pnlSplitter";
             this.pnlSplitter.Size = new System.Drawing.Size(1, 40);
             this.pnlSplitter.TabIndex = 8;
+            this.pnlSplitter.Visible = false;
             // 
             // panel1
             // 
@@ -211,6 +226,7 @@
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMain_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlHeader.ResumeLayout(false);
+            this.pnlSearch.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
@@ -232,7 +248,8 @@
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;
         private System.Windows.Forms.Panel pnlSplitter;
         private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.ComboBox cmbURL;
+        private System.Windows.Forms.Panel pnlSearch;
+        private SkydevCSTool.CustomComboBox cmbURL;
     }
 }
 

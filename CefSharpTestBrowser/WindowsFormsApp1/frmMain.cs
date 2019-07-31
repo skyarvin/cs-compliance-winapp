@@ -218,15 +218,23 @@ namespace WindowsFormsApp1
             Point loc = control.PointToScreen(Point.Empty);
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        private void CmbURL_Click_1(object sender, EventArgs e)
         {
-            if (keyData == (Keys.F10))
+            cmbURL.Items.Clear();
+            foreach (var item in Globals.UrlHistory)
             {
-
-                chromeBrowser.ShowDevTools();
-                return true;
+                cmbURL.Items.Add(item);
             }
-            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void CmbURL_KeyDown_1(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
+        }
+
+        private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            chromeBrowser.Load(cmbURL.SelectedItem.ToString());
         }
 
         #endregion
@@ -280,6 +288,27 @@ namespace WindowsFormsApp1
 
         #endregion
 
+        #region Override Methods
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams handleParam = base.CreateParams;
+                handleParam.ExStyle |= 0x02000000;
+                return handleParam;
+            }
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.F10))
+            {
+
+                chromeBrowser.ShowDevTools();
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+        #endregion
 
 
         public class Action
@@ -299,25 +328,6 @@ namespace WindowsFormsApp1
             public static Action SetExpiration { get { return new Action("set_expr"); } }
             public static Action ChatReply { get { return new Action("reply_button"); } }
 
-        }
-
-        private void CmbURL_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.SuppressKeyPress = true;
-        }
-
-        private void CmbURL_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            chromeBrowser.Load(cmbURL.SelectedItem.ToString());
-        }
-
-        private void CmbURL_Click(object sender, EventArgs e)
-        {
-            cmbURL.Items.Clear();
-            foreach (var item in Globals.UrlHistory)
-            {
-                cmbURL.Items.Add(item);
-            }
         }
     }
 }

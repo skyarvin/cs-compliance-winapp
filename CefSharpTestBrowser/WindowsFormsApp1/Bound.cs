@@ -63,6 +63,7 @@ namespace SkydevCSTool
                             document.getElementById('approve_button').addEventListener('click', 
                             function(e)
                             {
+                                console.log('AP clicked');
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(approve_interval);
@@ -75,6 +76,7 @@ namespace SkydevCSTool
                             document.getElementById('violation-submit').addEventListener('click', 
                             function(e)
                             {
+                                console.log('VR clicked');
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(violation_interval);
@@ -88,6 +90,7 @@ namespace SkydevCSTool
                             id_missing.addEventListener('click', 
                             function(e)
                             {
+                                console.log('IM clicked');
                                 bound.onClicked('id-missing');
                             },false)
                             clearInterval(id_missing_interval);
@@ -100,6 +103,7 @@ namespace SkydevCSTool
                             document.getElementById('spammer-submit').addEventListener('click', 
                             function(e)
                             {
+                                console.log('SR clicked');
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(spammer_interval);
@@ -112,6 +116,7 @@ namespace SkydevCSTool
                             document.getElementById('request-review-submit').addEventListener('click', 
                             function(e)
                             {
+                                console.log('RR clicked');
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(request_review_interval);
@@ -124,6 +129,7 @@ namespace SkydevCSTool
                             document.getElementById('agree_button').addEventListener('click', 
                             function(e)
                             {
+                                console.log('BSA clicked');
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(bs_agree);
@@ -136,6 +142,7 @@ namespace SkydevCSTool
                             document.getElementById('agree_button').addEventListener('click', 
                             function(e)
                             {
+                                console.log('BSD clicked');
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(bs_disagree);
@@ -148,6 +155,7 @@ namespace SkydevCSTool
                             document.getElementById('reply_button').addEventListener('click', 
                             function(e)
                             {
+                                console.log('RRR clicked');
                                 bound.onClicked(e.target.id);
                             },false)
                             clearInterval(request_review_reply);
@@ -161,6 +169,7 @@ namespace SkydevCSTool
                             chg.addEventListener('click', 
                             function(e)
                             {
+                                console.log('CG clicked');
                                 bound.onClicked('change_gender');
                             },false)
                             clearInterval(change_gender);
@@ -210,6 +219,7 @@ namespace SkydevCSTool
         }
         public void OnClicked(string id)
         {
+            Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
             if (HtmlItemClicked != null)
             {
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });

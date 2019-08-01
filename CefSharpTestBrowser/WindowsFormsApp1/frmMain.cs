@@ -241,7 +241,7 @@ namespace WindowsFormsApp1
 
         private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(cmbURL.SelectedItem.ToString())){
+            if(cmbURL.SelectedItem != null){
                 chromeBrowser.Load(cmbURL.SelectedItem.ToString());
             } 
         }

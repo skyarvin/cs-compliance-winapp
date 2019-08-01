@@ -17,7 +17,20 @@ namespace SkydevCSTool
         public event ItemClickedEventHandler HtmlItemClicked;
         private ChromiumWebBrowser browser;
         public BoundObject(ChromiumWebBrowser br) { browser = br; }
+
         public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
+        {
+            if (e.Frame.IsMain)
+            {
+                browser.EvaluateScriptAsync(@"
+                    var bounce = $(`body:contains('locked to another bouncer')`).length;
+                    if(bounce > 0){
+                        bound.saveAsBounce();
+                    }
+                ");
+            }
+        }
+        public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
             if (e.Frame.IsMain)
             {
@@ -28,7 +41,7 @@ namespace SkydevCSTool
                         var set_expr = document.querySelectorAll(`input[value='Update Expiration Date']`)[0];
                         var expr_date = setInterval(function(){
                             if(set_expr != undefined){
-                                console.log('EXPR binded');
+                                console.log('EXPR binded', window.location.href);
                                 set_expr.addEventListener('click', 
                                 function(e)
                                 {
@@ -43,9 +56,22 @@ namespace SkydevCSTool
                 else
                 {
                     var submit_script = @"
+                   
+                    var approve_interval = setInterval(function(){
+                        if(document.getElementById('approve_button') != undefined){
+                            console.log('AP binded', window.location.href);
+                            document.getElementById('approve_button').addEventListener('click', 
+                            function(e)
+                            {
+                                bound.onClicked(e.target.id);
+                            },false)
+                            clearInterval(approve_interval);
+                        }
+                    }, 1000);
+                    
                     var violation_interval = setInterval(function(){
                         if(document.getElementById('violation-submit') != undefined){
-                            console.log('VR binded');
+                            console.log('VR binded', window.location.href);
                             document.getElementById('violation-submit').addEventListener('click', 
                             function(e)
                             {
@@ -58,7 +84,7 @@ namespace SkydevCSTool
                     var id_missing_interval = setInterval(function(){
                         var id_missing = document.querySelectorAll(`input[value='Report Identification Missing Problem']`)[0];
                         if(id_missing != undefined){
-                            console.log('IM binded');
+                            console.log('IM binded', window.location.href);
                             id_missing.addEventListener('click', 
                             function(e)
                             {
@@ -69,9 +95,9 @@ namespace SkydevCSTool
                     }, 1000);
 
                     var spammer_interval = setInterval(function(){
-                        if($('#spammer-submit')[0] != undefined){
-                            console.log('SR binded');
-                            $('#spammer-submit')[0].addEventListener('click', 
+                        if(document.getElementById('spammer-submit') != undefined){
+                            console.log('SR binded', window.location.href);
+                            document.getElementById('spammer-submit').addEventListener('click', 
                             function(e)
                             {
                                 bound.onClicked(e.target.id);
@@ -81,9 +107,9 @@ namespace SkydevCSTool
                     }, 1000)
 
                     var request_review_interval = setInterval(function(){
-                        if($('#request-review-submit')[0] != undefined){
-                            console.log('RR binded');
-                            $('#request-review-submit')[0].addEventListener('click', 
+                        if(document.getElementById('request-review-submit') != undefined){
+                            console.log('RR binded', window.location.href);
+                            document.getElementById('request-review-submit').addEventListener('click', 
                             function(e)
                             {
                                 bound.onClicked(e.target.id);
@@ -93,9 +119,9 @@ namespace SkydevCSTool
                     }, 1000);
 
                     var bs_agree = setInterval(function(){
-                        if($('#agree_button')[0] != undefined){
-                            console.log('BSA binded');
-                            $('#agree_button')[0].addEventListener('click', 
+                        if(document.getElementById('agree_button') != undefined){
+                            console.log('BSA binded', window.location.href);
+                            document.getElementById('agree_button').addEventListener('click', 
                             function(e)
                             {
                                 bound.onClicked(e.target.id);
@@ -105,9 +131,9 @@ namespace SkydevCSTool
                     }, 1000);
 
                     var bs_disagree = setInterval(function(){
-                        if($('#disagree_button')[0] != undefined){
-                            console.log('BSD binded');
-                            $('#disagree_button')[0].addEventListener('click', 
+                        if(document.getElementById('disagree_button') != undefined){
+                            console.log('BSD binded', window.location.href);
+                            document.getElementById('agree_button').addEventListener('click', 
                             function(e)
                             {
                                 bound.onClicked(e.target.id);
@@ -117,9 +143,9 @@ namespace SkydevCSTool
                     }, 1000);
 
                     var request_review_reply = setInterval(function(){
-                        if($('#reply_button')[0] != undefined){
-                            console.log('RRR binded');
-                            $('#reply_button')[0].addEventListener('click', 
+                        if(document.getElementById('reply_button') != undefined){
+                            console.log('RRR binded', window.location.href);
+                            document.getElementById('reply_button').addEventListener('click', 
                             function(e)
                             {
                                 bound.onClicked(e.target.id);
@@ -131,7 +157,7 @@ namespace SkydevCSTool
                     var change_gender = setInterval(function(){
                         var chg = document.querySelectorAll(`input[value='Change Gender']`)[0]; 
                         if (chg != undefined){
-                            console.log('CG binded');
+                            console.log('CG binded', window.location.href);
                             chg.addEventListener('click', 
                             function(e)
                             {
@@ -141,18 +167,9 @@ namespace SkydevCSTool
                         }
                     }, 1000);
                     
-                    if($('#approve_button')[0] != undefined){
-                        $('#approve_button')[0].addEventListener('click', 
-                            function(e)
-                            {
-                                bound.onClicked(e.target.id);
-                            },false)
-                    }
                     
-                    var bounce = $(`body:contains('locked to another bouncer')`).length;
-                    if(bounce > 0){
-                        bound.saveAsBounce();
-                    }
+                    
+                    
                        
                     var zoomLevel = 1;
                     window.addEventListener('wheel', function(e) {

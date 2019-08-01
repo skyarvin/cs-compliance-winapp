@@ -92,6 +92,7 @@ namespace WindowsFormsApp1
             obj.HtmlItemClicked += Obj_HtmlItemClicked;
 
             chromeBrowser.RegisterJsObject("bound", obj);
+            chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();

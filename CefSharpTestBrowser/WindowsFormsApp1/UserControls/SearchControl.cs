@@ -35,7 +35,7 @@ namespace SkydevCSTool
             }
         }
 
-        public CustomComboBox()
+        public CustomComboBox()//
         {
             BorderColor = Color.FromArgb(31, 95, 167);
         }

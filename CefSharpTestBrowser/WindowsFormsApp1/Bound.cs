@@ -139,7 +139,7 @@ namespace SkydevCSTool
                     var bs_disagree = setInterval(function(){
                         if(document.getElementById('disagree_button') != undefined){
                             console.log('BSD binded', window.location.href);
-                            document.getElementById('agree_button').addEventListener('click', 
+                            document.getElementById('disagree_button').addEventListener('click', 
                             function(e)
                             {
                                 console.log('BSD clicked');

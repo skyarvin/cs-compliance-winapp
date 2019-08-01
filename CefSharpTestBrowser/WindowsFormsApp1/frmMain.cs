@@ -222,11 +222,16 @@ namespace WindowsFormsApp1
         }
         private void CmbURL_Click_1(object sender, EventArgs e)
         {
-            cmbURL.Items.Clear();
-            foreach (var item in Globals.UrlHistory)
+            try
             {
-                cmbURL.Items.Add(item);
+                cmbURL.Items.Clear();
+                foreach (var item in Globals.UrlHistory)
+                {
+                    cmbURL.Items.Add(item);
+                }
             }
+            catch { }
+            
         }
 
         private void CmbURL_KeyDown_1(object sender, KeyEventArgs e)
@@ -236,7 +241,9 @@ namespace WindowsFormsApp1
 
         private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            chromeBrowser.Load(cmbURL.SelectedItem.ToString());
+            if(!string.IsNullOrEmpty(cmbURL.SelectedItem.ToString())){
+                chromeBrowser.Load(cmbURL.SelectedItem.ToString());
+            } 
         }
 
         #endregion

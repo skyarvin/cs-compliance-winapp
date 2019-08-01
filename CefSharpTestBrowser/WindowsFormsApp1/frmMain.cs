@@ -14,6 +14,7 @@ using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
 using SkydevCSTool;
+using SkydevCSTool.Class;
 using SkydevCSTool.Handlers;
 using SkydevCSTool.Models;
 using WindowsFormsApp1.Models;
@@ -65,7 +66,7 @@ namespace WindowsFormsApp1
                 Cef.GetGlobalCookieManager().SetStoragePath(@path + "/cache/cookie/", true);
             }
 
-            chromeBrowser = new ChromiumWebBrowser(Globals.CB_COMPLIANCE_URL);
+            chromeBrowser = new ChromiumWebBrowser(Url.CB_COMPLIANCE_URL);
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
             lblUser.Text = Globals.ComplianceAgent.name;
@@ -135,7 +136,7 @@ namespace WindowsFormsApp1
             {
                 string sCurrAddress = e.Address;
                 cmbURL.Text = sCurrAddress;
-                if ((sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Globals.CB_COMPLIANCE_URL, "/photoset"))) &&
+                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) &&
                     !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
@@ -180,7 +181,7 @@ namespace WindowsFormsApp1
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
-            chromeBrowser.Load(Globals.CB_COMPLIANCE_URL);
+            chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
         }
 
         private void BtnFind_Click(object sender, EventArgs e)

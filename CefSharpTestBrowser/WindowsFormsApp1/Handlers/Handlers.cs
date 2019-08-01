@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using SkydevCSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,7 @@ namespace SkydevCSTool.Handlers
             IBrowserSettings browserSettings, ref bool noJavascriptAccess, out IWebBrowser newBrowser)
         {
             newBrowser = null;
-            if (targetUrl.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
+            if (targetUrl.Contains(Url.CB_COMPLIANCE_SET_ID_EXP_URL))
             {
                 browser.MainFrame.LoadUrl(targetUrl);
                 //Block popups

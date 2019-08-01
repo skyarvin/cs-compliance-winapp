@@ -34,7 +34,7 @@
     <ProductName>SkydevCsTool</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -130,6 +130,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bound.cs" />
+    <Compile Include="Class\Url.cs" />
     <Compile Include="frmPopup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,12 +164,6 @@
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserControls\SearchControl.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="UserControls\SearchControl.Designer.cs">
-      <DependentUpon>SearchControl.cs</DependentUpon>
-    </Compile>
     <None Include="Resources\skydev-logo.png" />
     <Content Include="swiftshader\libEGL.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

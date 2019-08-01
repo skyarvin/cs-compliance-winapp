@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using SkydevCSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace SkydevCSTool
             if (e.Frame.IsMain)
             {
                 browser.EvaluateScriptAsync(@"window.onmousemove = function(e) { bound.onBrowserEvent(); }");
-                if (e.Frame.Url.Contains(Globals.CB_COMPLIANCE_SET_ID_EXP_URL))
+                if (e.Frame.Url.Contains(Url.CB_COMPLIANCE_SET_ID_EXP_URL))
                 {
                     var submit_script = @"
                         var set_expr = document.querySelectorAll(`input[value='Update Expiration Date']`)[0];

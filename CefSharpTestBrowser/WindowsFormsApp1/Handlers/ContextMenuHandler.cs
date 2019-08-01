@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Web;
 using WindowsFormsApp1;
 using SkydevCSTool;
+using SkydevCSTool.Class;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -82,7 +83,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)26504)
         {
-            var surl = string.Concat(Globals.GOOGLE_TRANSLATE_URL, Uri.EscapeDataString(parameters.SelectionText));
+            var surl = string.Concat(Url.GOOGLE_TRANSLATE_URL, Uri.EscapeDataString(parameters.SelectionText));
             browserControl.EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
             return true;
         }
@@ -90,7 +91,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         if (commandId == (CefMenuCommand)26505)
         {
             if (!String.IsNullOrEmpty((parameters.SelectionText))){
-                browserControl.Load(String.Concat(Globals.CB_COMPLIANCE_URL, "/show/", parameters.SelectionText));
+                browserControl.Load(String.Concat(Url.CB_COMPLIANCE_URL, "/show/", parameters.SelectionText));
                 return true;
             }
         }

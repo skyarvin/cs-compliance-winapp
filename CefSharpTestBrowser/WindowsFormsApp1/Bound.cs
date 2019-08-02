@@ -38,8 +38,9 @@ namespace SkydevCSTool
                 if (e.Frame.Url.Contains(Url.CB_COMPLIANCE_SET_ID_EXP_URL))
                 {
                     var submit_script = @"
-                        var set_expr = document.querySelectorAll(`input[value='Update Expiration Date']`)[0];
+                       
                         var expr_date = setInterval(function(){
+                        var set_expr = document.querySelectorAll(`input[value='Update Expiration Date']`)[0];
                             if(set_expr != undefined){
                                 console.log('EXPR binded', window.location.href);
                                 set_expr.addEventListener('click', 

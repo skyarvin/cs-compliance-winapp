@@ -34,7 +34,7 @@
     <ProductName>SkydevCsTool</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
     <MinimumRequiredVersion>1.0.0.0</MinimumRequiredVersion>
-    <ApplicationRevision>18</ApplicationRevision>
+    <ApplicationRevision>19</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -158,7 +158,6 @@
     </Compile>
     <Compile Include="Globals.cs" />
     <Compile Include="Handlers\Handlers.cs" />
-    <Compile Include="Models\Action.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Logger.cs" />

@@ -1,18 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Deployment;
-using WindowsFormsApp1.Models;
-using System.Diagnostics;
-using System.Deployment.Application;
-using SkydevCSTool.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Windows.Forms;
+using WindowsFormsApp1.Models;
 
 namespace WindowsFormsApp1
 {
@@ -52,7 +41,6 @@ namespace WindowsFormsApp1
             }
         }
             private void Login() {
-            //TODO ADD EMAIL VALIDATION
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || (!(new EmailAddressAttribute().IsValid(txtEmail.Text))))
                 MessageBox.Show("Invalid Email", "Error");
             else
@@ -70,11 +58,6 @@ namespace WindowsFormsApp1
                     MessageBox.Show("We cannot find an account with that email address.", "Error");
                 }
             }
-        }
-
-        private void FrmLogin_Load(object sender, EventArgs e)
-        {
-
         }
     }
 }

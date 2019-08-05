@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Timers;
-using System.Windows.Forms;
-using CefSharp;
+﻿using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
 using SkydevCSTool;
 using SkydevCSTool.Class;
 using SkydevCSTool.Handlers;
-using SkydevCSTool.Models;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using Timer = System.Windows.Forms.Timer;
 
@@ -35,11 +28,11 @@ namespace WindowsFormsApp1
             {Action.IdMissing.Value, "IM" },
             {Action.SpammerSubmit.Value, "SR" },
             {Action.RequestReview.Value, "RR" },
-            {Action.Aggree.Value, "BA" },
-            {Action.Disaggree.Value, "BD" },
-            { Action.SetExpiration.Value, "SE" },
+            {Action.Agree.Value, "BA" },
+            {Action.Disagree.Value, "BD" },
+            {Action.SetExpiration.Value, "SE" },
             {Action.ChangeGender.Value, "CG" },
-            { Action.Approve.Value, "AP" },
+            {Action.Approve.Value, "AP" },
             {Action.ChatReply.Value, "AP" },
         };
         private List<string> Violations = new List<string>
@@ -105,8 +98,6 @@ namespace WindowsFormsApp1
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
         {
-            TimeSpan diff = DateTime.Now - Globals._wentIdle;
-
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 this.SaveActivity();
@@ -332,8 +323,8 @@ namespace WindowsFormsApp1
             public static Action SpammerSubmit { get { return new Action("spammer-submit"); } }
             public static Action RequestReview { get { return new Action("request-review-submit"); } }
             public static Action Violation { get { return new Action("violation-submit"); } }
-            public static Action Aggree { get { return new Action("agree_button"); } }
-            public static Action Disaggree { get { return new Action("disagree_button"); } }
+            public static Action Agree { get { return new Action("agree_button"); } }
+            public static Action Disagree { get { return new Action("disagree_button"); } }
             public static Action SetExpiration { get { return new Action("set_expr"); } }
             public static Action ChatReply { get { return new Action("reply_button"); } }
 

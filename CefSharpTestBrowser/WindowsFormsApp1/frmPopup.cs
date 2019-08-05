@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using CefSharp;
+﻿using CefSharp;
 using CefSharp.WinForms;
-using CefSharp.WinForms.Internals;
+using System;
+using System.Windows.Forms;
 using WindowsFormsApp1;
 
 namespace SkydevCSTool
@@ -49,16 +41,10 @@ namespace SkydevCSTool
                                     zoomLevel -= 0.1;
                                     document.body.style.zoom = zoomLevel;
                              }; 
-                             
                         }
                     });
                  ");
             }
-        }
-
-        private void FrmPopup_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            //chromePopup.Dispose();
         }
     }
 }

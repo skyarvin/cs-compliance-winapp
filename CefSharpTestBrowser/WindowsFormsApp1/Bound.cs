@@ -28,6 +28,15 @@ namespace SkydevCSTool
                         bound.saveAsBounce();
                     }
                 ");
+
+                     browser.ExecuteScriptAsync(@"
+                     window.onclick = function()
+                     {
+                       bound.windowOnClicked();
+                     }
+                    ");
+
+                browser.EvaluateScriptAsync(@"window.onclick = function(e) { if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); } }");
             }
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
@@ -208,6 +217,10 @@ namespace SkydevCSTool
             }
         }
 
+        public void WindowOnClicked(string element_id)
+        {
+            Globals.SaveToLogFile(String.Concat("Window OnClicked: ", element_id), (int)LogType.UserClick);
+        }
         public void OnBrowserEvent()
         {
             Globals._wentIdle = DateTime.MaxValue;

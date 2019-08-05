@@ -79,6 +79,9 @@ namespace WindowsFormsApp1
                 case (int)LogType.Activity:
                     logFilePath = @path + "activity_log.txt";
                     break;
+                case (int)LogType.UserClick:
+                    logFilePath = @path + "user_click_log.txt";
+                    break;
             }
 
             FileInfo logFileInfo = new FileInfo(logFilePath);
@@ -91,6 +94,7 @@ namespace WindowsFormsApp1
                     log.WriteLine(DateTime.Now.ToString());
                     log.WriteLine(logText);
                     log.Write(System.Environment.NewLine);
+                    log.Close();
                 }
             }
         }
@@ -102,6 +106,7 @@ namespace WindowsFormsApp1
         Url_Change = 2,
         Error = 3,
         Activity = 4,
+        UserClick = 5,
     }
 
     

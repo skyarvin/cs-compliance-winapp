@@ -39,14 +39,14 @@ namespace SkydevCSTool
                                 return;
                             }
 
-                            var element_values = ['Update Expiration Date','Report Identification Missing Problem','Change Gender'];
-                            if ((e.target.value != undefined) && (element_values.includes(e.target.value))) {
-                                if (e.target.value == element_values[0])    
-                                    bound.onClicked('set_expr');
-                                else if (e.target.value == element_values[1])
-                                    bound.onClicked('id-missing');
-                                else if (e.target.value == element_values[2])
-                                    bound.onClicked('change_gender');
+                            var element_values = {
+                                  'Update Expiration Date': ['set_expr'],
+                                  'Report Identification Missing Problem': ['id-missing'],
+                                  'Change Gender': ['change_gender']
+                                    }
+
+                            if ((e.target.value != undefined) && (element_values.hasOwnProperty(e.target.value))) {
+                                    bound.onClicked(element_values[e.target.value][0]);
                             }
                         }
                     }

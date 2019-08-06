@@ -50,7 +50,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (Exception e)
             {
-                Globals.SaveToLogFile(e.Message, (int)LogType.Error);
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
             }
 
             return null;
@@ -80,7 +80,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (Exception e)
             {
-                Globals.SaveToLogFile(e.Message, (int)LogType.Error);
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
             }
 
             return false;

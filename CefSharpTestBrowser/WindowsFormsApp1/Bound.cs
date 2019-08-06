@@ -24,7 +24,12 @@ namespace SkydevCSTool
                         bound.saveAsBounce();
                     }
                 ");
-
+            }
+        }
+        public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
+        {
+            if (e.Frame.IsMain)
+            {
                 browser.ExecuteScriptAsync(@"
                     window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
@@ -43,7 +48,7 @@ namespace SkydevCSTool
                                   'Update Expiration Date': ['set_expr'],
                                   'Report Identification Missing Problem': ['id-missing'],
                                   'Change Gender': ['change_gender']
-                                    }
+                            }
 
                             if ((e.target.value != undefined) && (element_values.hasOwnProperty(e.target.value))) {
                                     bound.onClicked(element_values[e.target.value][0]);
@@ -51,12 +56,7 @@ namespace SkydevCSTool
                         }
                     }
                 ");
-            }
-        }
-        public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
-        {
-            if (e.Frame.IsMain)
-            {
+
                 var submit_script = @"
                     window.onmousemove = function(e) { 
                         bound.onBrowserEvent(); 

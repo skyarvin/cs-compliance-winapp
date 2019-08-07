@@ -40,22 +40,37 @@ namespace WindowsFormsApp1
                 Login();
             }
         }
-            private void Login() {
+        private void Login()
+        {
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || (!(new EmailAddressAttribute().IsValid(txtEmail.Text))))
                 MessageBox.Show("Invalid Email", "Error");
             else
             {
-                Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
-                if (Globals.ComplianceAgent != null)
+                try
                 {
-                    bExitApp = false;
-                    frmMain Mainform = new frmMain();
-                    Mainform.Show();
-                    this.Close();
+                    Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
+                    if (Globals.ComplianceAgent != null)
+                    {
+                        bExitApp = false;
+                        frmMain Mainform = new frmMain();
+                        Mainform.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("We cannot find an account with that email address.", "Error");
+                    }
                 }
-                else
+                catch (AggregateException e)
                 {
-                    MessageBox.Show("We cannot find an account with that email address.", "Error");
+                    Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                    MessageBox.Show(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
+                        System.Environment.NewLine, "If error still persist, Please contact Admin"), "Error");
+                }
+                catch (Exception e)
+                {
+                    Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                    MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
                 }
             }
         }

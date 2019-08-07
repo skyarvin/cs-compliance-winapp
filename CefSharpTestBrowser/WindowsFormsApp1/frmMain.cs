@@ -113,9 +113,24 @@ namespace WindowsFormsApp1
 
         private void SaveActivity()
         {
-            Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            Globals.activity.agent_id = Globals.ComplianceAgent.id;
-            Globals.activity.Save();
+            try
+            {
+                Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                Globals.activity.agent_id = Globals.ComplianceAgent.id;
+                Globals.activity.Save();
+            }
+            catch (AggregateException e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If error still persist, Please contact Admin"), "Error");
+            }
+            catch (Exception e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+            }
+
             Globals.activity.start_time = "";
         }
 
@@ -246,16 +261,16 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
             string violation = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
             string notes = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
+            string reply = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
             if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
             if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
 
-            if (element_id == Action.ChatReply.Value) notes = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+            if (element_id == Action.ChatReply.Value) notes = reply;
             if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
 
-            int followers;
             string followRaw = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
             followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
-            int.TryParse(followRaw, out followers);
+            int followers = int.Parse(followRaw);
 
             var logData = new Logger
             {
@@ -265,19 +280,35 @@ namespace WindowsFormsApp1
                 remarks = String.Concat(violation, notes),
                 duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
                 followers = followers,
-                sc = Globals.SKYPE_COMPLIANCE
+                sc = followers >= 5000 ? true : false,
+                rr = string.IsNullOrEmpty(reply) ? false : true
             };
 
-            if (CurrentUrl == LastSuccessUrl)
+            try
             {
-                logData.id = Globals.LAST_SUCCESS_ID;
-                logData.Update();
+                if (CurrentUrl == LastSuccessUrl)
+                {
+                    logData.id = Globals.LAST_SUCCESS_ID;
+                    logData.Update();
+                }
+                else
+                {
+                    var result = logData.Save();
+                    Globals.LAST_SUCCESS_ID = result.id;
+                }
             }
-            else
+            catch(AggregateException e)
             {
-                var result = logData.Save();
-                Globals.LAST_SUCCESS_ID = result.id;
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If error still persist, Please contact Admin"), "Error");
             }
+            catch(Exception e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+            }
+
 
             if (element_id == "request-review-submit" && element_id == "set_expr" && element_id == "change_gender")
                 LastSuccessUrl = ""; //Clear last success

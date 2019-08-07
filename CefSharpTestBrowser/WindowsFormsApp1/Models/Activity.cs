@@ -17,24 +17,17 @@ namespace SkydevCSTool.Models
         public void Save()
         {
             Globals.SaveToLogFile(string.Concat("Save Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            try
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient())
+                var uri = string.Concat(Url.API_URL, "/activity/"); ;
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                var response = client.PostAsync(uri, content).Result;
+                if (!response.IsSuccessStatusCode)
                 {
-                    var uri = string.Concat(Url.API_URL, "/activity/"); ;
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.PostAsync(uri, content).Result;
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                        MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
-                    }
+                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                    throw new Exception("Api Activity save request error");
                 }
-            }
-            catch (Exception e)
-            {
-                Globals.SaveToLogFile(e.Message, (int)LogType.Error);
             }
 
         }

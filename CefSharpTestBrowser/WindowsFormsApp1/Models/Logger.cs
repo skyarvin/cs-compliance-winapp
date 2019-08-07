@@ -20,71 +20,53 @@ namespace WindowsFormsApp1.Models
         public int duration { get; set; }
         public int followers { get; set; }
         public bool sc { get; set; }
+        public bool rr { get; set; }
 
         public Logger Save()
         {
             Globals.SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            try
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient())
+                var uri = string.Concat(Url.API_URL, "/logs/");
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                var response = client.PostAsync(uri, content).Result;
+                if (response.IsSuccessStatusCode)
                 {
-                    var uri = string.Concat(Url.API_URL, "/logs/");
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                     var response = client.PostAsync(uri, content).Result;
-                    if (response.IsSuccessStatusCode)
+                    using (HttpContent data = response.Content)
                     {
-                        using (HttpContent data = response.Content)
-                        {
-                            var jsonString = data.ReadAsStringAsync();
-                            jsonString.Wait();
-                            return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
-                        }
-                    }
-                    else
-                    {
-                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                        MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
-
+                        var jsonString = data.ReadAsStringAsync();
+                        jsonString.Wait();
+                        return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
                     }
                 }
+                else
+                {
+                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                    throw new Exception("Api save request error");
+                }
             }
-            catch (Exception e)
-            {
-                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-            }
-
-            return null;
         }
 
         public bool Update()
         {
             Globals.SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            try
+            using (var client = new HttpClient())
             {
-                using (var client = new HttpClient())
+                var uri = string.Concat(Url.API_URL, "/logs/", this.id);
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                var response = client.PutAsync(uri, content).Result;
+                if (response.IsSuccessStatusCode)
                 {
-                    var uri = string.Concat(Url.API_URL, "/logs/", this.id);
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.PutAsync(uri, content).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                        MessageBox.Show(String.Concat("Something went wrong.", System.Environment.NewLine, "Please contact Admin."), "Error");
-                    }
+                    return true;
+                }
+                else
+                {
+                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                    throw new Exception("Api Update request error");
                 }
             }
-            catch (Exception e)
-            {
-                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-            }
-
-            return false;
         }
 
     }

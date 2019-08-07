@@ -44,7 +44,6 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.button1 = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -55,7 +54,6 @@
             // pnlHeader
             // 
             this.pnlHeader.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlHeader.Controls.Add(this.button1);
             this.pnlHeader.Controls.Add(this.pnlSearch);
             this.pnlHeader.Controls.Add(this.pnlSplitter);
             this.pnlHeader.Controls.Add(this.panel1);
@@ -213,16 +211,6 @@
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.LogoutToolStripMenuItem_Click);
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(862, 14);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -262,7 +250,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel pnlSearch;
         private SkydevCSTool.CustomComboBox cmbURL;
-        private System.Windows.Forms.Button button1;
     }
 }
 

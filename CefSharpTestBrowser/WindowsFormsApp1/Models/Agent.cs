@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SkydevCSTool.Class;
+using System;
 using System.Net.Http;
 
 namespace WindowsFormsApp1.Models
@@ -28,10 +29,13 @@ namespace WindowsFormsApp1.Models
                             return JsonConvert.DeserializeObject<Agent>(jsonString.Result);
                         }
                     }
+                    else
+                    {
+                        Globals.SaveToLogFile(email, (int)LogType.Error);
+                        throw new Exception("Api get request error");
+                    }
                 }
             }
-
-            return null;
         }
     }
 }

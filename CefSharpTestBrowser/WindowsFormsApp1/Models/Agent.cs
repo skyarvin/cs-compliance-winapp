@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SkydevCSTool.Class;
 using System.Net.Http;
 
 namespace WindowsFormsApp1.Models
@@ -14,7 +15,7 @@ namespace WindowsFormsApp1.Models
         {
             using (var client = new HttpClient())
             {
-                var uri = string.Concat(Globals.baseUrl, "/agents/", email);
+                var uri = string.Concat(Url.API_URL, "/agents/", email);
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

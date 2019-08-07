@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SkydevCSTool.Class;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -20,7 +21,7 @@ namespace SkydevCSTool.Models
             {
                 using (var client = new HttpClient())
                 {
-                    var uri = string.Concat(Globals.baseUrl, "/activity/"); ;
+                    var uri = string.Concat(Url.API_URL, "/activity/"); ;
                     client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                     var response = client.PostAsync(uri, content).Result;

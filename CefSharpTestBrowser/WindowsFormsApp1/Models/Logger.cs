@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SkydevCSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,10 @@ namespace WindowsFormsApp1.Models
             {
                 using (var client = new HttpClient())
                 {
-                    var uri = string.Concat(Globals.baseUrl, "/logs/");
+                    var uri = string.Concat(Url.API_URL, "/logs/");
                     client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.PostAsync(uri, content).Result;
+                     var response = client.PostAsync(uri, content).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)
@@ -50,7 +51,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (Exception e)
             {
-                Globals.SaveToLogFile(e.Message, (int)LogType.Error);
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
             }
 
             return null;
@@ -63,7 +64,7 @@ namespace WindowsFormsApp1.Models
             {
                 using (var client = new HttpClient())
                 {
-                    var uri = string.Concat(Globals.baseUrl, "/logs/", this.id);
+                    var uri = string.Concat(Url.API_URL, "/logs/", this.id);
                     client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                     var response = client.PutAsync(uri, content).Result;
@@ -80,7 +81,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (Exception e)
             {
-                Globals.SaveToLogFile(e.Message, (int)LogType.Error);
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
             }
 
             return false;

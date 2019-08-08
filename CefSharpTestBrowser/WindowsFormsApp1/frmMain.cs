@@ -270,7 +270,9 @@ namespace WindowsFormsApp1
 
             string followRaw = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
             followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
-            int followers = int.Parse(followRaw);
+            int followers = 0;
+            if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
+                followers = int.Parse(followRaw);
 
             var logData = new Logger
             {

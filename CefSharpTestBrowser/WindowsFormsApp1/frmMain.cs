@@ -280,7 +280,7 @@ namespace WindowsFormsApp1
                 remarks = String.Concat(violation, notes),
                 duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
                 followers = followers,
-                sc = followers >= 5000 ? true : false,
+                sc = followers >= Globals.SC_THRESHOLD ? true : false,
                 rr = string.IsNullOrEmpty(reply) ? false : true
             };
 

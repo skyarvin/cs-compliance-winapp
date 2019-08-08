@@ -21,6 +21,7 @@ namespace WindowsFormsApp1
         public static DateTime _wentIdle;
         public static int _idleTicks;
         public static bool SKYPE_COMPLIANCE;
+        public static int SC_THRESHOLD = 10000;
         public static List<string> UrlHistory = new List<string>();
 
         private static frmMessage frm = new frmMessage();

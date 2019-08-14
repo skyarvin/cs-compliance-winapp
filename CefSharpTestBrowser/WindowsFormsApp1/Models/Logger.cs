@@ -43,6 +43,7 @@ namespace WindowsFormsApp1.Models
                 else
                 {
                     Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                    Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
                     throw new Exception("Api save request error");
                 }
             }
@@ -64,6 +65,7 @@ namespace WindowsFormsApp1.Models
                 else
                 {
                     Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                    Resync.SavetoDB(JsonConvert.SerializeObject(this), "Update");
                     throw new Exception("Api Update request error");
                 }
             }

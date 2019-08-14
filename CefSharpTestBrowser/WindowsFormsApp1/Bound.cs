@@ -95,8 +95,28 @@ namespace SkydevCSTool
         }
         public void SaveAsBounce()
         {
-            Logger log = new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" };
-            log.Update();
+            try
+            {
+                Logger log = new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" };
+                log.Update();
+            }
+            catch (AggregateException e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                Globals.showMessage(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
+                System.Environment.NewLine, "If error still persist, Please contact Admin"));
+
+
+
+            }
+            catch (Exception e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
+
+            }
+
+
         }
         public void OnClicked(string id)
         {

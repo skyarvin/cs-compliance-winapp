@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
+using System.Threading.Tasks;
 
 namespace WindowsFormsApp1
 {
@@ -93,6 +94,14 @@ namespace WindowsFormsApp1
                     log.Close();
                 }
             }
+        }
+        public static void showMessage(string s) {
+            Task.Factory.StartNew(() =>
+            {
+                MessageBox.Show(s, "Error");
+
+            });
+
         }
     }
 

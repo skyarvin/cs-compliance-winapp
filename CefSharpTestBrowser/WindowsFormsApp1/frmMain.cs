@@ -302,13 +302,15 @@ namespace WindowsFormsApp1
             catch(AggregateException e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If error still persist, Please contact Admin"), "Error");
+                Globals.showMessage(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
+                System.Environment.NewLine, "If error still persist, Please contact Admin"));
+
             }
             catch(Exception e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+                Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
+             
             }
 
 

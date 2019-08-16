@@ -8,6 +8,9 @@ using System.Data.SqlClient;
 using System.Data;
 using Dapper;
 using SkydevCSTool.Models;
+using WindowsFormsApp1.Models;
+using System.Threading;
+using WindowsFormsApp1;
 
 namespace SkydevCSTool.Class
 {
@@ -15,57 +18,50 @@ namespace SkydevCSTool.Class
     {
         private static SQLiteConnection CreateConnection()
         {
-            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source= cscb.db; Version = 3; New = True; Compress = True;");
-            try
-            {
-                sqlite_conn.Open();
-            }
-            catch (Exception ex)
-            {
-
-            }
+            if (!System.IO.File.Exists("cscb.db"))
+                throw new Exception("No local DB found. Please contact admin");
+            SQLiteConnection sqlite_conn = new SQLiteConnection("Data Source= cscb.db; Version = 3; Compress = True;");
+            sqlite_conn.Open();
             return sqlite_conn;
         }
         public static void SavetoDB(string JsonData, string action)
         {
-            SQLiteConnection conn = CreateConnection();
-            SQLiteCommand sqlite_cmd;
-            sqlite_cmd = conn.CreateCommand();
-            sqlite_cmd.CommandText = "INSERT INTO tblAgentErrlogs (Data,Action,Created_at) VALUES ('" + string.Concat(JsonData, "','", action,"','", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")) + "')";
-            sqlite_cmd.ExecuteNonQuery();
+            using (IDbConnection db = CreateConnection())
+            {
+                db.Execute("INSERT INTO tblAgentErrlogs (Data,Action,Created_at) VALUES (@Data,@Action,@Created_at)",
+                    new ErrorLogs
+                    {
+                        Data = JsonData,
+                        Action = action,
+                        Created_at = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                    });
+            }
         }
 
         public static void RetryActions()
         {
-
             using (IDbConnection db = CreateConnection())
             {
-                var errlogs = db.Query<ErrorLogs>("Select * From tblAgentErrlogs where Sent = 0");
-                
-                if(errlogs.Count() > 0)
+                var errlogs = db.Query<ErrorLogs>("Select * From tblAgentErrlogs where Created_at >= DateTime('Now', 'LocalTime', '-5 Minute')");
+                if (errlogs.Count() > 0)
                 {
                     foreach(var item in errlogs)
                     {
-
+                        try
+                        {
+                            var flag = false;
+                            if (item.Action == "Save")
+                                flag = Logger.Save_Json_String(item.Data);
+                            if (item.Action == "Update")
+                                flag = Logger.Update_Json_String(item.Data);
+                            if (flag)
+                                db.Execute("Delete from tblAgentErrlogs WHERE ID = @ID", item);
+                        }
+                        catch { }
                     }
                 }
             }
-            //do 
-            //var logs = Errorlogs.where(a => a.Created_at >= Datetime.Now.AddMinutes(-5) && a.Sent == 0)
-            //If(logs.count() > 0)
-            //{
-            //foreach a in logs
-            //{ 
-            //  Httpclient PostAsync
-            //  if success
-            //      a.Sent = 1;
-            //      a.Save();
-            //}
-
-
-            //}
-
-            //while (true)
+            Thread.Sleep(30000);
         }
     }
 }

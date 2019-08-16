@@ -49,7 +49,7 @@ namespace WindowsFormsApp1.Models
             }
         }
 
-        public bool Update()
+        public void Update()
         {
             Globals.SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
             using (var client = new HttpClient())
@@ -58,11 +58,7 @@ namespace WindowsFormsApp1.Models
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 var response = client.PutAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                else
+                if (!response.IsSuccessStatusCode)
                 {
                     Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
                     Resync.SavetoDB(JsonConvert.SerializeObject(this), "Update");
@@ -71,5 +67,37 @@ namespace WindowsFormsApp1.Models
             }
         }
 
+
+        //Static Methods
+        #region Static Methods
+
+        private static bool Process_Json_String(bool is_post, string json_string)
+        {
+            using (var client = new HttpClient())
+            {
+                var uri = string.Concat(Url.API_URL, "/logs/");
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                var content = new StringContent(json_string, Encoding.UTF8, "application/json");
+                HttpResponseMessage response;
+                if (is_post)
+                    response = client.PostAsync(uri, content).Result;
+                else
+                    response = client.PutAsync(string.Concat(uri, JsonConvert.DeserializeObject<Logger>(json_string).id), content).Result;
+                if (response.IsSuccessStatusCode)
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool Save_Json_String(string json_string)
+        {
+            return Process_Json_String(true, json_string);
+        }
+
+        public static bool Update_Json_String(string json_string)
+        {
+            return Process_Json_String(false, json_string);
+        }
+        #endregion
     }
 }

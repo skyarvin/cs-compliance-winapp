@@ -103,6 +103,17 @@ namespace WindowsFormsApp1
             });
 
         }
+
+        public static string CurrentVersion()
+        {
+            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
+            {
+                System.Deployment.Application.ApplicationDeployment cd = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
+                return string.Concat("v.", cd.CurrentVersion.ToString());
+            }
+
+            return "v.0.0.0.0";
+        }
     }
 
     public enum LogType:int

@@ -6,9 +6,11 @@ using SkydevCSTool.Class;
 using SkydevCSTool.Handlers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using Timer = System.Windows.Forms.Timer;
@@ -35,6 +37,7 @@ namespace WindowsFormsApp1
             {Action.Approve.Value, "AP" },
             {Action.ChatReply.Value, "AP" },
         };
+
         private List<string> Violations = new List<string>
         {
            Action.Violation.Value,
@@ -42,8 +45,6 @@ namespace WindowsFormsApp1
            Action.SpammerSubmit.Value,
            Action.RequestReview.Value
         };
-
-
 
         #region Init
         public void InitializeChromium()
@@ -63,19 +64,19 @@ namespace WindowsFormsApp1
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
             lblUser.Text = Globals.ComplianceAgent.name;
-            try { pbImg.Load(Globals.ComplianceAgent.photo); }
+            try {
+                pbImg.Load(Globals.ComplianceAgent.photo);
+            }
             catch { }
-
         }
+
         public frmMain()
         {
-
             Application.Idle += new EventHandler(Application_OnIdle);
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
             _timer.Interval = 1000;
             _timer.Start();
-
 
             InitializeComponent();
             InitializeChromium();
@@ -89,10 +90,7 @@ namespace WindowsFormsApp1
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
-
         }
-
-
         #endregion
 
         #region ActivityMonitor
@@ -147,7 +145,7 @@ namespace WindowsFormsApp1
                     !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
-                    chromeBrowser.ShowDevTools();
+                    //chromeBrowser.ShowDevTools();
                     if (CurrentUrl != splitAddress[0])
                     {
                         Globals.AddToHistory(splitAddress[0]);
@@ -158,8 +156,8 @@ namespace WindowsFormsApp1
                     }
                 }
             });
-
         }
+
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
             this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id));
@@ -172,6 +170,9 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Application START", (int)LogType.Activity);
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+
+            this.Text += String.Concat(" ", Globals.CurrentVersion());
+            bgWorkResync.RunWorkerAsync();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -291,7 +292,8 @@ namespace WindowsFormsApp1
                 if (CurrentUrl == LastSuccessUrl)
                 {
                     logData.id = Globals.LAST_SUCCESS_ID;
-                    logData.Update();
+                    if(logData.id != 0)
+                        logData.Update();
                 }
                 else
                 {
@@ -304,13 +306,11 @@ namespace WindowsFormsApp1
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 Globals.showMessage(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
                 System.Environment.NewLine, "If error still persist, Please contact Admin"));
-
             }
             catch(Exception e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
-             
             }
 
 
@@ -345,7 +345,6 @@ namespace WindowsFormsApp1
         }
         #endregion
 
-
         public class Action
         {
             private Action(string value) { Value = value; }
@@ -362,7 +361,26 @@ namespace WindowsFormsApp1
             public static Action Disagree { get { return new Action("disagree_button"); } }
             public static Action SetExpiration { get { return new Action("set_expr"); } }
             public static Action ChatReply { get { return new Action("reply_button"); } }
+        }
 
+        private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                MessageBox.Show("Operation was canceled");
+            else if (e.Error != null)
+                Globals.showMessage(e.Error.Message);
+            else
+                bgWorkResync.RunWorkerAsync();
+        }
+
+        private void BgWorkResync_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            BackgroundWorker helperBW = sender as BackgroundWorker;
+            Resync.RetryActions();
+            if (helperBW.CancellationPending)
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

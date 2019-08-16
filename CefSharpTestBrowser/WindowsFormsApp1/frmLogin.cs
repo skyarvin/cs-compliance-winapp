@@ -11,11 +11,7 @@ namespace WindowsFormsApp1
         public frmLogin()
         {
             InitializeComponent();
-            if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
-            {
-                System.Deployment.Application.ApplicationDeployment cd = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
-                lblVersion.Text = string.Concat("v.", cd.CurrentVersion.ToString());
-            }
+            lblVersion.Text = Globals.CurrentVersion();
         }
         private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
         {

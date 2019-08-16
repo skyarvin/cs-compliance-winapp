@@ -38,7 +38,8 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26505, "View User");
 
-        
+        model.AddSeparator();
+        model.AddItem((CefMenuCommand)26506, "Devtools");
     }
 
     public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -85,6 +86,11 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 browserControl.Load(String.Concat(Url.CB_COMPLIANCE_URL, "/show/", parameters.SelectionText));
                 return true;
             }
+        }
+
+        if (commandId == (CefMenuCommand)26506)
+        {
+            browserControl.ShowDevTools();
         }
 
         // Return false should ignore the selected option of the user !

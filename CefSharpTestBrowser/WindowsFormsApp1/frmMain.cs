@@ -145,7 +145,6 @@ namespace WindowsFormsApp1
                     !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
-                    //chromeBrowser.ShowDevTools();
                     if (CurrentUrl != splitAddress[0])
                     {
                         Globals.AddToHistory(splitAddress[0]);

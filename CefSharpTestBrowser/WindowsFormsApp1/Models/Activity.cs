@@ -26,7 +26,7 @@ namespace SkydevCSTool.Models
                 if (!response.IsSuccessStatusCode)
                 {
                     Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    throw new Exception("Api Activity save request error");
+                    throw new Exception("Api Activity save request error, Please contact dev team");
                 }
             }
 

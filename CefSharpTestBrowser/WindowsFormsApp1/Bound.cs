@@ -104,11 +104,8 @@ namespace SkydevCSTool
             catch (AggregateException e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                Globals.showMessage(String.Concat("Server connection problem", System.Environment.NewLine, "Please refresh and try again.",
-                System.Environment.NewLine, "If error still persist, Please contact Admin"));
-
-
-
+                Globals.showMessage(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"));
             }
             catch (Exception e)
             {

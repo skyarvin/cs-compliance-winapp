@@ -149,7 +149,6 @@
   <ItemGroup>
     <Compile Include="Bound.cs" />
     <Compile Include="Class\Resync.cs" />
-    <Compile Include="Class\RetryHelperAsync.cs" />
     <Compile Include="Class\Url.cs" />
     <Compile Include="frmPopup.cs">
       <SubType>Form</SubType>

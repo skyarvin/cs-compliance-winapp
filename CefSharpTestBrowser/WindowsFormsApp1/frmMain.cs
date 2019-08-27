@@ -72,11 +72,6 @@ namespace WindowsFormsApp1
 
         public frmMain()
         {
-            Application.Idle += new EventHandler(Application_OnIdle);
-            _timer = new Timer();
-            _timer.Tick += new EventHandler(Timer_Expired);
-            _timer.Interval = 1000;
-            _timer.Start();
 
             InitializeComponent();
             InitializeChromium();
@@ -167,6 +162,12 @@ namespace WindowsFormsApp1
         #region Form Events
         private void Form1_Load(object sender, EventArgs e)
         {
+            Application.Idle += new EventHandler(Application_OnIdle);
+            _timer = new Timer();
+            _timer.Tick += new EventHandler(Timer_Expired);
+            _timer.Interval = 1000;
+            _timer.Start();
+
             Globals.SaveToLogFile("Application START", (int)LogType.Activity);
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 

@@ -60,7 +60,7 @@ namespace WindowsFormsApp1
                             return;
                         } 
 
-                        DialogResult dialogResult = MessageBox.Show("Are you sure this is your workshift?", "Workshift Change Detected", MessageBoxButtons.YesNo);
+                        DialogResult dialogResult = MessageBox.Show(string.Concat("Your previous shift is ",Globals.workshifts[Globals.ComplianceAgent.last_workshift],"\nAre you sure this is your workshift?"), "Workshift Change Detected", MessageBoxButtons.YesNo);
                         if (dialogResult == DialogResult.Yes)
                         {
                             Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
@@ -89,15 +89,9 @@ namespace WindowsFormsApp1
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-            Dictionary<String, String> comboSource = new Dictionary<String, String>
-            {
-                { "Dayshift", "DS" },
-                { "Midshift", "MS" },
-                { "Nightshift", "NS" }
-            };
-            workshift_list.DataSource = new BindingSource(comboSource, null);
-            workshift_list.DisplayMember = "Key";
-            workshift_list.ValueMember = "Value";
+            workshift_list.DataSource = new BindingSource(Globals.workshifts, null);
+            workshift_list.DisplayMember = "Value";
+            workshift_list.ValueMember = "Key";
 
             if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.email))
             {

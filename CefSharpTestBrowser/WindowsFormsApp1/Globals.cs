@@ -114,6 +114,13 @@ namespace WindowsFormsApp1
 
             return "v.0.0.0.0";
         }
+
+        public static Dictionary<String, String> workshifts = new Dictionary<String, String>
+        {
+            { "DS", "Dayshift" },
+            { "MS", "Midshift" },
+            { "NS", "Nightshift" }
+        };
     }
 
     public enum LogType:int

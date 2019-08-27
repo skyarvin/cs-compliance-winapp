@@ -73,7 +73,7 @@
             this.btnLogin.Location = new System.Drawing.Point(31, 270);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(337, 39);
-            this.btnLogin.TabIndex = 2;
+            this.btnLogin.TabIndex = 3;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = false;
             this.btnLogin.Click += new System.EventHandler(this.BtnLogin_Click);
@@ -88,7 +88,7 @@
             this.btnExit.Location = new System.Drawing.Point(31, 314);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(337, 39);
-            this.btnExit.TabIndex = 3;
+            this.btnExit.TabIndex = 4;
             this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.BtnExit_Click);
@@ -137,7 +137,7 @@
             this.workshift_list.MaxDropDownItems = 3;
             this.workshift_list.Name = "workshift_list";
             this.workshift_list.Size = new System.Drawing.Size(337, 29);
-            this.workshift_list.TabIndex = 7;
+            this.workshift_list.TabIndex = 2;
             this.workshift_list.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Workshift_list_KeyDown);
             // 
             // label2

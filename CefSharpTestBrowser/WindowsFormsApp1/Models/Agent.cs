@@ -11,12 +11,14 @@ namespace WindowsFormsApp1.Models
         public string name { get; set; }
         public string email { get; set; }
         public string photo { get; set; }
+        public string review_date { get; set; }
+        public string last_workshift { get; set; }
 
-        public static Agent Get(string email)
+        public static Agent Get(string email, string workshift)
         {
             using (var client = new HttpClient())
             {
-                var uri = string.Concat(Url.API_URL, "/agents/", email);
+                var uri = string.Concat(Url.API_URL, "/agent/?email=", email,"&workshift=", workshift);
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

@@ -21,6 +21,8 @@ namespace WindowsFormsApp1.Models
         public int followers { get; set; }
         public bool sc { get; set; }
         public bool rr { get; set; }
+        public string workshift { get; set; }
+        public string review_date { get; set; }
 
         public Logger Save()
         {

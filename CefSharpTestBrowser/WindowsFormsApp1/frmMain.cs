@@ -283,7 +283,9 @@ namespace WindowsFormsApp1
                 duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
                 followers = followers,
                 sc = followers >= Globals.SC_THRESHOLD ? true : false,
-                rr = string.IsNullOrEmpty(reply) ? false : true
+                rr = string.IsNullOrEmpty(reply) ? false : true,
+                review_date = Globals.ComplianceAgent.review_date,
+                workshift = Globals.ComplianceAgent.last_workshift
             };
 
             try

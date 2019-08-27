@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
@@ -44,13 +45,28 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
+                    Globals.ComplianceAgent = Agent.Get(txtEmail.Text, workshift_list.SelectedValue.ToString());
                     if (Globals.ComplianceAgent != null)
                     {
                         bExitApp = false;
                         frmMain Mainform = new frmMain();
-                        Mainform.Show();
-                        this.Close();
+                        SkydevCSTool.Properties.Settings.Default.email = txtEmail.Text;
+                        SkydevCSTool.Properties.Settings.Default.workshift = workshift_list.SelectedValue.ToString();
+                        SkydevCSTool.Properties.Settings.Default.Save();
+                        if (Globals.ComplianceAgent.last_workshift == workshift_list.SelectedValue.ToString())
+                        {
+                            Mainform.Show();
+                            this.Close();
+                            return;
+                        } 
+
+                        DialogResult dialogResult = MessageBox.Show("Are you sure this is your workshift?", "Workshift Change Detected", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
+                            Mainform.Show();
+                            this.Close();
+                        }
                     }
                     else
                     {
@@ -69,6 +85,33 @@ namespace WindowsFormsApp1
                     MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
                 }
             }
+        }
+
+        private void FrmLogin_Load(object sender, EventArgs e)
+        {
+            Dictionary<String, String> comboSource = new Dictionary<String, String>
+            {
+                { "Dayshift", "DS" },
+                { "Midshift", "MS" },
+                { "Nightshift", "NS" }
+            };
+            workshift_list.DataSource = new BindingSource(comboSource, null);
+            workshift_list.DisplayMember = "Key";
+            workshift_list.ValueMember = "Value";
+
+            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.email))
+            {
+                txtEmail.Text = SkydevCSTool.Properties.Settings.Default.email;
+            }
+            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.workshift))
+            {
+                workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
+            }
+        }
+
+        private void Workshift_list_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
         }
     }
 }

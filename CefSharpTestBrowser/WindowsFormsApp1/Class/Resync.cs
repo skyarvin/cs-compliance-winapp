@@ -63,5 +63,11 @@ namespace SkydevCSTool.Class
             }
             Thread.Sleep(30000);
         }
+        public static List<ErrorLogs> GetLogs() {
+            using (IDbConnection db = CreateConnection()) {
+                var errlogs = db.Query<ErrorLogs>("Select * from tblAgentErrlogs");
+                return errlogs.ToList();
+            }
+        }
     }
 }

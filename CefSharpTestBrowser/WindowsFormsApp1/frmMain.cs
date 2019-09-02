@@ -110,6 +110,7 @@ namespace WindowsFormsApp1
             {
                 Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 Globals.activity.agent_id = Globals.ComplianceAgent.id;
+                Globals.activity.work_date = Globals.ComplianceAgent.review_date;
                 Globals.activity.Save();
             }
             catch (AggregateException e)

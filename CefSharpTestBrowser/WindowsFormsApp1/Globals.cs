@@ -60,40 +60,44 @@ namespace WindowsFormsApp1
 
         public static void SaveToLogFile(string logText, int logtype)
         {
-            string logFilePath = "";
-            string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/SkydevCsTool/logs/");
-            switch (logtype)
+            try
             {
-                case (int)LogType.Action:
-                    logFilePath = @path + "log.txt";
-                    break;
-                case (int)LogType.Url_Change:
-                    logFilePath = @path + "url_log.txt";
-                    break;
-                case (int)LogType.Error:
-                    logFilePath = @path + "error_log.txt";
-                    break;
-                case (int)LogType.Activity:
-                    logFilePath = @path + "activity_log.txt";
-                    break;
-                case (int)LogType.UserClick:
-                    logFilePath = @path + "user_click_log.txt";
-                    break;
-            }
-
-            FileInfo logFileInfo = new FileInfo(logFilePath);
-            DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
-            if (!logDirInfo.Exists) logDirInfo.Create();
-            using (FileStream fileStream = new FileStream(logFilePath, FileMode.Append))
-            {
-                using (StreamWriter log = new StreamWriter(fileStream))
+                string logFilePath = "";
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/SkydevCsTool/logs/");
+                switch (logtype)
                 {
-                    log.WriteLine(DateTime.Now.ToString());
-                    log.WriteLine(logText);
-                    log.Write(System.Environment.NewLine);
-                    log.Close();
+                    case (int)LogType.Action:
+                        logFilePath = @path + "log.txt";
+                        break;
+                    case (int)LogType.Url_Change:
+                        logFilePath = @path + "url_log.txt";
+                        break;
+                    case (int)LogType.Error:
+                        logFilePath = @path + "error_log.txt";
+                        break;
+                    case (int)LogType.Activity:
+                        logFilePath = @path + "activity_log.txt";
+                        break;
+                    case (int)LogType.UserClick:
+                        logFilePath = @path + "user_click_log.txt";
+                        break;
+                }
+
+                FileInfo logFileInfo = new FileInfo(logFilePath);
+                DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
+                if (!logDirInfo.Exists) logDirInfo.Create();
+                using (FileStream fileStream = new FileStream(logFilePath, FileMode.Append))
+                {
+                    using (StreamWriter log = new StreamWriter(fileStream))
+                    {
+                        log.WriteLine(DateTime.Now.ToString());
+                        log.WriteLine(logText);
+                        log.Write(System.Environment.NewLine);
+                        log.Close();
+                    }
                 }
             }
+            catch { }
         }
         public static void showMessage(string s) {
             Task.Factory.StartNew(() =>

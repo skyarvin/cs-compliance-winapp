@@ -13,6 +13,7 @@ namespace SkydevCSTool.Models
         public string start_time { get; set; }
         public string end_time { get; set; }
         public int agent_id { get; set; }
+        public string work_date { get; set; }
 
         public void Save()
         {

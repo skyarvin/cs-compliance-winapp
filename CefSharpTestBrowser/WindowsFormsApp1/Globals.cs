@@ -18,7 +18,7 @@ namespace WindowsFormsApp1
         public static ChromiumWebBrowser chromePopup;
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;
-        public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds
+        public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds 600
         public static DateTime _wentIdle;
         public static int _idleTicks;
         public static bool SKYPE_COMPLIANCE;
@@ -125,6 +125,51 @@ namespace WindowsFormsApp1
             { "MS", "Midshift" },
             { "NS", "Nightshift" }
         };
+
+        public static void SaveActivity()
+        {
+            try
+            {
+                Globals.activity.agent_id = Globals.ComplianceAgent.id;
+                Globals.activity.work_date = Globals.ComplianceAgent.review_date;
+                Globals.activity.Save();
+            }
+            catch (AggregateException e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+            }
+            catch (Exception e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+            }
+
+            //Globals.activity.start_time = "";
+        }
+
+        public static void UpdateActivity()
+        {
+            try
+            {
+                Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                Globals.activity.Update();
+            }
+            catch (AggregateException e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+            }
+            catch (Exception e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+            }
+
+            Globals.activity.start_time = "";
+        }
     }
 
     public enum LogType:int

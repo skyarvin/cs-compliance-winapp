@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkydevCSTool.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -22,6 +23,8 @@ namespace SkydevCSTool
         {
             this.Hide();
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Globals.SaveActivity();
+
             Globals._wentIdle = DateTime.MaxValue;
             Globals._idleTicks = 0;
         }

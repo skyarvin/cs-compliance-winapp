@@ -44,6 +44,7 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
+            this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
             this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
@@ -199,6 +200,12 @@
             this.bgWorkResync.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgWorkResync_DoWork);
             this.bgWorkResync.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgWorkResync_RunWorkerCompleted);
             // 
+            // updateWorkactivity
+            // 
+            this.updateWorkactivity.Enabled = true;
+            this.updateWorkactivity.Interval = 300000;
+            this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
+            // 
             // cmbURL
             // 
             this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -257,6 +264,7 @@
         private System.Windows.Forms.Panel pnlSearch;
         private SkydevCSTool.CustomComboBox cmbURL;
         private System.ComponentModel.BackgroundWorker bgWorkResync;
+        private System.Windows.Forms.Timer updateWorkactivity;
     }
 }
 

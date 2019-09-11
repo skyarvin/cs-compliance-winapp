@@ -10,6 +10,7 @@ namespace SkydevCSTool.Models
 {
     public class Activity
     {
+        public int? id { get; set; }
         public string start_time { get; set; }
         public string end_time { get; set; }
         public int agent_id { get; set; }
@@ -24,7 +25,16 @@ namespace SkydevCSTool.Models
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 var response = client.PostAsync(uri, content).Result;
-                if (!response.IsSuccessStatusCode)
+                if (response.IsSuccessStatusCode)
+                {
+                    using (HttpContent data = response.Content)
+                    {
+                        var jsonString = data.ReadAsStringAsync();
+                        jsonString.Wait();
+                        this.id = JsonConvert.DeserializeObject<Activity>(jsonString.Result).id;
+                    }
+                }
+                else
                 {
                     Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
                     throw new Exception("Api Activity save request error, Please contact dev team");
@@ -33,5 +43,31 @@ namespace SkydevCSTool.Models
 
         }
 
+        public void Update()
+        {
+            Globals.SaveToLogFile(string.Concat("Update Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
+            using (var client = new HttpClient())
+            {
+                var uri = string.Concat(Url.API_URL, "/activity/", this.id); ;
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                var response = client.PutAsync(uri, content).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    using (HttpContent data = response.Content)
+                    {
+                        var jsonString = data.ReadAsStringAsync();
+                        jsonString.Wait();
+                        this.id = JsonConvert.DeserializeObject<Activity>(jsonString.Result).id;
+                    }
+                }
+                else
+                {
+                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                    throw new Exception("Api Activity update request error, Please contact dev team");
+                }
+            }
+
+        }
     }
 }

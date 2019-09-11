@@ -93,7 +93,7 @@ namespace WindowsFormsApp1
         {
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
-                this.SaveActivity();
+                Globals.UpdateActivity();
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
             }
             Console.WriteLine(string.Concat("LAPSE: ", Globals._idleTicks));
@@ -101,31 +101,6 @@ namespace WindowsFormsApp1
         private void Application_OnIdle(object sender, EventArgs e)
         {
             Globals._wentIdle = DateTime.Now;
-        }
-
-
-        private void SaveActivity()
-        {
-            try
-            {
-                Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                Globals.activity.agent_id = Globals.ComplianceAgent.id;
-                Globals.activity.work_date = Globals.ComplianceAgent.review_date;
-                Globals.activity.Save();
-            }
-            catch (AggregateException e)
-            {
-                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
-            }
-            catch (Exception e)
-            {
-                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
-            }
-
-            Globals.activity.start_time = "";
         }
 
         #endregion
@@ -171,6 +146,7 @@ namespace WindowsFormsApp1
 
             Globals.SaveToLogFile("Application START", (int)LogType.Activity);
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Globals.SaveActivity();
 
             this.Text += String.Concat(" ", Globals.CurrentVersion());
             bgWorkResync.RunWorkerAsync();
@@ -183,7 +159,7 @@ namespace WindowsFormsApp1
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            this.SaveActivity();
+            Globals.UpdateActivity();
             Application.Exit();
         }
 
@@ -383,6 +359,15 @@ namespace WindowsFormsApp1
             if (helperBW.CancellationPending)
             {
                 e.Cancel = true;
+            }
+        }
+
+        private void UpdateWorkactivity_Tick(object sender, EventArgs e)
+        {
+            if(!string.IsNullOrEmpty(Globals.activity.start_time))
+            {
+                Globals.UpdateActivity();
+                Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
         }
     }

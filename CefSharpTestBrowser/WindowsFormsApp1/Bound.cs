@@ -19,10 +19,10 @@ namespace SkydevCSTool
             if (e.Frame.IsMain)
             {
                 browser.EvaluateScriptAsync(@"
-                    var bounce = $(`body:contains('locked to another bouncer')`).length;
-                    if(bounce > 0){
-                        bound.saveAsBounce();
-                    }
+                var bounce = $(`body:contains('locked to another bouncer')`).length;
+                if(bounce > 0){
+                    bound.saveAsBounce();
+                }
                 ");
             }
         }
@@ -81,6 +81,11 @@ namespace SkydevCSTool
                     });
                 ";
                 browser.EvaluateScriptAsync(submit_script);
+
+                if (e.Url.Contains("/auth/login"))
+                {
+                    browser.EvaluateScriptAsync("");
+                }
             }
         }
 

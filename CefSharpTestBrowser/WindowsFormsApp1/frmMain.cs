@@ -211,31 +211,6 @@ namespace WindowsFormsApp1
             Point loc = control.PointToScreen(Point.Empty);
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
-        private void CmbURL_Click_1(object sender, EventArgs e)
-        {
-            try
-            {
-                cmbURL.Items.Clear();
-                foreach (var item in Globals.UrlHistory)
-                {
-                    cmbURL.Items.Add(item);
-                }
-            }
-            catch { }
-            
-        }
-
-        private void CmbURL_KeyDown_1(object sender, KeyEventArgs e)
-        {
-            e.SuppressKeyPress = true;
-        }
-
-        private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
-        {
-            if(cmbURL.SelectedItem != null){
-                chromeBrowser.Load(cmbURL.SelectedItem.ToString());
-            } 
-        }
 
         #endregion
 
@@ -393,6 +368,53 @@ namespace WindowsFormsApp1
                 Globals.Profile = 1;
             InitializeChromium(Globals.Profile);
             switchToolStripMenuItem.Enabled = true;
+        }
+
+        private void CmbURL_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                LoadUrl(cmbURL.Text.ToString());
+            }
+        }
+
+        private void CmbURL_DropDown(object sender, EventArgs e)
+        {
+            try
+            {
+                cmbURL.Items.Clear();
+                foreach (var item in Globals.UrlHistory)
+                {
+                    cmbURL.Items.Add(item);
+                }
+            }
+            catch { }
+        }
+
+        private void CmbURL_Click_1(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            if (cmbURL.SelectedItem != null)
+            {
+                LoadUrl(cmbURL.SelectedItem.ToString());
+            }
+        }
+
+        private void LoadUrl(string url)
+        {
+            if ((url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) &&
+                    !String.IsNullOrEmpty(url))
+            {
+                chromeBrowser.Load(url);
+            }
+            else
+            {
+                chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+            }
         }
     }
 }

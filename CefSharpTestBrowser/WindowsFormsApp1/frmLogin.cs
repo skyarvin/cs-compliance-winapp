@@ -104,8 +104,9 @@ namespace WindowsFormsApp1
                 workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
             }
 
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            Directory.Delete(@path + "/cache/", true);
+            string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/");
+            if(Directory.Exists(cache_path))
+                Directory.Delete(cache_path, true);
         }
 
         private void Workshift_list_KeyDown(object sender, KeyEventArgs e)

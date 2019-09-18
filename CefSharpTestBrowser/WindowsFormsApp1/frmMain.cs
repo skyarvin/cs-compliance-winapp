@@ -4,12 +4,12 @@ using CefSharp.WinForms.Internals;
 using SkydevCSTool;
 using SkydevCSTool.Class;
 using SkydevCSTool.Handlers;
-using SkydevCSTool.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
@@ -48,7 +48,7 @@ namespace WindowsFormsApp1
         };
 
         #region Init
-        public void InitializeChromium(string username)
+        public void InitializeChromium(int username = 1)
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
@@ -61,27 +61,15 @@ namespace WindowsFormsApp1
             }
 
             Cef.GetGlobalCookieManager().SetStoragePath(@path + "/cache/cookie/" + username + "/", true);
+
+            var requestContextSettings = new RequestContextSettings();
+            requestContextSettings.CachePath = @path + "/cache/cache/" + username + "/";
+            requestContextSettings.PersistSessionCookies = true;
+            requestContextSettings.PersistUserPreferences = true;
             chromeBrowser = new ChromiumWebBrowser(Url.CB_COMPLIANCE_URL);
-            chromeBrowser.RequestContext = new RequestContext(new RequestContextSettings()
-            {
-                CachePath = @path + "/cache/cache/" + username + "/",
-                PersistSessionCookies = true,
-                PersistUserPreferences = true
-            });
+            chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
-            lblUser.Text = Globals.ComplianceAgent.name;
-            try {
-                pbImg.Load(Globals.ComplianceAgent.photo);
-            }
-            catch { }
-        }
-
-        public frmMain()
-        {
-            Globals.useraccount = UserAccount.GetAccount();
-            InitializeComponent();
-            InitializeChromium(Globals.useraccount.username);
 
             chromeBrowser.AddressChanged += Browser_AddressChanged;
             var obj = new BoundObject(chromeBrowser);
@@ -92,6 +80,18 @@ namespace WindowsFormsApp1
             chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
+
+            lblUser.Text = Globals.ComplianceAgent.name;
+            try {
+                pbImg.Load(Globals.ComplianceAgent.photo);
+            }
+            catch { }
+        }
+
+        public frmMain()
+        {
+            InitializeComponent();
+            InitializeChromium();
         }
         #endregion
 
@@ -119,26 +119,17 @@ namespace WindowsFormsApp1
             {
                 string sCurrAddress = e.Address;
                 cmbURL.Text = sCurrAddress;
-
-                if (!String.IsNullOrEmpty(sCurrAddress))
+                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) &&
+                    !String.IsNullOrEmpty(sCurrAddress))
                 {
-                    if (sCurrAddress.Contains(Url.CB_COMPLIANCE_URL))
+                    var splitAddress = sCurrAddress.Split('#');
+                    if (CurrentUrl != splitAddress[0])
                     {
-                        chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                    }
-
-                    if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) &&
-                        !String.IsNullOrEmpty(sCurrAddress))
-                    {
-                        var splitAddress = sCurrAddress.Split('#');
-                        if (CurrentUrl != splitAddress[0])
-                        {
-                            Globals.AddToHistory(splitAddress[0]);
-                            Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
-                            CurrentUrl = splitAddress[0];
-                            StartTime = DateTime.Now;
-                            Globals.SKYPE_COMPLIANCE = false;
-                        }
+                        Globals.AddToHistory(splitAddress[0]);
+                        Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
+                        CurrentUrl = splitAddress[0];
+                        StartTime = DateTime.Now;
+                        Globals.SKYPE_COMPLIANCE = false;
                     }
                 }
             });
@@ -210,7 +201,7 @@ namespace WindowsFormsApp1
         private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
-            Cef.GetGlobalCookieManager().DeleteCookies("", "");
+            Cef.GetGlobalCookieManager().DeleteCookies();
             this.Close();
 
         }
@@ -385,6 +376,23 @@ namespace WindowsFormsApp1
                 Globals.UpdateActivity();
                 Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
+        }
+
+        private void SwitchToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            switchToolStripMenuItem.Enabled = false;
+            this.pnlBrowser.Controls.Clear();
+            chromeBrowser.Dispose();
+            while (chromeBrowser.Disposing)
+            {
+                Console.WriteLine("Disposing...");
+            }
+            if (Globals.Profile == 1)
+                Globals.Profile = 2;
+            else
+                Globals.Profile = 1;
+            InitializeChromium(Globals.Profile);
+            switchToolStripMenuItem.Enabled = true;
         }
     }
 }

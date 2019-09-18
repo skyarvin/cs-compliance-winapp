@@ -43,6 +43,7 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
             this.cmbURL = new SkydevCSTool.CustomComboBox();
@@ -184,9 +185,10 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logoutToolStripMenuItem});
+            this.logoutToolStripMenuItem,
+            this.switchToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
             // 
             // logoutToolStripMenuItem
             // 
@@ -194,6 +196,13 @@
             this.logoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.LogoutToolStripMenuItem_Click);
+            // 
+            // switchToolStripMenuItem
+            // 
+            this.switchToolStripMenuItem.Name = "switchToolStripMenuItem";
+            this.switchToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.switchToolStripMenuItem.Text = "Switch";
+            this.switchToolStripMenuItem.Click += new System.EventHandler(this.SwitchToolStripMenuItem_Click);
             // 
             // bgWorkResync
             // 
@@ -265,6 +274,7 @@
         private SkydevCSTool.CustomComboBox cmbURL;
         private System.ComponentModel.BackgroundWorker bgWorkResync;
         private System.Windows.Forms.Timer updateWorkactivity;
+        private System.Windows.Forms.ToolStripMenuItem switchToolStripMenuItem;
     }
 }
 

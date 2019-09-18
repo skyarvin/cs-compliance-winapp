@@ -13,6 +13,7 @@ namespace WindowsFormsApp1
 {
     static class Globals
     {
+        public static int Profile { get; set; }
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();

@@ -24,6 +24,18 @@ namespace SkydevCSTool
                     bound.saveAsBounce();
                 }
                 ");
+
+                var last_chatlog = Logger.GetLastChatlog("http://localhost:8080/cb/show/?id=1568790953"); //Globals.CurrentUrl
+                if (!string.IsNullOrEmpty(last_chatlog))
+                {
+                    browser.EvaluateScriptAsync("var chatlogs = $(`#chatlog_user .chatlog td.chatlog_date`);" +
+                        "chatlogs.each(function(){" +
+                        "if($.trim(this.innerText) == \"" + last_chatlog + "\"){" +
+                        "$(this)[0].parentElement.style.background=\"green\"" +
+                        "$(this)[0].parentElement.style.color=\"white\"" +
+                        "}" +
+                        "})");
+                }
             }
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)

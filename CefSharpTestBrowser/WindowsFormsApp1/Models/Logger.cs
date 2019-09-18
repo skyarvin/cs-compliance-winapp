@@ -23,6 +23,7 @@ namespace WindowsFormsApp1.Models
         public bool rr { get; set; }
         public string workshift { get; set; }
         public string review_date { get; set; }
+        public string last_chatlog { get; set; }
 
         public Logger Save()
         {
@@ -72,7 +73,34 @@ namespace WindowsFormsApp1.Models
 
         //Static Methods
         #region Static Methods
+        public static string GetLastChatlog(string url)
+        {
+            using (var client = new HttpClient())
+            {
+                var uri = string.Concat(Url.API_URL, "/logs/url_info");
+                //client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                var content = new StringContent("{\"compliance_url\":\"" + url + "\"}", Encoding.UTF8, "application/json");
+                var response = client.PostAsync(uri, content).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            return JsonConvert.DeserializeObject<Chatlog>(jsonString.Result).last_chatlog;
+                        }
+                    }
 
+                    return "test";
+                }
+                else
+                {
+                    throw new Exception("Api save request error, Please contact dev team");
+                }
+            }
+        }
         private static bool Process_Json_String(bool is_post, string json_string)
         {
             using (var client = new HttpClient())
@@ -101,5 +129,10 @@ namespace WindowsFormsApp1.Models
             return Process_Json_String(false, json_string);
         }
         #endregion
+    }
+
+    public class Chatlog
+    {
+        public string last_chatlog { get; set; }
     }
 }

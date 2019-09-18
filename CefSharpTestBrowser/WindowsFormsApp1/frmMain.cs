@@ -23,7 +23,6 @@ namespace WindowsFormsApp1
         private Timer _timer;
         public ChromiumWebBrowser chromeBrowser;
         private string LastSuccessUrl;
-        private string CurrentUrl;
         private DateTime StartTime;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -123,11 +122,11 @@ namespace WindowsFormsApp1
                     !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
-                    if (CurrentUrl != splitAddress[0])
+                    if (Globals.CurrentUrl != splitAddress[0])
                     {
                         Globals.AddToHistory(splitAddress[0]);
                         Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
-                        CurrentUrl = splitAddress[0];
+                        Globals.CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
                     }
@@ -234,9 +233,12 @@ namespace WindowsFormsApp1
             if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
                 followers = int.Parse(followRaw);
 
+            string last_chatlog = "";
+            if (element_id == Action.Approve.Value) last_chatlog = (string)chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+
             var logData = new Logger
             {
-                url = CurrentUrl,
+                url = Globals.CurrentUrl,
                 agent_id = Globals.ComplianceAgent.id.ToString(),
                 action = Actions[element_id],
                 remarks = String.Concat(violation, notes),
@@ -245,12 +247,13 @@ namespace WindowsFormsApp1
                 sc = followers >= Globals.SC_THRESHOLD ? true : false,
                 rr = string.IsNullOrEmpty(reply) ? false : true,
                 review_date = Globals.ComplianceAgent.review_date,
-                workshift = Globals.ComplianceAgent.last_workshift
+                workshift = Globals.ComplianceAgent.last_workshift,
+                last_chatlog = last_chatlog != "" ? last_chatlog : null
             };
 
             try
             {
-                if (CurrentUrl == LastSuccessUrl)
+                if (Globals.CurrentUrl == LastSuccessUrl)
                 {
                     logData.id = Globals.LAST_SUCCESS_ID;
                     if(logData.id != 0)
@@ -278,7 +281,7 @@ namespace WindowsFormsApp1
             if (element_id == "request-review-submit" && element_id == "set_expr" && element_id == "change_gender")
                 LastSuccessUrl = ""; //Clear last success
             else
-                LastSuccessUrl = CurrentUrl;
+                LastSuccessUrl = Globals.CurrentUrl;
         }
 
 

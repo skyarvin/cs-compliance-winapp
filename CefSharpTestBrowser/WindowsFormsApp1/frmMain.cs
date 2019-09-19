@@ -293,7 +293,7 @@ namespace WindowsFormsApp1
             }
 
 
-            if (element_id == "request-review-submit" && element_id == "set_expr" && element_id == "change_gender")
+            if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
                 LastSuccessUrl = ""; //Clear last success
             else
                 LastSuccessUrl = CurrentUrl;

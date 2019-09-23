@@ -15,6 +15,7 @@ using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using Timer = System.Windows.Forms.Timer;
+using System.Media;
 
 namespace WindowsFormsApp1
 {
@@ -22,6 +23,7 @@ namespace WindowsFormsApp1
     {
         private Timer _timer;
         private int room_duration;
+        private int max_room_duration = 30;
         public ChromiumWebBrowser chromeBrowser;
         private string LastSuccessUrl;
         private DateTime StartTime;
@@ -98,7 +100,8 @@ namespace WindowsFormsApp1
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
         {
-            if (++room_duration >= 30) {
+            if (++room_duration >= max_room_duration) {
+                if (room_duration == max_room_duration) PlayAlarm();
                 lblCountdown.BackColor = Color.Red;
                 lblCountdown.ForeColor = Color.White;
             }
@@ -431,6 +434,13 @@ namespace WindowsFormsApp1
             else
             {
                 chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+            }
+        }
+        private void PlayAlarm()
+        {
+            using (SoundPlayer player = new SoundPlayer("alarm.wav"))
+            {
+                player.Play();
             }
         }
     }

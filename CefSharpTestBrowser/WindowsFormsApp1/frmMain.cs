@@ -21,6 +21,7 @@ namespace WindowsFormsApp1
     public partial class frmMain : Form
     {
         private Timer _timer;
+        private int room_duration;
         public ChromiumWebBrowser chromeBrowser;
         private string LastSuccessUrl;
         private DateTime StartTime;
@@ -97,11 +98,16 @@ namespace WindowsFormsApp1
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
         {
+            if (++room_duration >= 30) {
+                lblCountdown.BackColor = Color.Red;
+                lblCountdown.ForeColor = Color.White;
+            }
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
             }
+            lblCountdown.Text = room_duration.ToString();
             Console.WriteLine(string.Concat("LAPSE: ", Globals._idleTicks));
         }
         private void Application_OnIdle(object sender, EventArgs e)
@@ -118,8 +124,8 @@ namespace WindowsFormsApp1
             {
                 string sCurrAddress = e.Address;
                 cmbURL.Text = sCurrAddress;
-                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) &&
-                    !String.IsNullOrEmpty(sCurrAddress))
+                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) ||
+                    sCurrAddress.Contains("/auth/login") && !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl != splitAddress[0])
@@ -129,7 +135,15 @@ namespace WindowsFormsApp1
                         Globals.CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
+                        room_duration = 0;
+                        lblCountdown.Text = room_duration.ToString();
+                        lblCountdown.ForeColor = Color.Green;
+                        lblCountdown.BackColor = Color.FromArgb(31, 95, 167);
                     }
+                }
+                else
+                {
+                    chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
                 }
             });
         }

@@ -25,18 +25,18 @@ namespace SkydevCSTool
                 }
                 ");
 
-                //var last_chatlog = Logger.GetLastChatlog(Globals.CurrentUrl); // http://localhost:8080/cb/show/?id=1568790953
-                //if (!string.IsNullOrEmpty(last_chatlog))
-                //{
-                //    var scrpt = "var chatlogs = $(`#chatlog_user .chatlog td.chatlog_date`);" +
-                //        "chatlogs.each(function(){" +
-                //        "if($.trim(this.innerText) == \"" + last_chatlog + "\"){" +
-                //        "$(this)[0].parentElement.style.background=\"#0f0\";" +
-                //        "}" +
-                //        "})";
+                var last_chatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
+                if (!string.IsNullOrEmpty(last_chatlog))
+                {
+                    var scrpt = "var chatlogs = $(`#chatlog_user .chatlog td.chatlog_date`);" +
+                        "chatlogs.each(function(){" +
+                        "if($.trim(this.innerText) == \"" + last_chatlog + "\"){" +
+                        "$(this)[0].parentElement.style.background=\"#0f0\";" +
+                        "}" +
+                        "})";
 
-                //    browser.EvaluateScriptAsync(scrpt);
-                //}
+                    browser.EvaluateScriptAsync(scrpt);
+                }
             }
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)

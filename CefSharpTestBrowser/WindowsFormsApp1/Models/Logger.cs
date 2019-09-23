@@ -78,7 +78,7 @@ namespace WindowsFormsApp1.Models
             using (var client = new HttpClient())
             {
                 var uri = string.Concat(Url.API_URL, "/logs/url_info");
-                //client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent("{\"compliance_url\":\"" + url + "\"}", Encoding.UTF8, "application/json");
                 var response = client.PostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)

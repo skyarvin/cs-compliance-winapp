@@ -46,6 +46,8 @@
             this.switchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
+            this.lblCountdown = new System.Windows.Forms.Label();
+            this.panel2 = new System.Windows.Forms.Panel();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
@@ -73,6 +75,8 @@
             // pnlSearch
             // 
             this.pnlSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.pnlSearch.Controls.Add(this.panel2);
+            this.pnlSearch.Controls.Add(this.lblCountdown);
             this.pnlSearch.Controls.Add(this.cmbURL);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSearch.Location = new System.Drawing.Point(307, 0);
@@ -215,6 +219,27 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
+            // lblCountdown
+            // 
+            this.lblCountdown.Dock = System.Windows.Forms.DockStyle.Right;
+            this.lblCountdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCountdown.ForeColor = System.Drawing.Color.Green;
+            this.lblCountdown.Location = new System.Drawing.Point(394, 0);
+            this.lblCountdown.Name = "lblCountdown";
+            this.lblCountdown.Size = new System.Drawing.Size(50, 40);
+            this.lblCountdown.TabIndex = 9;
+            this.lblCountdown.Text = "0";
+            this.lblCountdown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel2.Location = new System.Drawing.Point(393, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1, 40);
+            this.panel2.TabIndex = 9;
+            // 
             // cmbURL
             // 
             this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -225,9 +250,9 @@
             this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.cmbURL.ForeColor = System.Drawing.Color.White;
             this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(3, 8);
+            this.cmbURL.Location = new System.Drawing.Point(8, 8);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(438, 25);
+            this.cmbURL.Size = new System.Drawing.Size(379, 25);
             this.cmbURL.TabIndex = 8;
             this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
             this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
@@ -276,6 +301,8 @@
         private System.ComponentModel.BackgroundWorker bgWorkResync;
         private System.Windows.Forms.Timer updateWorkactivity;
         private System.Windows.Forms.ToolStripMenuItem switchToolStripMenuItem;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label lblCountdown;
     }
 }
 

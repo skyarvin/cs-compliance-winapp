@@ -273,6 +273,9 @@ namespace WindowsFormsApp1
             if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
                 followers = int.Parse(followRaw);
 
+            string last_chatlog = "";
+            if (element_id == Action.Approve.Value) last_chatlog = (string)chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+
             var logData = new Logger
             {
                 url = Globals.CurrentUrl,
@@ -284,7 +287,8 @@ namespace WindowsFormsApp1
                 sc = followers >= Globals.SC_THRESHOLD ? true : false,
                 rr = string.IsNullOrEmpty(reply) ? false : true,
                 review_date = Globals.ComplianceAgent.review_date,
-                workshift = Globals.ComplianceAgent.last_workshift
+                workshift = Globals.ComplianceAgent.last_workshift,
+                last_chatlog = last_chatlog != "" ? last_chatlog : null
             };
 
             try

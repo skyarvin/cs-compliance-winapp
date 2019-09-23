@@ -31,8 +31,7 @@ namespace SkydevCSTool
                     browser.EvaluateScriptAsync("var chatlogs = $(`#chatlog_user .chatlog td.chatlog_date`);" +
                         "chatlogs.each(function(){" +
                         "if($.trim(this.innerText) == \"" + last_chatlog + "\"){" +
-                        "$(this)[0].parentElement.style.background=\"green\"" +
-                        "$(this)[0].parentElement.style.color=\"white\"" +
+                        "$(this)[0].parentElement.style.background=\"green\";" +
                         "}" +
                         "})");
                 }

@@ -220,9 +220,10 @@
             this.cmbURL.Name = "cmbURL";
             this.cmbURL.Size = new System.Drawing.Size(438, 25);
             this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
             this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
-            this.cmbURL.KeyDown += new System.Windows.Forms.KeyEventHandler(this.CmbURL_KeyDown_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
             // 
             // frmMain
             // 

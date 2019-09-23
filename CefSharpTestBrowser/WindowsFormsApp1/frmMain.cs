@@ -22,7 +22,6 @@ namespace WindowsFormsApp1
         private Timer _timer;
         public ChromiumWebBrowser chromeBrowser;
         private string LastSuccessUrl;
-        private string CurrentUrl;
         private DateTime StartTime;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -116,11 +115,11 @@ namespace WindowsFormsApp1
                     !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
-                    if (CurrentUrl != splitAddress[0])
+                    if (Globals.CurrentUrl != splitAddress[0])
                     {
                         Globals.AddToHistory(splitAddress[0]);
                         Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
-                        CurrentUrl = splitAddress[0];
+                        Globals.CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
                     }
@@ -204,7 +203,16 @@ namespace WindowsFormsApp1
             Point loc = control.PointToScreen(Point.Empty);
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
-        private void CmbURL_Click_1(object sender, EventArgs e)
+
+        private void CmbURL_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                LoadUrl(cmbURL.Text.ToString());
+            }
+        }
+
+        private void CmbURL_DropDown(object sender, EventArgs e)
         {
             try
             {
@@ -215,19 +223,32 @@ namespace WindowsFormsApp1
                 }
             }
             catch { }
-            
         }
 
-        private void CmbURL_KeyDown_1(object sender, KeyEventArgs e)
+        private void CmbURL_Click_1(object sender, EventArgs e)
         {
-            e.SuppressKeyPress = true;
+
         }
 
         private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            if(cmbURL.SelectedItem != null){
-                chromeBrowser.Load(cmbURL.SelectedItem.ToString());
-            } 
+            if (cmbURL.SelectedItem != null)
+            {
+                LoadUrl(cmbURL.SelectedItem.ToString());
+            }
+        }
+
+        private void LoadUrl(string url)
+        {
+            if ((url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) &&
+                    !String.IsNullOrEmpty(url))
+            {
+                chromeBrowser.Load(url);
+            }
+            else
+            {
+                chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+            }
         }
 
         #endregion
@@ -254,7 +275,7 @@ namespace WindowsFormsApp1
 
             var logData = new Logger
             {
-                url = CurrentUrl,
+                url = Globals.CurrentUrl,
                 agent_id = Globals.ComplianceAgent.id.ToString(),
                 action = Actions[element_id],
                 remarks = String.Concat(violation, notes),
@@ -268,7 +289,7 @@ namespace WindowsFormsApp1
 
             try
             {
-                if (CurrentUrl == LastSuccessUrl)
+                if (Globals.CurrentUrl == LastSuccessUrl)
                 {
                     logData.id = Globals.LAST_SUCCESS_ID;
                     if(logData.id != 0)
@@ -296,7 +317,7 @@ namespace WindowsFormsApp1
             if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
                 LastSuccessUrl = ""; //Clear last success
             else
-                LastSuccessUrl = CurrentUrl;
+                LastSuccessUrl = Globals.CurrentUrl;
         }
 
 

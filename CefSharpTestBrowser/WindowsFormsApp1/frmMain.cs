@@ -131,6 +131,7 @@ namespace WindowsFormsApp1
                     sCurrAddress.Contains("/auth/login") && !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
+
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
                         Globals.AddToHistory(splitAddress[0]);
@@ -142,6 +143,7 @@ namespace WindowsFormsApp1
                         lblCountdown.Text = room_duration.ToString();
                         lblCountdown.ForeColor = Color.Green;
                         lblCountdown.BackColor = Color.FromArgb(31, 95, 167);
+                        Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
                     }
                 }
                 else

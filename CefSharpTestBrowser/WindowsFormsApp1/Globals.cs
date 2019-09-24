@@ -15,6 +15,8 @@ namespace WindowsFormsApp1
     {
         public static int Profile { get; set; }
         public static string CurrentUrl { get; set; }
+        public static string LastRoomChatlog { get; set; }
+
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();

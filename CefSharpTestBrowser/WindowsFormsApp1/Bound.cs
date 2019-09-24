@@ -24,19 +24,6 @@ namespace SkydevCSTool
                     bound.saveAsBounce();
                 }
                 ");
-
-                var last_chatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
-                if (!string.IsNullOrEmpty(last_chatlog))
-                {
-                    var scrpt = "var chatlogs = $(`#chatlog_user .chatlog td.chatlog_date`);" +
-                        "chatlogs.each(function(){" +
-                        "if($.trim(this.innerText) == \"" + last_chatlog + "\"){" +
-                        "$(this)[0].parentElement.style.background=\"#0f0\";" +
-                        "}" +
-                        "})";
-
-                    browser.EvaluateScriptAsync(scrpt);
-                }
             }
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
@@ -65,6 +52,9 @@ namespace SkydevCSTool
 
                             if ((e.target.value != undefined) && (element_values.hasOwnProperty(e.target.value))) {
                                     bound.onClicked(element_values[e.target.value][0]);
+                            }
+                            if (e.target.id == 'tab_chatlog_user') {
+                                bound.userChatLogOnClicked();
                             }
                         }
                     }
@@ -142,6 +132,22 @@ namespace SkydevCSTool
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });
             }
         }
+
+        public void UserChatLogOnClicked()
+        {
+            if (!string.IsNullOrEmpty(Globals.LastRoomChatlog))
+            {
+                var scrpt = "var chatlogs = $(`#data .chatlog td.chatlog_date`);" +
+                    "chatlogs.each(function(){" +
+                    "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
+                    "$(this)[0].parentElement.style.background=\"#0f0\";" +
+                    "}" +
+                    "})";
+
+                browser.EvaluateScriptAsync(scrpt);
+            }
+        }
+
         public class HtmlItemClickedEventArgs : EventArgs
         {
             public string Id { get; set; }

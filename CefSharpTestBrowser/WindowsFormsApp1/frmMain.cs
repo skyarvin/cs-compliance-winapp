@@ -101,9 +101,7 @@ namespace WindowsFormsApp1
         private void Timer_Expired(object sender, EventArgs e)
         {
             if (++room_duration >= max_room_duration) {
-                if (room_duration == max_room_duration) PlayAlarm();
-                lblCountdown.BackColor = Color.Red;
-                lblCountdown.ForeColor = Color.White;
+                setHeaderColor(Color.Red, Color.DarkRed);
             }
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
@@ -141,8 +139,7 @@ namespace WindowsFormsApp1
                         Globals.SKYPE_COMPLIANCE = false;
                         room_duration = 0;
                         lblCountdown.Text = room_duration.ToString();
-                        lblCountdown.ForeColor = Color.Green;
-                        lblCountdown.BackColor = Color.FromArgb(31, 95, 167);
+                        setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
                         Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
                     }
                 }
@@ -438,12 +435,21 @@ namespace WindowsFormsApp1
                 chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
             }
         }
-        private void PlayAlarm()
+
+        private void setHeaderColor(Color backcolor, Color darkBackColor)
         {
-            using (SoundPlayer player = new SoundPlayer("alarm.wav"))
-            {
-                player.Play();
-            }
+            lblUser.BackColor = backcolor;
+            cmbURL.BackColor = darkBackColor;
+            cmbURL.BorderColor = darkBackColor;
+            pnlSearch.BackColor = darkBackColor;
+            panel1.BackColor = backcolor;
+            panel2.BackColor = backcolor;
+            btnFind.BackColor = backcolor;
+            btnRefresh.BackColor = backcolor;
+            pbImg.BackColor = backcolor;
+            lblCountdown.BackColor = darkBackColor;
+            lblCountdown.ForeColor = Color.White;
         }
+       
     }
 }

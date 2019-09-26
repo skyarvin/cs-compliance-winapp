@@ -125,8 +125,8 @@ namespace WindowsFormsApp1
             {
                 string sCurrAddress = e.Address;
                 cmbURL.Text = sCurrAddress;
-                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) ||
-                    sCurrAddress.Contains("/auth/login") && !String.IsNullOrEmpty(sCurrAddress))
+                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")) ||
+                    sCurrAddress.Contains("/auth/login") || sCurrAddress.Contains("/update_expiration_date_form")) && !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
 
@@ -450,6 +450,10 @@ namespace WindowsFormsApp1
             lblCountdown.BackColor = darkBackColor;
             lblCountdown.ForeColor = Color.White;
         }
-       
+
+        private void CmbURL_Resize(object sender, EventArgs e)
+        {
+            cmbURL.Refresh();
+        }
     }
 }

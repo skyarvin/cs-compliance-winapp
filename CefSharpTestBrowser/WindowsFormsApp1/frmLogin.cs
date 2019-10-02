@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.IO.Compression;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 
@@ -104,9 +105,9 @@ namespace WindowsFormsApp1
                 workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
             }
 
-            string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/");
-            if(Directory.Exists(cache_path))
-                Directory.Delete(cache_path, true);
+            //string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/");
+            //if(Directory.Exists(cache_path))
+            //    Directory.Delete(cache_path, true);
         }
 
         private void Workshift_list_KeyDown(object sender, KeyEventArgs e)

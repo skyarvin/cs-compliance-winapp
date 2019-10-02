@@ -16,6 +16,10 @@ using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using Timer = System.Windows.Forms.Timer;
 using System.Media;
+using System.Net;
+using System.Threading.Tasks;
+using System.Text;
+using System.Net.Sockets;
 
 namespace WindowsFormsApp1
 {
@@ -50,22 +54,24 @@ namespace WindowsFormsApp1
         };
 
         #region Init
-        public void InitializeChromium(int username = 1)
+        public void InitializeChromium(string profile = "Me")
         {
+            if (string.IsNullOrEmpty(Globals.Profile))
+                Globals.Profile = "Me";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
-            settings.CachePath = @path + "/cache/cache/" + username + "/";
+            settings.CachePath = @path + "/cache/cache/";
             settings.PersistSessionCookies = true;
             if (!Cef.IsInitialized)
             {
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/cache/cookie/" + username + "/", true);
+            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/SkydevCsTool/cookies/" + profile + "/", true);
 
             var requestContextSettings = new RequestContextSettings();
-            requestContextSettings.CachePath = @path + "/cache/cache/" + username + "/";
+            requestContextSettings.CachePath = @path + "/cache/cache/";
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
             chromeBrowser = new ChromiumWebBrowser(Url.CB_COMPLIANCE_URL);
@@ -90,19 +96,58 @@ namespace WindowsFormsApp1
             catch { }
         }
 
+        private void InitializeServer()
+        {
+            IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
+            Globals.MyIP = ipHost.AddressList[1].ToString();
+
+            Globals.Server = new Server(Globals.MyIP);
+            WaitIncomingClientConnection();
+        }
+
+        private void InitializeAppFolders()
+        {
+            // TODO : Refactor this !
+            string temporary_cache_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\temp");
+            if ( !Directory.Exists(temporary_cache_directory))
+            {
+                Directory.CreateDirectory(temporary_cache_directory);
+            }
+
+            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Me");
+            if (!Directory.Exists(temporary_cookies_directory))
+            {
+                Directory.CreateDirectory(temporary_cookies_directory);
+            }
+
+            string temporary_me_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Other");
+            if (!Directory.Exists(temporary_me_directory))
+            {
+                Directory.CreateDirectory(temporary_me_directory);
+            }
+        }
+
+
         public frmMain()
         {
             InitializeComponent();
             InitializeChromium();
+            InitializeServer();
+            InitializeAppFolders();
         }
         #endregion
 
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
         {
-            if (++room_duration >= max_room_duration) {
+            room_duration = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds - Globals.unixTimestamp;
+            if (room_duration >= max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
             }
+
+            if (Globals.Server != null && Globals.Server.IsConnected)
+                Globals.Server.Send(new PairCommand { Action = "UPDATE_TIME" });
+            
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
@@ -137,10 +182,18 @@ namespace WindowsFormsApp1
                         Globals.CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
-                        room_duration = 0;
+                        Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                         lblCountdown.Text = room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
                         Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
+
+                        PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
+                        if (Globals.Server != null && Globals.Server.IsConnected)
+                            Globals.Server.Send(redirectCommand);
+                        else if (Globals.Client != null && Globals.Client.IsConnected)
+                        {
+                            Globals.Client.Send(redirectCommand);
+                        }
                     }
                 }
                 else
@@ -161,6 +214,7 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             Application.Idle += new EventHandler(Application_OnIdle);
+            Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
             _timer.Interval = 1000;
@@ -170,8 +224,9 @@ namespace WindowsFormsApp1
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             Globals.SaveActivity();
 
-            this.Text += String.Concat(" ", Globals.CurrentVersion());
             bgWorkResync.RunWorkerAsync();
+
+            this.Text += String.Concat(" ", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -189,6 +244,14 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+
+            PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
+            if (Globals.Server != null && Globals.Server.IsConnected)
+                Globals.Server.Send(refreshCommand);
+            else if (Globals.Client != null && Globals.Client.IsConnected)
+            {
+                Globals.Client.Send(refreshCommand);
+            }
         }
 
         private void BtnFind_Click(object sender, EventArgs e)
@@ -315,13 +378,20 @@ namespace WindowsFormsApp1
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == (Keys.F10))
+            try
             {
+                if (keyData == (Keys.F10))
+                {
 
-                chromeBrowser.ShowDevTools();
-                return true;
+                    chromeBrowser.ShowDevTools();
+                    return true;
+                }
+                return base.ProcessCmdKey(ref msg, keyData);
             }
-            return base.ProcessCmdKey(ref msg, keyData);
+            catch
+            {
+            }
+            return false;
         }
         #endregion
 
@@ -375,20 +445,27 @@ namespace WindowsFormsApp1
         private void SwitchToolStripMenuItem_Click(object sender, EventArgs e)
         {
             switchToolStripMenuItem.Enabled = false;
-            this.pnlBrowser.Controls.Clear();
-            chromeBrowser.Dispose();
-            while (chromeBrowser.Disposing)
-            {
-                Console.WriteLine("Disposing...");
-            }
-            if (Globals.Profile == 1)
-                Globals.Profile = 2;
+            Globals.Server.Send(new PairCommand { Action = "SWITCH", Profile = Globals.Profile }) ;
+            if (Globals.Profile == "Me")
+                Globals.Profile = "Other";
             else
-                Globals.Profile = 1;
-            InitializeChromium(Globals.Profile);
+                Globals.Profile = "Me";
+
+            SwitchCache();
             switchToolStripMenuItem.Enabled = true;
         }
 
+        private void SwitchCache()
+        {
+            this.InvokeOnUiThreadIfRequired(() =>
+                {
+                    this.pnlBrowser.Controls.Clear();
+                    chromeBrowser.Dispose();
+                    Application.DoEvents();
+                    InitializeChromium(Globals.Profile);
+                }
+            );
+        }
         private void CmbURL_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)
@@ -455,5 +532,125 @@ namespace WindowsFormsApp1
         {
             cmbURL.Refresh();
         }
+
+        private void BtnConnect_Click(object sender, EventArgs e)
+        {
+            frmPairConnect PairConnect = new frmPairConnect();
+            PairConnect.ShowDialog(this);
+            if (Globals.Client.IsConnected)
+            {
+                Globals.Profile = "Other";
+                SwitchCache();
+                StartListenToServer();
+                Globals.Client.Send(new PairCommand { Action = "BEGIN_SEND" });
+            }
+        }
+
+       
+        private void WaitIncomingClientConnection()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    Globals.Server.Accept();
+                    if (Globals.Server.Receive().Action == "CONNECT")
+                    {
+                        DialogResult dialogResult = MessageBox.Show("Allow incoming connection?", "Confirm", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            Globals.Server.Send(new PairCommand { Action = "APPROVE" });
+                            var response = Globals.Server.Receive();
+                            if (response.Action == "REQUEST_CACHE")
+                            {
+                                Globals.Server.SendCache();
+                                var cookies = Globals.Server.Receive().Message;
+                                Byte[] bytes = Convert.FromBase64String(cookies);
+                                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Other\\Cookies");
+                                File.WriteAllBytes(path, bytes);
+                                var begin_send = Globals.Server.Receive();
+                                if (begin_send.Action == "BEGIN_SEND")
+                                    Globals.Server.IsConnected = true;
+                                // TODO : Extract into ReceiveCache()
+                            }
+
+                            try
+                            {
+                                StartListeningToClient();
+                            }
+                            catch (SocketException ex)
+                            {
+                                MessageBox.Show("Pairing Connection has been disconnected", "Info");
+                            }
+                        }
+                        else
+                        {
+                            Globals.Server.Send(new PairCommand { Action = "DENY" });
+                        }
+                    }
+
+                    Globals.Server.Dispose();
+                }
+            });
+        }
+        private void StartListenToServer()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                while (true)
+                {
+                    PairCommand data = Globals.Client.Receive();
+                    if (!string.IsNullOrEmpty(data.Action))
+                    {
+                        switch (data.Action)
+                        {
+                            case "REFRESH":
+                                chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                                Globals.unixTimestamp = data.Timestamp;
+                                break;
+                            case "SWITCH":
+                                Globals.Profile = data.Profile;
+                                Globals.unixTimestamp = data.Timestamp;
+                                SwitchCache();
+                                break;
+                            case "UPDATE_TIME":
+                                Globals.unixTimestamp = data.Timestamp;
+                                break;
+                            case "GOTO":
+                                if (data.Message != Globals.CurrentUrl)
+                                    chromeBrowser.Load(data.Message);
+                                break;
+                        }
+                        //TODO: Services for actions
+                        Console.WriteLine("Action received -> {0} ", data);
+                    }
+                }
+            });
+        }
+
+        private void StartListeningToClient()
+        {
+            while (true)
+            {
+                PairCommand data = Globals.Server.Receive();
+
+                if (!string.IsNullOrEmpty(data.Action))
+                {
+                    switch(data.Action)
+                    {
+                        case "REFRESH":
+                            chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                            break;
+                        case "GOTO":
+                            if(data.Message != Globals.CurrentUrl)
+                                chromeBrowser.Load(data.Message);
+                            break;
+                    }
+                    //TODO: Services for actions
+                    Console.WriteLine("Action received -> {0} ", data);
+                }
+            }
+        }
+
     }
 }

@@ -8,14 +8,19 @@ using System.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using SkydevCSTool.Class;
 
 namespace WindowsFormsApp1
 {
     static class Globals
     {
-        public static int Profile { get; set; }
+        public static string Profile { get; set; }
         public static string CurrentUrl { get; set; }
         public static string LastRoomChatlog { get; set; }
+        public static bool Paired { get; set; }
+        public static Int32 unixTimestamp { get; set; }
+
 
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
@@ -29,6 +34,10 @@ namespace WindowsFormsApp1
         public static bool SKYPE_COMPLIANCE;
         public static int SC_THRESHOLD = 10000;
         public static List<string> UrlHistory = new List<string>();
+
+        public static Server Server;
+        public static Client Client;
+        public static string MyIP;
 
         private static frmMessage frm = new frmMessage();
         public static void ShowMessage(Form parent)

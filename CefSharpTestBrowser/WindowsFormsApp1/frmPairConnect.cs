@@ -41,12 +41,12 @@ namespace SkydevCSTool
                         Directory.CreateDirectory(temporary_cookies_directory);
                     }
                     Byte[] bytes = Convert.FromBase64String(response.Message);
-                    string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\",response.Profile,"\\Cookies");
+                    string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", response.Profile, "\\Cookies");
                     File.WriteAllBytes(path, bytes);
                     Globals.Profile = response.Profile;
                     Globals.unixTimestamp = response.Timestamp;
-                    // Now send the client cookie back to the server
                     Globals.Client.SendCache();
+
                 }
                 
                 this.Close();

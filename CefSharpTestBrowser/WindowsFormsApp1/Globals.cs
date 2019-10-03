@@ -15,6 +15,7 @@ namespace WindowsFormsApp1
 {
     static class Globals
     {
+        public static List<Socket> Connections = new List<Socket>();
         public static string Profile { get; set; }
         public static string CurrentUrl { get; set; }
         public static string LastRoomChatlog { get; set; }

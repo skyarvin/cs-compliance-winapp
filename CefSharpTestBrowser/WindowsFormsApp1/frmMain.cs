@@ -101,8 +101,13 @@ namespace WindowsFormsApp1
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             Globals.MyIP = ipHost.AddressList[1].ToString();
 
-            Globals.Server = new Server(Globals.MyIP);
-            WaitIncomingClientConnection();
+            //Globals.Server = new Server(Globals.MyIP);
+            //WaitIncomingClientConnection();
+
+            Task.Factory.StartNew(() =>
+            {
+                AsynchronousSocketListener.StartListening(Globals.MyIP);
+            });
         }
 
         private void InitializeAppFolders(string profile)
@@ -241,12 +246,17 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
 
-            PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
-            if (Globals.Server != null && Globals.Server.IsConnected)
-                Globals.Server.Send(refreshCommand);
-            else if (Globals.Client != null && Globals.Client.IsConnected)
+            PairCommand refreshCommand = new PairCommand { Action = "REFRESH" }; 
+            if (Globals.Client != null && Globals.Client.IsConnected)
             {
                 Globals.Client.Send(refreshCommand);
+            }
+            else
+            {
+                foreach (var connection in Globals.Connections)
+                {
+                    AsynchronousSocketListener.Send(connection, new PairCommand { Action = "REFRESH" });
+                }
             }
         }
 
@@ -627,8 +637,18 @@ namespace WindowsFormsApp1
                                 Globals.unixTimestamp = data.Timestamp;
                                 break;
                             case "SWITCH":
+                                if (data.Profile == Globals.Profile)
+                                    break;
                                 Globals.Profile = data.Profile;
                                 Globals.unixTimestamp = data.Timestamp;
+                                Byte[] bytes = Convert.FromBase64String(data.Message);
+                                string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile);
+                                if (!Directory.Exists(temporary_cookies_directory))
+                                {
+                                    Directory.CreateDirectory(temporary_cookies_directory);
+                                }
+                                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile, "\\Cookies");
+                                File.WriteAllBytes(path, bytes);
                                 SwitchCache();
                                 break;
                             case "UPDATE_TIME":
@@ -682,14 +702,18 @@ namespace WindowsFormsApp1
         }
         private void Profile_Click( object sender, EventArgs e)
         {
-            if (IsConnectedToPair()) {
-                Globals.Profile = sender.ToString();
-                Globals.Server.Send(new PairCommand { Action = "SWITCH", Profile = Globals.Profile });
-                SwitchCache();
+            Globals.Profile = sender.ToString();
+            foreach (var connection in Globals.Connections)
+            {
+                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile, "\\Cookies");
+                string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
+                Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
+                string file = Convert.ToBase64String(sbytes);
+                AsynchronousSocketListener.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile, Message = file });
             }
-           
-          
-      
+            SwitchCache();
+
         }
     }
 }

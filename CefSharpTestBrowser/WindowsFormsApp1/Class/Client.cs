@@ -23,7 +23,6 @@ namespace SkydevCSTool.Class
 
         public void Connect(string ip)
         {
-            Globals.Paired = false;
             this.Connection = Sockets.ExecuteClient(ip);
             try
             {
@@ -31,7 +30,6 @@ namespace SkydevCSTool.Class
                 PairCommand response = this.Receive();
                 if (response.Action == "APPROVE")
                 {
-                    Globals.Paired = true;
                     this.IsConnected = true;
                     this.Message = "Connected!";
                 }
@@ -75,12 +73,12 @@ namespace SkydevCSTool.Class
         public void SendCache()
         {
 
-            string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Me\\Cookies");
+            string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
             string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
             System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
             Byte[] bytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
             string file = Convert.ToBase64String(bytes);
-            this.Send(new PairCommand { Action = "SENDFILE", Message = file });
+            this.Send(new PairCommand { Action = "SENDFILE", Message = file, Profile=Globals.ComplianceAgent.profile });
 
         }
     }

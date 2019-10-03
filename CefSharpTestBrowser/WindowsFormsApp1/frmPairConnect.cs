@@ -35,9 +35,15 @@ namespace SkydevCSTool
                 {
                     Globals.Client.Send(new PairCommand { Action = "REQUEST_CACHE" });
                     PairCommand response = Globals.Client.Receive();
+                    string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", response.Profile);
+                    if (!Directory.Exists(temporary_cookies_directory))
+                    {
+                        Directory.CreateDirectory(temporary_cookies_directory);
+                    }
                     Byte[] bytes = Convert.FromBase64String(response.Message);
-                    string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Other\\Cookies");
+                    string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\",response.Profile,"\\Cookies");
                     File.WriteAllBytes(path, bytes);
+                    Globals.Profile = response.Profile;
                     Globals.unixTimestamp = response.Timestamp;
                     // Now send the client cookie back to the server
                     Globals.Client.SendCache();

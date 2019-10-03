@@ -54,10 +54,10 @@ namespace WindowsFormsApp1
         };
 
         #region Init
-        public void InitializeChromium(string profile = "Me")
+        public void InitializeChromium(string profile)
         {
-            if (string.IsNullOrEmpty(Globals.Profile))
-                Globals.Profile = "Me";
+           
+            Globals.Profile = profile;
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
@@ -74,7 +74,7 @@ namespace WindowsFormsApp1
             requestContextSettings.CachePath = @path + "/cache/cache/";
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
-            chromeBrowser = new ChromiumWebBrowser(Url.CB_COMPLIANCE_URL);
+            chromeBrowser = new ChromiumWebBrowser(Url.CB_HOME);
             chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(chromeBrowser);
             chromeBrowser.Dock = DockStyle.Fill;
@@ -105,7 +105,7 @@ namespace WindowsFormsApp1
             WaitIncomingClientConnection();
         }
 
-        private void InitializeAppFolders()
+        private void InitializeAppFolders(string profile)
         {
             // TODO : Refactor this !
             string temporary_cache_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\temp");
@@ -113,27 +113,22 @@ namespace WindowsFormsApp1
             {
                 Directory.CreateDirectory(temporary_cache_directory);
             }
-
-            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Me");
+            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", profile);
             if (!Directory.Exists(temporary_cookies_directory))
             {
                 Directory.CreateDirectory(temporary_cookies_directory);
-            }
-
-            string temporary_me_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Other");
-            if (!Directory.Exists(temporary_me_directory))
-            {
-                Directory.CreateDirectory(temporary_me_directory);
             }
         }
 
 
         public frmMain()
         {
+            Globals.Profiles.Add(Globals.ComplianceAgent.profile);
             InitializeComponent();
-            InitializeChromium();
+            InitializeAppFolders(Globals.ComplianceAgent.profile);
+            InitializeChromium(Globals.ComplianceAgent.profile);
             InitializeServer();
-            InitializeAppFolders();
+            
         }
         #endregion
 
@@ -170,11 +165,12 @@ namespace WindowsFormsApp1
             {
                 string sCurrAddress = e.Address;
                 cmbURL.Text = sCurrAddress;
-                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")) ||
+                if (sCurrAddress == Url.CB_HOME)
+                    return;
+                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL , "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")) ||
                     sCurrAddress.Contains("/auth/login") || sCurrAddress.Contains("/update_expiration_date_form")) && !String.IsNullOrEmpty(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
-
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
                         Globals.AddToHistory(splitAddress[0]);
@@ -442,17 +438,30 @@ namespace WindowsFormsApp1
             }
         }
 
+        private bool IsConnectedToPair()
+        {
+            if (Globals.Server != null && Globals.Server.IsConnected)
+                return true;
+            else if (Globals.Client != null && Globals.Client.IsConnected)
+                return true;
+
+            return false;
+        }
+
         private void SwitchToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            switchToolStripMenuItem.Enabled = false;
-            Globals.Server.Send(new PairCommand { Action = "SWITCH", Profile = Globals.Profile }) ;
-            if (Globals.Profile == "Me")
-                Globals.Profile = "Other";
-            else
-                Globals.Profile = "Me";
+            //switchToolStripMenuItem.Enabled = false;
+            //if(IsConnectedToPair())
+            //    Globals.Server.Send(new PairCommand { Action = "SWITCH", Profile = Globals.Profile }) ;
+            //if (Globals.Profile == "Me")
+            //    Globals.Profile = "Other";
+            //else
+            //    Globals.Profile = "Me";
 
-            SwitchCache();
-            switchToolStripMenuItem.Enabled = true;
+            //SwitchCache();
+            //switchToolStripMenuItem.Enabled = true;
+            
+           
         }
 
         private void SwitchCache()
@@ -502,7 +511,13 @@ namespace WindowsFormsApp1
 
         private void LoadUrl(string url)
         {
-            if ((url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset"))) &&
+            if (url == Url.CB_HOME)
+            {
+                chromeBrowser.Load(url);
+                return;
+            }
+            if ((url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")) ||
+                url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/auth/login")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/update_expiration_date_form"))) &&
                     !String.IsNullOrEmpty(url))
             {
                 chromeBrowser.Load(url);
@@ -539,7 +554,6 @@ namespace WindowsFormsApp1
             PairConnect.ShowDialog(this);
             if (Globals.Client.IsConnected)
             {
-                Globals.Profile = "Other";
                 SwitchCache();
                 StartListenToServer();
                 Globals.Client.Send(new PairCommand { Action = "BEGIN_SEND" });
@@ -564,16 +578,20 @@ namespace WindowsFormsApp1
                             if (response.Action == "REQUEST_CACHE")
                             {
                                 Globals.Server.SendCache();
-                                var cookies = Globals.Server.Receive().Message;
-                                Byte[] bytes = Convert.FromBase64String(cookies);
-                                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\Other\\Cookies");
+                                var cookies = Globals.Server.Receive();
+                                Byte[] bytes = Convert.FromBase64String(cookies.Message);
+                                string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", cookies.Profile);
+                                if (!Directory.Exists(temporary_cookies_directory))
+                                {
+                                    Directory.CreateDirectory(temporary_cookies_directory);
+                                }
+                                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", cookies.Profile, "\\Cookies");
                                 File.WriteAllBytes(path, bytes);
+                                Globals.Profiles.Add(cookies.Profile);
                                 var begin_send = Globals.Server.Receive();
                                 if (begin_send.Action == "BEGIN_SEND")
                                     Globals.Server.IsConnected = true;
-                                // TODO : Extract into ReceiveCache()
                             }
-
                             try
                             {
                                 StartListeningToClient();
@@ -652,5 +670,26 @@ namespace WindowsFormsApp1
             }
         }
 
+        private void ContextMenuStrip1_Opened(object sender, EventArgs e)
+        {
+            switchToolStripMenuItem.DropDownItems.Clear();
+            foreach (var profile in Globals.Profiles) {
+                var submenu = switchToolStripMenuItem.DropDownItems.Add(profile, null, new EventHandler(Profile_Click));
+                if (profile == Globals.Profile)
+                    submenu.BackColor = Color.DodgerBlue;
+            }
+            
+        }
+        private void Profile_Click( object sender, EventArgs e)
+        {
+            if (IsConnectedToPair()) {
+                Globals.Profile = sender.ToString();
+                Globals.Server.Send(new PairCommand { Action = "SWITCH", Profile = Globals.Profile });
+                SwitchCache();
+            }
+           
+          
+      
+        }
     }
 }

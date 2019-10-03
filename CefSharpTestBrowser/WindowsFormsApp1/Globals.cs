@@ -21,7 +21,7 @@ namespace WindowsFormsApp1
         public static bool Paired { get; set; }
         public static Int32 unixTimestamp { get; set; }
 
-
+        public static List<String> Profiles = new List<string>();
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();

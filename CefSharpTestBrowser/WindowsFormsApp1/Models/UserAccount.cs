@@ -16,14 +16,6 @@ namespace SkydevCSTool.Models
         /// API get to fetch account from  User pool
         /// </summary>
         /// <returns></returns>
-        public static UserAccount GetAccount()
-        {
-            return new UserAccount()
-            {
-                id = 0,
-                username = "skychrisp",
-                password = "FBBAFyAw%[r{)5z?"
-            };
-        }
+
     }
 }

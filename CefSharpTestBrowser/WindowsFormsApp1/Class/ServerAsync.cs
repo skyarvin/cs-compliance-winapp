@@ -87,7 +87,6 @@ namespace SkydevCSTool.Class
             // Create the state object.  
             StateObject state = new StateObject();
             state.workSocket = handler;
-            Globals.Connections.Add(handler);
             handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                 new AsyncCallback(ReadCallback), state);
         }
@@ -119,7 +118,7 @@ namespace SkydevCSTool.Class
                     switch(data.Action)
                     {
                         case "CONNECT":
-                            DialogResult dialogResult = MessageBox.Show("Allow incoming connection?", "Confirm", MessageBoxButtons.YesNo);
+                            DialogResult dialogResult = MessageBox.Show(string.Concat("Allow incoming connection from ",data.Message,"?"), "Confirm", MessageBoxButtons.YesNo);
                             if (dialogResult == DialogResult.Yes)
                             {
                                 Send(handler, new PairCommand { Action = "APPROVE" });
@@ -144,8 +143,20 @@ namespace SkydevCSTool.Class
                             File.WriteAllBytes(path, rbytes);
                             Globals.Profiles.Add(data.Profile);
                             break;
+                        case "BEGIN_SEND":
+                            Globals.Connections.Add(handler);
+                            break;
+                        case "REQUEST_TIME":
+                            AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME" });
+                            break;
                         case "REFRESH":
-                            SendToAll("REFRESH");
+                            Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                            SendToAll(new PairCommand { Action = "REFRESH" });
+                            break;
+                        case "GOTO":
+                            if (data.Message != Globals.CurrentUrl)
+                                Globals.chromeBrowser.Load(data.Message);
+                            SendToAll(new PairCommand { Action = "GOTO", Message = data.Message }, handler);
                             break;
                     }
 
@@ -158,11 +169,16 @@ namespace SkydevCSTool.Class
             }
         }
 
-        public static void SendToAll(string action)
+        public static void SendToAll(PairCommand data, Socket exclude_handler=null)
         {
             foreach (var connection in Globals.Connections)
             {
-                AsynchronousSocketListener.Send(connection, new PairCommand { Action = action, Profile = Globals.Profile });
+
+                if (exclude_handler != null && connection.RemoteEndPoint.ToString() == exclude_handler.RemoteEndPoint.ToString())
+                {
+                    continue;
+                }
+                AsynchronousSocketListener.Send(connection, data);
             }
         }
 

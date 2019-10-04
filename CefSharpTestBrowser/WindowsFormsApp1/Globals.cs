@@ -26,6 +26,7 @@ namespace WindowsFormsApp1
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();
+        public static ChromiumWebBrowser chromeBrowser;
         public static ChromiumWebBrowser chromePopup;
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;

@@ -46,7 +46,6 @@ namespace SkydevCSTool
                     Globals.Profile = response.Profile;
                     Globals.unixTimestamp = response.Timestamp;
                     Globals.Client.SendCache();
-
                 }
                 
                 this.Close();

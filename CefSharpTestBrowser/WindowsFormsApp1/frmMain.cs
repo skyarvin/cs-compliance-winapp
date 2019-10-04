@@ -27,8 +27,7 @@ namespace WindowsFormsApp1
     {
         private Timer _timer;
         private int room_duration;
-        private int max_room_duration = 30;
-        public ChromiumWebBrowser chromeBrowser;
+        private int max_room_duration = 15;
         private string LastSuccessUrl;
         private DateTime StartTime;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
@@ -58,6 +57,7 @@ namespace WindowsFormsApp1
         {
            
             Globals.Profile = profile;
+            lblProfile.Text = String.Concat("Profile: ", Globals.Profile);
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
@@ -74,20 +74,20 @@ namespace WindowsFormsApp1
             requestContextSettings.CachePath = @path + "/cache/cache/";
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
-            chromeBrowser = new ChromiumWebBrowser(Url.CB_HOME);
-            chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
-            this.pnlBrowser.Controls.Add(chromeBrowser);
-            chromeBrowser.Dock = DockStyle.Fill;
+            Globals.chromeBrowser = new ChromiumWebBrowser(Url.CB_HOME);
+            Globals.chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
+            this.pnlBrowser.Controls.Add(Globals.chromeBrowser);
+            Globals.chromeBrowser.Dock = DockStyle.Fill;
 
-            chromeBrowser.AddressChanged += Browser_AddressChanged;
-            var obj = new BoundObject(chromeBrowser);
+            Globals.chromeBrowser.AddressChanged += Browser_AddressChanged;
+            var obj = new BoundObject(Globals.chromeBrowser);
             obj.HtmlItemClicked += Obj_HtmlItemClicked;
 
-            chromeBrowser.RegisterJsObject("bound", obj);
-            chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
-            chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
-            chromeBrowser.MenuHandler = new MyCustomMenuHandler();
-            chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
+            Globals.chromeBrowser.RegisterJsObject("bound", obj);
+            Globals.chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
+            Globals.chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
+            Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
+            Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
 
             lblUser.Text = Globals.ComplianceAgent.name;
             try {
@@ -141,12 +141,11 @@ namespace WindowsFormsApp1
         private void Timer_Expired(object sender, EventArgs e)
         {
             room_duration = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds - Globals.unixTimestamp;
+
             if (room_duration >= max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
             }
 
-            if (Globals.Server != null && Globals.Server.IsConnected)
-                Globals.Server.Send(new PairCommand { Action = "UPDATE_TIME" });
             
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
@@ -189,17 +188,19 @@ namespace WindowsFormsApp1
                         Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
 
                         PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
-                        if (Globals.Server != null && Globals.Server.IsConnected)
-                            Globals.Server.Send(redirectCommand);
-                        else if (Globals.Client != null && Globals.Client.IsConnected)
+                        if (Globals.Client != null && Globals.Client.IsConnected)
                         {
                             Globals.Client.Send(redirectCommand);
+                            Globals.Client.Send(new PairCommand { Action = "REQUEST_TIME" });
+
                         }
+                        else
+                            AsynchronousSocketListener.SendToAll(redirectCommand);
                     }
                 }
                 else
                 {
-                    chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                    Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
                 }
             });
         }
@@ -244,9 +245,8 @@ namespace WindowsFormsApp1
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
-            chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-
-            PairCommand refreshCommand = new PairCommand { Action = "REFRESH" }; 
+            Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+            PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.Client != null && Globals.Client.IsConnected)
             {
                 Globals.Client.Send(refreshCommand);
@@ -269,7 +269,7 @@ namespace WindowsFormsApp1
         {
             if (!string.IsNullOrEmpty(txtSearch.Text))
             {
-                chromeBrowser.Find(0, txtSearch.Text, next, false, false);
+                Globals.chromeBrowser.Find(0, txtSearch.Text, next, false, false);
             }
         }
 
@@ -289,12 +289,7 @@ namespace WindowsFormsApp1
             this.Close();
 
         }
-        private void LblUser_MouseDown_1(object sender, MouseEventArgs e)
-        {
-            Label control = (Label)sender;
-            Point loc = control.PointToScreen(Point.Empty);
-            contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
-        }
+ 
 
         #endregion
 
@@ -303,23 +298,23 @@ namespace WindowsFormsApp1
         private void ProcessActionButtons(string element_id)
         {
             Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
-            string violation = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
-            string notes = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
-            string reply = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+            string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
+            string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
+            string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
             if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
             if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
 
             if (element_id == Action.ChatReply.Value) notes = reply;
             if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
 
-            string followRaw = Globals.myStr(chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
+            string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
             followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
             int followers = 0;
             if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
                 followers = int.Parse(followRaw);
 
             string last_chatlog = "";
-            if (element_id == Action.Approve.Value) last_chatlog = (string)chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+            if (element_id == Action.Approve.Value) last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
 
             var logData = new Logger
             {
@@ -389,7 +384,7 @@ namespace WindowsFormsApp1
                 if (keyData == (Keys.F10))
                 {
 
-                    chromeBrowser.ShowDevTools();
+                    Globals.chromeBrowser.ShowDevTools();
                     return true;
                 }
                 return base.ProcessCmdKey(ref msg, keyData);
@@ -479,7 +474,7 @@ namespace WindowsFormsApp1
             this.InvokeOnUiThreadIfRequired(() =>
                 {
                     this.pnlBrowser.Controls.Clear();
-                    chromeBrowser.Dispose();
+                    Globals.chromeBrowser.Dispose();
                     Application.DoEvents();
                     InitializeChromium(Globals.Profile);
                 }
@@ -523,24 +518,24 @@ namespace WindowsFormsApp1
         {
             if (url == Url.CB_HOME)
             {
-                chromeBrowser.Load(url);
+                Globals.chromeBrowser.Load(url);
                 return;
             }
             if ((url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")) ||
                 url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/auth/login")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/update_expiration_date_form"))) &&
                     !String.IsNullOrEmpty(url))
             {
-                chromeBrowser.Load(url);
+                Globals.chromeBrowser.Load(url);
             }
             else
             {
-                chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
             }
         }
 
         private void setHeaderColor(Color backcolor, Color darkBackColor)
         {
-            lblUser.BackColor = backcolor;
+            lblUser.BackColor = darkBackColor;
             cmbURL.BackColor = darkBackColor;
             cmbURL.BorderColor = darkBackColor;
             pnlSearch.BackColor = darkBackColor;
@@ -570,57 +565,6 @@ namespace WindowsFormsApp1
             }
         }
 
-       
-        private void WaitIncomingClientConnection()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    Globals.Server.Accept();
-                    if (Globals.Server.Receive().Action == "CONNECT")
-                    {
-                        DialogResult dialogResult = MessageBox.Show("Allow incoming connection?", "Confirm", MessageBoxButtons.YesNo);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            Globals.Server.Send(new PairCommand { Action = "APPROVE" });
-                            var response = Globals.Server.Receive();
-                            if (response.Action == "REQUEST_CACHE")
-                            {
-                                Globals.Server.SendCache();
-                                var cookies = Globals.Server.Receive();
-                                Byte[] bytes = Convert.FromBase64String(cookies.Message);
-                                string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", cookies.Profile);
-                                if (!Directory.Exists(temporary_cookies_directory))
-                                {
-                                    Directory.CreateDirectory(temporary_cookies_directory);
-                                }
-                                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", cookies.Profile, "\\Cookies");
-                                File.WriteAllBytes(path, bytes);
-                                Globals.Profiles.Add(cookies.Profile);
-                                var begin_send = Globals.Server.Receive();
-                                if (begin_send.Action == "BEGIN_SEND")
-                                    Globals.Server.IsConnected = true;
-                            }
-                            try
-                            {
-                                StartListeningToClient();
-                            }
-                            catch (SocketException ex)
-                            {
-                                MessageBox.Show("Pairing Connection has been disconnected", "Info");
-                            }
-                        }
-                        else
-                        {
-                            Globals.Server.Send(new PairCommand { Action = "DENY" });
-                        }
-                    }
-
-                    Globals.Server.Dispose();
-                }
-            });
-        }
         private void StartListenToServer()
         {
             Task.Factory.StartNew(() =>
@@ -633,7 +577,7 @@ namespace WindowsFormsApp1
                         switch (data.Action)
                         {
                             case "REFRESH":
-                                chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                                Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
                                 Globals.unixTimestamp = data.Timestamp;
                                 break;
                             case "SWITCH":
@@ -656,7 +600,8 @@ namespace WindowsFormsApp1
                                 break;
                             case "GOTO":
                                 if (data.Message != Globals.CurrentUrl)
-                                    chromeBrowser.Load(data.Message);
+                                    Globals.chromeBrowser.Load(data.Message);
+                                Globals.unixTimestamp = data.Timestamp;
                                 break;
                         }
                         //TODO: Services for actions
@@ -666,42 +611,10 @@ namespace WindowsFormsApp1
             });
         }
 
-        private void StartListeningToClient()
-        {
-            while (true)
-            {
-                PairCommand data = Globals.Server.Receive();
-
-                if (!string.IsNullOrEmpty(data.Action))
-                {
-                    switch(data.Action)
-                    {
-                        case "REFRESH":
-                            chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                            break;
-                        case "GOTO":
-                            if(data.Message != Globals.CurrentUrl)
-                                chromeBrowser.Load(data.Message);
-                            break;
-                    }
-                    //TODO: Services for actions
-                    Console.WriteLine("Action received -> {0} ", data);
-                }
-            }
-        }
-
-        private void ContextMenuStrip1_Opened(object sender, EventArgs e)
-        {
-            switchToolStripMenuItem.DropDownItems.Clear();
-            foreach (var profile in Globals.Profiles) {
-                var submenu = switchToolStripMenuItem.DropDownItems.Add(profile, null, new EventHandler(Profile_Click));
-                if (profile == Globals.Profile)
-                    submenu.BackColor = Color.DodgerBlue;
-            }
-            
-        }
         private void Profile_Click( object sender, EventArgs e)
         {
+            if (Globals.Profile == sender.ToString())
+                return;
             Globals.Profile = sender.ToString();
             foreach (var connection in Globals.Connections)
             {
@@ -713,7 +626,30 @@ namespace WindowsFormsApp1
                 AsynchronousSocketListener.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile, Message = file });
             }
             SwitchCache();
+        }
+        private void ContextMenuStrip1_Opened(object sender, EventArgs e)
+        {
+            switchToolStripMenuItem.DropDownItems.Clear();
+            foreach (var profile in Globals.Profiles)
+            {
+                var submenu = switchToolStripMenuItem.DropDownItems.Add(profile, null, new EventHandler(Profile_Click));
+                if (profile == Globals.Profile)
+                    submenu.BackColor = Color.DodgerBlue;
+            }
 
+        }
+        private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
+        {
+            if (Globals.Profiles.Count > 1) {
+                switchToolStripMenuItem.Visible = true;
+            }
+        }
+
+        private void PbImg_Click(object sender, EventArgs e)
+        {
+            PictureBox control = (PictureBox)sender;
+            Point loc = control.PointToScreen(Point.Empty);
+            contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
     }
 }

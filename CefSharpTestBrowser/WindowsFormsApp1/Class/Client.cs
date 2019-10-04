@@ -26,7 +26,7 @@ namespace SkydevCSTool.Class
             this.Connection = Sockets.ExecuteClient(ip);
             try
             {
-                this.Send(new PairCommand { Action = "CONNECT" });
+                this.Send(new PairCommand { Action = "CONNECT", Message = Globals.Profile});
                 PairCommand response = this.Receive();
                 if (response.Action == "APPROVE")
                 {
@@ -81,5 +81,7 @@ namespace SkydevCSTool.Class
             this.Send(new PairCommand { Action = "RECEIVE_CACHE", Message = file, Profile=Globals.ComplianceAgent.profile });
 
         }
+
+
     }
 }

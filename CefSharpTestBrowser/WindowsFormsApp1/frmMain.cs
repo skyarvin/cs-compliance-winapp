@@ -133,6 +133,7 @@ namespace WindowsFormsApp1
             InitializeAppFolders(Globals.ComplianceAgent.profile);
             InitializeChromium(Globals.ComplianceAgent.profile);
             InitializeServer();
+
             
         }
         #endregion
@@ -188,11 +189,10 @@ namespace WindowsFormsApp1
                         Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
 
                         PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
-                        if (Globals.Client != null && Globals.Client.IsConnected)
+                        if (Globals.Client != null && Globals.Connections.Count == 0)
                         {
-                            Globals.Client.Send(redirectCommand);
-                            Globals.Client.Send(new PairCommand { Action = "REQUEST_TIME" });
-
+                            AsynchronousClient.Send(Globals.Client, redirectCommand);
+                            //AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
                         }
                         else
                             AsynchronousSocketListener.SendToAll(redirectCommand);
@@ -247,16 +247,13 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
-            if (Globals.Client != null && Globals.Client.IsConnected)
+            if (Globals.Client != null && Globals.Connections.Count == 0)
             {
-                Globals.Client.Send(refreshCommand);
+                AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
             else
             {
-                foreach (var connection in Globals.Connections)
-                {
-                    AsynchronousSocketListener.Send(connection, new PairCommand { Action = "REFRESH" });
-                }
+                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "REFRESH" });
             }
         }
 
@@ -443,33 +440,9 @@ namespace WindowsFormsApp1
             }
         }
 
-        private bool IsConnectedToPair()
-        {
-            if (Globals.Server != null && Globals.Server.IsConnected)
-                return true;
-            else if (Globals.Client != null && Globals.Client.IsConnected)
-                return true;
-
-            return false;
-        }
-
-        private void SwitchToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            //switchToolStripMenuItem.Enabled = false;
-            //if(IsConnectedToPair())
-            //    Globals.Server.Send(new PairCommand { Action = "SWITCH", Profile = Globals.Profile }) ;
-            //if (Globals.Profile == "Me")
-            //    Globals.Profile = "Other";
-            //else
-            //    Globals.Profile = "Me";
-
-            //SwitchCache();
-            //switchToolStripMenuItem.Enabled = true;
-            
-           
-        }
-
-        private void SwitchCache()
+        
+        
+        public void SwitchCache()
         {
             this.InvokeOnUiThreadIfRequired(() =>
                 {
@@ -557,60 +530,10 @@ namespace WindowsFormsApp1
         {
             frmPairConnect PairConnect = new frmPairConnect();
             PairConnect.ShowDialog(this);
-            if (Globals.Client.IsConnected)
-            {
-                SwitchCache();
-                StartListenToServer();
-                Globals.Client.Send(new PairCommand { Action = "BEGIN_SEND" });
-            }
+            
         }
 
-        private void StartListenToServer()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                while (true)
-                {
-                    PairCommand data = Globals.Client.Receive();
-                    if (!string.IsNullOrEmpty(data.Action))
-                    {
-                        switch (data.Action)
-                        {
-                            case "REFRESH":
-                                Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                                Globals.unixTimestamp = data.Timestamp;
-                                break;
-                            case "SWITCH":
-                                if (data.Profile == Globals.Profile)
-                                    break;
-                                Globals.Profile = data.Profile;
-                                Globals.unixTimestamp = data.Timestamp;
-                                Byte[] bytes = Convert.FromBase64String(data.Message);
-                                string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile);
-                                if (!Directory.Exists(temporary_cookies_directory))
-                                {
-                                    Directory.CreateDirectory(temporary_cookies_directory);
-                                }
-                                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile, "\\Cookies");
-                                File.WriteAllBytes(path, bytes);
-                                SwitchCache();
-                                break;
-                            case "UPDATE_TIME":
-                                Globals.unixTimestamp = data.Timestamp;
-                                break;
-                            case "GOTO":
-                                if (data.Message != Globals.CurrentUrl)
-                                    Globals.chromeBrowser.Load(data.Message);
-                                Globals.unixTimestamp = data.Timestamp;
-                                break;
-                        }
-                        //TODO: Services for actions
-                        Console.WriteLine("Action received -> {0} ", data);
-                    }
-                }
-            });
-        }
-
+       
         private void Profile_Click( object sender, EventArgs e)
         {
             if (Globals.Profile == sender.ToString())
@@ -650,6 +573,11 @@ namespace WindowsFormsApp1
             PictureBox control = (PictureBox)sender;
             Point loc = control.PointToScreen(Point.Empty);
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            InitializeServer();
         }
     }
 }

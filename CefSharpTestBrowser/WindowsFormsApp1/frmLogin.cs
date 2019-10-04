@@ -51,14 +51,15 @@ namespace WindowsFormsApp1
                     if (Globals.ComplianceAgent != null)
                     {
                         bExitApp = false;
-                        frmMain Mainform = new frmMain();
+                        
+                        Globals.frmMain = new frmMain();
                         SkydevCSTool.Properties.Settings.Default.email = txtEmail.Text;
                         SkydevCSTool.Properties.Settings.Default.workshift = workshift_list.SelectedValue.ToString();
                         SkydevCSTool.Properties.Settings.Default.Save();
                         if (Globals.ComplianceAgent.last_workshift == workshift_list.SelectedValue.ToString() || String.IsNullOrEmpty(Globals.ComplianceAgent.last_workshift))
                         {
                             Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
-                            Mainform.Show();
+                            Globals.frmMain.Show();
                             this.Close();
                             return;
                         } 
@@ -67,7 +68,7 @@ namespace WindowsFormsApp1
                         if (dialogResult == DialogResult.Yes)
                         {
                             Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
-                            Mainform.Show();
+                            Globals.frmMain.Show();
                             this.Close();
                         }
                     }

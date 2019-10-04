@@ -23,6 +23,7 @@ namespace WindowsFormsApp1
         public static Int32 unixTimestamp { get; set; }
 
         public static List<String> Profiles = new List<string>();
+        public static frmMain frmMain;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();
@@ -38,7 +39,7 @@ namespace WindowsFormsApp1
         public static List<string> UrlHistory = new List<string>();
 
         public static Server Server;
-        public static Client Client;
+        public static Socket Client;
         public static string MyIP;
 
         private static frmMessage frm = new frmMessage();

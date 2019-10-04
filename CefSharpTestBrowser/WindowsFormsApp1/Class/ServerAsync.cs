@@ -112,60 +112,68 @@ namespace SkydevCSTool.Class
                 // Check for end-of-file tag. If it is not there, read   
                 // more data.  
                 content = state.sb.ToString();
-                if (!string.IsNullOrEmpty(content))
+                if (!string.IsNullOrEmpty(content) && content.IndexOf("|") > -1)
                 {
-                    var data = JsonConvert.DeserializeObject<PairCommand>(content);
-                    switch(data.Action)
+                    var comms = content.Split('|');
+                    state.sb.Clear();
+                    foreach (var comm in comms)
                     {
-                        case "CONNECT":
-                            DialogResult dialogResult = MessageBox.Show(string.Concat("Allow incoming connection from ",data.Message,"?"), "Confirm", MessageBoxButtons.YesNo);
-                            if (dialogResult == DialogResult.Yes)
+                        try
+                        {
+                            var data = JsonConvert.DeserializeObject<PairCommand>(comm);
+                            switch (data.Action)
                             {
-                                Send(handler, new PairCommand { Action = "APPROVE" });
+                                case "CONNECT":
+                                    DialogResult dialogResult = MessageBox.Show(string.Concat("Allow incoming connection from ", data.Message, "?"), "Confirm", MessageBoxButtons.YesNo);
+                                    if (dialogResult == DialogResult.Yes)
+                                    {
+                                        Send(handler, new PairCommand { Action = "APPROVE" });
+                                    }
+                                    break;
+                                case "REQUEST_CACHE":
+                                    string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
+                                    string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                                    System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
+                                    Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
+                                    string file = Convert.ToBase64String(sbytes);
+                                    Send(handler, new PairCommand { Action = "SAVE_SERVER_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile });
+                                    break;
+                                case "SAVE_CLIENT_CACHE":
+                                    Byte[] rbytes = Convert.FromBase64String(data.Message);
+                                    string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile);
+                                    if (!Directory.Exists(temporary_cookies_directory))
+                                    {
+                                        Directory.CreateDirectory(temporary_cookies_directory);
+                                    }
+                                    string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
+                                    File.WriteAllBytes(path, rbytes);
+                                    Globals.Profiles.Add(data.Profile);
+                                    break;
+                                case "BEGIN_SEND":
+                                    Globals.Connections.Add(handler);
+                                    break;
+                                case "REQUEST_TIME":
+                                    AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME" });
+                                    break;
+                                case "REFRESH":
+                                    Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                                    SendToAll(new PairCommand { Action = "REFRESH" });
+                                    break;
+                                case "GOTO":
+                                    if (data.Message != Globals.CurrentUrl)
+                                        Globals.chromeBrowser.Load(data.Message);
+                                    SendToAll(new PairCommand { Action = "GOTO", Message = data.Message }, handler);
+                                    break;
                             }
-                            break;
-                        case "REQUEST_CACHE":
-                            string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
-                            string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
-                            System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
-                            Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
-                            string file = Convert.ToBase64String(sbytes);
-                            Send(handler, new PairCommand { Action = "SENDFILE", Message = file, Profile = Globals.ComplianceAgent.profile });
-                            break;
-                        case "RECEIVE_CACHE":
-                            Byte[] rbytes = Convert.FromBase64String(data.Message);
-                            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile);
-                            if (!Directory.Exists(temporary_cookies_directory))
-                            {
-                                Directory.CreateDirectory(temporary_cookies_directory);
-                            }
-                            string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
-                            File.WriteAllBytes(path, rbytes);
-                            Globals.Profiles.Add(data.Profile);
-                            break;
-                        case "BEGIN_SEND":
-                            Globals.Connections.Add(handler);
-                            break;
-                        case "REQUEST_TIME":
-                            AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME" });
-                            break;
-                        case "REFRESH":
-                            Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                            SendToAll(new PairCommand { Action = "REFRESH" });
-                            break;
-                        case "GOTO":
-                            if (data.Message != Globals.CurrentUrl)
-                                Globals.chromeBrowser.Load(data.Message);
-                            SendToAll(new PairCommand { Action = "GOTO", Message = data.Message }, handler);
-                            break;
+                        }
+                        catch{
+                            state.sb.Append(comm);
+                        }
                     }
-
-                    // Not all data received. Get more.  
-                    StateObject newState = new StateObject();
-                    newState.workSocket = handler;
-                    handler.BeginReceive(newState.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), newState);
                 }
+
+                handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReadCallback), state);
             }
         }
 
@@ -186,7 +194,7 @@ namespace SkydevCSTool.Class
         {
             data.Timestamp = Globals.unixTimestamp;
             // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(JsonConvert.SerializeObject(data));
+            byte[] byteData = Encoding.ASCII.GetBytes(string.Concat(JsonConvert.SerializeObject(data), "|"));
 
             // Begin sending the data to the remote device.  
             handler.BeginSend(byteData, 0, byteData.Length, 0,

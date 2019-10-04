@@ -34,7 +34,15 @@
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.lblCountdown = new System.Windows.Forms.Label();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
+            this.pnlUser = new System.Windows.Forms.Panel();
+            this.lblProfile = new System.Windows.Forms.Label();
+            this.lblUser = new System.Windows.Forms.Label();
+            this.pbImg = new System.Windows.Forms.PictureBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.switchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlSplitter = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
@@ -42,22 +50,15 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.btnRefresh = new System.Windows.Forms.Button();
             this.pnlBrowser = new System.Windows.Forms.Panel();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.switchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.pnlUser = new System.Windows.Forms.Panel();
-            this.pbImg = new System.Windows.Forms.PictureBox();
-            this.lblUser = new System.Windows.Forms.Label();
-            this.lblProfile = new System.Windows.Forms.Label();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
             this.pnlUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -109,6 +110,26 @@
             this.lblCountdown.Text = "0";
             this.lblCountdown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // cmbURL
+            // 
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(8, 8);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(317, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
+            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
+            // 
             // btnConnect
             // 
             this.btnConnect.BackColor = System.Drawing.Color.Transparent;
@@ -124,6 +145,83 @@
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = false;
             this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
+            // 
+            // pnlUser
+            // 
+            this.pnlUser.Controls.Add(this.button1);
+            this.pnlUser.Controls.Add(this.lblProfile);
+            this.pnlUser.Controls.Add(this.lblUser);
+            this.pnlUser.Controls.Add(this.pbImg);
+            this.pnlUser.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlUser.Location = new System.Drawing.Point(462, 0);
+            this.pnlUser.Name = "pnlUser";
+            this.pnlUser.Size = new System.Drawing.Size(265, 40);
+            this.pnlUser.TabIndex = 0;
+            // 
+            // lblProfile
+            // 
+            this.lblProfile.BackColor = System.Drawing.Color.Transparent;
+            this.lblProfile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblProfile.Font = new System.Drawing.Font("Segoe UI Light", 9.25F);
+            this.lblProfile.ForeColor = System.Drawing.Color.MediumSpringGreen;
+            this.lblProfile.Location = new System.Drawing.Point(0, 22);
+            this.lblProfile.Name = "lblProfile";
+            this.lblProfile.Size = new System.Drawing.Size(220, 18);
+            this.lblProfile.TabIndex = 9;
+            this.lblProfile.Text = "Profile: Enrique";
+            this.lblProfile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblUser
+            // 
+            this.lblUser.BackColor = System.Drawing.Color.Transparent;
+            this.lblUser.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUser.ForeColor = System.Drawing.Color.White;
+            this.lblUser.Location = new System.Drawing.Point(0, 0);
+            this.lblUser.Name = "lblUser";
+            this.lblUser.Size = new System.Drawing.Size(220, 22);
+            this.lblUser.TabIndex = 8;
+            this.lblUser.Text = "Enrique";
+            this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // pbImg
+            // 
+            this.pbImg.ContextMenuStrip = this.contextMenuStrip1;
+            this.pbImg.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pbImg.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pbImg.ErrorImage")));
+            this.pbImg.Image = ((System.Drawing.Image)(resources.GetObject("pbImg.Image")));
+            this.pbImg.InitialImage = ((System.Drawing.Image)(resources.GetObject("pbImg.InitialImage")));
+            this.pbImg.Location = new System.Drawing.Point(220, 0);
+            this.pbImg.Name = "pbImg";
+            this.pbImg.Size = new System.Drawing.Size(45, 40);
+            this.pbImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbImg.TabIndex = 7;
+            this.pbImg.TabStop = false;
+            this.pbImg.Click += new System.EventHandler(this.PbImg_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.logoutToolStripMenuItem,
+            this.switchToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
+            this.contextMenuStrip1.Opened += new System.EventHandler(this.ContextMenuStrip1_Opened);
+            // 
+            // logoutToolStripMenuItem
+            // 
+            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.logoutToolStripMenuItem.Text = "Logout";
+            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.LogoutToolStripMenuItem_Click);
+            // 
+            // switchToolStripMenuItem
+            // 
+            this.switchToolStripMenuItem.Name = "switchToolStripMenuItem";
+            this.switchToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.switchToolStripMenuItem.Text = "Switch";
+            this.switchToolStripMenuItem.Visible = false;
             // 
             // pnlSplitter
             // 
@@ -201,31 +299,6 @@
             this.pnlBrowser.Size = new System.Drawing.Size(1034, 477);
             this.pnlBrowser.TabIndex = 2;
             // 
-            // contextMenuStrip1
-            // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logoutToolStripMenuItem,
-            this.switchToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
-            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
-            this.contextMenuStrip1.Opened += new System.EventHandler(this.ContextMenuStrip1_Opened);
-            // 
-            // logoutToolStripMenuItem
-            // 
-            this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-            this.logoutToolStripMenuItem.Text = "Logout";
-            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.LogoutToolStripMenuItem_Click);
-            // 
-            // switchToolStripMenuItem
-            // 
-            this.switchToolStripMenuItem.Name = "switchToolStripMenuItem";
-            this.switchToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
-            this.switchToolStripMenuItem.Text = "Switch";
-            this.switchToolStripMenuItem.Visible = false;
-            this.switchToolStripMenuItem.Click += new System.EventHandler(this.SwitchToolStripMenuItem_Click);
-            // 
             // bgWorkResync
             // 
             this.bgWorkResync.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgWorkResync_DoWork);
@@ -237,77 +310,15 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
-            // pnlUser
+            // button1
             // 
-            this.pnlUser.Controls.Add(this.lblProfile);
-            this.pnlUser.Controls.Add(this.lblUser);
-            this.pnlUser.Controls.Add(this.pbImg);
-            this.pnlUser.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlUser.Location = new System.Drawing.Point(462, 0);
-            this.pnlUser.Name = "pnlUser";
-            this.pnlUser.Size = new System.Drawing.Size(265, 40);
-            this.pnlUser.TabIndex = 0;
-            // 
-            // pbImg
-            // 
-            this.pbImg.ContextMenuStrip = this.contextMenuStrip1;
-            this.pbImg.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pbImg.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pbImg.ErrorImage")));
-            this.pbImg.Image = ((System.Drawing.Image)(resources.GetObject("pbImg.Image")));
-            this.pbImg.InitialImage = ((System.Drawing.Image)(resources.GetObject("pbImg.InitialImage")));
-            this.pbImg.Location = new System.Drawing.Point(220, 0);
-            this.pbImg.Name = "pbImg";
-            this.pbImg.Size = new System.Drawing.Size(45, 40);
-            this.pbImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbImg.TabIndex = 7;
-            this.pbImg.TabStop = false;
-            this.pbImg.Click += new System.EventHandler(this.PbImg_Click);
-            // 
-            // lblUser
-            // 
-            this.lblUser.BackColor = System.Drawing.Color.Transparent;
-            this.lblUser.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(0, 0);
-            this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(220, 22);
-            this.lblUser.TabIndex = 8;
-            this.lblUser.Text = "Enrique";
-            this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblProfile
-            // 
-            this.lblProfile.BackColor = System.Drawing.Color.Transparent;
-            this.lblProfile.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblProfile.Font = new System.Drawing.Font("Segoe UI Light", 9.25F);
-            this.lblProfile.ForeColor = System.Drawing.Color.MediumSpringGreen;
-            this.lblProfile.Location = new System.Drawing.Point(0, 22);
-            this.lblProfile.Name = "lblProfile";
-            this.lblProfile.Size = new System.Drawing.Size(220, 18);
-            this.lblProfile.TabIndex = 9;
-            this.lblProfile.Text = "Profile: Enrique";
-            this.lblProfile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // cmbURL
-            // 
-            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.cmbURL.ForeColor = System.Drawing.Color.White;
-            this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(8, 8);
-            this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(317, 25);
-            this.cmbURL.TabIndex = 8;
-            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
-            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
-            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
-            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
-            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
+            this.button1.Location = new System.Drawing.Point(35, 9);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 10;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
             // frmMain
             // 
@@ -325,11 +336,11 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlHeader.ResumeLayout(false);
             this.pnlSearch.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
             this.pnlUser.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -357,6 +368,7 @@
         private System.Windows.Forms.Label lblProfile;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.PictureBox pbImg;
+        private System.Windows.Forms.Button button1;
     }
 }
 

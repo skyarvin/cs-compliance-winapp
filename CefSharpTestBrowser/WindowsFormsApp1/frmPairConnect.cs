@@ -27,27 +27,13 @@ namespace SkydevCSTool
         {
             if(ValidateIP(txtIPaddress.Text))
             {
+                string target_ip = txtIPaddress.Text;
                 pnlWaiting.Visible = true;
                 Application.DoEvents();
-                Globals.Client = new Client(txtIPaddress.Text);
-                MessageBox.Show(Globals.Client.Message);
-                if (Globals.Client.IsConnected)
+                Task.Factory.StartNew(() =>
                 {
-                    Globals.Client.Send(new PairCommand { Action = "REQUEST_CACHE" });
-                    PairCommand response = Globals.Client.Receive();
-                    string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", response.Profile);
-                    if (!Directory.Exists(temporary_cookies_directory))
-                    {
-                        Directory.CreateDirectory(temporary_cookies_directory);
-                    }
-                    Byte[] bytes = Convert.FromBase64String(response.Message);
-                    string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", response.Profile, "\\Cookies");
-                    File.WriteAllBytes(path, bytes);
-                    Globals.Profile = response.Profile;
-                    Globals.unixTimestamp = response.Timestamp;
-                    Globals.Client.SendCache();
-                }
-                
+                    AsynchronousClient.StartClient(target_ip);
+                });
                 this.Close();
             }
         }

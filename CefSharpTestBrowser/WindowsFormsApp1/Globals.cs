@@ -187,7 +187,17 @@ namespace WindowsFormsApp1
 
             Globals.activity.start_time = "";
         }
+        public static bool IsServer()
+        {
+            if (Globals.Client == null)
+            {
+                return true;
+            }
+            return false;
+        }
     }
+
+  
 
     public enum LogType:int
     {
@@ -198,5 +208,4 @@ namespace WindowsFormsApp1
         UserClick = 5,
     }
 
-    
 }

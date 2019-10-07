@@ -20,6 +20,8 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Text;
 using System.Net.Sockets;
+using System.Diagnostics;
+using System.Reflection;
 
 namespace WindowsFormsApp1
 {
@@ -30,6 +32,7 @@ namespace WindowsFormsApp1
         private int max_room_duration = 15;
         private string LastSuccessUrl;
         private DateTime StartTime;
+        public Thread ClientThread;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },
@@ -125,6 +128,19 @@ namespace WindowsFormsApp1
             }
         }
 
+        public  void ClientHandleSocketError(string code)
+        {
+            if (code == "CON00")
+                MessageBox.Show("UNABLE TO CONNECT");
+            if (code == "CON03") {
+                MessageBox.Show("SERVER CONNECTION LOST");
+                SetBtnConnectText("CONNECT");
+            }
+            if (code == "CON04") {
+                MessageBox.Show("UNABLE TO COMMUNICATE TO SERVER");
+            }
+ 
+        }
 
         public frmMain()
         {
@@ -133,11 +149,18 @@ namespace WindowsFormsApp1
             InitializeAppFolders(Globals.ComplianceAgent.profile);
             InitializeChromium(Globals.ComplianceAgent.profile);
             InitializeServer();
+           
 
-            
+
         }
         #endregion
-
+        public static void MyCommonExceptionHandlingMethod(object sender, UnhandledExceptionEventArgs t)
+        {
+            //var s = new StackTrace(t.ExceptionObject.);
+            var thisasm = Assembly.GetExecutingAssembly();
+            //var methodname = s.GetFrames().Select(f => f.GetMethod()).First(m => m.Module.Assembly == thisasm).Name;
+            MessageBox.Show("LOLS");
+        }
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
         {
@@ -187,15 +210,18 @@ namespace WindowsFormsApp1
                         lblCountdown.Text = room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
                         Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
-
                         PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
-                        if (Globals.Client != null && Globals.Connections.Count == 0)
+                        if (Globals.IsServer())
                         {
-                            AsynchronousClient.Send(Globals.Client, redirectCommand);
-                            //AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
+                            AsynchronousSocketListener.SendToAll(redirectCommand);
+
                         }
                         else
-                            AsynchronousSocketListener.SendToAll(redirectCommand);
+                        {
+                            AsynchronousClient.Send(Globals.Client, redirectCommand);
+                            AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
+                        }
+                          
                     }
                 }
                 else
@@ -247,13 +273,13 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
-            if (Globals.Client != null && Globals.Connections.Count == 0)
+            if (Globals.IsServer())
             {
-                AsynchronousClient.Send(Globals.Client, refreshCommand);
+                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "REFRESH" });
             }
             else
             {
-                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "REFRESH" });
+                AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
         }
 
@@ -513,7 +539,8 @@ namespace WindowsFormsApp1
             cmbURL.BorderColor = darkBackColor;
             pnlSearch.BackColor = darkBackColor;
             panel1.BackColor = backcolor;
-            panel2.BackColor = backcolor;
+            pnlSplitter2.BackColor = backcolor;
+            pnlSplitter3.BackColor = backcolor;
             btnFind.BackColor = backcolor;
             btnRefresh.BackColor = backcolor;
             pbImg.BackColor = backcolor;
@@ -528,11 +555,21 @@ namespace WindowsFormsApp1
 
         private void BtnConnect_Click(object sender, EventArgs e)
         {
-            frmPairConnect PairConnect = new frmPairConnect();
-            PairConnect.ShowDialog(this);
-            
-        }
+            string btn_text = btnConnect.Text.ToUpper();
+            if (btn_text == "CONNECT")
+            {
+                frmPairConnect PairConnect = new frmPairConnect();
+                PairConnect.ShowDialog(this);
+            }
+            else if (btn_text == "DISCONNECT")
+            {
 
+            }
+        }
+        public void SetBtnConnectText(string txt)
+        {
+            btnConnect.Text = txt;
+        }
        
         private void Profile_Click( object sender, EventArgs e)
         {
@@ -573,11 +610,6 @@ namespace WindowsFormsApp1
             PictureBox control = (PictureBox)sender;
             Point loc = control.PointToScreen(Point.Empty);
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            InitializeServer();
         }
     }
 }

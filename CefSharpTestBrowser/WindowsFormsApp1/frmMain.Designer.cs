@@ -32,9 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.pnlSplitter2 = new System.Windows.Forms.Panel();
             this.lblCountdown = new System.Windows.Forms.Label();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.pnlUser = new System.Windows.Forms.Panel();
             this.lblProfile = new System.Windows.Forms.Label();
@@ -52,7 +51,8 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.button1 = new System.Windows.Forms.Button();
+            this.pnlSplitter3 = new System.Windows.Forms.Panel();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlUser.SuspendLayout();
@@ -78,7 +78,7 @@
             // pnlSearch
             // 
             this.pnlSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.pnlSearch.Controls.Add(this.panel2);
+            this.pnlSearch.Controls.Add(this.pnlSplitter2);
             this.pnlSearch.Controls.Add(this.lblCountdown);
             this.pnlSearch.Controls.Add(this.cmbURL);
             this.pnlSearch.Controls.Add(this.btnConnect);
@@ -89,14 +89,14 @@
             this.pnlSearch.Size = new System.Drawing.Size(727, 40);
             this.pnlSearch.TabIndex = 9;
             // 
-            // panel2
+            // pnlSplitter2
             // 
-            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(331, 0);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1, 40);
-            this.panel2.TabIndex = 9;
+            this.pnlSplitter2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlSplitter2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlSplitter2.Location = new System.Drawing.Point(331, 0);
+            this.pnlSplitter2.Name = "pnlSplitter2";
+            this.pnlSplitter2.Size = new System.Drawing.Size(1, 40);
+            this.pnlSplitter2.TabIndex = 9;
             // 
             // lblCountdown
             // 
@@ -109,26 +109,6 @@
             this.lblCountdown.TabIndex = 9;
             this.lblCountdown.Text = "0";
             this.lblCountdown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // cmbURL
-            // 
-            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.cmbURL.ForeColor = System.Drawing.Color.White;
-            this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(8, 8);
-            this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(317, 25);
-            this.cmbURL.TabIndex = 8;
-            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
-            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
-            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
-            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
-            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
             // 
             // btnConnect
             // 
@@ -148,10 +128,10 @@
             // 
             // pnlUser
             // 
-            this.pnlUser.Controls.Add(this.button1);
             this.pnlUser.Controls.Add(this.lblProfile);
             this.pnlUser.Controls.Add(this.lblUser);
             this.pnlUser.Controls.Add(this.pbImg);
+            this.pnlUser.Controls.Add(this.pnlSplitter3);
             this.pnlUser.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlUser.Location = new System.Drawing.Point(462, 0);
             this.pnlUser.Name = "pnlUser";
@@ -164,9 +144,9 @@
             this.lblProfile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblProfile.Font = new System.Drawing.Font("Segoe UI Light", 9.25F);
             this.lblProfile.ForeColor = System.Drawing.Color.MediumSpringGreen;
-            this.lblProfile.Location = new System.Drawing.Point(0, 22);
+            this.lblProfile.Location = new System.Drawing.Point(1, 22);
             this.lblProfile.Name = "lblProfile";
-            this.lblProfile.Size = new System.Drawing.Size(220, 18);
+            this.lblProfile.Size = new System.Drawing.Size(219, 18);
             this.lblProfile.TabIndex = 9;
             this.lblProfile.Text = "Profile: Enrique";
             this.lblProfile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -177,9 +157,9 @@
             this.lblUser.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(0, 0);
+            this.lblUser.Location = new System.Drawing.Point(1, 0);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(220, 22);
+            this.lblUser.Size = new System.Drawing.Size(219, 22);
             this.lblUser.TabIndex = 8;
             this.lblUser.Text = "Enrique";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -310,15 +290,34 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
-            // button1
+            // pnlSplitter3
             // 
-            this.button1.Location = new System.Drawing.Point(35, 9);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 10;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.pnlSplitter3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlSplitter3.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlSplitter3.Location = new System.Drawing.Point(0, 0);
+            this.pnlSplitter3.Name = "pnlSplitter3";
+            this.pnlSplitter3.Size = new System.Drawing.Size(1, 40);
+            this.pnlSplitter3.TabIndex = 10;
+            // 
+            // cmbURL
+            // 
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(8, 8);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(317, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
+            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
             // 
             // frmMain
             // 
@@ -361,14 +360,14 @@
         private System.ComponentModel.BackgroundWorker bgWorkResync;
         private System.Windows.Forms.Timer updateWorkactivity;
         private System.Windows.Forms.ToolStripMenuItem switchToolStripMenuItem;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel pnlSplitter2;
         private System.Windows.Forms.Label lblCountdown;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Panel pnlUser;
         private System.Windows.Forms.Label lblProfile;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.PictureBox pbImg;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Panel pnlSplitter3;
     }
 }
 

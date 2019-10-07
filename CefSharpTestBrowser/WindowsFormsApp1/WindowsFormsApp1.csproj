@@ -151,7 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bound.cs" />
-    <Compile Include="Class\Client.cs" />
     <Compile Include="Class\ClientAsync.cs" />
     <Compile Include="Class\PairCommand.cs" />
     <Compile Include="Class\Result.cs" />

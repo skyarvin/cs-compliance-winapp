@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1;
 using System.IO;
+using System.Threading;
 
 namespace SkydevCSTool
 {
@@ -32,6 +33,8 @@ namespace SkydevCSTool
                 Application.DoEvents();
                 Task.Factory.StartNew(() =>
                 {
+                    Thread.CurrentThread.Name = "ClientSocketsThread";
+                    Globals.frmMain.ClientThread = Thread.CurrentThread;
                     AsynchronousClient.StartClient(target_ip);
                 });
                 this.Close();

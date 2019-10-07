@@ -27,17 +27,14 @@ namespace SkydevCSTool.Class
 
         // The response from the remote device.  
         private static String response = String.Empty;
-
         public static void StartClient(string server_ip)
         {
-            // Connect to a remote device.  
-            try
-            {
-                // Establish the remote endpoint for the socket.  
-                // The name of the   
-                // remote device is "host.contoso.com".  
-                
-                IPAddress ipAddress = IPAddress.Parse(server_ip);
+             
+            connectDone.Reset();
+            sendDone.Reset();
+            receiveDone.Reset();
+
+            IPAddress ipAddress = IPAddress.Parse(server_ip);
                 IPEndPoint remoteEP = new IPEndPoint(ipAddress, port);
 
                 // Create a TCP/IP socket.  
@@ -48,6 +45,11 @@ namespace SkydevCSTool.Class
                 client.BeginConnect(remoteEP,
                     new AsyncCallback(ConnectCallback), client);
                 connectDone.WaitOne();
+                if (Globals.Client == null)
+                {
+                    
+                    return;
+                }
 
                 // Send test data to the remote device.  
                 Send(client, new PairCommand { Action = "CONNECT", Message = Globals.Profile });
@@ -56,12 +58,9 @@ namespace SkydevCSTool.Class
                 // Receive the response from the remote device.  
                 Receive(client);
                 receiveDone.WaitOne();
+                
 
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+
         }
 
         private static void ConnectCallback(IAsyncResult ar)
@@ -84,7 +83,9 @@ namespace SkydevCSTool.Class
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Globals.frmMain.ClientHandleSocketError("CON00");
+                connectDone.Set();
+
             }
         }
 
@@ -103,7 +104,8 @@ namespace SkydevCSTool.Class
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
-                MessageBox.Show(e.ToString());
+                Globals.frmMain.ClientHandleSocketError("CON03");
+                receiveDone.Set();
             }
         }
 
@@ -167,6 +169,7 @@ namespace SkydevCSTool.Class
                                         Globals.unixTimestamp = data.Timestamp;
                                         Globals.frmMain.SwitchCache();
                                         Send(client, new PairCommand { Action = "BEGIN_SEND" });
+                                        Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         break;
                                     // END HANDSHAKE BLOCK
 
@@ -209,12 +212,6 @@ namespace SkydevCSTool.Class
                             }
                         }
 
-                        //receiveDone.Set();
-                        // Not all data received. Get more.  
-
-                        //Receive(client);
-                        //StateObject newState = new StateObject();
-                        //newState.workSocket = client;
                         client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                         new AsyncCallback(ReceiveCallback), state);
                     }
@@ -223,18 +220,27 @@ namespace SkydevCSTool.Class
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Globals.frmMain.ClientHandleSocketError("CON03");
+                receiveDone.Set();
             }
         }
 
        public static void Send(Socket client, PairCommand data)
         {
-            data.Timestamp = Globals.unixTimestamp;
-            // Convert the string data to byte data using ASCII encoding.  
-            byte[] byteData = Encoding.ASCII.GetBytes(string.Concat(JsonConvert.SerializeObject(data), "|"));
+            try
+            {
+                data.Timestamp = Globals.unixTimestamp;
+                // Convert the string data to byte data using ASCII encoding.  
+                byte[] byteData = Encoding.ASCII.GetBytes(string.Concat(JsonConvert.SerializeObject(data), "|"));
 
-            // Begin sending the data to the remote device.  
-            client.BeginSend(byteData, 0, byteData.Length, 0,
-                new AsyncCallback(SendCallback), client);
+                // Begin sending the data to the remote device.  
+                client.BeginSend(byteData, 0, byteData.Length, 0,
+                    new AsyncCallback(SendCallback), client);
+            } catch
+            {
+                Globals.frmMain.ClientHandleSocketError("CON04");
+            }
+
         }
 
         private static void SendCallback(IAsyncResult ar)
@@ -249,12 +255,14 @@ namespace SkydevCSTool.Class
                 Console.WriteLine("Sent {0} bytes to server.", bytesSent);
 
                 // Signal that all bytes have been sent.  
-                sendDone.Set();
+                
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+                Globals.frmMain.ClientHandleSocketError("CON04");
             }
+            sendDone.Set();
         }
                
     }

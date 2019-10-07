@@ -47,6 +47,13 @@ namespace WindowsFormsApp1
             {
                 try
                 {
+                    //if (SkydevCSTool.Properties.Settings.Default.email != txtEmail.Text)
+                    //{
+                    //    string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/SkydevCsTool/cookies/");
+                    //    if (Directory.Exists(cache_path))
+                    //        Directory.Delete(cache_path, true);
+                    //}
+
                     Globals.ComplianceAgent = Agent.Get(txtEmail.Text, workshift_list.SelectedValue.ToString());
                     if (Globals.ComplianceAgent != null)
                     {
@@ -105,10 +112,6 @@ namespace WindowsFormsApp1
             {
                 workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
             }
-
-            string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/SkydevCsTool/cookies/Other/");
-            if (Directory.Exists(cache_path))
-                Directory.Delete(cache_path, true);
         }
 
         private void Workshift_list_KeyDown(object sender, KeyEventArgs e)

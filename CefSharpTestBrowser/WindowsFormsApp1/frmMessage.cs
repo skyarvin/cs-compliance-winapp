@@ -14,9 +14,11 @@ namespace SkydevCSTool
 {
     public partial class frmMessage : Form
     {
-        public frmMessage()
+
+        public frmMessage(string Message)
         {
             InitializeComponent();
+            lblMessage.Text = Message;
         }
 
         private void Button1_Click(object sender, EventArgs e)

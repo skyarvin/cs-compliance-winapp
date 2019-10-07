@@ -28,13 +28,13 @@ namespace SkydevCSTool
         {
             if(ValidateIP(txtIPaddress.Text))
             {
+                
                 string target_ip = txtIPaddress.Text;
                 pnlWaiting.Visible = true;
+                Globals.frmMain.SetBtnConnectText("Waiting..");
                 Application.DoEvents();
                 Task.Factory.StartNew(() =>
                 {
-                    Thread.CurrentThread.Name = "ClientSocketsThread";
-                    Globals.frmMain.ClientThread = Thread.CurrentThread;
                     AsynchronousClient.StartClient(target_ip);
                 });
                 this.Close();

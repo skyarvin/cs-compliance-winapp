@@ -79,7 +79,8 @@
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.txtIPaddress);
             this.Name = "frmPairConnect";
-            this.Text = "frmPairConnect";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "Connect to Server";
             this.Load += new System.EventHandler(this.FrmPairConnect_Load);
             this.pnlWaiting.ResumeLayout(false);
             this.pnlWaiting.PerformLayout();

@@ -77,106 +77,146 @@ namespace SkydevCSTool.Class
 
         public static void AcceptCallback(IAsyncResult ar)
         {
-            // Signal the main thread to continue.  
-            allDone.Set();
+            try
+            {
+                // Signal the main thread to continue.  
+                allDone.Set();
 
-            // Get the socket that handles the client request.  
-            Socket listener = (Socket)ar.AsyncState;
-            Socket handler = listener.EndAccept(ar);
+                // Get the socket that handles the client request.  
+                Socket listener = (Socket)ar.AsyncState;
+                Socket handler = listener.EndAccept(ar);
 
-            // Create the state object.  
-            StateObject state = new StateObject();
-            state.workSocket = handler;
-            handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                new AsyncCallback(ReadCallback), state);
+                // Create the state object.  
+                StateObject state = new StateObject();
+                state.workSocket = handler;
+                handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReadCallback), state);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+                Globals.frmMain.ServerHandleSocketError("CON00");
+            }
         }
 
         public static void ReadCallback(IAsyncResult ar)
         {
-            String content = String.Empty;
-
-            // Retrieve the state object and the handler socket  
-            // from the asynchronous state object.  
             StateObject state = (StateObject)ar.AsyncState;
             Socket handler = state.workSocket;
 
-            // Read data from the client socket.   
-            int bytesRead = handler.EndReceive(ar);
-
-            if (bytesRead > 0)
+            try
             {
-                // There  might be more data, so store the data received so far.  
-                state.sb.Append(Encoding.ASCII.GetString(
-                    state.buffer, 0, bytesRead));
+                String content = String.Empty;
 
-                // Check for end-of-file tag. If it is not there, read   
-                // more data.  
-                content = state.sb.ToString();
-                if (!string.IsNullOrEmpty(content) && content.IndexOf("|") > -1)
+                // Read data from the client socket.   
+                int bytesRead = handler.EndReceive(ar);
+
+                if (bytesRead > 0)
                 {
-                    var comms = content.Split('|');
-                    state.sb.Clear();
-                    foreach (var comm in comms)
+                    // There  might be more data, so store the data received so far.  
+                    state.sb.Append(Encoding.ASCII.GetString(
+                        state.buffer, 0, bytesRead));
+
+                    // Check for end-of-file tag. If it is not there, read   
+                    // more data.  
+                    content = state.sb.ToString();
+                    if (!string.IsNullOrEmpty(content) && content.IndexOf("|") > -1)
                     {
-                        try
+                        var comms = content.Split('|');
+                        state.sb.Clear();
+                        foreach (var comm in comms)
                         {
-                            var data = JsonConvert.DeserializeObject<PairCommand>(comm);
-                            switch (data.Action)
+                            try
                             {
-                                case "CONNECT":
-                                    DialogResult dialogResult = MessageBox.Show(string.Concat("Allow incoming connection from ", data.Message, "?"), "Confirm", MessageBoxButtons.YesNo);
-                                    if (dialogResult == DialogResult.Yes)
-                                    {
-                                        Send(handler, new PairCommand { Action = "APPROVE" });
-                                    }
-                                    break;
-                                case "REQUEST_CACHE":
-                                    string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
-                                    string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
-                                    System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
-                                    Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
-                                    string file = Convert.ToBase64String(sbytes);
-                                    Send(handler, new PairCommand { Action = "SAVE_SERVER_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile });
-                                    break;
-                                case "SAVE_CLIENT_CACHE":
-                                    Byte[] rbytes = Convert.FromBase64String(data.Message);
-                                    string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile);
-                                    if (!Directory.Exists(temporary_cookies_directory))
-                                    {
-                                        Directory.CreateDirectory(temporary_cookies_directory);
-                                    }
-                                    string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
-                                    File.WriteAllBytes(path, rbytes);
-                                    Globals.Profiles.Add(data.Profile);
-                                    break;
-                                case "BEGIN_SEND":
-                                    Globals.Connections.Add(handler);
-                                    break;
-                                case "REQUEST_TIME":
-                                    AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME" });
-                                    break;
-                                case "REFRESH":
-                                    Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                                    SendToAll(new PairCommand { Action = "REFRESH" });
-                                    break;
-                                case "GOTO":
-                                    if (data.Message != Globals.CurrentUrl)
-                                        Globals.chromeBrowser.Load(data.Message);
-                                    SendToAll(new PairCommand { Action = "GOTO", Message = data.Message }, handler);
-                                    break;
+                                var data = JsonConvert.DeserializeObject<PairCommand>(comm);
+                                switch (data.Action)
+                                {
+                                    case "CONNECT":
+                                        DialogResult dialogResult = MessageBox.Show(string.Concat("Allow incoming connection from ", data.Message, "?"), "Confirm", MessageBoxButtons.YesNo);
+                                        if (dialogResult == DialogResult.Yes)
+                                        {
+                                            Send(handler, new PairCommand { Action = "APPROVE" });
+                                        }
+                                        else
+                                        {
+                                            Send(handler, new PairCommand { Action = "DENY" });
+                                        }
+                                        break;
+                                    case "REQUEST_CACHE":
+                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
+                                        string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                                        System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
+                                        Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
+                                        string file = Convert.ToBase64String(sbytes);
+                                        Send(handler, new PairCommand { Action = "SAVE_SERVER_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile });
+                                        break;
+                                    case "SAVE_CLIENT_CACHE":
+                                        Byte[] rbytes = Convert.FromBase64String(data.Message);
+                                        string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile);
+                                        if (!Directory.Exists(temporary_cookies_directory))
+                                        {
+                                            Directory.CreateDirectory(temporary_cookies_directory);
+                                        }
+                                        string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
+                                        File.WriteAllBytes(path, rbytes);
+                                        Globals.Profiles.Add(new Profile { Name = data.Profile, RemoteAddress = handler.RemoteEndPoint.ToString() });
+                                        break;
+                                    case "BEGIN_SEND":
+                                        Globals.Connections.Add(handler);
+                                        Globals.frmMain.SetBtnConnectText("DISCONNECT");
+                                        break;
+                                    case "REQUEST_TIME":
+                                        var duration_threshold = DurationThreshold();
+                                        AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME",Message = duration_threshold.ToString() });
+                                        Globals.frmMain.max_room_duration = duration_threshold;
+                                        break;
+                                    case "REFRESH":
+                                        Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                                        SendToAll(new PairCommand { Action = "REFRESH" });
+                                        break;
+                                    case "GOTO":
+                                        if (data.Message != Globals.CurrentUrl)
+                                            Globals.chromeBrowser.Load(data.Message);
+                                        SendToAll(new PairCommand { Action = "GOTO", Message = data.Message }, handler);
+                                        break;
+                                }
+                            }
+                            catch
+                            {
+                                state.sb.Append(comm);
                             }
                         }
-                        catch{
-                            state.sb.Append(comm);
-                        }
                     }
-                }
 
-                handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
-                    new AsyncCallback(ReadCallback), state);
+                    handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                        new AsyncCallback(ReadCallback), state);
+                }
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    string RemoteEndPoint = handler.RemoteEndPoint.ToString();
+                    Globals.Connections = Globals.Connections.Where(m => m.RemoteEndPoint.ToString() != RemoteEndPoint).ToList();
+                    Profile deleteProfile = Globals.Profiles.Where(m => m.RemoteAddress == RemoteEndPoint).FirstOrDefault();
+                    Globals.Profiles.Remove(deleteProfile);
+                    Globals.frmMain.ServerHandleSocketError("CON03", deleteProfile.Name);
+                    handler.Shutdown(SocketShutdown.Both);
+                    handler.Dispose();
+                    handler.Close();
+                }
+                catch { }
             }
         }
 
+        public static int DurationThreshold()
+        {
+            if (Globals.Profiles.Count > 2)
+                return 15;
+            if (Globals.Profiles.Count > 1)
+                return 30;
+            return 48;
+        }
         public static void SendToAll(PairCommand data, Socket exclude_handler=null)
         {
             foreach (var connection in Globals.Connections)
@@ -203,23 +243,12 @@ namespace SkydevCSTool.Class
 
         private static void SendCallback(IAsyncResult ar)
         {
-            try
-            {
-                // Retrieve the socket from the state object.  
-                Socket handler = (Socket)ar.AsyncState;
+            // Retrieve the socket from the state object.  
+            Socket handler = (Socket)ar.AsyncState;
 
-                // Complete sending the data to the remote device.  
-                int bytesSent = handler.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to client.", bytesSent);
-
-                //handler.Shutdown(SocketShutdown.Both);
-                //handler.Close();
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
+            // Complete sending the data to the remote device.  
+            int bytesSent = handler.EndSend(ar);
+            Console.WriteLine("Sent {0} bytes to client.", bytesSent);
         }
     }
 }

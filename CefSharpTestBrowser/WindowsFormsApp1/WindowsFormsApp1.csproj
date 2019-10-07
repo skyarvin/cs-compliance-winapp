@@ -33,8 +33,8 @@
     <UpdateUrl>\\10.10.10.20\apps\SkydevCsTool_qa\</UpdateUrl>
     <ProductName>SkydevCsTool_qa</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.0.80</MinimumRequiredVersion>
-    <ApplicationRevision>81</ApplicationRevision>
+    <MinimumRequiredVersion>2.0.0.88</MinimumRequiredVersion>
+    <ApplicationRevision>89</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -155,7 +155,6 @@
     <Compile Include="Class\PairCommand.cs" />
     <Compile Include="Class\Result.cs" />
     <Compile Include="Class\Resync.cs" />
-    <Compile Include="Class\Server.cs" />
     <Compile Include="Class\ServerAsync.cs" />
     <Compile Include="Class\Sockets.cs" />
     <Compile Include="Class\Url.cs" />

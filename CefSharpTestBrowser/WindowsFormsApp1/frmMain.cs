@@ -29,10 +29,9 @@ namespace WindowsFormsApp1
     {
         private Timer _timer;
         private int room_duration;
-        private int max_room_duration = 15;
+        public int max_room_duration = 48;
         private string LastSuccessUrl;
         private DateTime StartTime;
-        public Thread ClientThread;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },
@@ -131,20 +130,42 @@ namespace WindowsFormsApp1
         public  void ClientHandleSocketError(string code)
         {
             if (code == "CON00")
-                MessageBox.Show("UNABLE TO CONNECT");
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO CONNECT"));
+          
             if (code == "CON03") {
-                MessageBox.Show("SERVER CONNECTION LOST");
+                //TODO Try to reconnect. If failed, run code below. Revert back to original profile.
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST"));
                 SetBtnConnectText("CONNECT");
+                Globals.Profile = Globals.ComplianceAgent.profile;
+                max_room_duration = 48;
+                SwitchCache();
             }
             if (code == "CON04") {
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO COMMUNICATE TO SERVER"));
                 MessageBox.Show("UNABLE TO COMMUNICATE TO SERVER");
             }
- 
+        }
+
+        public void ServerHandleSocketError(string code, string client = "")
+        {
+            if (code == "CON00")
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO ACCEPT INCOMING CONNECTION"));
+
+            if (code == "CON03")
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, string.Concat("CLIENT:", client, " HAS BEEN DISCONNECTED")));
+
+            if (code == "CON04")
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO SEND COMMAND"));
+
+            if(Globals.Connections.Count == 0)
+                Globals.frmMain.SetBtnConnectText("CONNECT");
+            max_room_duration = AsynchronousSocketListener.DurationThreshold();
+
         }
 
         public frmMain()
         {
-            Globals.Profiles.Add(Globals.ComplianceAgent.profile);
+            Globals.Profiles.Add(new Profile { Name = Globals.ComplianceAgent.profile });
             InitializeComponent();
             InitializeAppFolders(Globals.ComplianceAgent.profile);
             InitializeChromium(Globals.ComplianceAgent.profile);
@@ -174,10 +195,9 @@ namespace WindowsFormsApp1
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
-                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this));
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "You have been Idle for too long"));
             }
             lblCountdown.Text = room_duration.ToString();
-            Console.WriteLine(string.Concat("LAPSE: ", Globals._idleTicks));
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
@@ -563,12 +583,35 @@ namespace WindowsFormsApp1
             }
             else if (btn_text == "DISCONNECT")
             {
-
+                max_room_duration = 48;
+                if (!Globals.IsServer()) {
+                    //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
+                    Globals.Client.Close();
+                    SwitchCache();
+                }
+                else
+                {
+                    foreach(var handler in Globals.Connections)
+                    {
+                        handler.Dispose();
+                        handler.Close();
+                    }
+                    Globals.Connections = new List<Socket>();
+                    Globals.Profiles = new List<Profile>();
+                    Globals.Profiles.Add(new Profile { Name = Globals.ComplianceAgent.profile });
+                    SwitchCache();
+                }
+                Globals.Profile = Globals.ComplianceAgent.profile;
+                btnConnect.Text = "CONNECT";
             }
         }
         public void SetBtnConnectText(string txt)
         {
-            btnConnect.Text = txt;
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                btnConnect.Text = txt;
+            });
+               
         }
        
         private void Profile_Click( object sender, EventArgs e)
@@ -592,14 +635,15 @@ namespace WindowsFormsApp1
             switchToolStripMenuItem.DropDownItems.Clear();
             foreach (var profile in Globals.Profiles)
             {
-                var submenu = switchToolStripMenuItem.DropDownItems.Add(profile, null, new EventHandler(Profile_Click));
-                if (profile == Globals.Profile)
+                var submenu = switchToolStripMenuItem.DropDownItems.Add(profile.Name, null, new EventHandler(Profile_Click));
+                if (profile.Name == Globals.Profile)
                     submenu.BackColor = Color.DodgerBlue;
             }
 
         }
         private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
+            switchToolStripMenuItem.Visible = false;
             if (Globals.Profiles.Count > 1) {
                 switchToolStripMenuItem.Visible = true;
             }

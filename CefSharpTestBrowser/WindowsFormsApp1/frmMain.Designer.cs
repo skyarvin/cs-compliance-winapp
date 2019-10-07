@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
-            this.pnlSplitter2 = new System.Windows.Forms.Panel();
             this.lblCountdown = new System.Windows.Forms.Label();
             this.btnConnect = new System.Windows.Forms.Button();
             this.pnlUser = new System.Windows.Forms.Panel();
@@ -51,7 +50,9 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
+            this.pnlSplitter2 = new System.Windows.Forms.Panel();
             this.pnlSplitter3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
@@ -78,10 +79,12 @@
             // pnlSearch
             // 
             this.pnlSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.pnlSearch.Controls.Add(this.pnlSplitter2);
+            this.pnlSearch.Controls.Add(this.panel4);
             this.pnlSearch.Controls.Add(this.lblCountdown);
-            this.pnlSearch.Controls.Add(this.cmbURL);
+            this.pnlSearch.Controls.Add(this.pnlSplitter3);
             this.pnlSearch.Controls.Add(this.btnConnect);
+            this.pnlSearch.Controls.Add(this.pnlSplitter2);
+            this.pnlSearch.Controls.Add(this.cmbURL);
             this.pnlSearch.Controls.Add(this.pnlUser);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSearch.Location = new System.Drawing.Point(307, 0);
@@ -89,21 +92,12 @@
             this.pnlSearch.Size = new System.Drawing.Size(727, 40);
             this.pnlSearch.TabIndex = 9;
             // 
-            // pnlSplitter2
-            // 
-            this.pnlSplitter2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlSplitter2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlSplitter2.Location = new System.Drawing.Point(331, 0);
-            this.pnlSplitter2.Name = "pnlSplitter2";
-            this.pnlSplitter2.Size = new System.Drawing.Size(1, 40);
-            this.pnlSplitter2.TabIndex = 9;
-            // 
             // lblCountdown
             // 
             this.lblCountdown.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblCountdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCountdown.ForeColor = System.Drawing.Color.White;
-            this.lblCountdown.Location = new System.Drawing.Point(332, 0);
+            this.lblCountdown.Location = new System.Drawing.Point(290, 0);
             this.lblCountdown.Name = "lblCountdown";
             this.lblCountdown.Size = new System.Drawing.Size(55, 40);
             this.lblCountdown.TabIndex = 9;
@@ -118,11 +112,11 @@
             this.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConnect.ForeColor = System.Drawing.Color.White;
-            this.btnConnect.Location = new System.Drawing.Point(387, 0);
+            this.btnConnect.Location = new System.Drawing.Point(346, 0);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(75, 40);
+            this.btnConnect.Size = new System.Drawing.Size(115, 40);
             this.btnConnect.TabIndex = 1;
-            this.btnConnect.Text = "Connect";
+            this.btnConnect.Text = "CONNECT";
             this.btnConnect.UseVisualStyleBackColor = false;
             this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
             // 
@@ -131,7 +125,6 @@
             this.pnlUser.Controls.Add(this.lblProfile);
             this.pnlUser.Controls.Add(this.lblUser);
             this.pnlUser.Controls.Add(this.pbImg);
-            this.pnlUser.Controls.Add(this.pnlSplitter3);
             this.pnlUser.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlUser.Location = new System.Drawing.Point(462, 0);
             this.pnlUser.Name = "pnlUser";
@@ -144,9 +137,9 @@
             this.lblProfile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblProfile.Font = new System.Drawing.Font("Segoe UI Light", 9.25F);
             this.lblProfile.ForeColor = System.Drawing.Color.MediumSpringGreen;
-            this.lblProfile.Location = new System.Drawing.Point(1, 22);
+            this.lblProfile.Location = new System.Drawing.Point(0, 22);
             this.lblProfile.Name = "lblProfile";
-            this.lblProfile.Size = new System.Drawing.Size(219, 18);
+            this.lblProfile.Size = new System.Drawing.Size(220, 18);
             this.lblProfile.TabIndex = 9;
             this.lblProfile.Text = "Profile: Enrique";
             this.lblProfile.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -157,9 +150,9 @@
             this.lblUser.Dock = System.Windows.Forms.DockStyle.Top;
             this.lblUser.Font = new System.Drawing.Font("Segoe UI Light", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUser.ForeColor = System.Drawing.Color.White;
-            this.lblUser.Location = new System.Drawing.Point(1, 0);
+            this.lblUser.Location = new System.Drawing.Point(0, 0);
             this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(219, 22);
+            this.lblUser.Size = new System.Drawing.Size(220, 22);
             this.lblUser.TabIndex = 8;
             this.lblUser.Text = "Enrique";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -290,14 +283,32 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
+            // pnlSplitter2
+            // 
+            this.pnlSplitter2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlSplitter2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlSplitter2.Location = new System.Drawing.Point(461, 0);
+            this.pnlSplitter2.Name = "pnlSplitter2";
+            this.pnlSplitter2.Size = new System.Drawing.Size(1, 40);
+            this.pnlSplitter2.TabIndex = 11;
+            // 
             // pnlSplitter3
             // 
             this.pnlSplitter3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlSplitter3.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSplitter3.Location = new System.Drawing.Point(0, 0);
+            this.pnlSplitter3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlSplitter3.Location = new System.Drawing.Point(345, 0);
             this.pnlSplitter3.Name = "pnlSplitter3";
             this.pnlSplitter3.Size = new System.Drawing.Size(1, 40);
-            this.pnlSplitter3.TabIndex = 10;
+            this.pnlSplitter3.TabIndex = 12;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel4.Location = new System.Drawing.Point(289, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(1, 40);
+            this.panel4.TabIndex = 13;
             // 
             // cmbURL
             // 
@@ -311,7 +322,7 @@
             this.cmbURL.FormattingEnabled = true;
             this.cmbURL.Location = new System.Drawing.Point(8, 8);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(317, 25);
+            this.cmbURL.Size = new System.Drawing.Size(275, 25);
             this.cmbURL.TabIndex = 8;
             this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
             this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
@@ -360,14 +371,15 @@
         private System.ComponentModel.BackgroundWorker bgWorkResync;
         private System.Windows.Forms.Timer updateWorkactivity;
         private System.Windows.Forms.ToolStripMenuItem switchToolStripMenuItem;
-        private System.Windows.Forms.Panel pnlSplitter2;
         private System.Windows.Forms.Label lblCountdown;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Panel pnlUser;
         private System.Windows.Forms.Label lblProfile;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.PictureBox pbImg;
+        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel pnlSplitter3;
+        private System.Windows.Forms.Panel pnlSplitter2;
     }
 }
 

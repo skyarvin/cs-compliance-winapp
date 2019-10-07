@@ -10,6 +10,7 @@ using WindowsFormsApp1.Models;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using SkydevCSTool.Class;
+using System.Threading;
 
 namespace WindowsFormsApp1
 {
@@ -22,7 +23,7 @@ namespace WindowsFormsApp1
         public static bool Paired { get; set; }
         public static Int32 unixTimestamp { get; set; }
 
-        public static List<String> Profiles = new List<string>();
+        public static List<Profile> Profiles = new List<Profile>();
         public static frmMain frmMain;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
@@ -35,16 +36,14 @@ namespace WindowsFormsApp1
         public static DateTime _wentIdle;
         public static int _idleTicks;
         public static bool SKYPE_COMPLIANCE;
-        public static int SC_THRESHOLD = 10000;
+        public static int SC_THRESHOLD = 20000;
         public static List<string> UrlHistory = new List<string>();
-
-        public static Server Server;
         public static Socket Client;
         public static string MyIP;
-
-        private static frmMessage frm = new frmMessage();
-        public static void ShowMessage(Form parent)
+        public static ManualResetEvent pairConnect = new ManualResetEvent(false);
+        public static void ShowMessage(Form parent,string Message)
         {
+            frmMessage frm = new frmMessage(Message);
             if (frm.Visible != true){
                 frm.ShowDialog(parent);
             }

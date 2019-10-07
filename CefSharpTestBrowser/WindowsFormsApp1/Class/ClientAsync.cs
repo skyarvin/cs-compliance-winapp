@@ -52,12 +52,13 @@ namespace SkydevCSTool.Class
                 }
 
                 // Send test data to the remote device.  
-                Send(client, new PairCommand { Action = "CONNECT", Message = Globals.Profile });
+                Send(client, new PairCommand { Action = "CONNECT", Message = Globals.ComplianceAgent.profile });
                 sendDone.WaitOne();
 
                 // Receive the response from the remote device.  
                 Receive(client);
                 receiveDone.WaitOne();
+                
                 
 
 
@@ -145,9 +146,18 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "DENY":
                                         MessageBox.Show("Your request to pair has been denied!");
+                                        Globals.frmMain.SetBtnConnectText("CONNECT");
                                         // TODO: ?? check if we need to close the socket and Globals.Client
+
                                         break;
                                     case "SAVE_SERVER_CACHE":
+                                        Globals.unixTimestamp = data.Timestamp;
+                                        if (data.Profile == Globals.Profile)
+                                        {
+                                            Send(client, new PairCommand { Action = "BEGIN_SEND" });
+                                            Globals.frmMain.SetBtnConnectText("DISCONNECT");
+                                            break;
+                                        }
                                         // Receive the cache from server
                                         Byte[] rbytes = Convert.FromBase64String(data.Message);
                                         string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile);
@@ -166,7 +176,6 @@ namespace SkydevCSTool.Class
                                         Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile });
                                         // Finalize the handshake by switching to the server cache
                                         Globals.Profile = data.Profile;
-                                        Globals.unixTimestamp = data.Timestamp;
                                         Globals.frmMain.SwitchCache();
                                         Send(client, new PairCommand { Action = "BEGIN_SEND" });
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
@@ -179,10 +188,10 @@ namespace SkydevCSTool.Class
                                         break;
 
                                     case "SWITCH":
+                                        Globals.unixTimestamp = data.Timestamp;
                                         if (data.Profile == Globals.Profile)
                                             break;
                                         Globals.Profile = data.Profile;
-                                        Globals.unixTimestamp = data.Timestamp;
                                         Byte[] bytes = Convert.FromBase64String(data.Message);
                                         string _temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile);
                                         if (!Directory.Exists(_temporary_cookies_directory))
@@ -197,6 +206,7 @@ namespace SkydevCSTool.Class
 
                                     case "UPDATE_TIME":
                                         Globals.unixTimestamp = data.Timestamp;
+                                        Globals.frmMain.max_room_duration = Int32.Parse(data.Message);
                                         break;
 
                                     case "GOTO":
@@ -227,41 +237,24 @@ namespace SkydevCSTool.Class
 
        public static void Send(Socket client, PairCommand data)
         {
-            try
-            {
-                data.Timestamp = Globals.unixTimestamp;
-                // Convert the string data to byte data using ASCII encoding.  
-                byte[] byteData = Encoding.ASCII.GetBytes(string.Concat(JsonConvert.SerializeObject(data), "|"));
+            data.Timestamp = Globals.unixTimestamp;
+            // Convert the string data to byte data using ASCII encoding.  
+            byte[] byteData = Encoding.ASCII.GetBytes(string.Concat(JsonConvert.SerializeObject(data), "|"));
 
-                // Begin sending the data to the remote device.  
-                client.BeginSend(byteData, 0, byteData.Length, 0,
-                    new AsyncCallback(SendCallback), client);
-            } catch
-            {
-                Globals.frmMain.ClientHandleSocketError("CON04");
-            }
+            // Begin sending the data to the remote device.  
+            client.BeginSend(byteData, 0, byteData.Length, 0,
+                new AsyncCallback(SendCallback), client);
 
         }
 
         private static void SendCallback(IAsyncResult ar)
         {
-            try
-            {
-                // Retrieve the socket from the state object.  
-                Socket client = (Socket)ar.AsyncState;
+            // Retrieve the socket from the state object.  
+            Socket client = (Socket)ar.AsyncState;
 
-                // Complete sending the data to the remote device.  
-                int bytesSent = client.EndSend(ar);
-                Console.WriteLine("Sent {0} bytes to server.", bytesSent);
-
-                // Signal that all bytes have been sent.  
-                
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-                Globals.frmMain.ClientHandleSocketError("CON04");
-            }
+            // Complete sending the data to the remote device.  
+            int bytesSent = client.EndSend(ar);
+            Console.WriteLine("Sent {0} bytes to server.", bytesSent);
             sendDone.Set();
         }
                

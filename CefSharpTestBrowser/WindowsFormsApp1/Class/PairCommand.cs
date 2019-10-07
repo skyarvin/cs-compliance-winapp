@@ -14,4 +14,10 @@ namespace SkydevCSTool.Class
         public string Action { get; set; }
         public string Profile { get; set; }
     }
+
+    public class Profile
+    {
+        public string Name { get; set; }
+        public string RemoteAddress { get; set; }
+    }
 }

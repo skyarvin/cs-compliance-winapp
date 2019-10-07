@@ -23,23 +23,11 @@ namespace WindowsFormsApp1
             }
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.SetUnhandledExceptionMode(UnhandledExceptionMode.CatchException);
-
-            
-            Application.ThreadException += new ThreadExceptionEventHandler(chucha);
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(frmMain.MyCommonExceptionHandlingMethod);
             var Login = new frmLogin();
             Login.Show();
             Application.Run();
             
         }
-
-
-        public static void chucha(object sender, ThreadExceptionEventArgs t)
-        {
-            Console.WriteLine("chucha");
-        }
-
        
     }
 }

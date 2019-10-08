@@ -191,6 +191,7 @@ namespace WindowsFormsApp1
 
             if (room_duration >= max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
+                Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
             }
 
             
@@ -571,7 +572,6 @@ namespace WindowsFormsApp1
             panel1.BackColor = backcolor;
             pnlSplitter2.BackColor = backcolor;
             pnlSplitter3.BackColor = backcolor;
-            pnlSplitter4.BackColor = backcolor;
             btnFind.BackColor = backcolor;
             btnRefresh.BackColor = backcolor;
             pbImg.BackColor = backcolor;

@@ -32,11 +32,8 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
-            this.pnlSplitter4 = new System.Windows.Forms.Panel();
             this.lblCountdown = new System.Windows.Forms.Label();
-            this.pnlSplitter3 = new System.Windows.Forms.Panel();
             this.btnConnect = new System.Windows.Forms.Button();
-            this.pnlSplitter2 = new System.Windows.Forms.Panel();
             this.pnlUser = new System.Windows.Forms.Panel();
             this.lblProfile = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
@@ -53,6 +50,10 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
+            this.pnlSplitter2 = new System.Windows.Forms.Panel();
+            this.pnlSplitter3 = new System.Windows.Forms.Panel();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlUser.SuspendLayout();
@@ -78,20 +79,18 @@
             // pnlSearch
             // 
             this.pnlSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.pnlSearch.Controls.Add(this.panel4);
+            this.pnlSearch.Controls.Add(this.lblCountdown);
+            this.pnlSearch.Controls.Add(this.pnlSplitter3);
+            this.pnlSearch.Controls.Add(this.btnConnect);
+            this.pnlSearch.Controls.Add(this.pnlSplitter2);
+            this.pnlSearch.Controls.Add(this.cmbURL);
+            this.pnlSearch.Controls.Add(this.pnlUser);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSearch.Location = new System.Drawing.Point(307, 0);
             this.pnlSearch.Name = "pnlSearch";
             this.pnlSearch.Size = new System.Drawing.Size(727, 40);
             this.pnlSearch.TabIndex = 9;
-            // 
-            // pnlSplitter4
-            // 
-            this.pnlSplitter4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlSplitter4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlSplitter4.Location = new System.Drawing.Point(289, 0);
-            this.pnlSplitter4.Name = "pnlSplitter4";
-            this.pnlSplitter4.Size = new System.Drawing.Size(1, 40);
-            this.pnlSplitter4.TabIndex = 13;
             // 
             // lblCountdown
             // 
@@ -104,15 +103,6 @@
             this.lblCountdown.TabIndex = 9;
             this.lblCountdown.Text = "0";
             this.lblCountdown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // pnlSplitter3
-            // 
-            this.pnlSplitter3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlSplitter3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlSplitter3.Location = new System.Drawing.Point(345, 0);
-            this.pnlSplitter3.Name = "pnlSplitter3";
-            this.pnlSplitter3.Size = new System.Drawing.Size(1, 40);
-            this.pnlSplitter3.TabIndex = 12;
             // 
             // btnConnect
             // 
@@ -129,15 +119,6 @@
             this.btnConnect.Text = "CONNECT";
             this.btnConnect.UseVisualStyleBackColor = false;
             this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
-            // 
-            // pnlSplitter2
-            // 
-            this.pnlSplitter2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlSplitter2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlSplitter2.Location = new System.Drawing.Point(461, 0);
-            this.pnlSplitter2.Name = "pnlSplitter2";
-            this.pnlSplitter2.Size = new System.Drawing.Size(1, 40);
-            this.pnlSplitter2.TabIndex = 11;
             // 
             // pnlUser
             // 
@@ -193,26 +174,25 @@
             // 
             // contextMenuStrip1
             // 
-            this.contextMenuStrip1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.logoutToolStripMenuItem,
             this.switchToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(118, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
             this.contextMenuStrip1.Opened += new System.EventHandler(this.ContextMenuStrip1_Opened);
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.LogoutToolStripMenuItem_Click);
             // 
             // switchToolStripMenuItem
             // 
             this.switchToolStripMenuItem.Name = "switchToolStripMenuItem";
-            this.switchToolStripMenuItem.Size = new System.Drawing.Size(117, 22);
+            this.switchToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.switchToolStripMenuItem.Text = "Switch";
             this.switchToolStripMenuItem.Visible = false;
             // 
@@ -303,6 +283,53 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
+            // pnlSplitter2
+            // 
+            this.pnlSplitter2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlSplitter2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlSplitter2.Location = new System.Drawing.Point(461, 0);
+            this.pnlSplitter2.Name = "pnlSplitter2";
+            this.pnlSplitter2.Size = new System.Drawing.Size(1, 40);
+            this.pnlSplitter2.TabIndex = 11;
+            // 
+            // pnlSplitter3
+            // 
+            this.pnlSplitter3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlSplitter3.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlSplitter3.Location = new System.Drawing.Point(345, 0);
+            this.pnlSplitter3.Name = "pnlSplitter3";
+            this.pnlSplitter3.Size = new System.Drawing.Size(1, 40);
+            this.pnlSplitter3.TabIndex = 12;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
+            this.panel4.Location = new System.Drawing.Point(289, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(1, 40);
+            this.panel4.TabIndex = 13;
+            // 
+            // cmbURL
+            // 
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(8, 8);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(275, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
+            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -350,7 +377,7 @@
         private System.Windows.Forms.Label lblProfile;
         private System.Windows.Forms.Label lblUser;
         private System.Windows.Forms.PictureBox pbImg;
-        private System.Windows.Forms.Panel pnlSplitter4;
+        private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.Panel pnlSplitter3;
         private System.Windows.Forms.Panel pnlSplitter2;
     }

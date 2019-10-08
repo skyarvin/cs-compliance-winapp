@@ -130,32 +130,34 @@ namespace WindowsFormsApp1
         public  void ClientHandleSocketError(string code)
         {
             if (code == "CON00")
-                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO CONNECT"));
+            {
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO CONNECT. PLEASE TRY AGAIN."));
+                SetBtnConnectText("CONNECT");
+            }
           
             if (code == "CON03") {
                 //TODO Try to reconnect. If failed, run code below. Revert back to original profile.
-                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST"));
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST. CLICK 'CONNECT' BUTTON TO RECONNECT."));
                 SetBtnConnectText("CONNECT");
                 Globals.Profile = Globals.ComplianceAgent.profile;
                 max_room_duration = 48;
                 SwitchCache();
             }
             if (code == "CON04") {
-                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO COMMUNICATE TO SERVER"));
-                MessageBox.Show("UNABLE TO COMMUNICATE TO SERVER");
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO COMMUNICATE TO SERVER. PLEASE CONTACT ADMIN."));
             }
         }
 
         public void ServerHandleSocketError(string code, string client = "")
         {
             if (code == "CON00")
-                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO ACCEPT INCOMING CONNECTION"));
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO ACCEPT INCOMING CONNECTION. PLEASE CONTACT ADMIN."));
 
             if (code == "CON03")
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, string.Concat("CLIENT:", client, " HAS BEEN DISCONNECTED")));
 
             if (code == "CON04")
-                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO SEND COMMAND"));
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "THE SERVER CAN NOT SEND INFORMATION TO THE CLIENTS. PLEASE CONTACT ADMIN. "));
 
             if(Globals.Connections.Count == 0)
                 Globals.frmMain.SetBtnConnectText("CONNECT");
@@ -229,7 +231,14 @@ namespace WindowsFormsApp1
                         Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                         lblCountdown.Text = room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
-                        Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
+                        Task.Factory.StartNew(() =>
+                        {
+                            try
+                            {
+                                Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
+                            }
+                            catch { }
+                        });
                         PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
                         if (Globals.IsServer())
                         {
@@ -299,7 +308,8 @@ namespace WindowsFormsApp1
             }
             else
             {
-                AsynchronousClient.Send(Globals.Client, refreshCommand);
+                if(Globals.Client != null)
+                    AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
         }
 
@@ -561,6 +571,7 @@ namespace WindowsFormsApp1
             panel1.BackColor = backcolor;
             pnlSplitter2.BackColor = backcolor;
             pnlSplitter3.BackColor = backcolor;
+            pnlSplitter4.BackColor = backcolor;
             btnFind.BackColor = backcolor;
             btnRefresh.BackColor = backcolor;
             pbImg.BackColor = backcolor;
@@ -586,7 +597,9 @@ namespace WindowsFormsApp1
                 max_room_duration = 48;
                 if (!Globals.IsServer()) {
                     //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
+                    Globals.Client.Dispose();
                     Globals.Client.Close();
+                    Globals.Client = null;
                     SwitchCache();
                 }
                 else

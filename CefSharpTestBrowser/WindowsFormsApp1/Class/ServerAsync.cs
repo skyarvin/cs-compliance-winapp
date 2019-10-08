@@ -23,6 +23,8 @@ namespace SkydevCSTool.Class
         public byte[] buffer = new byte[BufferSize];
         // Received data string.  
         public StringBuilder sb = new StringBuilder();
+
+        public string remoteip { get; set; }
     }
 
     public class AsynchronousSocketListener
@@ -89,6 +91,7 @@ namespace SkydevCSTool.Class
                 // Create the state object.  
                 StateObject state = new StateObject();
                 state.workSocket = handler;
+                state.remoteip = handler.RemoteEndPoint.ToString();
                 handler.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
                     new AsyncCallback(ReadCallback), state);
             }
@@ -196,6 +199,7 @@ namespace SkydevCSTool.Class
             {
                 try
                 {
+                    //TODO PING CLIENT
                     string RemoteEndPoint = handler.RemoteEndPoint.ToString();
                     Globals.Connections = Globals.Connections.Where(m => m.RemoteEndPoint.ToString() != RemoteEndPoint).ToList();
                     Profile deleteProfile = Globals.Profiles.Where(m => m.RemoteAddress == RemoteEndPoint).FirstOrDefault();

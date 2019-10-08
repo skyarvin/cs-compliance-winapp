@@ -26,19 +26,7 @@ namespace SkydevCSTool
 
         private void BtnConnect_Click(object sender, EventArgs e)
         {
-            if(ValidateIP(txtIPaddress.Text))
-            {
-                
-                string target_ip = txtIPaddress.Text;
-                pnlWaiting.Visible = true;
-                Globals.frmMain.SetBtnConnectText("Waiting..");
-                Application.DoEvents();
-                Task.Factory.StartNew(() =>
-                {
-                    AsynchronousClient.StartClient(target_ip);
-                });
-                this.Close();
-            }
+            PairConnect();
         }
 
         private bool ValidateIP(string ip)
@@ -59,6 +47,29 @@ namespace SkydevCSTool
         private void FrmPairConnect_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void TxtIPaddress_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                PairConnect();
+            }
+        }
+        private void PairConnect()
+        {
+            if (ValidateIP(txtIPaddress.Text))
+            {
+
+                string target_ip = txtIPaddress.Text;
+                Globals.frmMain.SetBtnConnectText("Waiting..");
+                Application.DoEvents();
+                Task.Factory.StartNew(() =>
+                {
+                    AsynchronousClient.StartClient(target_ip);
+                });
+                this.Close();
+            }
         }
     }
 }

@@ -191,7 +191,8 @@ namespace WindowsFormsApp1
 
             if (room_duration >= max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
-                Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
+                //if(Cef.IsInitialized)
+                //    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
             }
 
             
@@ -312,6 +313,8 @@ namespace WindowsFormsApp1
                 if(Globals.Client != null)
                     AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
+
+
         }
 
         private void BtnFind_Click(object sender, EventArgs e)

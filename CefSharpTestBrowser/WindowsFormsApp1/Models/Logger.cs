@@ -32,6 +32,7 @@ namespace WindowsFormsApp1.Models
             {
                 var uri = string.Concat(Url.API_URL, "/logs/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 var response = client.PostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)

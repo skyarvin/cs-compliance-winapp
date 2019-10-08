@@ -351,71 +351,78 @@ namespace WindowsFormsApp1
 
         private void ProcessActionButtons(string element_id)
         {
-            Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
-            string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
-            string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
-            string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
-            if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
-            if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
-
-            if (element_id == Action.ChatReply.Value) notes = reply;
-            if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
-
-            string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
-            followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
-            int followers = 0;
-            if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
-                followers = int.Parse(followRaw);
-
-            string last_chatlog = "";
-            if (element_id == Action.Approve.Value) last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
-
-            var logData = new Logger
+            Task.Factory.StartNew(() =>
             {
-                url = Globals.CurrentUrl,
-                agent_id = Globals.ComplianceAgent.id.ToString(),
-                action = Actions[element_id],
-                remarks = String.Concat(violation, notes),
-                duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
-                followers = followers,
-                sc = followers >= Globals.SC_THRESHOLD ? true : false,
-                rr = string.IsNullOrEmpty(reply) ? false : true,
-                review_date = Globals.ComplianceAgent.review_date,
-                workshift = Globals.ComplianceAgent.last_workshift,
-                last_chatlog = last_chatlog != "" ? last_chatlog : null
-            };
+                Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
+                string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
+                string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
+                string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+                if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
+                if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
 
-            try
-            {
-                if (Globals.CurrentUrl == LastSuccessUrl)
+                if (element_id == Action.ChatReply.Value) notes = reply;
+                if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
+
+                string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
+                followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
+                int followers = 0;
+                if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
+                    followers = int.Parse(followRaw);
+
+                string last_chatlog = "";
+                if (element_id == Action.Approve.Value) last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+
+                var logData = new Logger
                 {
-                    logData.id = Globals.LAST_SUCCESS_ID;
-                    if(logData.id != 0)
-                        logData.Update();
-                }
-                else
+                    url = Globals.CurrentUrl,
+                    agent_id = Globals.ComplianceAgent.id.ToString(),
+                    action = Actions[element_id],
+                    remarks = String.Concat(violation, notes),
+                    duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
+                    followers = followers,
+                    sc = followers >= Globals.SC_THRESHOLD ? true : false,
+                    rr = string.IsNullOrEmpty(reply) ? false : true,
+                    review_date = Globals.ComplianceAgent.review_date,
+                    workshift = Globals.ComplianceAgent.last_workshift,
+                    last_chatlog = last_chatlog != "" ? last_chatlog : null
+                };
+
+                try
                 {
-                    var result = logData.Save();
-                    Globals.LAST_SUCCESS_ID = result.id;
+                    if (Globals.CurrentUrl == LastSuccessUrl)
+                    {
+                        logData.id = Globals.LAST_SUCCESS_ID;
+                        if (logData.id != 0)
+                            logData.Update();
+                        else
+                        {
+                            var result = logData.Save();
+                            Globals.LAST_SUCCESS_ID = result.id;
+                        }
+                    }
+                    else
+                    {
+                        var result = logData.Save();
+                        Globals.LAST_SUCCESS_ID = result.id;
+                    }
+
+                    if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
+                        LastSuccessUrl = ""; //Clear last success
+                    else
+                        LastSuccessUrl = Globals.CurrentUrl;
                 }
-            }
-            catch(AggregateException e)
-            {
-                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                Globals.showMessage(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"));
-            }
-            catch(Exception e)
-            {
-                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
-            }
-
-
-            if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
-                LastSuccessUrl = ""; //Clear last success
-            else
-                LastSuccessUrl = Globals.CurrentUrl;
+                catch (AggregateException e)
+                {
+                    Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                    Globals.showMessage(String.Concat("Error connecting to Chaturbate servers!", System.Environment.NewLine, "Please refresh and try again.",
+                        System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"));
+                }
+                catch (Exception e)
+                {
+                    Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                    Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
+                }
+            });
         }
 
 

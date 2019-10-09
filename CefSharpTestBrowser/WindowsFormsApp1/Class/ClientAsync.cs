@@ -216,8 +216,7 @@ namespace SkydevCSTool.Class
                                         Globals.unixTimestamp = data.Timestamp;
                                         break;
                                     case "CLEARED_AGENTS":
-                                        Decimal approval_percentage = (Decimal.Parse(data.Message) / (Decimal)data.NumberofActiveProfiles) * 100;
-                                        Globals.frmMain.DisplayRoomApprovalRate((int)approval_percentage,String.Concat(data.Message, "/", data.NumberofActiveProfiles));
+                                        Globals.frmMain.DisplayRoomApprovalRate(Int32.Parse(data.Message), data.NumberofActiveProfiles);
                                         break;
 
                                 }

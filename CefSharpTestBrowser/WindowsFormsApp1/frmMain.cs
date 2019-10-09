@@ -246,12 +246,6 @@ namespace WindowsFormsApp1
                         if (Globals.IsServer())
                         {
                             AsynchronousSocketListener.SendToAll(redirectCommand);
-                            //Order Clients to Reset their Room Approval Data
-                            Decimal approval_percentage = ((Decimal)Globals.ApprovedAgents.Count / (Decimal)Globals.Profiles.Count) * 100;
-                            Globals.frmMain.DisplayRoomApprovalRate((int)approval_percentage, String.Concat(Globals.ApprovedAgents.Count, "/", Globals.Profiles.Count));
-                            AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = "0", NumberofActiveProfiles = Globals.Profiles.Count});
-
-
                             }
                         else
                         {
@@ -264,6 +258,11 @@ namespace WindowsFormsApp1
                 else
                 {
                     Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+                }
+                if (Globals.IsServer())
+                {
+                    AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
                 }
             });
         }
@@ -693,8 +692,7 @@ namespace WindowsFormsApp1
                 {
                     Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
                 }
-                Decimal approval_percentage = ((Decimal)Globals.ApprovedAgents.Count / (Decimal)Globals.Profiles.Count) * 100;
-                Globals.frmMain.DisplayRoomApprovalRate((int)approval_percentage, String.Concat(Globals.ApprovedAgents.Count, "/", Globals.Profiles.Count));
+                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
                 AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
             }
             else {
@@ -702,13 +700,22 @@ namespace WindowsFormsApp1
                     AsynchronousClient.Send(Globals.Client, new PairCommand {  Action="CLEAR", Profile=Globals.ComplianceAgent.profile});
             }
         }
-        public void DisplayRoomApprovalRate (int progress, string progress_text)
+        public void DisplayRoomApprovalRate (int number_of_approve_agents, int number_of_agents)
         {
+            Decimal approval_percentage = ((Decimal)number_of_approve_agents / (Decimal)number_of_agents) * 100;
             this.InvokeOnUiThreadIfRequired(() =>
             {
-                pbProgress.Value = progress;
-                lblProgress.Text = progress_text;
+                pbProgress.Value = (int)approval_percentage;
+                lblProgress.Text = String.Concat(number_of_approve_agents,"/",number_of_agents);
             });
+
+            if (number_of_approve_agents == number_of_agents)
+            {
+                Globals.chromeBrowser.EvaluateScriptAsync(@"
+                        console.log(`Show approve button`);
+                      document.getElementById(`approve_button`).style.display = `block`;
+                    ");
+            }
         }
     }
 

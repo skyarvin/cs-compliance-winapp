@@ -186,8 +186,7 @@ namespace SkydevCSTool.Class
                                         if (!Globals.ApprovedAgents.Contains(data.Profile)) {
                                             Globals.ApprovedAgents.Add(data.Profile);
                                         }
-                                        Decimal approval_percentage = ((Decimal)Globals.ApprovedAgents.Count / (Decimal)Globals.Profiles.Count) * 100;
-                                        Globals.frmMain.DisplayRoomApprovalRate((int)approval_percentage, String.Concat(Globals.ApprovedAgents.Count, "/", Globals.Profiles.Count));
+                                        Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
                                         SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                                         break;
                                 }

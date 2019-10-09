@@ -18,20 +18,22 @@ namespace SkydevCSTool
         {
             if (e.Frame.IsMain)
             {
-                browser.EvaluateScriptAsync(@"
-                var bounce = $(`body:contains('locked to another bouncer')`).length;
-                if(bounce > 0){
-                    bound.saveAsBounce();
-                }
-                ");
+                //browser.EvaluateScriptAsync(@"
+                //var bounce = $(`body:contains('locked to another bouncer')`).length;
+                //if(bounce > 0){
+                //    bound.saveAsBounce();
+                //}
+                //");
+
             }
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
-            if (e.Frame.IsMain)
-            {
-                browser.ExecuteScriptAsync(@"
-                    window.onclick = function(e) { 
+            if (!e.Frame.IsMain)
+                return;
+
+            browser.ExecuteScriptAsync(@"
+                   window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
                         }
@@ -60,7 +62,7 @@ namespace SkydevCSTool
                     }
                 ");
 
-                var submit_script = @"
+            var submit_script = @"
                     window.onmousemove = function(e) { 
                         bound.onBrowserEvent(); 
                     }
@@ -83,12 +85,28 @@ namespace SkydevCSTool
                         }
                     });
                 ";
-                browser.EvaluateScriptAsync(submit_script);
+            browser.EvaluateScriptAsync(submit_script);
 
-                if (e.Url.Contains("/auth/login"))
-                {
-                    browser.EvaluateScriptAsync("");
-                }
+            if (Globals.Client == null && Globals.Connections.Count == 0)
+                return;
+
+            if (Globals.IsServer() && Globals.ApprovedAgents.Count == Globals.Profiles.Count)
+            {
+                browser.ExecuteScriptAsync(@"
+                            console.log(`Show approve button`);
+                            window.addEventListener(`DOMContentLoaded`, function(){
+                                document.getElementById(`approve_button`).style.display = `block`;
+                            });
+                        ");
+            }
+            else
+            {
+                browser.ExecuteScriptAsync(@"
+                        console.log(`start`);
+                        window.addEventListener(`DOMContentLoaded`, function(){
+                                document.getElementById(`approve_button`).style.display = `none`;
+                        });
+                    ");
             }
         }
 

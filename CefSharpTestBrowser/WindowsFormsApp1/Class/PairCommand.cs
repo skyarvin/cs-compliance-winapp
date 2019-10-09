@@ -13,6 +13,8 @@ namespace SkydevCSTool.Class
         public string Message { get; set; }
         public string Action { get; set; }
         public string Profile { get; set; }
+
+        public int NumberofActiveProfiles { get; set; }
     }
 
     public class Profile

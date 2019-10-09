@@ -22,6 +22,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Diagnostics;
 using System.Reflection;
+using Newtonsoft.Json;
 
 namespace WindowsFormsApp1
 {
@@ -188,7 +189,6 @@ namespace WindowsFormsApp1
         private void Timer_Expired(object sender, EventArgs e)
         {
             room_duration = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds - Globals.unixTimestamp;
-
             if (room_duration >= max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
                 //if(Cef.IsInitialized)
@@ -230,6 +230,7 @@ namespace WindowsFormsApp1
                         Globals.CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
+                        Globals.ApprovedAgents.Clear();
                         Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                         lblCountdown.Text = room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
@@ -245,8 +246,13 @@ namespace WindowsFormsApp1
                         if (Globals.IsServer())
                         {
                             AsynchronousSocketListener.SendToAll(redirectCommand);
+                            //Order Clients to Reset their Room Approval Data
+                            Decimal approval_percentage = ((Decimal)Globals.ApprovedAgents.Count / (Decimal)Globals.Profiles.Count) * 100;
+                            Globals.frmMain.DisplayRoomApprovalRate((int)approval_percentage, String.Concat(Globals.ApprovedAgents.Count, "/", Globals.Profiles.Count));
+                            AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = "0", NumberofActiveProfiles = Globals.Profiles.Count});
 
-                        }
+
+                            }
                         else
                         {
                             AsynchronousClient.Send(Globals.Client, redirectCommand);
@@ -582,7 +588,6 @@ namespace WindowsFormsApp1
             panel1.BackColor = backcolor;
             pnlSplitter2.BackColor = backcolor;
             pnlSplitter3.BackColor = backcolor;
-            btnFind.BackColor = backcolor;
             btnRefresh.BackColor = backcolor;
             pbImg.BackColor = backcolor;
             lblCountdown.BackColor = darkBackColor;
@@ -627,6 +632,7 @@ namespace WindowsFormsApp1
                 Globals.Profile = Globals.ComplianceAgent.profile;
                 btnConnect.Text = "CONNECT";
             }
+            Globals.ApprovedAgents.Clear();
         }
         public void SetBtnConnectText(string txt)
         {
@@ -678,5 +684,32 @@ namespace WindowsFormsApp1
             Point loc = control.PointToScreen(Point.Empty);
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
+
+        private void BtnClear_Click(object sender, EventArgs e)
+        {
+            if (Globals.IsServer())
+            {
+                if (!Globals.ApprovedAgents.Contains(Globals.ComplianceAgent.profile))
+                {
+                    Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
+                }
+                Decimal approval_percentage = ((Decimal)Globals.ApprovedAgents.Count / (Decimal)Globals.Profiles.Count) * 100;
+                Globals.frmMain.DisplayRoomApprovalRate((int)approval_percentage, String.Concat(Globals.ApprovedAgents.Count, "/", Globals.Profiles.Count));
+                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+            }
+            else {
+                if (Globals.Client != null)
+                    AsynchronousClient.Send(Globals.Client, new PairCommand {  Action="CLEAR", Profile=Globals.ComplianceAgent.profile});
+            }
+        }
+        public void DisplayRoomApprovalRate (int progress, string progress_text)
+        {
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                pbProgress.Value = progress;
+                lblProgress.Text = progress_text;
+            });
+        }
     }
+
 }

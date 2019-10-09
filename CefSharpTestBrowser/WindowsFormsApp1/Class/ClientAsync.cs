@@ -7,6 +7,7 @@ using WindowsFormsApp1;
 using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace SkydevCSTool.Class
 {
@@ -214,6 +215,11 @@ namespace SkydevCSTool.Class
                                             Globals.chromeBrowser.Load(data.Message);
                                         Globals.unixTimestamp = data.Timestamp;
                                         break;
+                                    case "CLEARED_AGENTS":
+                                        Decimal approval_percentage = (Decimal.Parse(data.Message) / (Decimal)data.NumberofActiveProfiles) * 100;
+                                        Globals.frmMain.DisplayRoomApprovalRate((int)approval_percentage,String.Concat(data.Message, "/", data.NumberofActiveProfiles));
+                                        break;
+
                                 }
                             }
                             catch

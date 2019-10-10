@@ -46,7 +46,8 @@ namespace SkydevCSTool
 
         private void FrmPairConnect_Load(object sender, EventArgs e)
         {
-
+            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.server_ip))
+                txtIPaddress.Text = SkydevCSTool.Properties.Settings.Default.server_ip;
         }
 
         private void TxtIPaddress_KeyDown(object sender, KeyEventArgs e)
@@ -62,6 +63,7 @@ namespace SkydevCSTool
             {
 
                 string target_ip = txtIPaddress.Text;
+                SkydevCSTool.Properties.Settings.Default.server_ip = target_ip;
                 Globals.frmMain.SetBtnConnectText("Waiting..");
                 Application.DoEvents();
                 Task.Factory.StartNew(() =>

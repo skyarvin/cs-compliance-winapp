@@ -31,10 +31,10 @@
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <UpdateUrl>\\10.10.10.20\apps\SkydevCsTool_qa\</UpdateUrl>
-    <ProductName>SkydevCsTool_qa</ProductName>
+    <ProductName>SkydevCSTool_qa</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.1.11</MinimumRequiredVersion>
-    <ApplicationRevision>12</ApplicationRevision>
+    <MinimumRequiredVersion>2.0.1.12</MinimumRequiredVersion>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>2.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -125,6 +125,7 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -152,6 +153,9 @@
   <ItemGroup>
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
+    <Compile Include="UserControls\CustomProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Class\PairCommand.cs" />
     <Compile Include="Class\Result.cs" />
     <Compile Include="Class\Resync.cs" />

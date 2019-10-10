@@ -20,18 +20,17 @@ namespace SkydevCSTool
             {
                 //browser.EvaluateScriptAsync(@"
                 //var bounce = $(`body:contains('locked to another bouncer')`).length;
-                //if(bounce > 0){
-                //    bound.saveAsBounce();
-                //}
+                //    if(bounce > 0){
+                //        bound.saveAsBounce();
+                //    }
                 //");
-
             }
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
             if (!e.Frame.IsMain)
                 return;
-            Console.WriteLine(String.Concat("Load Start ",e.Url));
+            
             browser.ExecuteScriptAsync(@"
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
@@ -58,6 +57,20 @@ namespace SkydevCSTool
                             if (e.target.id == 'tab_chatlog_user') {
                                 bound.userChatLogOnClicked();
                             }
+                        }
+                    }
+
+                    window.onmousedown = function(e) {
+                        if(e.which == 2){
+                            e.preventDefault();
+                            bound.triggerClear();
+                        }
+                    }
+
+                    window.onkeydown = function(e){
+                        if(e.which == 112){
+                            e.preventDefault();
+                            bound.disableForceHide();
                         }
                     }
                 ");
@@ -87,8 +100,16 @@ namespace SkydevCSTool
                 ";
                 browser.EvaluateScriptAsync(submit_script);
 
+            browser.EvaluateScriptAsync(@"
+                window.addEventListener('DOMContentLoaded', function(){
+                    bound.evaluateMaxRoomDuration();
+                });
+            ");
+
+            
             if (Globals.Client != null || Globals.Connections.Count > 0)
             {
+
                 browser.ExecuteScriptAsync(@"
                         console.log(`start`);
                         window.addEventListener(`DOMContentLoaded`, function(){
@@ -97,7 +118,20 @@ namespace SkydevCSTool
                     ");
 
             }
-   
+
+            Globals.ForceHideComliance = true;
+            if (Globals.IsServer())
+            {
+                Globals.ApprovedAgents.Clear();
+                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+            }
+        }
+
+        public void DisableForceHide()
+        {
+            Globals.ForceHideComliance = false;
+            browser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
         }
 
         public void WindowOnClicked(string element_id)
@@ -141,6 +175,19 @@ namespace SkydevCSTool
             }
         }
 
+        public void EvaluateMaxRoomDuration()
+        {
+            var scrpt = "var marked_index=0;" +
+                        "$('#chatlog_user .chatlog td.chatlog_date').each(function(){" +
+                            "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
+                            "marked_index = $(this).index() + 1;" +
+                            "return false;"+
+                        "}" +
+                        "});"+
+                        "bound.updateMaxRoomDuration(marked_index);";
+            browser.EvaluateScriptAsync(scrpt);
+        }
+
         public void UserChatLogOnClicked()
         {
             if (!string.IsNullOrEmpty(Globals.LastRoomChatlog))
@@ -150,10 +197,28 @@ namespace SkydevCSTool
                     "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
                     "$(this)[0].parentElement.style.background=\"#0f0\";" +
                     "}" +
-                    "})";
+                    "});";
 
                 browser.EvaluateScriptAsync(scrpt);
             }
+        }
+
+        public void UpdateMaxRoomDuration(int chatlog_position = 0)
+        {
+
+            if (chatlog_position == 0 || chatlog_position > 100)
+            {
+                Globals.frmMain.max_room_duration = 48;
+                return;
+            }
+
+            if (chatlog_position > 50)
+                Globals.frmMain.max_room_duration += 5;
+        }
+
+        public void TriggerClear()
+        {
+            Globals.frmMain.BroadCastClearEvent();
         }
 
         public class HtmlItemClickedEventArgs : EventArgs

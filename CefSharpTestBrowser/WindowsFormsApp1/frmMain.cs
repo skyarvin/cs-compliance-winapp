@@ -23,6 +23,7 @@ using System.Net.Sockets;
 using System.Diagnostics;
 using System.Reflection;
 using Newtonsoft.Json;
+using System.Windows.Input;
 
 namespace WindowsFormsApp1
 {
@@ -91,7 +92,6 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
-
             lblUser.Text = Globals.ComplianceAgent.name;
             try {
                 pbImg.Load(Globals.ComplianceAgent.photo);
@@ -191,8 +191,8 @@ namespace WindowsFormsApp1
             room_duration = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds - Globals.unixTimestamp;
             if (room_duration >= max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
-                //if(Cef.IsInitialized)
-                //    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
+                if (Cef.IsInitialized && Globals.ForceHideComliance)
+                    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
             }
 
             
@@ -213,6 +213,7 @@ namespace WindowsFormsApp1
         #region ChromiumBrowserEvents
         private void Browser_AddressChanged(object sender, AddressChangedEventArgs e)
         {
+            Console.WriteLine("BrowserChanged");
             this.InvokeOnUiThreadIfRequired(() =>
             {
                 string sCurrAddress = e.Address;
@@ -257,12 +258,6 @@ namespace WindowsFormsApp1
                 else
                 {
                     Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                }
-                if (Globals.IsServer())
-                {
-                    Globals.ApprovedAgents.Clear();
-                    AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
-                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
                 }
             });
         }
@@ -335,22 +330,22 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode != Keys.Enter)
-            {
-                return;
-            }
+        //private void TxtSearch_KeyDown(object sender, KeyEventArgs e)
+        //{
+        //    if (e.KeyCode != Keys.Enter)
+        //    {
+        //        return;
+        //    }
 
-            Find(true);
-        }
-        private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        //    Find(true);
+        //}
+        //private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
+        //{
 
-            Cef.GetGlobalCookieManager().DeleteCookies();
-            this.Close();
+        //    Cef.GetGlobalCookieManager().DeleteCookies();
+        //    this.Close();
 
-        }
+        //}
  
 
         #endregion
@@ -446,23 +441,23 @@ namespace WindowsFormsApp1
                 return handleParam;
             }
         }
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            try
-            {
-                if (keyData == (Keys.F10))
-                {
+        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        //{
+        //    try
+        //    {
+        //        if (keyData == (Keys.F10))
+        //        {
 
-                    Globals.chromeBrowser.ShowDevTools();
-                    return true;
-                }
-                return base.ProcessCmdKey(ref msg, keyData);
-            }
-            catch
-            {
-            }
-            return false;
-        }
+        //            Globals.chromeBrowser.ShowDevTools();
+        //            return true;
+        //        }
+        //        return base.ProcessCmdKey(ref msg, keyData);
+        //    }
+        //    catch
+        //    {
+        //    }
+        //    return false;
+        //}
         #endregion
 
         public class Action
@@ -686,6 +681,12 @@ namespace WindowsFormsApp1
 
         private void BtnClear_Click(object sender, EventArgs e)
         {
+            BroadCastClearEvent();
+        }
+
+
+        public void BroadCastClearEvent()
+        {
             if (Globals.IsServer())
             {
                 if (!Globals.ApprovedAgents.Contains(Globals.ComplianceAgent.profile))
@@ -695,18 +696,20 @@ namespace WindowsFormsApp1
                 Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
                 AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
             }
-            else {
+            else
+            {
                 if (Globals.Client != null)
-                    AsynchronousClient.Send(Globals.Client, new PairCommand {  Action="CLEAR", Profile=Globals.ComplianceAgent.profile});
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "CLEAR", Profile = Globals.ComplianceAgent.profile });
             }
         }
+
         public void DisplayRoomApprovalRate (int number_of_approve_agents, int number_of_agents)
         {
             Decimal approval_percentage = ((Decimal)number_of_approve_agents / (Decimal)number_of_agents) * 100;
             this.InvokeOnUiThreadIfRequired(() =>
             {
                 pbProgress.Value = (int)approval_percentage;
-                lblProgress.Text = String.Concat(number_of_approve_agents,"/",number_of_agents);
+                pbProgress.CustomText = String.Concat(number_of_approve_agents,"/",number_of_agents);
 
             });
 
@@ -729,6 +732,7 @@ namespace WindowsFormsApp1
 
             }
         }
+
     }
 
 }

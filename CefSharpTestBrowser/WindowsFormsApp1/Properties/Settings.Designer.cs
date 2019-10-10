@@ -46,5 +46,17 @@ namespace SkydevCSTool.Properties {
                 this["workshift"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string server_ip {
+            get {
+                return ((string)(this["server_ip"]));
+            }
+            set {
+                this["server_ip"] = value;
+            }
+        }
     }
 }

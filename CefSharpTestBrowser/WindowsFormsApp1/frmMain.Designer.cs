@@ -32,6 +32,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
+            this.pnlAction = new System.Windows.Forms.Panel();
+            this.lblProgress = new System.Windows.Forms.Label();
+            this.btnClear = new System.Windows.Forms.Button();
+            this.pnlSplitter5 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.lblCountdown = new System.Windows.Forms.Label();
             this.pnlSplitter3 = new System.Windows.Forms.Panel();
@@ -47,24 +51,20 @@
             this.pnlSplitter = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.pnlAction = new System.Windows.Forms.Panel();
-            this.pnlSplitter5 = new System.Windows.Forms.Panel();
-            this.btnClear = new System.Windows.Forms.Button();
-            this.pbProgress = new System.Windows.Forms.ProgressBar();
-            this.lblProgress = new System.Windows.Forms.Label();
+            this.pbProgress = new ProgressBarSample.CustomProgressBar();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
+            this.pnlAction.SuspendLayout();
             this.pnlUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.pnlAction.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -96,6 +96,52 @@
             this.pnlSearch.Name = "pnlSearch";
             this.pnlSearch.Size = new System.Drawing.Size(948, 40);
             this.pnlSearch.TabIndex = 9;
+            // 
+            // pnlAction
+            // 
+            this.pnlAction.Controls.Add(this.pbProgress);
+            this.pnlAction.Controls.Add(this.lblProgress);
+            this.pnlAction.Controls.Add(this.btnClear);
+            this.pnlAction.Controls.Add(this.pnlSplitter5);
+            this.pnlAction.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pnlAction.Location = new System.Drawing.Point(368, 0);
+            this.pnlAction.Name = "pnlAction";
+            this.pnlAction.Size = new System.Drawing.Size(142, 40);
+            this.pnlAction.TabIndex = 10;
+            // 
+            // lblProgress
+            // 
+            this.lblProgress.AutoSize = true;
+            this.lblProgress.BackColor = System.Drawing.Color.White;
+            this.lblProgress.Location = new System.Drawing.Point(52, 24);
+            this.lblProgress.Name = "lblProgress";
+            this.lblProgress.Size = new System.Drawing.Size(0, 13);
+            this.lblProgress.TabIndex = 16;
+            // 
+            // btnClear
+            // 
+            this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
+            this.btnClear.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnClear.FlatAppearance.BorderSize = 0;
+            this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            this.btnClear.ForeColor = System.Drawing.Color.White;
+            this.btnClear.Location = new System.Drawing.Point(1, 0);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(141, 22);
+            this.btnClear.TabIndex = 14;
+            this.btnClear.Text = "CLEAR";
+            this.btnClear.UseVisualStyleBackColor = false;
+            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
+            // 
+            // pnlSplitter5
+            // 
+            this.pnlSplitter5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlSplitter5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlSplitter5.Location = new System.Drawing.Point(0, 0);
+            this.pnlSplitter5.Name = "pnlSplitter5";
+            this.pnlSplitter5.Size = new System.Drawing.Size(1, 40);
+            this.pnlSplitter5.TabIndex = 13;
             // 
             // panel4
             // 
@@ -219,7 +265,6 @@
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
             this.logoutToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
-            this.logoutToolStripMenuItem.Click += new System.EventHandler(this.LogoutToolStripMenuItem_Click);
             // 
             // switchToolStripMenuItem
             // 
@@ -254,14 +299,6 @@
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(121, 27);
             this.txtSearch.TabIndex = 0;
-            this.txtSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TxtSearch_KeyDown);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "find.png");
-            this.imageList1.Images.SetKeyName(1, "refresh.png");
             // 
             // btnRefresh
             // 
@@ -278,6 +315,13 @@
             this.btnRefresh.TabIndex = 0;
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "find.png");
+            this.imageList1.Images.SetKeyName(1, "refresh.png");
             // 
             // pnlBrowser
             // 
@@ -298,59 +342,15 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
-            // pnlAction
-            // 
-            this.pnlAction.Controls.Add(this.lblProgress);
-            this.pnlAction.Controls.Add(this.pbProgress);
-            this.pnlAction.Controls.Add(this.btnClear);
-            this.pnlAction.Controls.Add(this.pnlSplitter5);
-            this.pnlAction.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlAction.Location = new System.Drawing.Point(368, 0);
-            this.pnlAction.Name = "pnlAction";
-            this.pnlAction.Size = new System.Drawing.Size(142, 40);
-            this.pnlAction.TabIndex = 10;
-            // 
-            // pnlSplitter5
-            // 
-            this.pnlSplitter5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlSplitter5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSplitter5.Location = new System.Drawing.Point(0, 0);
-            this.pnlSplitter5.Name = "pnlSplitter5";
-            this.pnlSplitter5.Size = new System.Drawing.Size(1, 40);
-            this.pnlSplitter5.TabIndex = 13;
-            // 
-            // btnClear
-            // 
-            this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
-            this.btnClear.Dock = System.Windows.Forms.DockStyle.Top;
-            this.btnClear.FlatAppearance.BorderSize = 0;
-            this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
-            this.btnClear.ForeColor = System.Drawing.Color.White;
-            this.btnClear.Location = new System.Drawing.Point(1, 0);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(141, 22);
-            this.btnClear.TabIndex = 14;
-            this.btnClear.Text = "CLEAR";
-            this.btnClear.UseVisualStyleBackColor = false;
-            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
-            // 
             // pbProgress
             // 
+            this.pbProgress.CustomText = null;
+            this.pbProgress.DisplayStyle = ProgressBarSample.ProgressBarDisplayText.CustomText;
             this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pbProgress.Location = new System.Drawing.Point(1, 22);
             this.pbProgress.Name = "pbProgress";
             this.pbProgress.Size = new System.Drawing.Size(141, 18);
-            this.pbProgress.TabIndex = 15;
-            // 
-            // lblProgress
-            // 
-            this.lblProgress.AutoSize = true;
-            this.lblProgress.BackColor = System.Drawing.Color.White;
-            this.lblProgress.Location = new System.Drawing.Point(52, 24);
-            this.lblProgress.Name = "lblProgress";
-            this.lblProgress.Size = new System.Drawing.Size(0, 13);
-            this.lblProgress.TabIndex = 16;
+            this.pbProgress.TabIndex = 0;
             // 
             // cmbURL
             // 
@@ -380,6 +380,7 @@
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.pnlHeader);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.Name = "frmMain";
             this.Text = "Skydev Browser";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
@@ -388,13 +389,13 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlHeader.ResumeLayout(false);
             this.pnlSearch.ResumeLayout(false);
+            this.pnlAction.ResumeLayout(false);
+            this.pnlAction.PerformLayout();
             this.pnlUser.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.pnlAction.ResumeLayout(false);
-            this.pnlAction.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -427,7 +428,7 @@
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Panel pnlSplitter5;
         private System.Windows.Forms.Label lblProgress;
-        private System.Windows.Forms.ProgressBar pbProgress;
+        private ProgressBarSample.CustomProgressBar pbProgress;
     }
 }
 

@@ -230,7 +230,6 @@ namespace WindowsFormsApp1
                         Globals.CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
-                        Globals.ApprovedAgents.Clear();
                         Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                         lblCountdown.Text = room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
@@ -261,6 +260,7 @@ namespace WindowsFormsApp1
                 }
                 if (Globals.IsServer())
                 {
+                    Globals.ApprovedAgents.Clear();
                     AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                     Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
                 }
@@ -707,6 +707,7 @@ namespace WindowsFormsApp1
             {
                 pbProgress.Value = (int)approval_percentage;
                 lblProgress.Text = String.Concat(number_of_approve_agents,"/",number_of_agents);
+
             });
 
             if (number_of_approve_agents == number_of_agents)
@@ -714,7 +715,18 @@ namespace WindowsFormsApp1
                 Globals.chromeBrowser.EvaluateScriptAsync(@"
                         console.log(`Show approve button`);
                       document.getElementById(`approve_button`).style.display = `block`;
+                       document.getElementById(`main`).style[`background`] = `#00B159`;
                     ");
+            }
+            else if (number_of_approve_agents > 0) {
+                Globals.chromeBrowser.EvaluateScriptAsync(@"
+                      var old_bg = document.getElementById(`main`).style[`background`];
+                     document.getElementById(`main`).style[`background`] = `#00B159`;
+                      setTimeout(function(){
+                      document.getElementById(`main`).style[`background`] = old_bg;
+                        },250);
+                    ");
+
             }
         }
     }

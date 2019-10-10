@@ -31,7 +31,7 @@ namespace SkydevCSTool
         {
             if (!e.Frame.IsMain)
                 return;
-
+            Console.WriteLine(String.Concat("Load Start ",e.Url));
             browser.ExecuteScriptAsync(@"
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
@@ -85,21 +85,9 @@ namespace SkydevCSTool
                         }
                     });
                 ";
-            browser.EvaluateScriptAsync(submit_script);
+                browser.EvaluateScriptAsync(submit_script);
 
-            if (Globals.Client == null && Globals.Connections.Count == 0)
-                return;
-
-            if (Globals.IsServer() && Globals.ApprovedAgents.Count == Globals.Profiles.Count)
-            {
-                browser.ExecuteScriptAsync(@"
-                            console.log(`Show approve button`);
-                            window.addEventListener(`DOMContentLoaded`, function(){
-                                document.getElementById(`approve_button`).style.display = `block`;
-                            });
-                        ");
-            }
-            else
+            if (Globals.Client != null || Globals.Connections.Count > 0)
             {
                 browser.ExecuteScriptAsync(@"
                         console.log(`start`);
@@ -107,7 +95,9 @@ namespace SkydevCSTool
                                 document.getElementById(`approve_button`).style.display = `none`;
                         });
                     ");
+
             }
+   
         }
 
         public void WindowOnClicked(string element_id)

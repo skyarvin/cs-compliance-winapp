@@ -738,14 +738,6 @@ namespace WindowsFormsApp1
 
             }
         }
-        public void ShowBuddyApproveControl(bool show)
-        {
-            this.InvokeOnUiThreadIfRequired(() =>
-            {
-                pnlAction.Visible = show;
-            });
-        }
-
     }
 
 }

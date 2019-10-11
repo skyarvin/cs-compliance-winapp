@@ -146,12 +146,12 @@ namespace SkydevCSTool.Class
                                         }
                                         break;
                                     case "REQUEST_CACHE":
-                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
+                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile, "\\Cookies");
                                         string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
                                         System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                                         Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                                         string file = Convert.ToBase64String(sbytes);
-                                        Send(handler, new PairCommand { Action = "SAVE_SERVER_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile });
+                                        Send(handler, new PairCommand { Action = "SAVE_SERVER_CACHE", Message = file, Profile = Globals.Profile });
                                         break;
                                     case "SAVE_CLIENT_CACHE":
                                         Byte[] rbytes = Convert.FromBase64String(data.Message);

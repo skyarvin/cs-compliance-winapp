@@ -714,8 +714,7 @@ namespace WindowsFormsApp1
             this.InvokeOnUiThreadIfRequired(() =>
             {
                 pbProgress.Value = (int)approval_percentage;
-                pbProgress.CustomText = String.Concat(number_of_approve_agents,"/",number_of_agents);
-
+                lblApproveCount.Text = String.Concat(number_of_approve_agents,"/",number_of_agents);
             });
 
             if (number_of_approve_agents == number_of_agents)

@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
+            this.pnlURL = new System.Windows.Forms.Panel();
             this.pnlAction = new System.Windows.Forms.Panel();
             this.lblProgress = new System.Windows.Forms.Label();
             this.btnClear = new System.Windows.Forms.Button();
@@ -56,17 +57,17 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.pnlURL = new System.Windows.Forms.Panel();
+            this.lblApproveCount = new System.Windows.Forms.Label();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pbProgress = new ProgressBarSample.CustomProgressBar();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
+            this.pnlURL.SuspendLayout();
             this.pnlAction.SuspendLayout();
             this.pnlUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
-            this.pnlURL.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -99,8 +100,19 @@
             this.pnlSearch.Size = new System.Drawing.Size(948, 40);
             this.pnlSearch.TabIndex = 9;
             // 
+            // pnlURL
+            // 
+            this.pnlURL.BackColor = System.Drawing.Color.Transparent;
+            this.pnlURL.Controls.Add(this.cmbURL);
+            this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlURL.Location = new System.Drawing.Point(0, 0);
+            this.pnlURL.Name = "pnlURL";
+            this.pnlURL.Size = new System.Drawing.Size(368, 40);
+            this.pnlURL.TabIndex = 14;
+            // 
             // pnlAction
             // 
+            this.pnlAction.Controls.Add(this.lblApproveCount);
             this.pnlAction.Controls.Add(this.pbProgress);
             this.pnlAction.Controls.Add(this.lblProgress);
             this.pnlAction.Controls.Add(this.btnClear);
@@ -345,15 +357,17 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
-            // pnlURL
+            // lblApproveCount
             // 
-            this.pnlURL.BackColor = System.Drawing.Color.Transparent;
-            this.pnlURL.Controls.Add(this.cmbURL);
-            this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlURL.Location = new System.Drawing.Point(0, 0);
-            this.pnlURL.Name = "pnlURL";
-            this.pnlURL.Size = new System.Drawing.Size(368, 40);
-            this.pnlURL.TabIndex = 14;
+            this.lblApproveCount.AutoSize = true;
+            this.lblApproveCount.BackColor = System.Drawing.Color.White;
+            this.lblApproveCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblApproveCount.ForeColor = System.Drawing.Color.DarkBlue;
+            this.lblApproveCount.Location = new System.Drawing.Point(52, 26);
+            this.lblApproveCount.Name = "lblApproveCount";
+            this.lblApproveCount.Size = new System.Drawing.Size(27, 13);
+            this.lblApproveCount.TabIndex = 0;
+            this.lblApproveCount.Text = "0/1";
             // 
             // cmbURL
             // 
@@ -402,6 +416,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.pnlHeader.ResumeLayout(false);
             this.pnlSearch.ResumeLayout(false);
+            this.pnlURL.ResumeLayout(false);
             this.pnlAction.ResumeLayout(false);
             this.pnlAction.PerformLayout();
             this.pnlUser.ResumeLayout(false);
@@ -409,7 +424,6 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            this.pnlURL.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -444,6 +458,7 @@
         private System.Windows.Forms.Label lblProgress;
         private ProgressBarSample.CustomProgressBar pbProgress;
         private System.Windows.Forms.Panel pnlURL;
+        private System.Windows.Forms.Label lblApproveCount;
     }
 }
 

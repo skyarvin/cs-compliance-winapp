@@ -58,8 +58,8 @@
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
             this.lblApproveCount = new System.Windows.Forms.Label();
+            this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
-            this.pbProgress = new ProgressBarSample.CustomProgressBar();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -113,10 +113,10 @@
             // pnlAction
             // 
             this.pnlAction.Controls.Add(this.lblApproveCount);
-            this.pnlAction.Controls.Add(this.pbProgress);
             this.pnlAction.Controls.Add(this.lblProgress);
-            this.pnlAction.Controls.Add(this.btnClear);
             this.pnlAction.Controls.Add(this.pnlSplitter5);
+            this.pnlAction.Controls.Add(this.pbProgress);
+            this.pnlAction.Controls.Add(this.btnClear);
             this.pnlAction.Dock = System.Windows.Forms.DockStyle.Right;
             this.pnlAction.Location = new System.Drawing.Point(368, 0);
             this.pnlAction.Name = "pnlAction";
@@ -141,9 +141,9 @@
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
             this.btnClear.ForeColor = System.Drawing.Color.White;
-            this.btnClear.Location = new System.Drawing.Point(1, 0);
+            this.btnClear.Location = new System.Drawing.Point(0, 0);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(141, 25);
+            this.btnClear.Size = new System.Drawing.Size(142, 25);
             this.btnClear.TabIndex = 14;
             this.btnClear.Text = "APPROVE";
             this.btnClear.UseVisualStyleBackColor = false;
@@ -153,9 +153,9 @@
             // 
             this.pnlSplitter5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.pnlSplitter5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSplitter5.Location = new System.Drawing.Point(0, 0);
+            this.pnlSplitter5.Location = new System.Drawing.Point(0, 25);
             this.pnlSplitter5.Name = "pnlSplitter5";
-            this.pnlSplitter5.Size = new System.Drawing.Size(1, 40);
+            this.pnlSplitter5.Size = new System.Drawing.Size(1, 15);
             this.pnlSplitter5.TabIndex = 13;
             // 
             // panel4
@@ -363,11 +363,20 @@
             this.lblApproveCount.BackColor = System.Drawing.Color.White;
             this.lblApproveCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblApproveCount.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblApproveCount.Location = new System.Drawing.Point(52, 26);
+            this.lblApproveCount.Location = new System.Drawing.Point(57, 26);
             this.lblApproveCount.Name = "lblApproveCount";
             this.lblApproveCount.Size = new System.Drawing.Size(27, 13);
             this.lblApproveCount.TabIndex = 0;
             this.lblApproveCount.Text = "0/1";
+            this.lblApproveCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // pbProgress
+            // 
+            this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbProgress.Location = new System.Drawing.Point(0, 25);
+            this.pbProgress.Name = "pbProgress";
+            this.pbProgress.Size = new System.Drawing.Size(142, 15);
+            this.pbProgress.TabIndex = 0;
             // 
             // cmbURL
             // 
@@ -388,16 +397,6 @@
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
             this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
             this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
-            // 
-            // pbProgress
-            // 
-            this.pbProgress.CustomText = null;
-            this.pbProgress.DisplayStyle = ProgressBarSample.ProgressBarDisplayText.CustomText;
-            this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbProgress.Location = new System.Drawing.Point(1, 25);
-            this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(141, 15);
-            this.pbProgress.TabIndex = 0;
             // 
             // frmMain
             // 
@@ -456,9 +455,9 @@
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Panel pnlSplitter5;
         private System.Windows.Forms.Label lblProgress;
-        private ProgressBarSample.CustomProgressBar pbProgress;
         private System.Windows.Forms.Panel pnlURL;
         private System.Windows.Forms.Label lblApproveCount;
+        private System.Windows.Forms.ProgressBar pbProgress;
     }
 }
 

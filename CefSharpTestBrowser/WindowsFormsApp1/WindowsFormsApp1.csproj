@@ -153,9 +153,6 @@
   <ItemGroup>
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
-    <Compile Include="UserControls\CustomProgressBar.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Class\PairCommand.cs" />
     <Compile Include="Class\Result.cs" />
     <Compile Include="Class\Resync.cs" />

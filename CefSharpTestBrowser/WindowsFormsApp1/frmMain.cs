@@ -246,7 +246,6 @@ namespace WindowsFormsApp1
                             AsynchronousClient.Send(Globals.Client, redirectCommand);
                             AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
                         }
-                          
                     }
                 }
                 else

@@ -167,6 +167,8 @@ namespace SkydevCSTool.Class
                                     case "BEGIN_SEND":
                                         Globals.Connections.Add(handler);
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
+                                        Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                                        SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                                         break;
                                     case "REQUEST_TIME":
                                         var duration_threshold = DurationThreshold();

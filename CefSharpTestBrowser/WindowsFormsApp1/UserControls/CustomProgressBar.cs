@@ -44,7 +44,7 @@ namespace ProgressBarSample
             string text = DisplayStyle == ProgressBarDisplayText.Percentage ? Value.ToString() + '%' : CustomText;
 
 
-            using (Font f = new Font(FontFamily.GenericSansSerif, 10))
+            using (Font f = new Font(FontFamily.GenericSansSerif, 8))
             {
 
                 SizeF len = g.MeasureString(text, f);
@@ -53,7 +53,7 @@ namespace ProgressBarSample
                 Point location = new Point(Convert.ToInt32((Width / 2) - len.Width / 2), Convert.ToInt32((Height / 2) - len.Height / 2));
                 // The commented-out code will centre the text into the highlighted area only. This will centre the text regardless of the highlighted area.
                 // Draw the custom text
-                g.DrawString(text, f, Brushes.White, location);
+                g.DrawString(text, f, Brushes.Black, location);
             }
         }
     }

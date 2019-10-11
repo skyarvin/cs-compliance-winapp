@@ -185,9 +185,9 @@ namespace SkydevCSTool.Class
                                     case "CLEAR":
                                         if (!Globals.ApprovedAgents.Contains(data.Profile)) {
                                             Globals.ApprovedAgents.Add(data.Profile);
+                                            Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                                            SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                                         }
-                                        Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
-                                        SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                                         break;
                                 }
                             }
@@ -225,7 +225,7 @@ namespace SkydevCSTool.Class
             if (Globals.Profiles.Count > 2)
                 return 15;
             if (Globals.Profiles.Count > 1)
-                return 30;
+                return 24;
             return 48;
         }
         public static void SendToAll(PairCommand data, Socket exclude_handler=null)
@@ -239,6 +239,11 @@ namespace SkydevCSTool.Class
                 }
                 AsynchronousSocketListener.Send(connection, data);
             }
+        }
+
+        public static bool HasConnections()
+        {
+            return Globals.Connections.Count > 0;
         }
 
         public static void Send(Socket handler, PairCommand data)

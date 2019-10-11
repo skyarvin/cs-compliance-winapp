@@ -34,6 +34,7 @@ namespace WindowsFormsApp1
         public int max_room_duration = 48;
         private string LastSuccessUrl;
         private DateTime StartTime;
+        private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },
@@ -90,6 +91,7 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.RegisterJsObject("bound", obj);
             Globals.chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
             Globals.chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
+            Globals.chromeBrowser.IsBrowserInitializedChanged += OnIsBrowserInitiazedChanged;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
             lblUser.Text = Globals.ComplianceAgent.name;
@@ -160,7 +162,7 @@ namespace WindowsFormsApp1
             if (code == "CON04")
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "THE SERVER CAN NOT SEND INFORMATION TO THE CLIENTS. PLEASE CONTACT ADMIN. "));
 
-            if(Globals.Connections.Count == 0)
+            if(AsynchronousSocketListener.HasConnections() == false)
                 Globals.frmMain.SetBtnConnectText("CONNECT");
             max_room_duration = AsynchronousSocketListener.DurationThreshold();
 
@@ -191,11 +193,10 @@ namespace WindowsFormsApp1
             room_duration = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds - Globals.unixTimestamp;
             if (room_duration >= max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
-                if (Cef.IsInitialized && Globals.ForceHideComliance)
+                if (isBrowserInitialized && Globals.ForceHideComliance)
                     Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
             }
-
-            
+           
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
@@ -234,14 +235,7 @@ namespace WindowsFormsApp1
                         Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                         lblCountdown.Text = room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
-                        Task.Factory.StartNew(() =>
-                        {
-                            try
-                            {
-                                Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
-                            }
-                            catch { }
-                        });
+                       
                         PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
                         if (Globals.IsServer())
                         {
@@ -260,6 +254,11 @@ namespace WindowsFormsApp1
                     Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
                 }
             });
+        }
+
+        private void OnIsBrowserInitiazedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
+        {
+            isBrowserInitialized = e.IsBrowserInitialized;
         }
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
@@ -513,6 +512,7 @@ namespace WindowsFormsApp1
         {
             this.InvokeOnUiThreadIfRequired(() =>
                 {
+                    isBrowserInitialized = false;
                     this.pnlBrowser.Controls.Clear();
                     Globals.chromeBrowser.Dispose();
                     Application.DoEvents();
@@ -625,6 +625,7 @@ namespace WindowsFormsApp1
                 }
                 Globals.Profile = Globals.ComplianceAgent.profile;
                 btnConnect.Text = "CONNECT";
+                pnlAction.Visible = false;
             }
             Globals.ApprovedAgents.Clear();
         }
@@ -633,6 +634,10 @@ namespace WindowsFormsApp1
             this.InvokeOnUiThreadIfRequired(() =>
             {
                 btnConnect.Text = txt;
+                pnlAction.Visible = false;
+                if (txt == "DISCONNECT") {
+                    pnlAction.Visible = true;
+                }
             });
                
         }
@@ -682,6 +687,7 @@ namespace WindowsFormsApp1
         private void BtnClear_Click(object sender, EventArgs e)
         {
             BroadCastClearEvent();
+           // btnClear.Enabled = false;
         }
 
 
@@ -692,9 +698,9 @@ namespace WindowsFormsApp1
                 if (!Globals.ApprovedAgents.Contains(Globals.ComplianceAgent.profile))
                 {
                     Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
+                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                    AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                 }
-                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
-                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
             }
             else
             {
@@ -731,6 +737,13 @@ namespace WindowsFormsApp1
                     ");
 
             }
+        }
+        public void ShowBuddyApproveControl(bool show)
+        {
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                pnlAction.Visible = show;
+            });
         }
 
     }

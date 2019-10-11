@@ -56,8 +56,9 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.pbProgress = new ProgressBarSample.CustomProgressBar();
+            this.pnlURL = new System.Windows.Forms.Panel();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
+            this.pbProgress = new ProgressBarSample.CustomProgressBar();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlAction.SuspendLayout();
@@ -65,6 +66,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.pnlURL.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -83,9 +85,9 @@
             // pnlSearch
             // 
             this.pnlSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.pnlSearch.Controls.Add(this.pnlURL);
             this.pnlSearch.Controls.Add(this.pnlAction);
             this.pnlSearch.Controls.Add(this.panel4);
-            this.pnlSearch.Controls.Add(this.cmbURL);
             this.pnlSearch.Controls.Add(this.lblCountdown);
             this.pnlSearch.Controls.Add(this.pnlSplitter3);
             this.pnlSearch.Controls.Add(this.btnConnect);
@@ -108,6 +110,7 @@
             this.pnlAction.Name = "pnlAction";
             this.pnlAction.Size = new System.Drawing.Size(142, 40);
             this.pnlAction.TabIndex = 10;
+            this.pnlAction.Visible = false;
             // 
             // lblProgress
             // 
@@ -128,9 +131,9 @@
             this.btnClear.ForeColor = System.Drawing.Color.White;
             this.btnClear.Location = new System.Drawing.Point(1, 0);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(141, 22);
+            this.btnClear.Size = new System.Drawing.Size(141, 25);
             this.btnClear.TabIndex = 14;
-            this.btnClear.Text = "CLEAR";
+            this.btnClear.Text = "APPROVE";
             this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
             // 
@@ -307,7 +310,7 @@
             this.btnRefresh.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.btnRefresh.FlatAppearance.BorderSize = 0;
             this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh.ImageIndex = 1;
+            this.btnRefresh.ImageKey = "refresh.png";
             this.btnRefresh.ImageList = this.imageList1;
             this.btnRefresh.Location = new System.Drawing.Point(0, 0);
             this.btnRefresh.Name = "btnRefresh";
@@ -342,15 +345,15 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
-            // pbProgress
+            // pnlURL
             // 
-            this.pbProgress.CustomText = null;
-            this.pbProgress.DisplayStyle = ProgressBarSample.ProgressBarDisplayText.CustomText;
-            this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbProgress.Location = new System.Drawing.Point(1, 22);
-            this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(141, 18);
-            this.pbProgress.TabIndex = 0;
+            this.pnlURL.BackColor = System.Drawing.Color.Transparent;
+            this.pnlURL.Controls.Add(this.cmbURL);
+            this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlURL.Location = new System.Drawing.Point(0, 0);
+            this.pnlURL.Name = "pnlURL";
+            this.pnlURL.Size = new System.Drawing.Size(368, 40);
+            this.pnlURL.TabIndex = 14;
             // 
             // cmbURL
             // 
@@ -362,7 +365,7 @@
             this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.cmbURL.ForeColor = System.Drawing.Color.White;
             this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(6, 10);
+            this.cmbURL.Location = new System.Drawing.Point(6, 9);
             this.cmbURL.Name = "cmbURL";
             this.cmbURL.Size = new System.Drawing.Size(356, 25);
             this.cmbURL.TabIndex = 8;
@@ -371,6 +374,16 @@
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
             this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
             this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
+            // 
+            // pbProgress
+            // 
+            this.pbProgress.CustomText = null;
+            this.pbProgress.DisplayStyle = ProgressBarSample.ProgressBarDisplayText.CustomText;
+            this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbProgress.Location = new System.Drawing.Point(1, 25);
+            this.pbProgress.Name = "pbProgress";
+            this.pbProgress.Size = new System.Drawing.Size(141, 15);
+            this.pbProgress.TabIndex = 0;
             // 
             // frmMain
             // 
@@ -396,6 +409,7 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.pnlURL.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -429,6 +443,7 @@
         private System.Windows.Forms.Panel pnlSplitter5;
         private System.Windows.Forms.Label lblProgress;
         private ProgressBarSample.CustomProgressBar pbProgress;
+        private System.Windows.Forms.Panel pnlURL;
     }
 }
 

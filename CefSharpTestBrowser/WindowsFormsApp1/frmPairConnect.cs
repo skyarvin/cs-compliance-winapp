@@ -64,6 +64,7 @@ namespace SkydevCSTool
 
                 string target_ip = txtIPaddress.Text;
                 SkydevCSTool.Properties.Settings.Default.server_ip = target_ip;
+                SkydevCSTool.Properties.Settings.Default.Save();
                 Globals.frmMain.SetBtnConnectText("Waiting..");
                 Application.DoEvents();
                 Task.Factory.StartNew(() =>

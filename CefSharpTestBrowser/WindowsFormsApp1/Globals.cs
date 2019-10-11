@@ -126,6 +126,11 @@ namespace WindowsFormsApp1
 
         }
 
+        public static bool IsBuddySystem()
+        {
+            return Globals.Client != null || AsynchronousSocketListener.HasConnections();
+        }
+
         public static string CurrentVersion()
         {
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)

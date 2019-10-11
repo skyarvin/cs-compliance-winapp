@@ -2,6 +2,7 @@
 using CefSharp.WinForms;
 using SkydevCSTool.Class;
 using System;
+using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
 
@@ -30,7 +31,7 @@ namespace SkydevCSTool
         {
             if (!e.Frame.IsMain)
                 return;
-            
+
             browser.ExecuteScriptAsync(@"
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
@@ -54,9 +55,7 @@ namespace SkydevCSTool
                             if ((e.target.value != undefined) && (element_values.hasOwnProperty(e.target.value))) {
                                     bound.onClicked(element_values[e.target.value][0]);
                             }
-                            if (e.target.id == 'tab_chatlog_user') {
-                                bound.userChatLogOnClicked();
-                            }
+                            
                         }
                     }
 
@@ -98,7 +97,7 @@ namespace SkydevCSTool
                         }
                     });
                 ";
-                browser.EvaluateScriptAsync(submit_script);
+            browser.EvaluateScriptAsync(submit_script);
 
             browser.EvaluateScriptAsync(@"
                 window.addEventListener('DOMContentLoaded', function(){
@@ -106,8 +105,8 @@ namespace SkydevCSTool
                 });
             ");
 
-            
-            if (Globals.Client != null || Globals.Connections.Count > 0)
+
+            if (Globals.IsBuddySystem())
             {
 
                 browser.ExecuteScriptAsync(@"
@@ -148,7 +147,7 @@ namespace SkydevCSTool
             try
             {
                 Logger log = new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" };
-                if(log.id != 0)
+                if (log.id != 0)
                     log.Update();
             }
             catch (AggregateException e)
@@ -177,43 +176,49 @@ namespace SkydevCSTool
 
         public void EvaluateMaxRoomDuration()
         {
-            var scrpt = "var marked_index=0;" +
-                        "$('#chatlog_user .chatlog td.chatlog_date').each(function(){" +
-                            "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
-                            "marked_index = $(this).index() + 1;" +
-                            "return false;"+
-                        "}" +
-                        "});"+
-                        "bound.updateMaxRoomDuration(marked_index);";
-            browser.EvaluateScriptAsync(scrpt);
-        }
-
-        public void UserChatLogOnClicked()
-        {
-            if (!string.IsNullOrEmpty(Globals.LastRoomChatlog))
+            Task.Factory.StartNew(() =>
             {
-                var scrpt = "var chatlogs = $(`#data .chatlog td.chatlog_date`);" +
-                    "chatlogs.each(function(){" +
-                    "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
-                    "$(this)[0].parentElement.style.background=\"#0f0\";" +
-                    "}" +
-                    "});";
 
-                browser.EvaluateScriptAsync(scrpt);
-            }
+                try
+                {
+                    Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
+                    var scrpt = "var marked_index=0;" +
+                        "$('#chatlog_user .chatlog td.chatlog_date, #data .chatlog td.chatlog_date').each(function(){" +
+                            "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
+                            "marked_index = $(this).parent().index() + 1;" +
+                            "$(this)[0].parentElement.style.background=\"#da1b1b\";" +
+                            "return false;" +
+                        "}" +
+                        "});" +
+                        "bound.updateMaxRoomDuration(marked_index);";
+                    browser.EvaluateScriptAsync(scrpt);
+                }
+                catch { }
+            });
+            
         }
 
+        
         public void UpdateMaxRoomDuration(int chatlog_position = 0)
         {
+            if (!Globals.IsBuddySystem())
+                return;
+
 
             if (chatlog_position == 0 || chatlog_position > 100)
             {
                 Globals.frmMain.max_room_duration = 48;
+                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = "48" });
                 return;
             }
 
             if (chatlog_position > 50)
+            {
                 Globals.frmMain.max_room_duration += 5;
+                int duration = Globals.frmMain.max_room_duration;
+                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = duration.ToString() });
+            }
+                
         }
 
         public void TriggerClear()

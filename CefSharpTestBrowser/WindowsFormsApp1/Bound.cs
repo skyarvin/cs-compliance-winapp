@@ -182,14 +182,34 @@ namespace SkydevCSTool
                 try
                 {
                     Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
+                    //var scrpt = "var marked_index=0;" +
+                    //    "$('#chatlog_user .chatlog td.chatlog_date, #data .chatlog td.chatlog_date').each(function(){" +
+                    //        "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
+                    //        "marked_index = $(this).parent().index() + 1;" +
+                    //        "$(this)[0].parentElement.style.background=\"#da1b1b\";" +
+                    //        "return false;" +
+                    //    "}" +
+                    //    "});" +
+                    //    "bound.updateMaxRoomDuration(marked_index);";
+
                     var scrpt = "var marked_index=0;" +
-                        "$('#chatlog_user .chatlog td.chatlog_date, #data .chatlog td.chatlog_date').each(function(){" +
-                            "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
-                            "marked_index = $(this).parent().index() + 1;" +
-                            "$(this)[0].parentElement.style.background=\"#da1b1b\";" +
-                            "return false;" +
-                        "}" +
-                        "});" +
+                        "highlight(document.querySelector('#data .chatlog tbody'));" +
+                        "highlight(document.querySelector('#chatlog_user .chatlog tbody'));" +
+                        "function highlight(selector){" +
+                            "if(selector == null){ return; }" +
+                            "selector.childNodes.forEach(function(el){" +
+                                "el.childNodes.forEach(function(td){" +
+                                    "if(td.className == 'chatlog_date'){" +
+                                        //"if (td.innerText.indexOf(\"" + Globals.LastRoomChatlog + "\") >= 0){" +
+                                        "if (td.innerText.indexOf(\"Oct. 4, 2019, 11:35 p.m.\") >= 0){" +
+                                            "td.parentNode.style.background = \"#da1b1b\";" +
+                                            "marked_index = Array.prototype.slice.call(el.parentElement.children).indexOf(el) + 1;" +
+                                            "return false;" +
+                                        "}" +
+                                    "}" +
+                                "})" +
+                            "})" +
+                        "};" +
                         "bound.updateMaxRoomDuration(marked_index);";
                     browser.EvaluateScriptAsync(scrpt);
                 }

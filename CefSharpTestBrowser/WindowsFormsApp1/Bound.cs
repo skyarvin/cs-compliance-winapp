@@ -201,9 +201,9 @@ namespace SkydevCSTool
         
         public void UpdateMaxRoomDuration(int chatlog_position = 0)
         {
-            if (!Globals.IsBuddySystem())
-                return;
 
+            if (!Globals.IsServer())
+                return;
 
             if (chatlog_position == 0 || chatlog_position > 100)
             {

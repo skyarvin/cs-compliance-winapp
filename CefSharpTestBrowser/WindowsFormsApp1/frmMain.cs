@@ -196,6 +196,12 @@ namespace WindowsFormsApp1
                 if (isBrowserInitialized && Globals.ForceHideComliance)
                     Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
             }
+            else
+            {
+                setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
+                if (isBrowserInitialized)
+                    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
+            }
            
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {

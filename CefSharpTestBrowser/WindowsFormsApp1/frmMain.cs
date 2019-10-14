@@ -30,8 +30,6 @@ namespace WindowsFormsApp1
     public partial class frmMain : Form
     {
         private Timer _timer;
-        private int room_duration;
-        public int max_room_duration = 48;
         private string LastSuccessUrl;
         private DateTime StartTime;
         private bool isBrowserInitialized = false;
@@ -111,7 +109,7 @@ namespace WindowsFormsApp1
 
             Task.Factory.StartNew(() =>
             {
-                AsynchronousSocketListener.StartListening(Globals.MyIP);
+                ServerAsync.StartListening(Globals.MyIP);
             });
         }
 
@@ -143,7 +141,7 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST. CLICK 'CONNECT' BUTTON TO RECONNECT."));
                 SetBtnConnectText("CONNECT");
                 Globals.Profile = Globals.ComplianceAgent.profile;
-                max_room_duration = 48;
+                Globals.max_room_duration = 48;
                 SwitchCache();
             }
             if (code == "CON04") {
@@ -162,9 +160,9 @@ namespace WindowsFormsApp1
             if (code == "CON04")
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "THE SERVER CAN NOT SEND INFORMATION TO THE CLIENTS. PLEASE CONTACT ADMIN. "));
 
-            if(AsynchronousSocketListener.HasConnections() == false)
+            if(ServerAsync.HasConnections() == false)
                 Globals.frmMain.SetBtnConnectText("CONNECT");
-            max_room_duration = AsynchronousSocketListener.DurationThreshold();
+            Globals.max_room_duration = ServerAsync.DurationThreshold();
 
         }
 
@@ -190,17 +188,16 @@ namespace WindowsFormsApp1
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
         {
-            room_duration = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds - Globals.unixTimestamp;
-            if (room_duration >= max_room_duration) {
+            if (++Globals.room_duration >= Globals.max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
                 if (isBrowserInitialized && Globals.ForceHideComliance)
-                    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).hide()");
+                    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
             }
             else
             {
                 setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
                 if (isBrowserInitialized)
-                    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
+                    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'block'; });");
             }
            
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
@@ -208,7 +205,7 @@ namespace WindowsFormsApp1
                 Globals.UpdateActivity();
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "You have been Idle for too long"));
             }
-            lblCountdown.Text = room_duration.ToString();
+            lblCountdown.Text = Globals.room_duration.ToString();
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
@@ -238,20 +235,22 @@ namespace WindowsFormsApp1
                         Globals.CurrentUrl = splitAddress[0];
                         StartTime = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
-                        Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                        lblCountdown.Text = room_duration.ToString();
+                        lblCountdown.Text = Globals.room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
-                       
                         PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
                         if (Globals.IsServer())
                         {
-                            AsynchronousSocketListener.SendToAll(redirectCommand);
-                            }
-                        else
+                            Globals.room_duration = 0;
+                            Globals.max_room_duration = ServerAsync.DurationThreshold();
+                            ServerAsync.SendToAll(redirectCommand);
+                            ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
+                        }
+                        else if (Globals.IsClient())
                         {
                             AsynchronousClient.Send(Globals.Client, redirectCommand);
                             AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
                         }
+                        else Globals.room_duration = 0;
                     }
                 }
                 else
@@ -277,7 +276,6 @@ namespace WindowsFormsApp1
         private void Form1_Load(object sender, EventArgs e)
         {
             Application.Idle += new EventHandler(Application_OnIdle);
-            Globals.unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
             _timer.Interval = 1000;
@@ -310,12 +308,11 @@ namespace WindowsFormsApp1
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
-                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "REFRESH" });
+                ServerAsync.SendToAll(new PairCommand { Action = "REFRESH" });
             }
-            else
+            else if(Globals.IsClient())
             {
-                if(Globals.Client != null)
-                    AsynchronousClient.Send(Globals.Client, refreshCommand);
+                AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
 
 
@@ -445,23 +442,24 @@ namespace WindowsFormsApp1
                 return handleParam;
             }
         }
-        //protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        //{
-        //    try
-        //    {
-        //        if (keyData == (Keys.F10))
-        //        {
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            try
+            {
+                if (keyData == (Keys.F1))
+                {
 
-        //            Globals.chromeBrowser.ShowDevTools();
-        //            return true;
-        //        }
-        //        return base.ProcessCmdKey(ref msg, keyData);
-        //    }
-        //    catch
-        //    {
-        //    }
-        //    return false;
-        //}
+                    Globals.ForceHideComliance = false;
+                    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
+                    return true;
+                }
+                return base.ProcessCmdKey(ref msg, keyData);
+            }
+            catch
+            {
+            }
+            return false;
+        }
         #endregion
 
         public class Action
@@ -608,7 +606,7 @@ namespace WindowsFormsApp1
             }
             else if (btn_text == "DISCONNECT")
             {
-                max_room_duration = 48;
+                Globals.max_room_duration = 48;
                 if (!Globals.IsServer()) {
                     //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
                     Globals.Client.Dispose();
@@ -659,7 +657,7 @@ namespace WindowsFormsApp1
                 System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                 Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                 string file = Convert.ToBase64String(sbytes);
-                AsynchronousSocketListener.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile, Message = file });
+                ServerAsync.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile, Message = file });
             }
             SwitchCache();
         }
@@ -704,13 +702,12 @@ namespace WindowsFormsApp1
                 {
                     Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
                     Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
-                    AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                 }
             }
-            else
+            else if(Globals.IsClient())
             {
-                if (Globals.Client != null)
-                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "CLEAR", Profile = Globals.ComplianceAgent.profile });
+                AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "CLEAR", Profile = Globals.ComplianceAgent.profile });
             }
         }
 

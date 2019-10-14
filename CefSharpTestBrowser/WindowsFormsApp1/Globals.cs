@@ -43,6 +43,8 @@ namespace WindowsFormsApp1
         public static ManualResetEvent pairConnect = new ManualResetEvent(false);
         public static List<string> ApprovedAgents = new List<string>();
         public static bool ForceHideComliance = true;
+        public  static int max_room_duration = 48;
+        public  static int room_duration;
         public static void ShowMessage(Form parent,string Message)
         {
             frmMessage frm = new frmMessage(Message);
@@ -128,7 +130,7 @@ namespace WindowsFormsApp1
 
         public static bool IsBuddySystem()
         {
-            return Globals.Client != null || AsynchronousSocketListener.HasConnections();
+            return Globals.Client != null || ServerAsync.HasConnections();
         }
 
         public static string CurrentVersion()
@@ -195,12 +197,15 @@ namespace WindowsFormsApp1
         }
         public static bool IsServer()
         {
-            if (Globals.Client == null)
-            {
-                return true;
-            }
-            return false;
+            return Globals.Client == null && ServerAsync.HasConnections();
         }
+
+        public static bool IsClient()
+        {
+            return Globals.Client != null;
+        }
+
+
     }
 
   

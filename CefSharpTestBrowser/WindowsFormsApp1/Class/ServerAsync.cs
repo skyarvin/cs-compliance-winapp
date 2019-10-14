@@ -27,12 +27,12 @@ namespace SkydevCSTool.Class
         public string remoteip { get; set; }
     }
 
-    public class AsynchronousSocketListener
+    public class ServerAsync
     {
         // Thread signal.  
         public static ManualResetEvent allDone = new ManualResetEvent(false);
 
-        public AsynchronousSocketListener()
+        public ServerAsync()
         {
         }
 
@@ -168,12 +168,9 @@ namespace SkydevCSTool.Class
                                         Globals.Connections.Add(handler);
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                                        Globals.max_room_duration = ServerAsync.DurationThreshold();
                                         SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
-                                        break;
-                                    case "REQUEST_TIME":
-                                        var duration_threshold = DurationThreshold();
-                                        AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME",Message = duration_threshold.ToString() });
-                                        Globals.frmMain.max_room_duration = duration_threshold;
+                                        SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
                                         break;
                                     case "REFRESH":
                                         Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
@@ -208,7 +205,7 @@ namespace SkydevCSTool.Class
             {
                 try
                 {
-                    //TODO PING CLIENT
+                    //TODO PING CLIENT - to detect which client has been disconnection
                     string RemoteEndPoint = handler.RemoteEndPoint.ToString();
                     Globals.Connections = Globals.Connections.Where(m => m.RemoteEndPoint.ToString() != RemoteEndPoint).ToList();
                     Profile deleteProfile = Globals.Profiles.Where(m => m.RemoteAddress == RemoteEndPoint).FirstOrDefault();
@@ -239,7 +236,7 @@ namespace SkydevCSTool.Class
                 {
                     continue;
                 }
-                AsynchronousSocketListener.Send(connection, data);
+                ServerAsync.Send(connection, data);
             }
         }
 
@@ -250,8 +247,7 @@ namespace SkydevCSTool.Class
 
         public static void Send(Socket handler, PairCommand data)
         {
-            data.Timestamp = Globals.unixTimestamp;
-            // Convert the string data to byte data using ASCII encoding.  
+           // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(string.Concat(JsonConvert.SerializeObject(data), "|"));
 
             // Begin sending the data to the remote device.  

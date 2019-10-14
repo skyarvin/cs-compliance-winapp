@@ -9,7 +9,7 @@ namespace SkydevCSTool.Class
 {
     public class PairCommand
     {
-        public int Timestamp { get; set; }
+        public int RoomDuration { get; set; }
         public string Message { get; set; }
         public string Action { get; set; }
         public string Profile { get; set; }

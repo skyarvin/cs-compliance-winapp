@@ -17,15 +17,7 @@ namespace SkydevCSTool
 
         public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
-            if (e.Frame.IsMain)
-            {
-                //browser.EvaluateScriptAsync(@"
-                //var bounce = $(`body:contains('locked to another bouncer')`).length;
-                //    if(bounce > 0){
-                //        bound.saveAsBounce();
-                //    }
-                //");
-            }
+            
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
@@ -58,20 +50,8 @@ namespace SkydevCSTool
                             
                         }
                     }
-
-                    window.onmousedown = function(e) {
-                        if(e.which == 2){
-                            e.preventDefault();
-                            bound.triggerClear();
-                        }
-                    }
-
-                    window.onkeydown = function(e){
-                        if(e.which == 112){
-                            e.preventDefault();
-                            bound.disableForceHide();
-                        }
-                    }
+                
+                    
                 ");
 
             var submit_script = @"
@@ -97,11 +77,24 @@ namespace SkydevCSTool
                         }
                     });
                 ";
+
             browser.EvaluateScriptAsync(submit_script);
 
             browser.EvaluateScriptAsync(@"
                 window.addEventListener('DOMContentLoaded', function(){
                     bound.evaluateMaxRoomDuration();
+                    window.onkeydown = function(e){
+                        if (e.which == 112)
+                        {
+                            e.preventDefault();
+                            bound.disableForceHide();
+                        }
+                    }
+
+                    if (document.getElementsByTagName('body')[0].innerText.indexOf('locked to another bouncer') >= 0)
+                    {
+                        bound.saveAsBounce();
+                    }
                 });
             ");
 
@@ -113,6 +106,13 @@ namespace SkydevCSTool
                         console.log(`start`);
                         window.addEventListener(`DOMContentLoaded`, function(){
                                 document.getElementById(`approve_button`).style.display = `none`;
+
+                                window.onmousedown = function(e) {
+                                    if(e.which == 2){
+                                        e.preventDefault();
+                                        bound.triggerClear();
+                                    }
+                                }
                         });
                     ");
 
@@ -122,7 +122,7 @@ namespace SkydevCSTool
             if (Globals.IsServer())
             {
                 Globals.ApprovedAgents.Clear();
-                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                 Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
             }
         }
@@ -178,7 +178,6 @@ namespace SkydevCSTool
         {
             Task.Factory.StartNew(() =>
             {
-
                 try
                 {
                     Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
@@ -191,17 +190,19 @@ namespace SkydevCSTool
                     //    "}" +
                     //    "});" +
                     //    "bound.updateMaxRoomDuration(marked_index);";
-
+                    //"if (td.innerText.indexOf(\"" + Globals.LastRoomChatlog + "\") >= 0){" + 
                     var scrpt = "var marked_index=0;" +
-                        "highlight(document.querySelector('#data .chatlog tbody'));" +
+                        "console.log(window.readyState);" +
                         "highlight(document.querySelector('#chatlog_user .chatlog tbody'));" +
+                        "highlight(document.querySelector('#data .chatlog tbody'));" +
                         "function highlight(selector){" +
+                            "console.log(selector);" +
                             "if(selector == null){ return; }" +
                             "selector.childNodes.forEach(function(el){" +
                                 "el.childNodes.forEach(function(td){" +
                                     "if(td.className == 'chatlog_date'){" +
-                                        //"if (td.innerText.indexOf(\"" + Globals.LastRoomChatlog + "\") >= 0){" +
-                                        "if (td.innerText.indexOf(\"Oct. 4, 2019, 11:35 p.m.\") >= 0){" +
+                                        
+                                        "if (td.innerText.indexOf(\"Oct. 10, 2019, 3:36 p.m.\") >= 0){" +
                                             "td.parentNode.style.background = \"#da1b1b\";" +
                                             "marked_index = Array.prototype.slice.call(el.parentElement.children).indexOf(el) + 1;" +
                                             "return false;" +
@@ -210,7 +211,8 @@ namespace SkydevCSTool
                                 "})" +
                             "})" +
                         "};" +
-                        "bound.updateMaxRoomDuration(marked_index);";
+                        "bound.updateMaxRoomDuration(marked_index);console.log( 'last ' + marked_index);";
+
                     browser.EvaluateScriptAsync(scrpt);
                 }
                 catch { }
@@ -227,16 +229,16 @@ namespace SkydevCSTool
 
             if (chatlog_position == 0 || chatlog_position > 100)
             {
-                Globals.frmMain.max_room_duration = 48;
-                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = "48" });
+                Globals.max_room_duration = 48;
+                ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = "48",RoomDuration = Globals.room_duration });
                 return;
             }
 
             if (chatlog_position > 50)
             {
-                Globals.frmMain.max_room_duration += 5;
-                int duration = Globals.frmMain.max_room_duration;
-                AsynchronousSocketListener.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = duration.ToString() });
+                Globals.max_room_duration += 5;
+                int duration = Globals.max_room_duration;
+                ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = duration.ToString(), RoomDuration = Globals.room_duration }) ;
             }
                 
         }

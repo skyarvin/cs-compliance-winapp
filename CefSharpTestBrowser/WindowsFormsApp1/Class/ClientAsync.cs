@@ -46,7 +46,7 @@ namespace SkydevCSTool.Class
                 client.BeginConnect(remoteEP,
                     new AsyncCallback(ConnectCallback), client);
                 connectDone.WaitOne();
-                if (Globals.Client == null)
+                if (!Globals.IsClient())
                 {
                     
                     return;
@@ -152,8 +152,7 @@ namespace SkydevCSTool.Class
 
                                         break;
                                     case "SAVE_SERVER_CACHE":
-                                        Globals.unixTimestamp = data.Timestamp;
-                                        if (data.Profile == Globals.Profile)
+                                       if (data.Profile == Globals.Profile)
                                         {
                                             Send(client, new PairCommand { Action = "BEGIN_SEND" });
                                             Globals.frmMain.SetBtnConnectText("DISCONNECT");
@@ -185,12 +184,10 @@ namespace SkydevCSTool.Class
 
                                     case "REFRESH":
                                         Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                                        Globals.unixTimestamp = data.Timestamp;
                                         break;
 
                                     case "SWITCH":
-                                        Globals.unixTimestamp = data.Timestamp;
-                                        if (data.Profile == Globals.Profile)
+                                       if (data.Profile == Globals.Profile)
                                             break;
                                         Globals.Profile = data.Profile;
                                         Byte[] bytes = Convert.FromBase64String(data.Message);
@@ -206,14 +203,13 @@ namespace SkydevCSTool.Class
                                         break;
 
                                     case "UPDATE_TIME":
-                                        Globals.unixTimestamp = data.Timestamp;
-                                        Globals.frmMain.max_room_duration = Int32.Parse(data.Message);
+                                        Globals.max_room_duration = Int32.Parse(data.Message);
+                                        Globals.room_duration = data.RoomDuration;
                                         break;
 
                                     case "GOTO":
                                         if (data.Message != Globals.CurrentUrl)
                                             Globals.chromeBrowser.Load(data.Message);
-                                        Globals.unixTimestamp = data.Timestamp;
                                         break;
                                     case "CLEARED_AGENTS":
                                         Globals.frmMain.DisplayRoomApprovalRate(Int32.Parse(data.Message), data.NumberofActiveProfiles);
@@ -242,7 +238,6 @@ namespace SkydevCSTool.Class
 
        public static void Send(Socket client, PairCommand data)
         {
-            data.Timestamp = Globals.unixTimestamp;
             // Convert the string data to byte data using ASCII encoding.  
             byte[] byteData = Encoding.ASCII.GetBytes(string.Concat(JsonConvert.SerializeObject(data), "|"));
 

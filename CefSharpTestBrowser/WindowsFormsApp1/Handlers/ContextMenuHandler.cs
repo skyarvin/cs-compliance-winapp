@@ -6,6 +6,7 @@ using System.Web;
 using WindowsFormsApp1;
 using SkydevCSTool;
 using SkydevCSTool.Class;
+using SkydevCSTool.Properties;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -24,12 +25,9 @@ public class MyCustomMenuHandler : IContextMenuHandler
         }
 
         model.AddItem((CefMenuCommand)26503, "Copy URL");
-        model.AddSeparator();
 
         // Add a new item to the list using the AddItem method of the model
         model.AddItem((CefMenuCommand)26501, "Open Image");
-        model.AddSeparator();
-
         model.AddItem((CefMenuCommand)26502, "Open room in Chrome");
 
         model.AddSeparator();
@@ -37,12 +35,19 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26505, "View User");
-
+        model.AddItem((CefMenuCommand)26507, "Log Viewer");
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26506, "Devtools");
 
-        model.AddSeparator();
-        model.AddItem((CefMenuCommand)26507, "Log Viewer");
+        string defaultview = Settings.Default.compliance_default_view;
+        IMenuModel submenu = model.AddSubMenu((CefMenuCommand)26508, "Preference");
+        submenu.AddCheckItem((CefMenuCommand)26509, "Chatlog_user");
+        submenu.AddCheckItem((CefMenuCommand)26510, "Bio");
+        submenu.AddCheckItem((CefMenuCommand)26511, "Photos");
+
+        submenu.SetChecked((CefMenuCommand)26509, defaultview == "chatlog_user");
+        submenu.SetChecked((CefMenuCommand)26510, defaultview == "bio");
+        submenu.SetChecked((CefMenuCommand)26511, defaultview == "photos");
     }
 
     public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -100,6 +105,23 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             frmLogViewer frmLogViewer = new frmLogViewer();
             frmLogViewer.Show();
+        }
+
+        if (commandId == (CefMenuCommand)26509)
+        {
+            SkydevCSTool.Properties.Settings.Default.compliance_default_view = "chatlog_user";
+            SkydevCSTool.Properties.Settings.Default.Save();
+        }
+
+        if (commandId == (CefMenuCommand)26510)
+        {
+            SkydevCSTool.Properties.Settings.Default.compliance_default_view = "bio";
+            SkydevCSTool.Properties.Settings.Default.Save();
+        }
+        if (commandId == (CefMenuCommand)26511)
+        {
+            SkydevCSTool.Properties.Settings.Default.compliance_default_view = "photos";
+            SkydevCSTool.Properties.Settings.Default.Save();
         }
 
         // Return false should ignore the selected option of the user !

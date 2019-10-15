@@ -148,6 +148,13 @@ namespace SkydevCSTool.Class
                                     case "DENY":
                                         MessageBox.Show("Your request to pair has been denied!");
                                         Globals.frmMain.SetBtnConnectText("CONNECT");
+                                        if(Globals.Client != null)
+                                        {
+                                            Globals.Client.Shutdown(SocketShutdown.Both);
+                                            Globals.Client.Dispose();
+                                            Globals.Client.Close();
+                                            Globals.Client = null;
+                                        }
                                         // TODO: ?? check if we need to close the socket and Globals.Client
 
                                         break;
@@ -244,7 +251,6 @@ namespace SkydevCSTool.Class
             // Begin sending the data to the remote device.  
             client.BeginSend(byteData, 0, byteData.Length, 0,
                 new AsyncCallback(SendCallback), client);
-
         }
 
         private static void SendCallback(IAsyncResult ar)

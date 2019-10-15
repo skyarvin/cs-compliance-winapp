@@ -58,5 +58,17 @@ namespace SkydevCSTool.Properties {
                 this["server_ip"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string compliance_default_view {
+            get {
+                return ((string)(this["compliance_default_view"]));
+            }
+            set {
+                this["compliance_default_view"] = value;
+            }
+        }
     }
 }

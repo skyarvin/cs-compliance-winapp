@@ -43,8 +43,8 @@ namespace WindowsFormsApp1
         public static ManualResetEvent pairConnect = new ManualResetEvent(false);
         public static List<string> ApprovedAgents = new List<string>();
         public static bool ForceHideComliance = true;
-        public  static int max_room_duration = 48;
-        public  static int room_duration;
+        public static int max_room_duration = 48;
+        public static int room_duration;
         public static void ShowMessage(Form parent,string Message)
         {
             frmMessage frm = new frmMessage(Message);

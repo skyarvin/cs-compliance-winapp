@@ -188,6 +188,7 @@ namespace SkydevCSTool.Class
                                             SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                                         }
                                         break;
+                                    
                                 }
                             }
                             catch

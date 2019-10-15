@@ -24,6 +24,7 @@ using System.Diagnostics;
 using System.Reflection;
 using Newtonsoft.Json;
 using System.Windows.Input;
+using SkydevCSTool.Properties;
 
 namespace WindowsFormsApp1
 {
@@ -58,7 +59,7 @@ namespace WindowsFormsApp1
         #region Init
         public void InitializeChromium(string profile)
         {
-           
+
             Globals.Profile = profile;
             lblProfile.Text = String.Concat("Profile: ", Globals.Profile);
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
@@ -77,6 +78,7 @@ namespace WindowsFormsApp1
             requestContextSettings.CachePath = @path + "/cache/cache/";
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
+
             Globals.chromeBrowser = new ChromiumWebBrowser(Url.CB_HOME);
             Globals.chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(Globals.chromeBrowser);
@@ -117,7 +119,7 @@ namespace WindowsFormsApp1
         {
             // TODO : Refactor this !
             string temporary_cache_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\temp");
-            if ( !Directory.Exists(temporary_cache_directory))
+            if (!Directory.Exists(temporary_cache_directory))
             {
                 Directory.CreateDirectory(temporary_cache_directory);
             }
@@ -128,14 +130,14 @@ namespace WindowsFormsApp1
             }
         }
 
-        public  void ClientHandleSocketError(string code)
+        public void ClientHandleSocketError(string code)
         {
             if (code == "CON00")
             {
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO CONNECT. PLEASE TRY AGAIN."));
                 SetBtnConnectText("CONNECT");
             }
-          
+
             if (code == "CON03") {
                 //TODO Try to reconnect. If failed, run code below. Revert back to original profile.
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST. CLICK 'CONNECT' BUTTON TO RECONNECT."));
@@ -147,6 +149,13 @@ namespace WindowsFormsApp1
             if (code == "CON04") {
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO COMMUNICATE TO SERVER. PLEASE CONTACT ADMIN."));
             }
+            if (Globals.Client != null)
+            {
+                Globals.Client.Dispose();
+                Globals.Client.Close();
+                Globals.Client = null;
+            }
+
         }
 
         public void ServerHandleSocketError(string code, string client = "")
@@ -160,7 +169,7 @@ namespace WindowsFormsApp1
             if (code == "CON04")
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "THE SERVER CAN NOT SEND INFORMATION TO THE CLIENTS. PLEASE CONTACT ADMIN. "));
 
-            if(ServerAsync.HasConnections() == false)
+            if (ServerAsync.HasConnections() == false)
                 Globals.frmMain.SetBtnConnectText("CONNECT");
             Globals.max_room_duration = ServerAsync.DurationThreshold();
 
@@ -173,9 +182,6 @@ namespace WindowsFormsApp1
             InitializeAppFolders(Globals.ComplianceAgent.profile);
             InitializeChromium(Globals.ComplianceAgent.profile);
             InitializeServer();
-           
-
-
         }
         #endregion
         public static void MyCommonExceptionHandlingMethod(object sender, UnhandledExceptionEventArgs t)
@@ -199,7 +205,7 @@ namespace WindowsFormsApp1
                 if (isBrowserInitialized)
                     Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'block'; });");
             }
-           
+
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
@@ -222,10 +228,7 @@ namespace WindowsFormsApp1
             {
                 string sCurrAddress = e.Address;
                 cmbURL.Text = sCurrAddress;
-                if (sCurrAddress == Url.CB_HOME)
-                    return;
-                if ((sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL , "/show")) || sCurrAddress.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")) ||
-                    sCurrAddress.Contains("/auth/login") || sCurrAddress.Contains("/update_expiration_date_form")) && !String.IsNullOrEmpty(sCurrAddress))
+                if (IsValidUrl(sCurrAddress))
                 {
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl != splitAddress[0])
@@ -310,7 +313,7 @@ namespace WindowsFormsApp1
             {
                 ServerAsync.SendToAll(new PairCommand { Action = "REFRESH" });
             }
-            else if(Globals.IsClient())
+            else if (Globals.IsClient())
             {
                 AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
@@ -347,7 +350,7 @@ namespace WindowsFormsApp1
         //    this.Close();
 
         //}
- 
+
 
         #endregion
 
@@ -502,15 +505,15 @@ namespace WindowsFormsApp1
 
         private void UpdateWorkactivity_Tick(object sender, EventArgs e)
         {
-            if(!string.IsNullOrEmpty(Globals.activity.start_time))
+            if (!string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
                 Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
         }
 
-        
-        
+
+
         public void SwitchCache()
         {
             this.InvokeOnUiThreadIfRequired(() =>
@@ -518,7 +521,10 @@ namespace WindowsFormsApp1
                     isBrowserInitialized = false;
                     this.pnlBrowser.Controls.Clear();
                     Globals.chromeBrowser.Dispose();
+                    while (Globals.chromeBrowser.Disposing)
+                        Console.WriteLine("disposing...");
                     Application.DoEvents();
+                    System.Threading.Thread.Sleep(3000);
                     InitializeChromium(Globals.Profile);
                 }
             );
@@ -546,7 +552,7 @@ namespace WindowsFormsApp1
 
         private void CmbURL_Click_1(object sender, EventArgs e)
         {
-            
+
         }
 
         private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -559,21 +565,41 @@ namespace WindowsFormsApp1
 
         private void LoadUrl(string url)
         {
-            if (url == Url.CB_HOME)
-            {
+            //if (url == Url.CB_HOME)
+            //{
+            //    Globals.chromeBrowser.Load(url);
+            //    return;
+            //}
+            if (IsValidUrl(url))
                 Globals.chromeBrowser.Load(url);
-                return;
-            }
-            if ((url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")) ||
-                url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/auth/login")) || url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/update_expiration_date_form"))) &&
-                    !String.IsNullOrEmpty(url))
-            {
-                Globals.chromeBrowser.Load(url);
-            }
             else
-            {
                 Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-            }
+        }
+
+        private bool IsValidUrl(string url)
+        {
+            if (String.IsNullOrEmpty(url))
+                return false;
+
+            if (url == Url.CB_HOME)
+                return true;
+
+            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")))
+                return true;
+
+            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")))
+                return true;
+
+            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/auth/login")))
+                return true;
+
+            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/update_expiration_date_form")))
+                return true;
+
+            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/seed_failure")))
+                return true;
+
+            return false;
         }
 
         private void setHeaderColor(Color backcolor, Color darkBackColor)
@@ -612,11 +638,11 @@ namespace WindowsFormsApp1
                     Globals.Client.Dispose();
                     Globals.Client.Close();
                     Globals.Client = null;
-                    SwitchCache();
+                    //SwitchCache();
                 }
                 else
                 {
-                    foreach(var handler in Globals.Connections)
+                    foreach (var handler in Globals.Connections)
                     {
                         handler.Dispose();
                         handler.Close();
@@ -642,10 +668,10 @@ namespace WindowsFormsApp1
                     pnlAction.Visible = true;
                 }
             });
-               
+
         }
-       
-        private void Profile_Click( object sender, EventArgs e)
+
+        private void Profile_Click(object sender, EventArgs e)
         {
             if (Globals.Profile == sender.ToString())
                 return;
@@ -690,9 +716,7 @@ namespace WindowsFormsApp1
         private void BtnClear_Click(object sender, EventArgs e)
         {
             BroadCastClearEvent();
-           // btnClear.Enabled = false;
         }
-
 
         public void BroadCastClearEvent()
         {
@@ -701,18 +725,21 @@ namespace WindowsFormsApp1
                 if (!Globals.ApprovedAgents.Contains(Globals.ComplianceAgent.profile))
                 {
                     Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
-                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
-                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                 }
+                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+
             }
             else if(Globals.IsClient())
             {
                 AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "CLEAR", Profile = Globals.ComplianceAgent.profile });
             }
+
         }
 
         public void DisplayRoomApprovalRate (int number_of_approve_agents, int number_of_agents)
         {
+
             Decimal approval_percentage = ((Decimal)number_of_approve_agents / (Decimal)number_of_agents) * 100;
             this.InvokeOnUiThreadIfRequired(() =>
             {
@@ -738,7 +765,9 @@ namespace WindowsFormsApp1
                     ");
 
             }
+           
         }
+
     }
 
 }

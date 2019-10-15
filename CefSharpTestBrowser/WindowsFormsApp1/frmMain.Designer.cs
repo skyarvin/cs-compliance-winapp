@@ -34,9 +34,11 @@
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.pnlURL = new System.Windows.Forms.Panel();
             this.pnlAction = new System.Windows.Forms.Panel();
+            this.lblApproveCount = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
-            this.btnClear = new System.Windows.Forms.Button();
             this.pnlSplitter5 = new System.Windows.Forms.Panel();
+            this.pbProgress = new System.Windows.Forms.ProgressBar();
+            this.btnClear = new System.Windows.Forms.Button();
             this.panel4 = new System.Windows.Forms.Panel();
             this.lblCountdown = new System.Windows.Forms.Label();
             this.pnlSplitter3 = new System.Windows.Forms.Panel();
@@ -57,8 +59,6 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.lblApproveCount = new System.Windows.Forms.Label();
-            this.pbProgress = new System.Windows.Forms.ProgressBar();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
@@ -124,6 +124,19 @@
             this.pnlAction.TabIndex = 10;
             this.pnlAction.Visible = false;
             // 
+            // lblApproveCount
+            // 
+            this.lblApproveCount.AutoSize = true;
+            this.lblApproveCount.BackColor = System.Drawing.Color.White;
+            this.lblApproveCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblApproveCount.ForeColor = System.Drawing.Color.DarkBlue;
+            this.lblApproveCount.Location = new System.Drawing.Point(57, 26);
+            this.lblApproveCount.Name = "lblApproveCount";
+            this.lblApproveCount.Size = new System.Drawing.Size(27, 13);
+            this.lblApproveCount.TabIndex = 0;
+            this.lblApproveCount.Text = "0/1";
+            this.lblApproveCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblProgress
             // 
             this.lblProgress.AutoSize = true;
@@ -132,6 +145,23 @@
             this.lblProgress.Name = "lblProgress";
             this.lblProgress.Size = new System.Drawing.Size(0, 13);
             this.lblProgress.TabIndex = 16;
+            // 
+            // pnlSplitter5
+            // 
+            this.pnlSplitter5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.pnlSplitter5.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlSplitter5.Location = new System.Drawing.Point(0, 25);
+            this.pnlSplitter5.Name = "pnlSplitter5";
+            this.pnlSplitter5.Size = new System.Drawing.Size(1, 15);
+            this.pnlSplitter5.TabIndex = 13;
+            // 
+            // pbProgress
+            // 
+            this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pbProgress.Location = new System.Drawing.Point(0, 25);
+            this.pbProgress.Name = "pbProgress";
+            this.pbProgress.Size = new System.Drawing.Size(142, 15);
+            this.pbProgress.TabIndex = 0;
             // 
             // btnClear
             // 
@@ -148,15 +178,6 @@
             this.btnClear.Text = "APPROVE";
             this.btnClear.UseVisualStyleBackColor = false;
             this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
-            // 
-            // pnlSplitter5
-            // 
-            this.pnlSplitter5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.pnlSplitter5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSplitter5.Location = new System.Drawing.Point(0, 25);
-            this.pnlSplitter5.Name = "pnlSplitter5";
-            this.pnlSplitter5.Size = new System.Drawing.Size(1, 15);
-            this.pnlSplitter5.TabIndex = 13;
             // 
             // panel4
             // 
@@ -356,27 +377,6 @@
             this.updateWorkactivity.Enabled = true;
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
-            // 
-            // lblApproveCount
-            // 
-            this.lblApproveCount.AutoSize = true;
-            this.lblApproveCount.BackColor = System.Drawing.Color.White;
-            this.lblApproveCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblApproveCount.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblApproveCount.Location = new System.Drawing.Point(57, 26);
-            this.lblApproveCount.Name = "lblApproveCount";
-            this.lblApproveCount.Size = new System.Drawing.Size(27, 13);
-            this.lblApproveCount.TabIndex = 0;
-            this.lblApproveCount.Text = "0/1";
-            this.lblApproveCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // pbProgress
-            // 
-            this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbProgress.Location = new System.Drawing.Point(0, 25);
-            this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(142, 15);
-            this.pbProgress.TabIndex = 0;
             // 
             // cmbURL
             // 

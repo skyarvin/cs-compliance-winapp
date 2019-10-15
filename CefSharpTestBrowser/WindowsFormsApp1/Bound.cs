@@ -1,7 +1,9 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using SkydevCSTool.Class;
+using SkydevCSTool.Properties;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
@@ -23,6 +25,21 @@ namespace SkydevCSTool
         {
             if (!e.Frame.IsMain)
                 return;
+
+            if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && e.Url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")))
+            {
+                
+                browser.ExecuteScriptAsync(
+                "function sleep(ms) {" +
+                    "return new Promise(resolve => setTimeout(resolve, ms));" +
+                "}" +
+                "document.addEventListener('DOMContentLoaded', " +
+                    "async function(){" +
+                        "await sleep(1000);" +
+                        "if(document.getElementById(\"data\") != null){" +
+                            "document.getElementById(\"data\").innerText = null;}" +
+                        "changeDiv('" + Settings.Default.compliance_default_view + "');});");
+            }
 
             browser.ExecuteScriptAsync(@"
                    window.onclick = function(e) { 
@@ -81,7 +98,7 @@ namespace SkydevCSTool
             browser.EvaluateScriptAsync(submit_script);
 
             browser.EvaluateScriptAsync(@"
-                window.addEventListener('DOMContentLoaded', function(){
+                document.addEventListener('DOMContentLoaded', function(){
                     bound.evaluateMaxRoomDuration();
                     window.onkeydown = function(e){
                         if (e.which == 112)
@@ -119,6 +136,7 @@ namespace SkydevCSTool
             }
 
             Globals.ForceHideComliance = true;
+            
             if (Globals.IsServer())
             {
                 Globals.ApprovedAgents.Clear();
@@ -181,39 +199,34 @@ namespace SkydevCSTool
                 try
                 {
                     Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
-                    //var scrpt = "var marked_index=0;" +
-                    //    "$('#chatlog_user .chatlog td.chatlog_date, #data .chatlog td.chatlog_date').each(function(){" +
-                    //        "if($.trim(this.innerText) == \"" + Globals.LastRoomChatlog + "\"){" +
-                    //        "marked_index = $(this).parent().index() + 1;" +
-                    //        "$(this)[0].parentElement.style.background=\"#da1b1b\";" +
-                    //        "return false;" +
-                    //    "}" +
-                    //    "});" +
-                    //    "bound.updateMaxRoomDuration(marked_index);";
-                    //"if (td.innerText.indexOf(\"" + Globals.LastRoomChatlog + "\") >= 0){" + 
-                    var scrpt = "var marked_index=0;" +
-                        "console.log(window.readyState);" +
-                        "highlight(document.querySelector('#chatlog_user .chatlog tbody'));" +
-                        "highlight(document.querySelector('#data .chatlog tbody'));" +
-                        "function highlight(selector){" +
-                            "console.log(selector);" +
-                            "if(selector == null){ return; }" +
-                            "selector.childNodes.forEach(function(el){" +
-                                "el.childNodes.forEach(function(td){" +
-                                    "if(td.className == 'chatlog_date'){" +
-                                        
-                                        "if (td.innerText.indexOf(\"Oct. 10, 2019, 3:36 p.m.\") >= 0){" +
-                                            "td.parentNode.style.background = \"#da1b1b\";" +
-                                            "marked_index = Array.prototype.slice.call(el.parentElement.children).indexOf(el) + 1;" +
-                                            "return false;" +
-                                        "}" +
-                                    "}" +
-                                "})" +
-                            "})" +
-                        "};" +
-                        "bound.updateMaxRoomDuration(marked_index);console.log( 'last ' + marked_index);";
+                    System.Threading.Thread.Sleep(1500);
+                    if (!string.IsNullOrEmpty(Globals.LastRoomChatlog))
+                    {
+                        var scrpt = "var marked_index=0;" +
+                            "highlight(document.querySelector('#chatlog_user .chatlog tbody'));" +
+                            "highlight(document.querySelector('#data .chatlog tbody'));" +
+                            "function highlight(selector){" +
+                                "console.log(selector);" +
+                                "if(selector == null){ return; }" +
+                                "selector.childNodes.forEach(function(el){" +
+                                    "el.childNodes.forEach(function(td){" +
+                                        "if(td.className == 'chatlog_date'){" +
 
-                    browser.EvaluateScriptAsync(scrpt);
+                                            "if (td.innerText.indexOf(\"" + Globals.LastRoomChatlog + "\") >= 0){" +
+                                                "td.parentNode.style.background = \"#da1b1b\";" +
+                                                "marked_index = Array.prototype.slice.call(el.parentElement.children).indexOf(el) + 1;" +
+                                                "return false;" +
+                                            "}" +
+                                        "}" +
+                                    "})" +
+                                "})" +
+                            "};";
+                        //"bound.updateMaxRoomDuration(marked_index);console.log( 'last ' + marked_index);";
+
+                        browser.EvaluateScriptAsync(scrpt);
+                    }
+                    //else
+                    //    UpdateMaxRoomDuration();
                 }
                 catch { }
             });

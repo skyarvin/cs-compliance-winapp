@@ -18,7 +18,7 @@ namespace SkydevCSTool.Class
         // Client  socket.  
         public Socket workSocket = null;
         // Size of receive buffer.  
-        public const int BufferSize = 51200;
+        public const int BufferSize = 151200;
         // Receive buffer.  
         public byte[] buffer = new byte[BufferSize];
         // Received data string.  

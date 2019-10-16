@@ -256,10 +256,7 @@ namespace WindowsFormsApp1
                         else Globals.room_duration = 0;
                     }
                 }
-                else
-                {
-                    Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
-                }
+                
             });
         }
 
@@ -565,15 +562,7 @@ namespace WindowsFormsApp1
 
         private void LoadUrl(string url)
         {
-            //if (url == Url.CB_HOME)
-            //{
-            //    Globals.chromeBrowser.Load(url);
-            //    return;
-            //}
-            if (IsValidUrl(url))
-                Globals.chromeBrowser.Load(url);
-            else
-                Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+            Globals.chromeBrowser.Load(url);
         }
 
         private bool IsValidUrl(string url)
@@ -581,24 +570,9 @@ namespace WindowsFormsApp1
             if (String.IsNullOrEmpty(url))
                 return false;
 
-            if (url == Url.CB_HOME)
+            if (url.Contains("chaturbate.com"))
                 return true;
-
-            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")))
-                return true;
-
-            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/photoset")))
-                return true;
-
-            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/auth/login")))
-                return true;
-
-            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/update_expiration_date_form")))
-                return true;
-
-            if (url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/seed_failure")))
-                return true;
-
+        
             return false;
         }
 

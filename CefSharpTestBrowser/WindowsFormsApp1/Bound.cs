@@ -26,7 +26,7 @@ namespace SkydevCSTool
             if (!e.Frame.IsMain)
                 return;
 
-            if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && e.Url.Contains(string.Concat(Url.CB_COMPLIANCE_URL, "/show")))
+            if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && e.Url.Contains("/compliance/show"))
             {
                 
                 browser.ExecuteScriptAsync(

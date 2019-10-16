@@ -106,7 +106,7 @@
             this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlURL.Location = new System.Drawing.Point(0, 0);
             this.pnlURL.Name = "pnlURL";
-            this.pnlURL.Size = new System.Drawing.Size(368, 40);
+            this.pnlURL.Size = new System.Drawing.Size(313, 40);
             this.pnlURL.TabIndex = 14;
             // 
             // pnlAction
@@ -117,21 +117,21 @@
             this.pnlAction.Controls.Add(this.pbProgress);
             this.pnlAction.Controls.Add(this.btnClear);
             this.pnlAction.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlAction.Location = new System.Drawing.Point(368, 0);
+            this.pnlAction.Location = new System.Drawing.Point(313, 0);
             this.pnlAction.Name = "pnlAction";
-            this.pnlAction.Size = new System.Drawing.Size(142, 40);
+            this.pnlAction.Size = new System.Drawing.Size(197, 40);
             this.pnlAction.TabIndex = 10;
             this.pnlAction.Visible = false;
             // 
             // lblApproveCount
             // 
             this.lblApproveCount.AutoSize = true;
-            this.lblApproveCount.BackColor = System.Drawing.Color.White;
-            this.lblApproveCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblApproveCount.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.lblApproveCount.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblApproveCount.ForeColor = System.Drawing.Color.DarkBlue;
-            this.lblApproveCount.Location = new System.Drawing.Point(57, 26);
+            this.lblApproveCount.Location = new System.Drawing.Point(143, 11);
             this.lblApproveCount.Name = "lblApproveCount";
-            this.lblApproveCount.Size = new System.Drawing.Size(27, 13);
+            this.lblApproveCount.Size = new System.Drawing.Size(34, 20);
             this.lblApproveCount.TabIndex = 0;
             this.lblApproveCount.Text = "0/1";
             this.lblApproveCount.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -149,30 +149,30 @@
             // 
             this.pnlSplitter5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.pnlSplitter5.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlSplitter5.Location = new System.Drawing.Point(0, 25);
+            this.pnlSplitter5.Location = new System.Drawing.Point(120, 0);
             this.pnlSplitter5.Name = "pnlSplitter5";
-            this.pnlSplitter5.Size = new System.Drawing.Size(1, 15);
+            this.pnlSplitter5.Size = new System.Drawing.Size(1, 40);
             this.pnlSplitter5.TabIndex = 13;
             // 
             // pbProgress
             // 
             this.pbProgress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pbProgress.Location = new System.Drawing.Point(0, 25);
+            this.pbProgress.Location = new System.Drawing.Point(120, 0);
             this.pbProgress.Name = "pbProgress";
-            this.pbProgress.Size = new System.Drawing.Size(142, 15);
+            this.pbProgress.Size = new System.Drawing.Size(77, 40);
             this.pbProgress.TabIndex = 0;
             // 
             // btnClear
             // 
             this.btnClear.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
-            this.btnClear.Dock = System.Windows.Forms.DockStyle.Top;
+            this.btnClear.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnClear.FlatAppearance.BorderSize = 0;
             this.btnClear.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClear.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
             this.btnClear.ForeColor = System.Drawing.Color.White;
             this.btnClear.Location = new System.Drawing.Point(0, 0);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(142, 25);
+            this.btnClear.Size = new System.Drawing.Size(120, 40);
             this.btnClear.TabIndex = 14;
             this.btnClear.Text = "APPROVE";
             this.btnClear.UseVisualStyleBackColor = false;
@@ -382,7 +382,7 @@
             this.cmbURL.FormattingEnabled = true;
             this.cmbURL.Location = new System.Drawing.Point(6, 9);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(356, 25);
+            this.cmbURL.Size = new System.Drawing.Size(301, 25);
             this.cmbURL.TabIndex = 8;
             this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
             this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);

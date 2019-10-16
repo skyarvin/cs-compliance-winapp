@@ -57,11 +57,10 @@ namespace WindowsFormsApp1
         };
 
         #region Init
-        public void InitializeChromium(string profile)
+        public void InitializeChromium()
         {
 
-            Globals.Profile = profile;
-            lblProfile.Text = String.Concat("Profile: ", Globals.Profile);
+            lblProfile.Text = String.Concat("Profile: ", Globals.Profile.Name);
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
@@ -72,7 +71,7 @@ namespace WindowsFormsApp1
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/SkydevCsTool/cookies/" + profile + "/", true);
+            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/SkydevCsTool/cookies/" + Globals.Profile.Name + "/", true);
 
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
@@ -115,7 +114,7 @@ namespace WindowsFormsApp1
             });
         }
 
-        private void InitializeAppFolders(string profile)
+        private void InitializeAppFolders()
         {
             // TODO : Refactor this !
             string temporary_cache_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\temp");
@@ -123,7 +122,7 @@ namespace WindowsFormsApp1
             {
                 Directory.CreateDirectory(temporary_cache_directory);
             }
-            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", profile);
+            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name);
             if (!Directory.Exists(temporary_cookies_directory))
             {
                 Directory.CreateDirectory(temporary_cookies_directory);
@@ -142,7 +141,7 @@ namespace WindowsFormsApp1
                 //TODO Try to reconnect. If failed, run code below. Revert back to original profile.
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST. CLICK 'CONNECT' BUTTON TO RECONNECT."));
                 SetBtnConnectText("CONNECT");
-                Globals.Profile = Globals.ComplianceAgent.profile;
+                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
                 Globals.max_room_duration = 48;
                 SwitchCache();
             }
@@ -177,10 +176,11 @@ namespace WindowsFormsApp1
 
         public frmMain()
         {
-            Globals.Profiles.Add(new Profile { Name = Globals.ComplianceAgent.profile });
+            Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile , AgentID = Globals.ComplianceAgent.id };
+            Globals.Profiles.Add(Globals.Profile);
             InitializeComponent();
-            InitializeAppFolders(Globals.ComplianceAgent.profile);
-            InitializeChromium(Globals.ComplianceAgent.profile);
+            InitializeAppFolders();
+            InitializeChromium();
             InitializeServer();
         }
         #endregion
@@ -371,15 +371,14 @@ namespace WindowsFormsApp1
                 followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
                 int followers = 0;
                 if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
-                    followers = int.Parse(followRaw);
-
+                    Int32.TryParse(followRaw, out followers);
                 string last_chatlog = "";
                 if (element_id == Action.Approve.Value) last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
 
                 var logData = new Logger
                 {
                     url = Globals.CurrentUrl,
-                    agent_id = Globals.ComplianceAgent.id.ToString(),
+                    agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
                     remarks = String.Concat(violation, notes),
                     duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
@@ -442,25 +441,7 @@ namespace WindowsFormsApp1
                 return handleParam;
             }
         }
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            try
-            {
-                if (keyData == (Keys.F1))
-                {
-
-                    Globals.ForceHideComliance = false;
-                    Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
-                    return true;
-                }
-                return base.ProcessCmdKey(ref msg, keyData);
-            }
-            catch
-            {
-            }
-            return false;
-        }
-        #endregion
+                #endregion
 
         public class Action
         {
@@ -522,7 +503,7 @@ namespace WindowsFormsApp1
                         Console.WriteLine("disposing...");
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(3000);
-                    InitializeChromium(Globals.Profile);
+                    InitializeChromium();
                 }
             );
         }
@@ -567,6 +548,8 @@ namespace WindowsFormsApp1
 
         private bool IsValidUrl(string url)
         {
+            if (Url.DEBUG)
+                return true;
             if (String.IsNullOrEmpty(url))
                 return false;
 
@@ -612,7 +595,6 @@ namespace WindowsFormsApp1
                     Globals.Client.Dispose();
                     Globals.Client.Close();
                     Globals.Client = null;
-                    //SwitchCache();
                 }
                 else
                 {
@@ -622,11 +604,11 @@ namespace WindowsFormsApp1
                         handler.Close();
                     }
                     Globals.Connections = new List<Socket>();
-                    Globals.Profiles = new List<Profile>();
-                    Globals.Profiles.Add(new Profile { Name = Globals.ComplianceAgent.profile });
                     SwitchCache();
                 }
-                Globals.Profile = Globals.ComplianceAgent.profile;
+                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
+                Globals.Profiles = new List<Profile>();
+                Globals.Profiles.Add(Globals.Profile);
                 btnConnect.Text = "CONNECT";
                 pnlAction.Visible = false;
             }
@@ -647,17 +629,18 @@ namespace WindowsFormsApp1
 
         private void Profile_Click(object sender, EventArgs e)
         {
-            if (Globals.Profile == sender.ToString())
+            if (Globals.Profile.Name == sender.ToString())
                 return;
-            Globals.Profile = sender.ToString();
+            Profile target_profile = Globals.Profiles.Find(p => p.Name == sender.ToString());
+            Globals.Profile = new Profile { Name = sender.ToString(), AgentID = target_profile != null ? target_profile.AgentID : 0 };
             foreach (var connection in Globals.Connections)
             {
-                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile, "\\Cookies");
+                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
                 string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
                 System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                 Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                 string file = Convert.ToBase64String(sbytes);
-                ServerAsync.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile, Message = file });
+                ServerAsync.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile.Name, ProfileID = Globals.Profile.AgentID, Message = file });
             }
             SwitchCache();
         }
@@ -667,7 +650,7 @@ namespace WindowsFormsApp1
             foreach (var profile in Globals.Profiles)
             {
                 var submenu = switchToolStripMenuItem.DropDownItems.Add(profile.Name, null, new EventHandler(Profile_Click));
-                if (profile.Name == Globals.Profile)
+                if (profile.Name == Globals.Profile.Name)
                     submenu.BackColor = Color.DodgerBlue;
             }
 
@@ -719,19 +702,27 @@ namespace WindowsFormsApp1
             {
                 pbProgress.Value = (int)approval_percentage;
                 lblApproveCount.Text = String.Concat(number_of_approve_agents,"/",number_of_agents);
+                btnClear.Enabled = true;
             });
 
             if (number_of_approve_agents == number_of_agents)
             {
+                this.InvokeOnUiThreadIfRequired(() => btnClear.Enabled = false);
                 Globals.chromeBrowser.EvaluateScriptAsync(@"
                         console.log(`Show approve button`);
-                      document.getElementById(`approve_button`).style.display = `block`;
                        document.getElementById(`main`).style[`background`] = `#00B159`;
+                       ");
+                if (Globals.IsServer())
+                {
+                    Globals.chromeBrowser.EvaluateScriptAsync(@"
+                    document.getElementById(`approve_button`).click();
                     ");
+                }
             }
             else if (number_of_approve_agents > 0) {
                 Globals.chromeBrowser.EvaluateScriptAsync(@"
-                      var old_bg = document.getElementById(`main`).style[`background`];
+
+                     var old_bg = document.getElementById(`main`).style[`background`];
                      document.getElementById(`main`).style[`background`] = `#00B159`;
                       setTimeout(function(){
                       document.getElementById(`main`).style[`background`] = old_bg;
@@ -742,6 +733,19 @@ namespace WindowsFormsApp1
            
         }
 
+        private void FrmMain_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
+        {
+            if (e.KeyCode == (Keys.F1))
+            {
+                Globals.ForceHideComliance = false;
+                Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
+                
+            }
+            else if (e.Control && e.KeyCode == Keys.Oemtilde )
+            {
+                Globals.frmMain.BroadCastClearEvent();
+            }
+        }
     }
 
 }

@@ -103,10 +103,17 @@ namespace SkydevCSTool
                     window.onkeydown = function(e){
                         if (e.which == 112)
                         {
+                            console.log('EP_ONE');
                             e.preventDefault();
                             bound.disableForceHide();
                         }
+
+                        if(e.ctrlKey == true && e.keyCode == 192){
+                            e.preventDefault();
+                            bound.triggerClear();
+                        }
                     }
+
 
                     if (document.getElementsByTagName('body')[0].innerText.indexOf('locked to another bouncer') >= 0)
                     {
@@ -122,14 +129,7 @@ namespace SkydevCSTool
                 browser.ExecuteScriptAsync(@"
                         console.log(`start`);
                         window.addEventListener(`DOMContentLoaded`, function(){
-                                document.getElementById(`approve_button`).style.display = `none`;
-
-                                window.onmousedown = function(e) {
-                                    if(e.which == 2){
-                                        e.preventDefault();
-                                        bound.triggerClear();
-                                    }
-                                }
+                                document.getElementById(`approve_button`).style.visibility = `hidden`;
                         });
                     ");
 

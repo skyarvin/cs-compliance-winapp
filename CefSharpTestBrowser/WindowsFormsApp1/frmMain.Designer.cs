@@ -47,27 +47,26 @@
             this.pnlUser = new System.Windows.Forms.Panel();
             this.lblProfile = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
-            this.pbImg = new System.Windows.Forms.PictureBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.switchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlSplitter = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
-            this.btnRefresh = new System.Windows.Forms.Button();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
+            this.pbImg = new System.Windows.Forms.PictureBox();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
             this.pnlAction.SuspendLayout();
             this.pnlUser.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -271,21 +270,6 @@
             this.lblUser.Text = "Enrique";
             this.lblUser.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // pbImg
-            // 
-            this.pbImg.ContextMenuStrip = this.contextMenuStrip1;
-            this.pbImg.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pbImg.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pbImg.ErrorImage")));
-            this.pbImg.Image = ((System.Drawing.Image)(resources.GetObject("pbImg.Image")));
-            this.pbImg.InitialImage = ((System.Drawing.Image)(resources.GetObject("pbImg.InitialImage")));
-            this.pbImg.Location = new System.Drawing.Point(220, 0);
-            this.pbImg.Name = "pbImg";
-            this.pbImg.Size = new System.Drawing.Size(45, 40);
-            this.pbImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbImg.TabIndex = 7;
-            this.pbImg.TabStop = false;
-            this.pbImg.Click += new System.EventHandler(this.PbImg_Click);
-            // 
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -336,29 +320,6 @@
             this.txtSearch.Size = new System.Drawing.Size(121, 27);
             this.txtSearch.TabIndex = 0;
             // 
-            // btnRefresh
-            // 
-            this.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnRefresh.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnRefresh.FlatAppearance.BorderSize = 0;
-            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnRefresh.ImageKey = "refresh.png";
-            this.btnRefresh.ImageList = this.imageList1;
-            this.btnRefresh.Location = new System.Drawing.Point(0, 0);
-            this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(49, 40);
-            this.btnRefresh.TabIndex = 0;
-            this.btnRefresh.UseVisualStyleBackColor = true;
-            this.btnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "find.png");
-            this.imageList1.Images.SetKeyName(1, "refresh.png");
-            // 
             // pnlBrowser
             // 
             this.pnlBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -377,6 +338,37 @@
             this.updateWorkactivity.Enabled = true;
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
+            // 
+            // pbImg
+            // 
+            this.pbImg.ContextMenuStrip = this.contextMenuStrip1;
+            this.pbImg.Dock = System.Windows.Forms.DockStyle.Right;
+            this.pbImg.ErrorImage = ((System.Drawing.Image)(resources.GetObject("pbImg.ErrorImage")));
+            this.pbImg.Image = ((System.Drawing.Image)(resources.GetObject("pbImg.Image")));
+            this.pbImg.InitialImage = ((System.Drawing.Image)(resources.GetObject("pbImg.InitialImage")));
+            this.pbImg.Location = new System.Drawing.Point(220, 0);
+            this.pbImg.Name = "pbImg";
+            this.pbImg.Size = new System.Drawing.Size(45, 40);
+            this.pbImg.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbImg.TabIndex = 7;
+            this.pbImg.TabStop = false;
+            this.pbImg.Click += new System.EventHandler(this.PbImg_Click);
+            // 
+            // btnRefresh
+            // 
+            this.btnRefresh.BackgroundImage = global::SkydevCSTool.Properties.Resources.home;
+            this.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnRefresh.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnRefresh.FlatAppearance.BorderSize = 0;
+            this.btnRefresh.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRefresh.ImageKey = "(none)";
+            this.btnRefresh.Location = new System.Drawing.Point(0, 0);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(49, 40);
+            this.btnRefresh.TabIndex = 0;
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
             // 
             // cmbURL
             // 
@@ -413,16 +405,17 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMain_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmMain_KeyDown);
             this.pnlHeader.ResumeLayout(false);
             this.pnlSearch.ResumeLayout(false);
             this.pnlURL.ResumeLayout(false);
             this.pnlAction.ResumeLayout(false);
             this.pnlAction.PerformLayout();
             this.pnlUser.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -431,7 +424,6 @@
         private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Panel pnlBrowser;
         private System.Windows.Forms.Button btnRefresh;
-        private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem logoutToolStripMenuItem;

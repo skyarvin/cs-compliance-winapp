@@ -159,7 +159,7 @@ namespace SkydevCSTool.Class
 
                                         break;
                                     case "SAVE_SERVER_CACHE":
-                                       if (data.Profile == Globals.Profile)
+                                       if (data.Profile == Globals.Profile.Name)
                                         {
                                             Send(client, new PairCommand { Action = "BEGIN_SEND" });
                                             Globals.frmMain.SetBtnConnectText("DISCONNECT");
@@ -175,14 +175,14 @@ namespace SkydevCSTool.Class
                                         string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
                                         File.WriteAllBytes(path, rbytes);
                                         // Give local cache back to server
-                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
+                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
                                         string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
                                         System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                                         Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                                         string file = Convert.ToBase64String(sbytes);
-                                        Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile });
+                                        Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.Profile.Name , ProfileID = Globals.Profile.AgentID });
                                         // Finalize the handshake by switching to the server cache
-                                        Globals.Profile = data.Profile;
+                                        Globals.Profile = new Profile { Name = data.Profile , AgentID = data.ProfileID };
                                         Globals.frmMain.SwitchCache();
                                         Send(client, new PairCommand { Action = "BEGIN_SEND" });
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
@@ -194,16 +194,16 @@ namespace SkydevCSTool.Class
                                         break;
 
                                     case "SWITCH":
-                                       if (data.Profile == Globals.Profile)
+                                       if (data.Profile == Globals.Profile.Name)
                                             break;
-                                        Globals.Profile = data.Profile;
+                                        Globals.Profile = new Profile { Name = data.Profile, AgentID = data.ProfileID };
                                         Byte[] bytes = Convert.FromBase64String(data.Message);
-                                        string _temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile);
+                                        string _temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name);
                                         if (!Directory.Exists(_temporary_cookies_directory))
                                         {
                                             Directory.CreateDirectory(_temporary_cookies_directory);
                                         }
-                                        string _path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile, "\\Cookies");
+                                        string _path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
                                         File.WriteAllBytes(_path, bytes);
                                         Globals.frmMain.SwitchCache();
                                         Console.WriteLine("do switch");

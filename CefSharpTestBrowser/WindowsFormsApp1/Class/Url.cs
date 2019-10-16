@@ -8,6 +8,12 @@ namespace SkydevCSTool.Class
 {
     public static class Url
     {
+        //##################SET TO FALSE WHEN DEPLOYING ON PRODUCTION #########################//
+        public static bool DEBUG = true;
+        //####################################################################################//
+
+
+
         // ## Production
         //public static string CB_HOME = "https://chaturbate.com/";
         //public static string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";

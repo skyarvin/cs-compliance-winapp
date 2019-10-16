@@ -13,7 +13,7 @@ namespace SkydevCSTool.Class
         public string Message { get; set; }
         public string Action { get; set; }
         public string Profile { get; set; }
-
+        public int ProfileID { get; set; }
         public int NumberofActiveProfiles { get; set; }
     }
 
@@ -21,5 +21,7 @@ namespace SkydevCSTool.Class
     {
         public string Name { get; set; }
         public string RemoteAddress { get; set; }
+
+        public int AgentID { get; set; }
     }
 }

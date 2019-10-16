@@ -17,7 +17,7 @@ namespace WindowsFormsApp1
     static class Globals
     {
         public static List<Socket> Connections = new List<Socket>();
-        public static string Profile { get; set; }
+        public static Profile Profile { get; set; }
         public static string CurrentUrl { get; set; }
         public static string LastRoomChatlog { get; set; }
         public static bool Paired { get; set; }
@@ -43,7 +43,7 @@ namespace WindowsFormsApp1
         public static ManualResetEvent pairConnect = new ManualResetEvent(false);
         public static List<string> ApprovedAgents = new List<string>();
         public static bool ForceHideComliance = true;
-        public static int max_room_duration = 48;
+        public static int max_room_duration = 5;
         public static int room_duration;
         public static void ShowMessage(Form parent,string Message)
         {

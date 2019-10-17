@@ -33,8 +33,8 @@
     <UpdateUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL_QA\</UpdateUrl>
     <ProductName>COMPLIANCE_TOOL_QA</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.0.17</MinimumRequiredVersion>
-    <ApplicationRevision>18</ApplicationRevision>
+    <MinimumRequiredVersion>2.0.0.19</MinimumRequiredVersion>
+    <ApplicationRevision>20</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -84,7 +84,7 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <ApplicationIcon>logo_qa.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <Prefer32Bit>false</Prefer32Bit>
@@ -214,6 +214,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\home.png" />
+    <Content Include="favicon.ico" />
+    <Content Include="logo_qa.ico" />
+    <Content Include="logo_qa_qa.ico.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

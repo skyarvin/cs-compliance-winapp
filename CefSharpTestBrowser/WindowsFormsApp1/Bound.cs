@@ -258,7 +258,8 @@ namespace SkydevCSTool
 
         public void TriggerClear()
         {
-            Globals.frmMain.BroadCastClearEvent();
+            //Globals.frmMain.BroadCastClearEvent();
+            Globals.frmMain.ButtonClearClick();
         }
 
         public class HtmlItemClickedEventArgs : EventArgs

@@ -670,28 +670,54 @@ namespace WindowsFormsApp1
             contextMenuStrip1.Show(new Point(loc.X + 52, loc.Y + 41));
         }
 
-        private void BtnClear_Click(object sender, EventArgs e)
+        public void ButtonClearClick()
         {
-            BroadCastClearEvent();
+            btnClear.PerformClick();
         }
 
-        public void BroadCastClearEvent()
+        private void BtnClear_Click(object sender, EventArgs e)
         {
-            if (Globals.IsServer())
+            BroadCastClearEvent(btnClear.Text);
+        }
+
+        public void BroadCastClearEvent(string action)
+        {
+            if (action == "APPROVE")
             {
-                if (!Globals.ApprovedAgents.Contains(Globals.ComplianceAgent.profile))
+                btnClear.Text = "UNAPPROVE";
+                btnClear.BackColor = Color.Gray;
+                if (Globals.IsServer())
                 {
-                    Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
+                    if (!Globals.ApprovedAgents.Contains(Globals.ComplianceAgent.profile))
+                    {
+                        Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
+                    }
+                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                 }
-                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
-                ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
-
+                else if (Globals.IsClient())
+                {
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "CLEAR", Profile = Globals.ComplianceAgent.profile });
+                }
             }
-            else if(Globals.IsClient())
+            else
             {
-                AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "CLEAR", Profile = Globals.ComplianceAgent.profile });
+                btnClear.Text = "APPROVE";
+                btnClear.BackColor = Color.FromArgb(96, 169, 23);
+                if (Globals.IsServer())
+                {
+                    if (Globals.ApprovedAgents.Contains(Globals.ComplianceAgent.profile))
+                    {
+                        Globals.ApprovedAgents.Remove(Globals.ComplianceAgent.profile);
+                    }
+                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                }
+                else if (Globals.IsClient())
+                {
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UNCLEAR", Profile = Globals.ComplianceAgent.profile });
+                }
             }
-
         }
 
         public void DisplayRoomApprovalRate (int number_of_approve_agents, int number_of_agents)
@@ -703,6 +729,11 @@ namespace WindowsFormsApp1
                 pbProgress.Value = (int)approval_percentage;
                 lblApproveCount.Text = String.Concat(number_of_approve_agents,"/",number_of_agents);
                 btnClear.Enabled = true;
+                if (number_of_approve_agents == 0)
+                {
+                    btnClear.Text = "APPROVE";
+                    btnClear.BackColor = Color.FromArgb(96, 169, 23);
+                }
             });
 
             if (number_of_approve_agents == number_of_agents)
@@ -743,7 +774,7 @@ namespace WindowsFormsApp1
             }
             else if (e.Control && e.KeyCode == Keys.Oemtilde )
             {
-                Globals.frmMain.BroadCastClearEvent();
+                ButtonClearClick();
             }
         }
     }

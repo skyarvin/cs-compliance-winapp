@@ -165,6 +165,7 @@ namespace SkydevCSTool.Class
                                         Globals.Profiles.Add(new Profile { Name = data.Profile, RemoteAddress = handler.RemoteEndPoint.ToString(), AgentID = data.ProfileID });
                                         break;
                                     case "BEGIN_SEND":
+                                        Globals.ApprovedAgents.Clear();
                                         Globals.Connections.Add(handler);
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
@@ -188,7 +189,14 @@ namespace SkydevCSTool.Class
                                             SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                                         }
                                         break;
-                                    
+                                    case "UNCLEAR":
+                                        if (Globals.ApprovedAgents.Contains(data.Profile))
+                                        {
+                                            Globals.ApprovedAgents.Remove(data.Profile);
+                                            Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                                            SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                                        }
+                                        break;
                                 }
                             }
                             catch

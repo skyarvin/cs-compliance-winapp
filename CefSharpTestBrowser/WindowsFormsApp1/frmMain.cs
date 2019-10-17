@@ -590,7 +590,7 @@ namespace WindowsFormsApp1
             else if (btn_text == "DISCONNECT")
             {
                 Globals.max_room_duration = 48;
-                if (!Globals.IsServer()) {
+                if (Globals.IsClient()) {
                     //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
                     Globals.Client.Dispose();
                     Globals.Client.Close();
@@ -775,6 +775,15 @@ namespace WindowsFormsApp1
             else if (e.Control && e.KeyCode == Keys.Oemtilde )
             {
                 ButtonClearClick();
+            }
+        }
+
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        {
+            Globals.chromeBrowser.StopFinding(true);
+            if (!string.IsNullOrEmpty(txtSearch.Text))
+            {
+                Globals.chromeBrowser.Find(0, txtSearch.Text, true, false, false);
             }
         }
     }

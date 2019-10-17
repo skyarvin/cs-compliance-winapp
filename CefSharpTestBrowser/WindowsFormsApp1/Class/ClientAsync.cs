@@ -48,7 +48,6 @@ namespace SkydevCSTool.Class
                 connectDone.WaitOne();
                 if (!Globals.IsClient())
                 {
-                    
                     return;
                 }
 
@@ -143,6 +142,7 @@ namespace SkydevCSTool.Class
                                     // START HANDSHAKE BLOCK
                                     case "APPROVE":
                                         MessageBox.Show("Connected!");
+                                        
                                         Send(client, new PairCommand { Action = "REQUEST_CACHE" });
                                         break;
                                     case "DENY":

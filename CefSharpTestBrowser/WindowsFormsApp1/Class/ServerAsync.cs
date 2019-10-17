@@ -135,6 +135,11 @@ namespace SkydevCSTool.Class
                                 switch (data.Action)
                                 {
                                     case "CONNECT":
+                                        if (Globals.IsClient())
+                                        {
+                                            Send(handler, new PairCommand { Action = "DENY" });
+                                            break;
+                                        }
                                         DialogResult dialogResult = MessageBox.Show(string.Concat("Allow incoming connection from ", data.Message, "?"), "Confirm", MessageBoxButtons.YesNo);
                                         if (dialogResult == DialogResult.Yes)
                                         {

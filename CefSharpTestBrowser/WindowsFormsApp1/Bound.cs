@@ -33,6 +33,7 @@ namespace SkydevCSTool
                 "function sleep(ms) {" +
                     "return new Promise(resolve => setTimeout(resolve, ms));" +
                 "}" +
+
                 "document.addEventListener('DOMContentLoaded', " +
                     "async function(){" +
                         "await sleep(1000);" +
@@ -93,6 +94,24 @@ namespace SkydevCSTool
                             }
                         }
                     });
+
+                    function waitUntil(selector, max_ms_timeout){
+                        return new Promise( (resolve, reject) => {
+	                        var ms = 0;
+                            var finder = setInterval( () => {
+		                        if (ms >= max_ms_timeout){
+			                        clearInterval(finder);
+			                        reject(false);
+		                        }
+                                if (document.querySelector(selector)){
+        	                        clearInterval(finder);
+                                    resolve(document.querySelector(selector));
+                                }
+		                        ms+=100;
+                            }, 100);
+	
+                        });
+                    }
                 ";
 
             browser.EvaluateScriptAsync(submit_script);
@@ -103,7 +122,6 @@ namespace SkydevCSTool
                     window.onkeydown = function(e){
                         if (e.which == 112)
                         {
-                            console.log('EP_ONE');
                             e.preventDefault();
                             bound.disableForceHide();
                         }
@@ -199,14 +217,16 @@ namespace SkydevCSTool
                 try
                 {
                     Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
-                    System.Threading.Thread.Sleep(1500);
                     if (!string.IsNullOrEmpty(Globals.LastRoomChatlog))
                     {
-                        var scrpt = "var marked_index=0;" +
-                            "highlight(document.querySelector('#chatlog_user .chatlog tbody'));" +
-                            "highlight(document.querySelector('#data .chatlog tbody'));" +
+                        var scrpt =
+                            "waitUntil('#chatlog_user .chatlog tbody', 5000).then( (element) => { " +
+                                 "var marked_index = highlight(element); " +
+                                 "bound.updateMaxRoomDuration(marked_index);" +
+                            "}, (error) => console.log(error));" +
+                            "waitUntil('#data .chatlog tbody', 5000).then( (element) => highlight(element), (error) => console.log(error) );" +
                             "function highlight(selector){" +
-                                "console.log(selector);" +
+                                "var chatlog_position =0;" +
                                 "if(selector == null){ return; }" +
                                 "selector.childNodes.forEach(function(el){" +
                                     "el.childNodes.forEach(function(td){" +
@@ -214,14 +234,15 @@ namespace SkydevCSTool
 
                                             "if (td.innerText.indexOf(\"" + Globals.LastRoomChatlog + "\") >= 0){" +
                                                 "td.parentNode.style.background = \"#da1b1b\";" +
-                                                "marked_index = Array.prototype.slice.call(el.parentElement.children).indexOf(el) + 1;" +
-                                                "return false;" +
+                                                "chatlog_position= Array.prototype.slice.call(el.parentElement.children).indexOf(el) + 1;" +
+
                                             "}" +
                                         "}" +
                                     "})" +
-                                "})" +
-                            "};";
-                        //"bound.updateMaxRoomDuration(marked_index);console.log( 'last ' + marked_index);";
+                                "});" +
+                                "return chatlog_position;"+
+                        "};";
+                        
 
                         browser.EvaluateScriptAsync(scrpt);
                     }

@@ -103,9 +103,9 @@ namespace SkydevCSTool
 			                        clearInterval(finder);
 			                        reject(false);
 		                        }
-                                if (document.querySelector(selector)){
+                                if (document.querySelectorAll(selector).length > 0){
         	                        clearInterval(finder);
-                                    resolve(document.querySelector(selector));
+                                    resolve(document.querySelectorAll(selector));
                                 }
 		                        ms+=100;
                             }, 100);
@@ -217,64 +217,82 @@ namespace SkydevCSTool
                 try
                 {
                     Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
-                    if (!string.IsNullOrEmpty(Globals.LastRoomChatlog))
-                    {
-                        var scrpt =
-                            "waitUntil('#chatlog_user .chatlog tbody', 5000).then( (element) => { " +
-                                 "var marked_index = highlight(element); " +
-                                 "bound.updateMaxRoomDuration(marked_index);" +
-                            "}, (error) => console.log(error));" +
-                            "waitUntil('#data .chatlog tbody', 5000).then( (element) => highlight(element), (error) => console.log(error) );" +
-                            "function highlight(selector){" +
-                                "var chatlog_position =0;" +
-                                "if(selector == null){ return; }" +
-                                "selector.childNodes.forEach(function(el){" +
-                                    "el.childNodes.forEach(function(td){" +
-                                        "if(td.className == 'chatlog_date'){" +
+                    
+                        string script = @"
+                            var last_room_chatlog = '{{global_chatlog}}';
 
-                                            "if (td.innerText.indexOf(\"" + Globals.LastRoomChatlog + "\") >= 0){" +
-                                                "td.parentNode.style.background = \"#da1b1b\";" +
-                                                "chatlog_position= Array.prototype.slice.call(el.parentElement.children).indexOf(el) + 1;" +
+                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => 
+                            { 
+                                bound.updateMaxRoomDuration(highlight(element));
+                            }, (error) => console.log(error));
 
-                                            "}" +
-                                        "}" +
-                                    "})" +
-                                "});" +
-                                "return chatlog_position;"+
-                        "};";
-                        
+                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element), (error) => console.log(error));
 
-                        browser.EvaluateScriptAsync(scrpt);
-                    }
-                    //else
-                    //    UpdateMaxRoomDuration();
+                            ;
+                            function highlight(selector)
+                            {
+                                console.log(selector);
+                                var chatlog_position = 0;
+                                if (selector == null || selector.length == 0)
+                                    return; 
+                                var found = false
+                                var row_index = 0;
+                                
+                                if (last_room_chatlog == '' || last_room_chatlog == undefined || last_room_chatlog == null){
+                                    return selector.length;
+                                }
+                                
+                                selector.forEach(function(el)
+                                {
+                                    row_index++;
+                                    
+                                    el.childNodes.forEach(function(td)
+                                    {
+                                        if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_room_chatlog) >= 0))
+                                        {
+                                            td.parentNode.style.background = '#da1b1b';
+                                            chatlog_position = row_index;
+                                        }
+                                    })
+
+                                });
+
+                                if (chatlog_position == 0)
+                                    return row_index 
+
+                                return chatlog_position;
+                                
+                            }
+
+                            document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
+                            {
+                                console.log('changed');
+                                waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => {
+                                    bound.updateMaxRoomDuration(highlight(element));
+                                }, (error) => console.log(error));
+                                waitUntil('#data .chatlog tbody tr', 5000).then( (element) => highlight(element), (error) => console.log(error));
+                            });
+                        ";
+
+                        script = script.Replace("{{global_chatlog}}", Globals.LastRoomChatlog);
+                        browser.ExecuteScriptAsync(script);
+                    
                 }
-                catch { }
+                catch {}
             });
-            
         }
-
         
-        public void UpdateMaxRoomDuration(int chatlog_position = 0)
+        public void UpdateMaxRoomDuration(int chatlog_lines_count = 0)
         {
-
-            if (!Globals.IsServer())
-                return;
-
-            if (chatlog_position == 0 || chatlog_position > 100)
-            {
-                Globals.max_room_duration = 48;
-                ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = "48",RoomDuration = Globals.room_duration });
-                return;
+            Console.WriteLine("UpdateMaxRoomDuration: " + chatlog_lines_count);
+            if (Globals.IsServer()) {
+                ServerAsync.ChatlogRecomputeDurationThreshold(chatlog_lines_count);
+                ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
             }
-
-            if (chatlog_position > 50)
+            else if (Globals.IsClient())
             {
-                Globals.max_room_duration += 5;
-                int duration = Globals.max_room_duration;
-                ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = duration.ToString(), RoomDuration = Globals.room_duration }) ;
+                AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "COMPUTE_TIME", Message = chatlog_lines_count.ToString() });
             }
-                
         }
 
         public void TriggerClear()

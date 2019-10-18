@@ -202,6 +202,11 @@ namespace SkydevCSTool.Class
                                             SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
                                         }
                                         break;
+
+                                    case "COMPUTE_TIME":
+                                        ServerAsync.ChatlogRecomputeDurationThreshold(Int32.Parse(data.Message));
+                                        ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
+                                        break;
                                 }
                             }
                             catch
@@ -240,6 +245,18 @@ namespace SkydevCSTool.Class
             if (Globals.Profiles.Count > 1)
                 return 24;
             return 48;
+        }
+
+
+        public static void ChatlogRecomputeDurationThreshold(int chatlog_lines_count)
+        {
+            const int MINIMUM_LINES_REQUIRED = 1500;
+            const int MAXIMUM_DURATION = 45;
+            int base_duration = DurationThreshold() + (chatlog_lines_count > MINIMUM_LINES_REQUIRED ? ( ((chatlog_lines_count - MINIMUM_LINES_REQUIRED) / 500) * 5) : 0);
+            Console.WriteLine("NEW MAX ROOM DURATION" + ((base_duration > MAXIMUM_DURATION) ? MAXIMUM_DURATION : base_duration ));
+            Console.WriteLine("CHAT LINES" + chatlog_lines_count);
+            int new_max_duration = (base_duration > MAXIMUM_DURATION) ? MAXIMUM_DURATION : base_duration;
+            Globals.max_room_duration = Globals.max_room_duration < new_max_duration ? new_max_duration : Globals.max_room_duration;
         }
         public static void SendToAll(PairCommand data, Socket exclude_handler=null)
         {

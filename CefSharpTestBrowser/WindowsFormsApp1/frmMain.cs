@@ -91,6 +91,7 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
             Globals.chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
             Globals.chromeBrowser.IsBrowserInitializedChanged += OnIsBrowserInitiazedChanged;
+            Globals.chromeBrowser.LoadingStateChanged += OnLoadingStateChanged;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
             lblUser.Text = Globals.ComplianceAgent.name;
@@ -268,6 +269,20 @@ namespace WindowsFormsApp1
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
             this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id));
+        }
+
+        private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        {
+            this.InvokeOnUiThreadIfRequired(() => {
+                if (e.IsLoading)
+                {
+                    this.pnlLoader.Visible = true;
+                }
+                else
+                {
+                    this.pnlLoader.Visible = false;
+                }
+            });
         }
 
         #endregion

@@ -32,7 +32,6 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
-            this.pnlURL = new System.Windows.Forms.Panel();
             this.pnlAction = new System.Windows.Forms.Panel();
             this.lblApproveCount = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
@@ -51,22 +50,27 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.switchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pnlLoader = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pnlSplitter = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.pnlURL = new System.Windows.Forms.Panel();
             this.pnlBrowser = new System.Windows.Forms.Panel();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
-            this.pnlURL.SuspendLayout();
             this.pnlAction.SuspendLayout();
             this.pnlUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
+            this.pnlLoader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
+            this.pnlURL.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlHeader
@@ -93,21 +97,12 @@
             this.pnlSearch.Controls.Add(this.btnConnect);
             this.pnlSearch.Controls.Add(this.pnlSplitter2);
             this.pnlSearch.Controls.Add(this.pnlUser);
+            this.pnlSearch.Controls.Add(this.pnlLoader);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSearch.Location = new System.Drawing.Point(180, 0);
             this.pnlSearch.Name = "pnlSearch";
             this.pnlSearch.Size = new System.Drawing.Size(948, 40);
             this.pnlSearch.TabIndex = 9;
-            // 
-            // pnlURL
-            // 
-            this.pnlURL.BackColor = System.Drawing.Color.Transparent;
-            this.pnlURL.Controls.Add(this.cmbURL);
-            this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlURL.Location = new System.Drawing.Point(0, 0);
-            this.pnlURL.Name = "pnlURL";
-            this.pnlURL.Size = new System.Drawing.Size(313, 40);
-            this.pnlURL.TabIndex = 14;
             // 
             // pnlAction
             // 
@@ -308,6 +303,27 @@
             this.switchToolStripMenuItem.Text = "Switch";
             this.switchToolStripMenuItem.Visible = false;
             // 
+            // pnlLoader
+            // 
+            this.pnlLoader.BackColor = System.Drawing.Color.Transparent;
+            this.pnlLoader.Controls.Add(this.pictureBox1);
+            this.pnlLoader.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlLoader.Location = new System.Drawing.Point(0, 0);
+            this.pnlLoader.Name = "pnlLoader";
+            this.pnlLoader.Size = new System.Drawing.Size(41, 40);
+            this.pnlLoader.TabIndex = 15;
+            this.pnlLoader.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::SkydevCSTool.Properties.Resources.loader;
+            this.pictureBox1.Location = new System.Drawing.Point(5, 6);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(30, 28);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
+            // 
             // pnlSplitter
             // 
             this.pnlSplitter.BackColor = System.Drawing.Color.White;
@@ -352,6 +368,16 @@
             this.btnRefresh.UseVisualStyleBackColor = true;
             this.btnRefresh.Click += new System.EventHandler(this.BtnRefresh_Click);
             // 
+            // pnlURL
+            // 
+            this.pnlURL.BackColor = System.Drawing.Color.Transparent;
+            this.pnlURL.Controls.Add(this.cmbURL);
+            this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlURL.Location = new System.Drawing.Point(41, 0);
+            this.pnlURL.Name = "pnlURL";
+            this.pnlURL.Size = new System.Drawing.Size(272, 40);
+            this.pnlURL.TabIndex = 14;
+            // 
             // pnlBrowser
             // 
             this.pnlBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -359,17 +385,6 @@
             this.pnlBrowser.Name = "pnlBrowser";
             this.pnlBrowser.Size = new System.Drawing.Size(1128, 477);
             this.pnlBrowser.TabIndex = 2;
-            // 
-            // bgWorkResync
-            // 
-            this.bgWorkResync.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgWorkResync_DoWork);
-            this.bgWorkResync.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgWorkResync_RunWorkerCompleted);
-            // 
-            // updateWorkactivity
-            // 
-            this.updateWorkactivity.Enabled = true;
-            this.updateWorkactivity.Interval = 300000;
-            this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
             // cmbURL
             // 
@@ -381,15 +396,26 @@
             this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.cmbURL.ForeColor = System.Drawing.Color.White;
             this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(6, 9);
+            this.cmbURL.Location = new System.Drawing.Point(7, 7);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(301, 25);
+            this.cmbURL.Size = new System.Drawing.Size(262, 25);
             this.cmbURL.TabIndex = 8;
             this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
             this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
             this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
             this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
+            // 
+            // bgWorkResync
+            // 
+            this.bgWorkResync.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgWorkResync_DoWork);
+            this.bgWorkResync.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgWorkResync_RunWorkerCompleted);
+            // 
+            // updateWorkactivity
+            // 
+            this.updateWorkactivity.Enabled = true;
+            this.updateWorkactivity.Interval = 300000;
+            this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
             // frmMain
             // 
@@ -409,14 +435,16 @@
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FrmMain_KeyDown);
             this.pnlHeader.ResumeLayout(false);
             this.pnlSearch.ResumeLayout(false);
-            this.pnlURL.ResumeLayout(false);
             this.pnlAction.ResumeLayout(false);
             this.pnlAction.PerformLayout();
             this.pnlUser.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
+            this.pnlLoader.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.pnlURL.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -451,6 +479,8 @@
         private System.Windows.Forms.Panel pnlURL;
         private System.Windows.Forms.Label lblApproveCount;
         private System.Windows.Forms.ProgressBar pbProgress;
+        private System.Windows.Forms.Panel pnlLoader;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

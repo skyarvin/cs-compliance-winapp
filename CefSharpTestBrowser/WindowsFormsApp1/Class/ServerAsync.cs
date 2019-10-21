@@ -140,8 +140,9 @@ namespace SkydevCSTool.Class
                                             Send(handler, new PairCommand { Action = "DENY" });
                                             break;
                                         }
-                                        DialogResult dialogResult = MessageBox.Show(string.Concat("Allow incoming connection from ", data.Message, "?"), "Confirm", MessageBoxButtons.YesNo);
-                                        if (dialogResult == DialogResult.Yes)
+                                        frmConfirm frmconfirm = new frmConfirm { Title = "Confirm", Message = string.Concat("Allow incoming connection from ", data.Message, "?"), Button1Text="Yes",Button2Text="No"};
+                                        frmconfirm.ShowDialog();
+                                        if (frmconfirm.DialogResult == DialogResult.Yes)
                                         {
                                             Send(handler, new PairCommand { Action = "APPROVE" });
                                         }
@@ -209,8 +210,9 @@ namespace SkydevCSTool.Class
                                         break;
                                 }
                             }
-                            catch
+                            catch(Exception e)
                             {
+                                Console.WriteLine(e.Message);
                                 state.sb.Append(comm);
                             }
                         }

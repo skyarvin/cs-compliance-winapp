@@ -141,12 +141,15 @@ namespace SkydevCSTool.Class
                                 {
                                     // START HANDSHAKE BLOCK
                                     case "APPROVE":
-                                        MessageBox.Show("Connected!");
-                                        
+                                        //MessageBox.Show("Connected!");
+                                        frmConfirm frmconfirm = new frmConfirm { Title = "Connection status", Message = "Connected", Button1Text = "Ok", Button2Visible = false };
+                                        frmconfirm.ShowDialog();
                                         Send(client, new PairCommand { Action = "REQUEST_CACHE" });
                                         break;
                                     case "DENY":
-                                        MessageBox.Show("Your request to pair has been denied!");
+                                        // MessageBox.Show("Your request to pair has been denied!");
+                                        frmConfirm frmDenied = new frmConfirm { Title = "Connection status", Message = "Your request to pair has been denied!", Button1Text = "Ok", Button2Visible = false };
+                                        frmDenied.ShowDialog();
                                         Globals.frmMain.SetBtnConnectText("CONNECT");
                                         if(Globals.Client != null)
                                         {

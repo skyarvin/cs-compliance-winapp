@@ -167,11 +167,11 @@ namespace SkydevCSTool.Class
                                         }
                                         string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
                                         File.WriteAllBytes(path, rbytes);
-                                        Globals.Profiles.Add(new Profile { Name = data.Profile, RemoteAddress = handler.RemoteEndPoint.ToString(), AgentID = data.ProfileID });
                                         break;
                                     case "BEGIN_SEND":
                                         Globals.ApprovedAgents.Clear();
                                         Globals.Connections.Add(handler);
+                                        Globals.Profiles.Add(new Profile { Name = data.Profile, RemoteAddress = handler.RemoteEndPoint.ToString(), AgentID = data.ProfileID });
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
                                         Globals.max_room_duration = ServerAsync.DurationThreshold();

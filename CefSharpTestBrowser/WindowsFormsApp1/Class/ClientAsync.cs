@@ -159,9 +159,9 @@ namespace SkydevCSTool.Class
 
                                         break;
                                     case "SAVE_SERVER_CACHE":
-                                       if (data.Profile == Globals.Profile.Name)
+                                       if (data.Profile == Globals.ComplianceAgent.profile)
                                         {
-                                            Send(client, new PairCommand { Action = "BEGIN_SEND" });
+                                            Send(client, new PairCommand { Action = "BEGIN_SEND" , Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
                                             Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                             break;
                                         }
@@ -175,16 +175,16 @@ namespace SkydevCSTool.Class
                                         string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
                                         File.WriteAllBytes(path, rbytes);
                                         // Give local cache back to server
-                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
+                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
                                         string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
                                         System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                                         Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                                         string file = Convert.ToBase64String(sbytes);
-                                        Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.Profile.Name , ProfileID = Globals.Profile.AgentID });
+                                        Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
                                         // Finalize the handshake by switching to the server cache
                                         Globals.Profile = new Profile { Name = data.Profile , AgentID = data.ProfileID };
                                         Globals.frmMain.SwitchCache();
-                                        Send(client, new PairCommand { Action = "BEGIN_SEND" });
+                                        Send(client, new PairCommand { Action = "BEGIN_SEND" , Profile = Globals.ComplianceAgent.profile , ProfileID = Globals.ComplianceAgent.id });
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         break;
                                     // END HANDSHAKE BLOCK

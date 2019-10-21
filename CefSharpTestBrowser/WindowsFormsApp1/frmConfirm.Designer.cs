@@ -53,9 +53,10 @@
             this.lblTitle.ForeColor = System.Drawing.Color.White;
             this.lblTitle.Location = new System.Drawing.Point(0, 0);
             this.lblTitle.Name = "lblTitle";
-            this.lblTitle.Size = new System.Drawing.Size(449, 23);
+            this.lblTitle.Size = new System.Drawing.Size(449, 32);
             this.lblTitle.TabIndex = 1;
-            this.lblTitle.Text = "Confirm Action";
+            this.lblTitle.Text = " Confirm Action";
+            this.lblTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnOk
             // 

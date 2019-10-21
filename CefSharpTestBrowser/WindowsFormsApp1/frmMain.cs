@@ -567,6 +567,7 @@ namespace WindowsFormsApp1
             pnlSearch.BackColor = darkBackColor;
             panel1.BackColor = backcolor;
             pnlSplitter2.BackColor = backcolor;
+            panel4.BackColor = backcolor;
             pnlSplitter3.BackColor = backcolor;
             btnRefresh.BackColor = backcolor;
             pbImg.BackColor = backcolor;

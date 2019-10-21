@@ -21,7 +21,14 @@ namespace SkydevCSTool
             lblMessage.Text = Message;
         }
 
-        private void Button1_Click(object sender, EventArgs e)
+      
+
+        private void FrmMessage_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
+        private void Button1_Click_1(object sender, EventArgs e)
         {
             this.Hide();
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -29,11 +36,6 @@ namespace SkydevCSTool
 
             Globals._wentIdle = DateTime.MaxValue;
             Globals._idleTicks = 0;
-        }
-
-        private void FrmMessage_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
         }
     }
 }

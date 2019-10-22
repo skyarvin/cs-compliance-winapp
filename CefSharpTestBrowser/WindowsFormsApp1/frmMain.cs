@@ -171,7 +171,11 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "THE SERVER CAN NOT SEND INFORMATION TO THE CLIENTS. PLEASE CONTACT ADMIN. "));
 
             if (ServerAsync.HasConnections() == false)
+            {
+                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
+                this.InvokeOnUiThreadIfRequired(() => SwitchCache());
                 Globals.frmMain.SetBtnConnectText("CONNECT");
+            }
             Globals.max_room_duration = ServerAsync.DurationThreshold();
         }
 
@@ -603,6 +607,9 @@ namespace WindowsFormsApp1
             }
             else if (btn_text == "DISCONNECT")
             {
+                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
+                Globals.Profiles = new List<Profile>();
+                Globals.Profiles.Add(Globals.Profile);
                 Globals.max_room_duration = 48;
                 if (Globals.IsClient()) {
                     //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
@@ -620,9 +627,6 @@ namespace WindowsFormsApp1
                     Globals.Connections = new List<Socket>();
                     SwitchCache();
                 }
-                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
-                Globals.Profiles = new List<Profile>();
-                Globals.Profiles.Add(Globals.Profile);
                 btnConnect.Text = "CONNECT";
                 pnlAction.Visible = false;
             }

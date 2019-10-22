@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
+using CefSharp.WinForms.Internals;
 
 namespace SkydevCSTool.Class
 {
@@ -186,9 +187,13 @@ namespace SkydevCSTool.Class
                                         Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
                                         // Finalize the handshake by switching to the server cache
                                         Globals.Profile = new Profile { Name = data.Profile , AgentID = data.ProfileID };
-                                        Globals.frmMain.SwitchCache();
-                                        Send(client, new PairCommand { Action = "BEGIN_SEND" , Profile = Globals.ComplianceAgent.profile , ProfileID = Globals.ComplianceAgent.id });
-                                        Globals.frmMain.SetBtnConnectText("DISCONNECT");
+
+                                        Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                        {
+                                            Globals.frmMain.SwitchCache();
+                                            Send(client, new PairCommand { Action = "BEGIN_SEND", Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
+                                            Globals.frmMain.SetBtnConnectText("DISCONNECT");
+                                        });
                                         break;
                                     // END HANDSHAKE BLOCK
 
@@ -208,8 +213,11 @@ namespace SkydevCSTool.Class
                                         }
                                         string _path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
                                         File.WriteAllBytes(_path, bytes);
-                                        Globals.frmMain.SwitchCache();
-                                        Console.WriteLine("do switch");
+                                        Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                        {
+                                            Globals.frmMain.SwitchCache();
+                                            Console.WriteLine("do switch");
+                                        });
                                         break;
 
                                     case "UPDATE_TIME":
@@ -227,7 +235,7 @@ namespace SkydevCSTool.Class
 
                                 }
                             }
-                            catch
+                            catch (Exception ee)
                             {
                                 state.sb.Append(comm);
                             }

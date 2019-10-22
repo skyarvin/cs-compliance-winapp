@@ -58,9 +58,9 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.pnlURL = new System.Windows.Forms.Panel();
             this.pnlBrowser = new System.Windows.Forms.Panel();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlAction.SuspendLayout();
@@ -310,16 +310,16 @@
             this.pnlLoader.Dock = System.Windows.Forms.DockStyle.Left;
             this.pnlLoader.Location = new System.Drawing.Point(0, 0);
             this.pnlLoader.Name = "pnlLoader";
-            this.pnlLoader.Size = new System.Drawing.Size(41, 40);
+            this.pnlLoader.Size = new System.Drawing.Size(35, 40);
             this.pnlLoader.TabIndex = 15;
             this.pnlLoader.Visible = false;
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = global::SkydevCSTool.Properties.Resources.loader;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 6);
+            this.pictureBox1.Location = new System.Drawing.Point(5, 7);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(30, 28);
+            this.pictureBox1.Size = new System.Drawing.Size(24, 25);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
@@ -373,9 +373,9 @@
             this.pnlURL.BackColor = System.Drawing.Color.Transparent;
             this.pnlURL.Controls.Add(this.cmbURL);
             this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlURL.Location = new System.Drawing.Point(41, 0);
+            this.pnlURL.Location = new System.Drawing.Point(35, 0);
             this.pnlURL.Name = "pnlURL";
-            this.pnlURL.Size = new System.Drawing.Size(272, 40);
+            this.pnlURL.Size = new System.Drawing.Size(278, 40);
             this.pnlURL.TabIndex = 14;
             // 
             // pnlBrowser
@@ -385,6 +385,17 @@
             this.pnlBrowser.Name = "pnlBrowser";
             this.pnlBrowser.Size = new System.Drawing.Size(1128, 477);
             this.pnlBrowser.TabIndex = 2;
+            // 
+            // bgWorkResync
+            // 
+            this.bgWorkResync.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgWorkResync_DoWork);
+            this.bgWorkResync.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgWorkResync_RunWorkerCompleted);
+            // 
+            // updateWorkactivity
+            // 
+            this.updateWorkactivity.Enabled = true;
+            this.updateWorkactivity.Interval = 300000;
+            this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
             // cmbURL
             // 
@@ -398,24 +409,13 @@
             this.cmbURL.FormattingEnabled = true;
             this.cmbURL.Location = new System.Drawing.Point(7, 7);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(262, 25);
+            this.cmbURL.Size = new System.Drawing.Size(268, 25);
             this.cmbURL.TabIndex = 8;
             this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
             this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
             this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
             this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
-            // 
-            // bgWorkResync
-            // 
-            this.bgWorkResync.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgWorkResync_DoWork);
-            this.bgWorkResync.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgWorkResync_RunWorkerCompleted);
-            // 
-            // updateWorkactivity
-            // 
-            this.updateWorkactivity.Enabled = true;
-            this.updateWorkactivity.Interval = 300000;
-            this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
             // frmMain
             // 

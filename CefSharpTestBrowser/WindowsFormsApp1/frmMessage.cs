@@ -31,6 +31,7 @@ namespace SkydevCSTool
         private void Button1_Click_1(object sender, EventArgs e)
         {
             this.Hide();
+            // TODO: Move this code out !!!
             Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             Globals.SaveActivity();
 

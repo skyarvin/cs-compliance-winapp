@@ -99,6 +99,7 @@ namespace WindowsFormsApp1
                 pbImg.Load(Globals.ComplianceAgent.photo);
             }
             catch { }
+            Globals.EnableTimer = true;
         }
 
         private void InitializeServer()
@@ -144,7 +145,7 @@ namespace WindowsFormsApp1
                 SetBtnConnectText("CONNECT");
                 Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
                 Globals.max_room_duration = 48;
-                SwitchCache();
+                this.InvokeOnUiThreadIfRequired(() => SwitchCache());
             }
             if (code == "CON04") {
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "UNABLE TO COMMUNICATE TO SERVER. PLEASE CONTACT ADMIN."));
@@ -172,7 +173,6 @@ namespace WindowsFormsApp1
             if (ServerAsync.HasConnections() == false)
                 Globals.frmMain.SetBtnConnectText("CONNECT");
             Globals.max_room_duration = ServerAsync.DurationThreshold();
-
         }
 
         public frmMain()
@@ -185,16 +185,12 @@ namespace WindowsFormsApp1
             InitializeServer();
         }
         #endregion
-        public static void MyCommonExceptionHandlingMethod(object sender, UnhandledExceptionEventArgs t)
-        {
-            //var s = new StackTrace(t.ExceptionObject.);
-            var thisasm = Assembly.GetExecutingAssembly();
-            //var methodname = s.GetFrames().Select(f => f.GetMethod()).First(m => m.Module.Assembly == thisasm).Name;
-            MessageBox.Show("LOLS");
-        }
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
         {
+            if (!Globals.EnableTimer)
+                return;
+
             if (++Globals.room_duration >= Globals.max_room_duration) {
                 setHeaderColor(Color.Red, Color.DarkRed);
                 if (isBrowserInitialized && Globals.ForceHideComliance)
@@ -313,6 +309,7 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
             Globals.UpdateActivity();
+            Globals.EnableTimer = false;
             Application.Exit();
         }
 
@@ -509,19 +506,20 @@ namespace WindowsFormsApp1
 
         public void SwitchCache()
         {
-            this.InvokeOnUiThreadIfRequired(() =>
-                {
-                    isBrowserInitialized = false;
-                    this.pnlBrowser.Controls.Clear();
-                    Globals.chromeBrowser.Dispose();
-                    while (Globals.chromeBrowser.Disposing)
-                        Console.WriteLine("disposing...");
-                    Application.DoEvents();
-                    System.Threading.Thread.Sleep(3000);
-                    InitializeChromium();
-                }
-            );
+            
+            isBrowserInitialized = false;
+            this.pnlBrowser.Controls.Clear();
+            Globals.EnableTimer = false;
+            Globals.chromeBrowser.Dispose();
+            while (Globals.chromeBrowser.Disposing)
+                Console.WriteLine("disposing...");
+            Application.DoEvents();
+            System.Threading.Thread.Sleep(3000);
+            InitializeChromium();
+            
         }
+
+
         private void CmbURL_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)

@@ -41,7 +41,6 @@ namespace WindowsFormsApp1
         public static List<string> UrlHistory = new List<string>();
         public static Socket Client;
         public static string MyIP;
-        public static ManualResetEvent pairConnect = new ManualResetEvent(false);
         public static List<string> ApprovedAgents = new List<string>();
         public static bool ForceHideComliance = true;
         public static int max_room_duration = 48;
@@ -49,10 +48,14 @@ namespace WindowsFormsApp1
         public static void ShowMessage(Form parent,string Message)
         {
             frmMessage frm = new frmMessage(Message);
-            if (frm.Visible != true){
-                frm.ShowDialog(parent);
-            }
-           
+            frm.ShowDialog(parent);
+        }
+
+        public static DialogResult ShowMessageDialog(Form parent, string Message)
+        {
+            frmMessage frm = new frmMessage(Message);
+            frm.ShowDialog(parent);
+            return DialogResult.OK;
         }
         public static string myStr(object o, string label = "")
         {

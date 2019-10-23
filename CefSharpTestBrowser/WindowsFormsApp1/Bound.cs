@@ -81,14 +81,12 @@ namespace SkydevCSTool
                     window.addEventListener('wheel', function(e) {
                         if (e.deltaY < 0) {
                              if(event.ctrlKey && zoomLevel < 2){
-                                    console.log('scrolling up');
                                     zoomLevel += 0.1;
                                      document.body.style.zoom = zoomLevel;
                              }     
                         }
                         if (e.deltaY > 0) {
                            if(event.ctrlKey && zoomLevel > 0.5){
-                                    console.log('scrolling down');
                                     zoomLevel -= 0.1;
                                     document.body.style.zoom = zoomLevel;
                             }
@@ -145,7 +143,6 @@ namespace SkydevCSTool
             {
 
                 browser.ExecuteScriptAsync(@"
-                        console.log(`start`);
                         window.addEventListener(`DOMContentLoaded`, function(){
                                 document.getElementById(`approve_button`).style.visibility = `hidden`;
                         });
@@ -231,7 +228,7 @@ namespace SkydevCSTool
                             ;
                             function highlight(selector)
                             {
-                                console.log(selector);
+                                
                                 var chatlog_position = 0;
                                 if (selector == null || selector.length == 0)
                                     return; 
@@ -266,7 +263,6 @@ namespace SkydevCSTool
 
                             document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
                             {
-                                console.log('changed');
                                 waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => {
                                     bound.updateMaxRoomDuration(highlight(element));
                                 }, (error) => console.log(error));

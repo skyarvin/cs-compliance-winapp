@@ -210,7 +210,16 @@ namespace WindowsFormsApp1
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
-                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "You have been Idle for too long"));
+                this.InvokeOnUiThreadIfRequired(() => {
+                    var result = Globals.ShowMessageDialog(this, "You have been Idle for too long");
+                    if (result == DialogResult.OK)
+                    {
+                        Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                        Globals.SaveActivity();
+                        Globals._wentIdle = DateTime.MaxValue;
+                        Globals._idleTicks = 0;
+                    }
+                });
             }
             lblCountdown.Text = Globals.room_duration.ToString();
         }

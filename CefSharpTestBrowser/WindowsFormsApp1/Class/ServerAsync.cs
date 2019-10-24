@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using CefSharp.WinForms.Internals;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -208,6 +209,9 @@ namespace SkydevCSTool.Class
                                         ServerAsync.ChatlogRecomputeDurationThreshold(Int32.Parse(data.Message));
                                         ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
                                         break;
+                                    case "AUTO_SWITCH":
+                                        SwitchToNextProfile();
+                                        break;
                                 }
                             }
                             catch(Exception e)
@@ -296,6 +300,37 @@ namespace SkydevCSTool.Class
             // Complete sending the data to the remote device.  
             int bytesSent = handler.EndSend(ar);
             Console.WriteLine("Sent {0} bytes to client.", bytesSent);
+        }
+
+        public static void SwitchToNextProfile()
+        {
+            for (var i = 0; i < Globals.Profiles.Count(); i++)
+            {
+                if (Globals.Profiles[i].Name == Globals.Profile.Name)
+                {
+                    if (i == Globals.Profiles.Count() - 1)
+                        Globals.Profile = Globals.Profiles[0];
+                    else
+                        Globals.Profile = Globals.Profiles[i + 1];
+                    break;
+                }
+            }
+
+            foreach (var connection in Globals.Connections)
+            {
+                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
+                string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
+                Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
+                string file = Convert.ToBase64String(sbytes);
+                ServerAsync.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile.Name, ProfileID = Globals.Profile.AgentID, Message = file });
+            }
+
+            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+            {
+                Globals.frmMain.SwitchCache();
+                Console.WriteLine("do switch");
+            });
         }
     }
 }

@@ -57,7 +57,7 @@ namespace WindowsFormsApp1
         };
 
         #region Init
-        public void InitializeChromium()
+        public void InitializeChromium(string url)
         {
 
             lblProfile.Text = String.Concat("Profile: ", Globals.Profile.Name);
@@ -78,7 +78,7 @@ namespace WindowsFormsApp1
             requestContextSettings.PersistSessionCookies = true;
             requestContextSettings.PersistUserPreferences = true;
 
-            Globals.chromeBrowser = new ChromiumWebBrowser(Url.CB_HOME);
+            Globals.chromeBrowser = new ChromiumWebBrowser(url);
             Globals.chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(Globals.chromeBrowser);
             Globals.chromeBrowser.Dock = DockStyle.Fill;
@@ -94,6 +94,9 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.LoadingStateChanged += OnLoadingStateChanged;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
+            Globals.chromeBrowser.RequestHandler = new BrowserRequestHandler();
+
+
             lblUser.Text = Globals.ComplianceAgent.name;
             try {
                 pbImg.Load(Globals.ComplianceAgent.photo);
@@ -185,7 +188,7 @@ namespace WindowsFormsApp1
             Globals.Profiles.Add(Globals.Profile);
             InitializeComponent();
             InitializeAppFolders();
-            InitializeChromium();
+            InitializeChromium(Url.CB_HOME);
             InitializeServer();
         }
         #endregion
@@ -264,6 +267,7 @@ namespace WindowsFormsApp1
                             AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
                         }
                         else Globals.room_duration = 0;
+
                     }
                 }
                 
@@ -523,13 +527,17 @@ namespace WindowsFormsApp1
             isBrowserInitialized = false;
             this.pnlBrowser.Controls.Clear();
             Globals.EnableTimer = false;
-            Globals.chromeBrowser.Dispose();
-            while (Globals.chromeBrowser.Disposing)
-                Console.WriteLine("disposing...");
-            Application.DoEvents();
-            System.Threading.Thread.Sleep(3000);
-            InitializeChromium();
-            
+            var tempBrowser = Globals.chromeBrowser;
+            InitializeChromium(Url.CB_COMPLIANCE_URL);
+
+            Task.Factory.StartNew(() =>
+            {
+                tempBrowser.Dispose();
+
+                while (tempBrowser.Disposing)
+                    Console.WriteLine("disposing...");
+                Application.DoEvents();
+            });
         }
 
 
@@ -806,7 +814,7 @@ namespace WindowsFormsApp1
             }
             else if (e.Control && e.KeyCode == Keys.Oemtilde )
             {
-                ButtonClearClick();
+                //ButtonClearClick();
             }
         }
 
@@ -818,6 +826,8 @@ namespace WindowsFormsApp1
                 Globals.chromeBrowser.Find(0, txtSearch.Text, true, false, false);
             }
         }
+
+        
     }
 
 }

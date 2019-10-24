@@ -23,6 +23,7 @@ namespace SkydevCSTool
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
+            Console.WriteLine(e.Url);
             if (!e.Frame.IsMain)
                 return;
 
@@ -126,7 +127,6 @@ namespace SkydevCSTool
 
                         if(e.ctrlKey == true && e.keyCode == 192){
                             e.preventDefault();
-                            bound.triggerClear();
                         }
                     }
 
@@ -295,7 +295,6 @@ namespace SkydevCSTool
 
         public void TriggerClear()
         {
-            //Globals.frmMain.BroadCastClearEvent();
             Globals.frmMain.ButtonClearClick();
         }
 

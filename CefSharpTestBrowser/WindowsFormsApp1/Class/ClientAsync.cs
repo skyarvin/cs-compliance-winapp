@@ -230,7 +230,7 @@ namespace SkydevCSTool.Class
                                             Globals.chromeBrowser.Load(data.Message);
                                         break;
                                     case "CLEARED_AGENTS":
-                                        Globals.frmMain.DisplayRoomApprovalRate(Int32.Parse(data.Message), data.NumberofActiveProfiles);
+                                        Globals.frmMain.DisplayRoomApprovalRate(Int32.Parse(data.Message), data.NumberofActiveProfiles, data.Url);
                                         break;
 
                                 }

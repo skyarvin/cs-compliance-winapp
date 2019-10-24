@@ -14,6 +14,8 @@ namespace SkydevCSTool.Class
         public string Action { get; set; }
         public string Profile { get; set; }
         public int ProfileID { get; set; }
+
+        public string Url { get; set; }
         public int NumberofActiveProfiles { get; set; }
     }
 

@@ -144,7 +144,9 @@ namespace SkydevCSTool
 
                 browser.ExecuteScriptAsync(@"
                         window.addEventListener(`DOMContentLoaded`, function(){
-                                document.getElementById(`approve_button`).style.visibility = `hidden`;
+                            waitUntil(`#approve_button`,5000).then( 
+                                (el) => document.getElementById(`approve_button`).style.visibility = `hidden`,
+                                (err) => console.log(`approve not found`));
                         });
                     ");
 
@@ -155,8 +157,8 @@ namespace SkydevCSTool
             if (Globals.IsServer())
             {
                 Globals.ApprovedAgents.Clear();
-                ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
-                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
+                ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count , Url = Globals.CurrentUrl});
+                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
             }
         }
 

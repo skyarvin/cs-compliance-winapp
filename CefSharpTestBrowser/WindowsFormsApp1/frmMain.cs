@@ -719,8 +719,8 @@ namespace WindowsFormsApp1
                     {
                         Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
                     }
-                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
-                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
+                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count , Url = Globals.CurrentUrl});
                 }
                 else if (Globals.IsClient())
                 {
@@ -737,8 +737,8 @@ namespace WindowsFormsApp1
                     {
                         Globals.ApprovedAgents.Remove(Globals.ComplianceAgent.profile);
                     }
-                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count);
-                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count });
+                    Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
+                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count, Url = Globals.CurrentUrl });
                 }
                 else if (Globals.IsClient())
                 {
@@ -747,9 +747,10 @@ namespace WindowsFormsApp1
             }
         }
 
-        public void DisplayRoomApprovalRate (int number_of_approve_agents, int number_of_agents)
+        public void DisplayRoomApprovalRate (int number_of_approve_agents, int number_of_agents, string url)
         {
-
+            Console.WriteLine("Peer Approval URL:" + url);
+            Console.WriteLine("Peer Approval Status:" + number_of_approve_agents +"/"+number_of_agents);
             Decimal approval_percentage = ((Decimal)number_of_approve_agents / (Decimal)number_of_agents) * 100;
             this.InvokeOnUiThreadIfRequired(() =>
             {
@@ -773,8 +774,12 @@ namespace WindowsFormsApp1
                 if (Globals.IsServer())
                 {
                     Globals.chromeBrowser.EvaluateScriptAsync(@"
-                    document.getElementById(`approve_button`).click();
-                    ");
+                    if (window.location.href.replace(location.hash, '') == '{{target_url}}'){
+                        console.log('Url matched clicking approve for :{{target_url}}');
+                        document.getElementById(`approve_button`).click();
+                    } else {
+                        console.log('Url not match not clicking {{target_url}} vs '+ window.location.href.replace(location.hash, ''));
+                    }".Replace("{{target_url}}", url) );
                 }
             }
             else if (number_of_approve_agents > 0) {

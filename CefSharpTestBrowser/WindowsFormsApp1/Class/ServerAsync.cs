@@ -177,8 +177,11 @@ namespace SkydevCSTool.Class
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
                                         Globals.max_room_duration = ServerAsync.DurationThreshold();
+                                        Globals.PartnerAgents = ListOfPartnerId();
+
                                         SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count, Url = Globals.CurrentUrl });
                                         SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
+                                        SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
                                         break;
                                     case "REFRESH":
                                         Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
@@ -251,6 +254,11 @@ namespace SkydevCSTool.Class
             if (Globals.Profiles.Count > 1)
                 return 24;
             return 48;
+        }
+
+        public static string ListOfPartnerId()
+        {
+            return String.Join(",", Globals.Profiles.Select((s) => s.AgentID).ToList());
         }
 
 

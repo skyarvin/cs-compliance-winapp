@@ -19,12 +19,12 @@ namespace WindowsFormsApp1
         public static List<Socket> Connections = new List<Socket>();
         public static Profile Profile { get; set; }
         public static string CurrentUrl { get; set; }
-        public static string LastRoomChatlog { get; set; }
         public static bool Paired { get; set; }
         public static Int32 unixTimestamp { get; set; }
         public static bool EnableTimer { get; set; }
 
         public static List<Profile> Profiles = new List<Profile>();
+        public static string PartnerAgents = "";
         public static frmMain frmMain;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();

@@ -94,7 +94,7 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.LoadingStateChanged += OnLoadingStateChanged;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
-            Globals.chromeBrowser.RequestHandler = new BrowserRequestHandler();
+            //Globals.chromeBrowser.RequestHandler = new BrowserRequestHandler();
 
 
             lblUser.Text = Globals.ComplianceAgent.name;
@@ -159,6 +159,7 @@ namespace WindowsFormsApp1
                 Globals.Client.Close();
                 Globals.Client = null;
             }
+            Globals.PartnerAgents = "";
 
         }
 
@@ -175,10 +176,16 @@ namespace WindowsFormsApp1
 
             if (ServerAsync.HasConnections() == false)
             {
+                Globals.PartnerAgents = "";
                 Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
                 this.InvokeOnUiThreadIfRequired(() => SwitchCache());
                 Globals.frmMain.SetBtnConnectText("CONNECT");
+            } else
+            {
+                Globals.PartnerAgents = ServerAsync.ListOfPartnerId();
+                ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
             }
+            
             Globals.max_room_duration = ServerAsync.DurationThreshold();
         }
 
@@ -402,7 +409,12 @@ namespace WindowsFormsApp1
                 if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
                     Int32.TryParse(followRaw, out followers);
                 string last_chatlog = "";
-                if (element_id == Action.Approve.Value) last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+                string last_photo = "";
+                if (element_id == Action.Approve.Value)
+                {
+                    last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+                    last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
+                }
 
                 var logData = new Logger
                 {
@@ -416,7 +428,9 @@ namespace WindowsFormsApp1
                     rr = string.IsNullOrEmpty(reply) ? false : true,
                     review_date = Globals.ComplianceAgent.review_date,
                     workshift = Globals.ComplianceAgent.last_workshift,
-                    last_chatlog = last_chatlog != "" ? last_chatlog : null
+                    last_chatlog = last_chatlog != "" ? last_chatlog : null,
+                    last_photo = last_photo != "" ? last_photo : null,
+                    partner_ids = Globals.PartnerAgents
                 };
 
                 try
@@ -648,6 +662,7 @@ namespace WindowsFormsApp1
                 pnlAction.Visible = false;
             }
             Globals.ApprovedAgents.Clear();
+            Globals.PartnerAgents = "";
         }
         public void SetBtnConnectText(string txt)
         {

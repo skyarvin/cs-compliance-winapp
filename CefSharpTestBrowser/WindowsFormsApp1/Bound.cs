@@ -215,7 +215,7 @@ namespace SkydevCSTool
             {
                 try
                 {
-                    Globals.LastRoomChatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
+                    UrlInformation urlInfo = Logger.GetUrlInformation(Globals.CurrentUrl);
                     
                         string script = @"
                             var last_room_chatlog = '{{global_chatlog}}';
@@ -270,9 +270,30 @@ namespace SkydevCSTool
                                 }, (error) => console.log(error));
                                 waitUntil('#data .chatlog tbody tr', 5000).then( (element) => highlight(element), (error) => console.log(error));
                             });
+
+
+                            console.log('checking images');
+                            waitUntil('#data .image_container .image center', 5000).then( (elements) => {
+                                elements.forEach( (el) => {
+                                    if(el.innerText != '{{last_photo}}')
+                                        return;
+		                            el.style.background = '#da1b1b';
+		                            el.style['color'] = 'white';
+                                });
+                            }, (error) => console.log(error));
+
+                            waitUntil('#photos .image_container .image center', 5000).then( (elements) => {
+                                elements.forEach( (el) => {
+                                    if(el.innerText != '{{last_photo}}')
+                                        return;
+		                            el.style.background = '#da1b1b';
+		                            el.style['color'] = 'white';
+                                });
+                            }, (error) => console.log(error));
+
                         ";
 
-                        script = script.Replace("{{global_chatlog}}", Globals.LastRoomChatlog);
+                        script = script.Replace("{{global_chatlog}}", urlInfo.last_chatlog).Replace("{{last_photo}}", urlInfo.last_photo);
                         browser.ExecuteScriptAsync(script);
                     
                 }

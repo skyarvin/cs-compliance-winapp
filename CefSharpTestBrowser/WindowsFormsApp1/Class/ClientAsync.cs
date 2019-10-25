@@ -232,6 +232,9 @@ namespace SkydevCSTool.Class
                                     case "CLEARED_AGENTS":
                                         Globals.frmMain.DisplayRoomApprovalRate(Int32.Parse(data.Message), data.NumberofActiveProfiles, data.Url);
                                         break;
+                                    case "PARTNER_LIST":
+                                        Globals.PartnerAgents = data.Message;
+                                        break;
 
                                 }
                             }

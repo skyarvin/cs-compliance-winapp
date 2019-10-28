@@ -22,6 +22,7 @@ namespace WindowsFormsApp1
         public static bool Paired { get; set; }
         public static Int32 unixTimestamp { get; set; }
         public static bool EnableTimer { get; set; }
+        public static int? LAST_GROUP_ID { get; set; }
 
         public static List<Profile> Profiles = new List<Profile>();
         public static string PartnerAgents = "";

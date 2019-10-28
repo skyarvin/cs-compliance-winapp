@@ -25,8 +25,8 @@ namespace WindowsFormsApp1.Models
         public string review_date { get; set; }
         public string last_chatlog { get; set; }
         public string last_photo { get; set; }
-
-        public string partner_ids { get; set; }
+        public int? group_id { get; set; }
+        public List<Profile> members { get; set; }
 
         public Logger Save()
         {

@@ -9,11 +9,14 @@ using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using CefSharp.WinForms.Internals;
+using SkydevCSTool.Properties;
 
 namespace SkydevCSTool.Class
 {
-    
-    
+    public class Client
+    {
+        public static string Type { get { return "CL"; } }
+    }
     public class AsynchronousClient
     {
         // The port number for the remote device.  
@@ -165,7 +168,12 @@ namespace SkydevCSTool.Class
                                     case "SAVE_SERVER_CACHE":
                                        if (data.Profile == Globals.ComplianceAgent.profile)
                                         {
-                                            Send(client, new PairCommand { Action = "BEGIN_SEND" , Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
+                                            Send(client, new PairCommand { 
+                                                Action = "BEGIN_SEND" , 
+                                                Profile = Globals.ComplianceAgent.profile,
+                                                ProfileID = Globals.ComplianceAgent.id, 
+                                                Preference = Settings.Default.preference
+                                            });
                                             Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                             break;
                                         }
@@ -191,7 +199,12 @@ namespace SkydevCSTool.Class
                                         Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                                         {
                                             Globals.frmMain.SwitchCache();
-                                            Send(client, new PairCommand { Action = "BEGIN_SEND", Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
+                                            Send(client, new PairCommand { 
+                                                Action = "BEGIN_SEND", 
+                                                Profile = Globals.ComplianceAgent.profile, 
+                                                ProfileID = Globals.ComplianceAgent.id,
+                                                Preference = Settings.Default.preference
+                                            });
                                             Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         });
                                         break;
@@ -233,7 +246,8 @@ namespace SkydevCSTool.Class
                                         Globals.frmMain.DisplayRoomApprovalRate(Int32.Parse(data.Message), data.NumberofActiveProfiles, data.Url);
                                         break;
                                     case "PARTNER_LIST":
-                                        Globals.PartnerAgents = data.Message;
+                                        Globals.Profiles = JsonConvert.DeserializeObject<List<Profile>>(data.Message);
+                                        //Globals.PartnerAgents = ;
                                         break;
 
                                 }

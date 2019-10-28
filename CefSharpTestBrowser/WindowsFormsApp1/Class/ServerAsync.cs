@@ -14,6 +14,10 @@ using WindowsFormsApp1;
 
 namespace SkydevCSTool.Class
 {
+    public class Server
+    {
+        public static string Type { get { return "SV"; } }
+    }
     public class StateObject
     {
         // Client  socket.  
@@ -173,7 +177,13 @@ namespace SkydevCSTool.Class
                                     case "BEGIN_SEND":
                                         Globals.ApprovedAgents.Clear();
                                         Globals.Connections.Add(handler);
-                                        Globals.Profiles.Add(new Profile { Name = data.Profile, RemoteAddress = handler.RemoteEndPoint.ToString(), AgentID = data.ProfileID });
+                                        Globals.Profiles.Add(new Profile { 
+                                            Name = data.Profile, 
+                                            RemoteAddress = handler.RemoteEndPoint.ToString(), 
+                                            AgentID = data.ProfileID, 
+                                            Preference = data.Preference,
+                                            Type = Client.Type
+                                        });
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
                                         Globals.max_room_duration = ServerAsync.DurationThreshold();
@@ -216,6 +226,9 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "AUTO_SWITCH":
                                         SwitchToNextProfile();
+                                        break;
+                                    case "UPDATE_PREFERENCE":
+
                                         break;
                                 }
                             }
@@ -260,7 +273,7 @@ namespace SkydevCSTool.Class
 
         public static string ListOfPartnerId()
         {
-            return String.Join(",", Globals.Profiles.Select((s) => s.AgentID).ToList());
+            return JsonConvert.SerializeObject(Globals.Profiles);
         }
 
 

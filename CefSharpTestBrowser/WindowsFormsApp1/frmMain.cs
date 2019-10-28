@@ -110,9 +110,6 @@ namespace WindowsFormsApp1
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
             Globals.MyIP = ipHost.AddressList[1].ToString();
 
-            //Globals.Server = new Server(Globals.MyIP);
-            //WaitIncomingClientConnection();
-
             Task.Factory.StartNew(() =>
             {
                 ServerAsync.StartListening(Globals.MyIP);
@@ -191,12 +188,18 @@ namespace WindowsFormsApp1
 
         public frmMain()
         {
-            Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile , AgentID = Globals.ComplianceAgent.id };
+            InitializeServer();
+            Globals.Profile = new Profile { 
+                Name = Globals.ComplianceAgent.profile , 
+                AgentID = Globals.ComplianceAgent.id, 
+                Type = Server.Type, 
+                Preference = Settings.Default.preference,
+                RemoteAddress = Globals.MyIP
+            };
             Globals.Profiles.Add(Globals.Profile);
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
-            InitializeServer();
         }
         #endregion
         #region ActivityMonitor
@@ -430,7 +433,8 @@ namespace WindowsFormsApp1
                     workshift = Globals.ComplianceAgent.last_workshift,
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
-                    partner_ids = Globals.PartnerAgents
+                    group_id = Globals.LAST_GROUP_ID,
+                    members = Globals.Profiles
                 };
 
                 try
@@ -444,12 +448,14 @@ namespace WindowsFormsApp1
                         {
                             var result = logData.Save();
                             Globals.LAST_SUCCESS_ID = result.id;
+                            Globals.LAST_GROUP_ID = result.group_id;
                         }
                     }
                     else
                     {
                         var result = logData.Save();
                         Globals.LAST_SUCCESS_ID = result.id;
+                        Globals.LAST_GROUP_ID = result.group_id;
                     }
 
                     if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)

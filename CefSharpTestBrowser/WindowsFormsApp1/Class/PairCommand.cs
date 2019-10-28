@@ -17,13 +17,15 @@ namespace SkydevCSTool.Class
 
         public string Url { get; set; }
         public int NumberofActiveProfiles { get; set; }
+        public string Preference { get; set; }
     }
 
     public class Profile
     {
         public string Name { get; set; }
         public string RemoteAddress { get; set; }
-
         public int AgentID { get; set; }
+        public string Type { get; set; }
+        public string Preference { get; set; }
     }
 }

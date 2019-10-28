@@ -111,19 +111,41 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)26509)
         {
-            SkydevCSTool.Properties.Settings.Default.compliance_default_view = "chatlog_user";
-            SkydevCSTool.Properties.Settings.Default.Save();
+            if (Settings.Default.compliance_default_view != "chatlog_user")
+            {
+                Globals.LAST_GROUP_ID = null;
+                if (Globals.IsServer())
+                    ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+                else
+                {
+
+                }
+
+                Settings.Default.compliance_default_view = "chatlog_user";
+                Settings.Default.preference = "CL";
+                Settings.Default.Save();
+            }
+            else
+            {
+                
+            }
         }
 
         if (commandId == (CefMenuCommand)26510)
         {
-            SkydevCSTool.Properties.Settings.Default.compliance_default_view = "bio";
-            SkydevCSTool.Properties.Settings.Default.Save();
+            if (Settings.Default.compliance_default_view != "bio")
+                Globals.LAST_GROUP_ID = null;
+            Settings.Default.compliance_default_view = "bio";
+            Settings.Default.preference = "BO";
+            Settings.Default.Save();
         }
         if (commandId == (CefMenuCommand)26511)
         {
-            SkydevCSTool.Properties.Settings.Default.compliance_default_view = "photos";
-            SkydevCSTool.Properties.Settings.Default.Save();
+            if (Settings.Default.compliance_default_view != "photos")
+                Globals.LAST_GROUP_ID = null;
+            Settings.Default.compliance_default_view = "photos";
+            Settings.Default.preference = "PT";
+            Settings.Default.Save();
         }
         if (commandId == (CefMenuCommand)26512)
         {

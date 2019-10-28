@@ -732,6 +732,7 @@ namespace WindowsFormsApp1
 
         public void BroadCastClearEvent(string action)
         {
+            Globals.SaveToLogFile(String.Concat("BroadCastClearEvent Action:", action), (int)LogType.Activity);
             if (action == "APPROVE")
             {
                 btnClear.Text = "UNAPPROVE";
@@ -791,9 +792,10 @@ namespace WindowsFormsApp1
             {
                 this.InvokeOnUiThreadIfRequired(() => btnClear.Enabled = false);
                 Globals.chromeBrowser.EvaluateScriptAsync(@"
-                        console.log(`Show approve button`);
+                       console.log(`Show approve button`);
                        document.getElementById(`main`).style[`background`] = `#00B159`;
                        ");
+                Globals.SaveToLogFile(String.Concat("Display approval rate, Trigger auto approve:", number_of_approve_agents, "/", number_of_agents), (int)LogType.Activity);
                 if (Globals.IsServer())
                 {
                     Globals.chromeBrowser.EvaluateScriptAsync(@"
@@ -806,6 +808,7 @@ namespace WindowsFormsApp1
                 }
             }
             else if (number_of_approve_agents > 0) {
+                Globals.SaveToLogFile(String.Concat("Display approval rate:", number_of_approve_agents, "/", number_of_agents), (int)LogType.Activity);
                 Globals.chromeBrowser.EvaluateScriptAsync(@"
 
                      var old_bg = document.getElementById(`main`).style[`background`];

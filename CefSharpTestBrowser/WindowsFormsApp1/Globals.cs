@@ -87,7 +87,7 @@ namespace WindowsFormsApp1
             try
             {
                 string logFilePath = "";
-                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/SkydevCsTool/logs/");
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/SkydevCsTool/logs/", DateTime.Now.ToString("MM-dd-yyyy"), "/"));
                 switch (logtype)
                 {
                     case (int)LogType.Action:

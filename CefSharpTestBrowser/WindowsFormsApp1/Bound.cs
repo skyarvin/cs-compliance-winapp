@@ -145,7 +145,7 @@ namespace SkydevCSTool
                 browser.ExecuteScriptAsync(@"
                         window.addEventListener(`DOMContentLoaded`, function(){
                             waitUntil(`#approve_button`,5000).then( 
-                                (el) => document.getElementById(`approve_button`).style.visibility = `hidden`,
+                                (el) => document.getElementById(`approve_button`).style.display = `none`,
                                 (err) => console.log(`approve not found`));
                         });
                     ");

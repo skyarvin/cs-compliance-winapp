@@ -193,6 +193,7 @@ namespace SkydevCSTool.Class
                                         SendToAll(new PairCommand { Action = "GOTO", Message = data.Message }, handler);
                                         break;
                                     case "CLEAR":
+                                        Globals.SaveToLogFile(String.Concat("Server Receive Clear:", Globals.ApprovedAgents.Count, "/", Globals.Profiles.Count, "-", Globals.CurrentUrl), (int)LogType.Activity);
                                         if (!Globals.ApprovedAgents.Contains(data.Profile)) {
                                             Globals.ApprovedAgents.Add(data.Profile);
                                             Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
@@ -200,6 +201,7 @@ namespace SkydevCSTool.Class
                                         }
                                         break;
                                     case "UNCLEAR":
+                                        Globals.SaveToLogFile(String.Concat("Server Receive UnClear:", Globals.ApprovedAgents.Count, "/", Globals.Profiles.Count, "-", Globals.CurrentUrl), (int)LogType.Activity);
                                         if (Globals.ApprovedAgents.Contains(data.Profile))
                                         {
                                             Globals.ApprovedAgents.Remove(data.Profile);

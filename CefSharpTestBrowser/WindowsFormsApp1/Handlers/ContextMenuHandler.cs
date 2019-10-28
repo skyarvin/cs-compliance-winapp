@@ -7,6 +7,7 @@ using WindowsFormsApp1;
 using SkydevCSTool;
 using SkydevCSTool.Class;
 using SkydevCSTool.Properties;
+using SkydevCSTool.Models;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -38,6 +39,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26507, "Log Viewer");
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26506, "Devtools");
+        model.AddItem((CefMenuCommand)26512, "Send Error Report");
 
         string defaultview = Settings.Default.compliance_default_view;
         IMenuModel submenu = model.AddSubMenu((CefMenuCommand)26508, "Preference");
@@ -122,6 +124,13 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             SkydevCSTool.Properties.Settings.Default.compliance_default_view = "photos";
             SkydevCSTool.Properties.Settings.Default.Save();
+        }
+        if (commandId == (CefMenuCommand)26512)
+        {
+            Emailer mailer = new Emailer();
+            mailer.subject = "Auto Approve Error Report";
+            mailer.message = ReadTextFile.Read();
+            mailer.Send();
         }
 
         // Return false should ignore the selected option of the user !

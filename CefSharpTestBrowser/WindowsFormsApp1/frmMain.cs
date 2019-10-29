@@ -635,6 +635,12 @@ namespace WindowsFormsApp1
 
         private void BtnConnect_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(Settings.Default.preference))
+            {
+                Globals.ShowMessage(this,"Please set your View Preference first and Try again");
+                return;
+            }
+
             string btn_text = btnConnect.Text.ToUpper();
             if (btn_text == "CONNECT")
             {

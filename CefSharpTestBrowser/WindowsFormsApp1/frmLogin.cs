@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkydevCSTool.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
@@ -53,9 +54,10 @@ namespace WindowsFormsApp1
                         bExitApp = false;
                         
                         Globals.frmMain = new frmMain();
-                        SkydevCSTool.Properties.Settings.Default.email = txtEmail.Text;
-                        SkydevCSTool.Properties.Settings.Default.workshift = workshift_list.SelectedValue.ToString();
-                        SkydevCSTool.Properties.Settings.Default.Save();
+                        Settings.Default.preference = null;
+                        Settings.Default.email = txtEmail.Text;
+                        Settings.Default.workshift = workshift_list.SelectedValue.ToString();
+                        Settings.Default.Save();
                         if (Globals.ComplianceAgent.last_workshift == workshift_list.SelectedValue.ToString() || String.IsNullOrEmpty(Globals.ComplianceAgent.last_workshift))
                         {
                             Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();

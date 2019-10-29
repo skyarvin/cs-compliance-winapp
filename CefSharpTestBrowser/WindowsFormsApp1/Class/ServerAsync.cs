@@ -1,5 +1,6 @@
 ﻿using CefSharp.WinForms.Internals;
 using Newtonsoft.Json;
+using SkydevCSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -145,6 +146,13 @@ namespace SkydevCSTool.Class
                                             Send(handler, new PairCommand { Action = "DENY" });
                                             break;
                                         }
+                                        if(string.IsNullOrEmpty(Settings.Default.preference))
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(Globals.frmMain, "Please set your View Preference first and Try again"));
+                                            Send(handler, new PairCommand { Action = "DENY" });
+                                            break;
+                                        }
+
                                         frmConfirm frmconfirm = new frmConfirm { Title = "Confirm", Message = string.Concat("Allow incoming connection from ", data.Message, "?"), Button1Text="Yes",Button2Text="No"};
                                         frmconfirm.ShowDialog();
                                         if (frmconfirm.DialogResult == DialogResult.Yes)

@@ -228,7 +228,9 @@ namespace SkydevCSTool.Class
                                         SwitchToNextProfile();
                                         break;
                                     case "UPDATE_PREFERENCE":
-
+                                        Globals.Profiles.Where(m => m.AgentID == data.ProfileID).FirstOrDefault().Preference = data.Preference;
+                                        Globals.PartnerAgents = ServerAsync.ListOfPartnerId();
+                                        ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
                                         break;
                                 }
                             }

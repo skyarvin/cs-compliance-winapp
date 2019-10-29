@@ -25,6 +25,7 @@ using System.Reflection;
 using Newtonsoft.Json;
 using System.Windows.Input;
 using SkydevCSTool.Properties;
+using System.Security.Cryptography;
 
 namespace WindowsFormsApp1
 {
@@ -433,7 +434,7 @@ namespace WindowsFormsApp1
                     workshift = Globals.ComplianceAgent.last_workshift,
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
-                    group_id = Globals.LAST_GROUP_ID,
+                    hash = HashMembers(),
                     members = Globals.Profiles
                 };
 
@@ -448,14 +449,12 @@ namespace WindowsFormsApp1
                         {
                             var result = logData.Save();
                             Globals.LAST_SUCCESS_ID = result.id;
-                            Globals.LAST_GROUP_ID = result.group_id;
                         }
                     }
                     else
                     {
                         var result = logData.Save();
                         Globals.LAST_SUCCESS_ID = result.id;
-                        Globals.LAST_GROUP_ID = result.group_id;
                     }
 
                     if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
@@ -851,7 +850,34 @@ namespace WindowsFormsApp1
             }
         }
 
-        
+        private string HashMembers()
+        {
+            if (!Globals.IsBuddySystem())
+                return null;
+
+            var final = "";
+            foreach (var profile in Globals.Profiles.OrderBy(a => a.AgentID))
+            {
+                final += string.Concat(profile.AgentID, ":", profile.Preference,":", profile.Type, ";");
+            }
+            return CalculateMD5Hash(final);
+        }
+
+        public string CalculateMD5Hash(string input)
+        {
+            // step 1, calculate MD5 hash from input
+            MD5 md5 = System.Security.Cryptography.MD5.Create();
+            byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+            byte[] hash = md5.ComputeHash(inputBytes);
+
+            // step 2, convert byte array to hex string
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < hash.Length; i++)
+            {
+                sb.Append(hash[i].ToString("X2"));
+            }
+            return sb.ToString();
+        }
     }
 
 }

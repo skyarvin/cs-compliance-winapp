@@ -247,7 +247,6 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "PARTNER_LIST":
                                         Globals.Profiles = JsonConvert.DeserializeObject<List<Profile>>(data.Message);
-                                        //Globals.PartnerAgents = ;
                                         break;
 
                                 }

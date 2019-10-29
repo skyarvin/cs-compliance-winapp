@@ -131,12 +131,14 @@ namespace SkydevCSTool
                     }
 
 
-                    if (document.getElementsByTagName('body')[0].innerText.indexOf('locked to another bouncer') >= 0)
-                    {
-                        bound.saveAsBounce();
-                    }
+                    
                 });
             ");
+
+            //if (document.getElementsByTagName('body')[0].innerText.indexOf('locked to another bouncer') >= 0)
+            //{
+            //    bound.saveAsBounce();
+            //}
 
 
             if (Globals.IsBuddySystem())

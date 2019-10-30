@@ -144,7 +144,13 @@ namespace WindowsFormsApp1
                 //TODO Try to reconnect. If failed, run code below. Revert back to original profile.
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST. CLICK 'CONNECT' BUTTON TO RECONNECT."));
                 SetBtnConnectText("CONNECT");
-                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
+                Globals.Profile = new Profile { 
+                    Name = Globals.ComplianceAgent.profile, 
+                    AgentID = Globals.ComplianceAgent.id,
+                    Type = Server.Type,
+                    Preference = Settings.Default.preference,
+                    RemoteAddress = Globals.MyIP
+                };
                 Globals.max_room_duration = 48;
                 this.InvokeOnUiThreadIfRequired(() => SwitchCache());
             }
@@ -158,7 +164,8 @@ namespace WindowsFormsApp1
                 Globals.Client = null;
             }
             Globals.PartnerAgents = "";
-
+            Globals.Profiles.Clear();
+            Globals.Profiles.Add(Globals.Profile);
         }
 
         public void ServerHandleSocketError(string code, string client = "")
@@ -175,12 +182,20 @@ namespace WindowsFormsApp1
             if (ServerAsync.HasConnections() == false)
             {
                 Globals.PartnerAgents = "";
-                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
+                Globals.Profile = new Profile { 
+                    Name = Globals.ComplianceAgent.profile, 
+                    AgentID = Globals.ComplianceAgent.id,
+                    Type = Server.Type,
+                    Preference = Settings.Default.preference,
+                    RemoteAddress = Globals.MyIP
+                };
+                Globals.Profiles.Clear();
+                Globals.Profiles.Add(Globals.Profile);
                 this.InvokeOnUiThreadIfRequired(() => SwitchCache());
                 Globals.frmMain.SetBtnConnectText("CONNECT");
             } else
             {
-                Globals.PartnerAgents = ServerAsync.ListOfPartnerId();
+                Globals.PartnerAgents = ServerAsync.ListOfPartners();
                 ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
             }
             
@@ -649,8 +664,14 @@ namespace WindowsFormsApp1
             }
             else if (btn_text == "DISCONNECT")
             {
-                Globals.Profile = new Profile { Name = Globals.ComplianceAgent.profile, AgentID = Globals.ComplianceAgent.id };
-                Globals.Profiles = new List<Profile>();
+                Globals.Profile = new Profile { 
+                    Name = Globals.ComplianceAgent.profile, 
+                    AgentID = Globals.ComplianceAgent.id,
+                    Type = Server.Type,
+                    Preference = Settings.Default.preference,
+                    RemoteAddress = Globals.MyIP
+                };
+                Globals.Profiles.Clear();
                 Globals.Profiles.Add(Globals.Profile);
                 Globals.max_room_duration = 48;
                 if (Globals.IsClient()) {

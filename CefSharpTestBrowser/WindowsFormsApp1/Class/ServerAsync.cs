@@ -195,7 +195,7 @@ namespace SkydevCSTool.Class
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
                                         Globals.max_room_duration = ServerAsync.DurationThreshold();
-                                        Globals.PartnerAgents = ListOfPartnerId();
+                                        Globals.PartnerAgents = ListOfPartners();
 
                                         SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count, Url = Globals.CurrentUrl });
                                         SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
@@ -237,7 +237,7 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "UPDATE_PREFERENCE":
                                         Globals.Profiles.Where(m => m.AgentID == data.ProfileID).FirstOrDefault().Preference = data.Preference;
-                                        Globals.PartnerAgents = ServerAsync.ListOfPartnerId();
+                                        Globals.PartnerAgents = ServerAsync.ListOfPartners();
                                         ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
                                         break;
                                 }
@@ -281,7 +281,7 @@ namespace SkydevCSTool.Class
             return 48;
         }
 
-        public static string ListOfPartnerId()
+        public static string ListOfPartners()
         {
             return JsonConvert.SerializeObject(Globals.Profiles);
         }

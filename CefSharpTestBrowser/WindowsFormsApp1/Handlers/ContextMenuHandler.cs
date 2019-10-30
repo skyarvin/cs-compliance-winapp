@@ -178,14 +178,13 @@ public class MyCustomMenuHandler : IContextMenuHandler
         if ((int)commandId >= 1 && (int)commandId <= 6 && Globals.IsBuddySystem())
         {
             Globals.Profiles.Where(m => m.AgentID == Globals.ComplianceAgent.id).FirstOrDefault().Preference = Settings.Default.preference;
-            Globals.PartnerAgents = ServerAsync.ListOfPartnerId();
+            Globals.PartnerAgents = ServerAsync.ListOfPartners();
             if (Globals.IsServer()) {
                 ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
             }
             else if(Globals.IsClient()) {
                 AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_PREFERENCE", ProfileID = Globals.ComplianceAgent.id, Preference = Settings.Default.preference });
             }
-
         }
         // Return false should ignore the selected option of the user !
         return false;

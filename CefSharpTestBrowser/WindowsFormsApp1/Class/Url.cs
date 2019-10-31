@@ -9,7 +9,7 @@ namespace SkydevCSTool.Class
     public static class Url
     {
         //##################SET TO FALSE WHEN DEPLOYING ON PRODUCTION #########################//
-        public static bool DEBUG = false;
+        public static bool DEBUG = true;
         //####################################################################################//
 
 

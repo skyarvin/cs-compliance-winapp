@@ -154,17 +154,16 @@ namespace SkydevCSTool
                 document.addEventListener('DOMContentLoaded', function(){
                     var urlParams = new URLSearchParams(window.location.search);
                     if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
-                        waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
-                        waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
-                        waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
-                        waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
-
-                        document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
-                        {
+                        function qa_chatlog_highlight(){
                             waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
                             waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
                             waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
                             waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
+                        }
+                        qa_chatlog_highlight();
+                        document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
+                        {
+                            qa_chatlog_highlight();
                         });
                     } else {
                         bound.evaluateMaxRoomDuration();

@@ -52,12 +52,12 @@ namespace WindowsFormsApp1
                     if (Globals.ComplianceAgent != null)
                     {
                         bExitApp = false;
-                        
-                        Globals.frmMain = new frmMain();
                         Settings.Default.preference = null;
                         Settings.Default.email = txtEmail.Text;
                         Settings.Default.workshift = workshift_list.SelectedValue.ToString();
                         Settings.Default.Save();
+
+                        Globals.frmMain = new frmMain();
                         if (Globals.ComplianceAgent.last_workshift == workshift_list.SelectedValue.ToString() || String.IsNullOrEmpty(Globals.ComplianceAgent.last_workshift))
                         {
                             Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();

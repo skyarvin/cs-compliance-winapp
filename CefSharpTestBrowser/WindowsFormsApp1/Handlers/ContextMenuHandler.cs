@@ -120,8 +120,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)1)
         {
-            if (Settings.Default.preference != "CL")
-                Globals.LAST_GROUP_ID = null;
             Settings.Default.compliance_default_view = "chatlog_user";
             Settings.Default.preference = "CL";
             Settings.Default.Save();
@@ -129,40 +127,30 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)2)
         {
-            if (Settings.Default.preference != "BO")
-                Globals.LAST_GROUP_ID = null;
             Settings.Default.compliance_default_view = "bio";
             Settings.Default.preference = "BO";
             Settings.Default.Save();
         }
         if (commandId == (CefMenuCommand)3)
         {
-            if (Settings.Default.preference != "PT")
-                Globals.LAST_GROUP_ID = null;
             Settings.Default.compliance_default_view = "photos";
             Settings.Default.preference = "PT";
             Settings.Default.Save();
         }
         if (commandId == (CefMenuCommand)4)
         {
-            if (Settings.Default.preference != "CLBO")
-                Globals.LAST_GROUP_ID = null;
             Settings.Default.compliance_default_view = "bio";
             Settings.Default.preference = "CLBO";
             Settings.Default.Save();
         }
         if (commandId == (CefMenuCommand)5)
         {
-            if (Settings.Default.preference != "PTCL")
-                Globals.LAST_GROUP_ID = null;
             Settings.Default.compliance_default_view = "chatlog_user";
             Settings.Default.preference = "PTCL";
             Settings.Default.Save();
         }
         if (commandId == (CefMenuCommand)6)
         {
-            if (Settings.Default.preference != "PTBO")
-                Globals.LAST_GROUP_ID = null;
             Settings.Default.compliance_default_view = "photos";
             Settings.Default.preference = "PTBO";
             Settings.Default.Save();
@@ -175,7 +163,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
             mailer.Send();
         }
         //Broadcast update in preference
-        if ((int)commandId >= 1 && (int)commandId <= 6 && Globals.IsBuddySystem())
+        if ((int)commandId >= 1 && (int)commandId <= 6)
         {
             Globals.Profiles.Where(m => m.AgentID == Globals.ComplianceAgent.id).FirstOrDefault().Preference = Settings.Default.preference;
             Globals.PartnerAgents = ServerAsync.ListOfPartners();

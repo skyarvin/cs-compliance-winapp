@@ -34,7 +34,7 @@
     <ProductName>SkydevCsTool_qa</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
     <MinimumRequiredVersion>2.0.1.91</MinimumRequiredVersion>
-    <ApplicationRevision>91</ApplicationRevision>
+    <ApplicationRevision>93</ApplicationRevision>
     <ApplicationVersion>2.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

@@ -740,7 +740,8 @@ namespace WindowsFormsApp1
         private void ContextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
             switchToolStripMenuItem.Visible = false;
-            if (Globals.Profiles.Count > 1) {
+            if (ServerAsync.HasConnections() && Globals.IsServer())
+            { 
                 switchToolStripMenuItem.Visible = true;
             }
         }

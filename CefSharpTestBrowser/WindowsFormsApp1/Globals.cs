@@ -27,6 +27,7 @@ namespace WindowsFormsApp1
         public static List<Profile> Profiles = new List<Profile>();
         public static string PartnerAgents = "";
         public static frmMain frmMain;
+        public static frmQA FrmQA;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();

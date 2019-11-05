@@ -82,5 +82,17 @@ namespace SkydevCSTool.Properties {
                 this["preference"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string user_type {
+            get {
+                return ((string)(this["user_type"]));
+            }
+            set {
+                this["user_type"] = value;
+            }
+        }
     }
 }

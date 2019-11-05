@@ -11,7 +11,7 @@
     <ProjectGuid>{D9E5E89D-2CCE-4555-A950-AB2D61CA6537}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SkydevCSTool</RootNamespace>
-    <AssemblyName>COMPLIANCE_TOOL_QA</AssemblyName>
+    <AssemblyName>SkydevCsTool_qa</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -20,7 +20,7 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL_QA\</PublishUrl>
+    <PublishUrl>\\10.10.10.20\apps\SkydevCsTool_qa\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -30,12 +30,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <UpdateUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL_QA\</UpdateUrl>
-    <ProductName>COMPLIANCE_TOOL_QA</ProductName>
+    <UpdateUrl>\\10.10.10.20\apps\SkydevCsTool_qa\</UpdateUrl>
+    <ProductName>SkydevCsTool_qa</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.0.31</MinimumRequiredVersion>
-    <ApplicationRevision>31</ApplicationRevision>
-    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
+    <MinimumRequiredVersion>2.0.1.91</MinimumRequiredVersion>
+    <ApplicationRevision>91</ApplicationRevision>
+    <ApplicationVersion>2.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -152,6 +152,12 @@
   <ItemGroup>
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
+    <Compile Include="frmQA.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmQA.Designer.cs">
+      <DependentUpon>frmQA.cs</DependentUpon>
+    </Compile>
     <Compile Include="Class\PairCommand.cs" />
     <Compile Include="Class\ReadTextFile.cs" />
     <Compile Include="Class\Result.cs" />
@@ -271,6 +277,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmPopup.resx">
       <DependentUpon>frmPopup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmQA.resx">
+      <DependentUpon>frmQA.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

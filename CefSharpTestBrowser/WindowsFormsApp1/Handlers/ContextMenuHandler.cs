@@ -178,7 +178,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         return false;
     }
 
-    public void OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)
+    public void OnContextMenuDismissed(IWebBrowser browserControl, IBrowser browser, IFrame frame)                                                                                                                                               
     {
 
     }

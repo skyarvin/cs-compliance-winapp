@@ -92,11 +92,11 @@
             this.txtUrl.Name = "txtUrl";
             this.txtUrl.Size = new System.Drawing.Size(376, 25);
             this.txtUrl.TabIndex = 1;
-            this.txtUrl.TextChanged += new System.EventHandler(this.txtUrl_TextChanged);
+            this.txtUrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUrl_KeyPress);
             // 
             // panel1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
             this.panel1.Controls.Add(this.lblChatEnd);
             this.panel1.Controls.Add(this.lblChatStart);
             this.panel1.Controls.Add(this.label3);
@@ -109,24 +109,26 @@
             // 
             // lblChatEnd
             // 
-            this.lblChatEnd.BackColor = System.Drawing.Color.Transparent;
+            this.lblChatEnd.BackColor = System.Drawing.Color.DarkRed;
             this.lblChatEnd.Font = new System.Drawing.Font("Segoe UI Semibold", 9.25F, System.Drawing.FontStyle.Bold);
             this.lblChatEnd.ForeColor = System.Drawing.Color.White;
-            this.lblChatEnd.Location = new System.Drawing.Point(71, 21);
+            this.lblChatEnd.Location = new System.Drawing.Point(72, 23);
             this.lblChatEnd.Name = "lblChatEnd";
             this.lblChatEnd.Size = new System.Drawing.Size(139, 22);
             this.lblChatEnd.TabIndex = 12;
+            this.lblChatEnd.Text = "-";
             this.lblChatEnd.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblChatStart
             // 
-            this.lblChatStart.BackColor = System.Drawing.Color.Transparent;
+            this.lblChatStart.BackColor = System.Drawing.Color.Green;
             this.lblChatStart.Font = new System.Drawing.Font("Segoe UI Semibold", 9.25F, System.Drawing.FontStyle.Bold);
             this.lblChatStart.ForeColor = System.Drawing.Color.White;
-            this.lblChatStart.Location = new System.Drawing.Point(71, 1);
+            this.lblChatStart.Location = new System.Drawing.Point(72, 1);
             this.lblChatStart.Name = "lblChatStart";
             this.lblChatStart.Size = new System.Drawing.Size(139, 22);
             this.lblChatStart.TabIndex = 11;
+            this.lblChatStart.Text = "-";
             this.lblChatStart.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label3
@@ -219,9 +221,12 @@
             this.ClientSize = new System.Drawing.Size(875, 450);
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.pnlHeader);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmQA";
             this.Text = "Skydev Browser | QA";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmQA_FormClosed);
+            this.Load += new System.EventHandler(this.frmQA_Load);
             this.pnlHeader.ResumeLayout(false);
             this.pnlURL.ResumeLayout(false);
             this.pnlURL.PerformLayout();

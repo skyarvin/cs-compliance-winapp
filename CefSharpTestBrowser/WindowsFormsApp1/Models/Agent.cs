@@ -13,6 +13,7 @@ namespace WindowsFormsApp1.Models
         public string photo { get; set; }
         public string review_date { get; set; }
         public string last_workshift { get; set; }
+        public string role { get; set; }
         public string profile
         {
             get

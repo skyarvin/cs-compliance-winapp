@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
+using CefSharp.WinForms.Internals;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,6 +17,8 @@ namespace WindowsFormsApp1
     public partial class frmQA : Form
     {
         private ChromiumWebBrowser chromeBrowserQA;
+        private string currentUrl;
+
         public frmQA()
         {
             InitializeComponent();
@@ -53,6 +56,7 @@ namespace WindowsFormsApp1
             chromeBrowserQA.FrameLoadStart += obj.OnFrameLoadStart;
             chromeBrowserQA.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowserQA.MenuHandler = new MyCustomMenuHandler();
+            chromeBrowserQA.AddressChanged += Browser_AddressChanged;
 
             lblUser.Text = Globals.ComplianceAgent.name;
             try
@@ -70,17 +74,44 @@ namespace WindowsFormsApp1
         //    }
         //}
 
-        private void txtUrl_TextChanged(object sender, EventArgs e)
+        private void Browser_AddressChanged(object sender, AddressChangedEventArgs e)
         {
-            try
-            {
-                Uri myUri = new Uri(txtUrl.Text );
-                lblChatStart.Text = HttpUtility.ParseQueryString(myUri.Query).Get("chatstart");
-                lblChatEnd.Text = HttpUtility.ParseQueryString(myUri.Query).Get("chatend");
-                chromeBrowserQA.Load(txtUrl.Text);
-            }
-            catch { }
+            string sCurrAddress = e.Address;
+            this.InvokeOnUiThreadIfRequired(() => {
+                if (sCurrAddress != txtUrl.Text)
+                {
+                    txtUrl.Text = sCurrAddress;
+                }
+                this.currentUrl = sCurrAddress;
+            });
+            
+        }
 
+        
+
+        private void frmQA_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void txtUrl_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)13)
+            {
+                try
+                {
+                    Uri myUri = new Uri(txtUrl.Text);
+                    lblChatStart.Text = HttpUtility.ParseQueryString(myUri.Query).Get("chatstart");
+                    lblChatEnd.Text = HttpUtility.ParseQueryString(myUri.Query).Get("chatend");
+                    chromeBrowserQA.Load(txtUrl.Text);
+                }
+                catch { }
+            }
+        }
+
+        private void frmQA_Load(object sender, EventArgs e)
+        {
+            this.Text += String.Concat(" ", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
         }
     }
     public class BoundObjectQA
@@ -98,7 +129,7 @@ namespace WindowsFormsApp1
             if (!e.Frame.IsMain)
                 return;
  
-
+            
             
 
             var submit_script = @"
@@ -136,9 +167,11 @@ namespace WindowsFormsApp1
                         });
                     }
 
-                    function highlight(selector, last_chatlog)
+                    function highlight(selector, last_chatlog, color)
                     {
-                                
+                        if (!color){
+                            color = '#da1b1b';
+                        }
                         var chatlog_position = 0;
                         if (selector == null || selector.length == 0)
                             return; 
@@ -157,7 +190,8 @@ namespace WindowsFormsApp1
                             {
                                 if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_chatlog) >= 0))
                                 {
-                                    td.parentNode.style.background = '#da1b1b';
+                                    
+                                    td.parentNode.style.background = color;
                                     chatlog_position = row_index;
                                 }
                             })
@@ -179,9 +213,9 @@ namespace WindowsFormsApp1
                     var urlParams = new URLSearchParams(window.location.search);
                     if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
                         function qa_chatlog_highlight(){
-                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
+                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart'),'#0f0'), (error) => console.log(error));
                             waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
-                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
+                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart'), '#0f0'), (error) => console.log(error));
                             waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
                         }
                         qa_chatlog_highlight();

@@ -176,7 +176,7 @@
             this.cmbUtype.ItemHeight = 21;
             this.cmbUtype.Items.AddRange(new object[] {
             "Agent",
-            "QA"});
+            "Customer Service QA"});
             this.cmbUtype.Location = new System.Drawing.Point(31, 294);
             this.cmbUtype.MaxDropDownItems = 3;
             this.cmbUtype.Name = "cmbUtype";

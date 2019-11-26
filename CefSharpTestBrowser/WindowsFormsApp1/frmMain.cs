@@ -244,7 +244,6 @@ namespace WindowsFormsApp1
                     var result = Globals.ShowMessageDialog(this, "You have been Idle for too long");
                     if (result == DialogResult.OK)
                     {
-                        Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         Globals.SaveActivity();
                         Globals._wentIdle = DateTime.MaxValue;
                         Globals._idleTicks = 0;
@@ -336,10 +335,8 @@ namespace WindowsFormsApp1
             _timer.Interval = 1000;
             _timer.Start();
 
-            Globals.SaveToLogFile("Application START", (int)LogType.Activity);
-            Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+            Globals.SaveToLogFile("Application START", (int)LogType.Activity);           
             Globals.SaveActivity();
-
             bgWorkResync.RunWorkerAsync();
 
             this.Text += String.Concat(" ", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
@@ -552,7 +549,7 @@ namespace WindowsFormsApp1
         private void UpdateWorkactivity_Tick(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(Globals.activity.start_time))
-            {
+            {                
                 Globals.UpdateActivity();
                 Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }

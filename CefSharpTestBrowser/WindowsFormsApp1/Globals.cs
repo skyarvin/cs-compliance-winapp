@@ -161,6 +161,7 @@ namespace WindowsFormsApp1
         {
             try
             {
+                Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 Globals.activity.agent_id = Globals.ComplianceAgent.id;
                 Globals.activity.work_date = Globals.ComplianceAgent.review_date;
                 Globals.activity.Save();
@@ -184,8 +185,15 @@ namespace WindowsFormsApp1
         {
             try
             {
-                Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                Globals.activity.Update();
+                if (Globals.activity.id.HasValue)
+                {
+                    Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    Globals.activity.Update();
+                }
+                else
+                {
+                    Globals.SaveActivity();
+                }
             }
             catch (AggregateException e)
             {

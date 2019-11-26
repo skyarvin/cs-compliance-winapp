@@ -33,6 +33,7 @@ namespace WindowsFormsApp1
     {
         private Timer _timer;
         private string LastSuccessUrl;
+        private string LastSucessAction;
         private DateTime StartTime;
         private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
@@ -455,8 +456,9 @@ namespace WindowsFormsApp1
 
                 try
                 {
-                    if (Globals.CurrentUrl == LastSuccessUrl)
+                    if (logData.url == LastSuccessUrl)
                     {
+                        if (LastSucessAction == element_id) return;
                         logData.id = Globals.LAST_SUCCESS_ID;
                         if (logData.id != 0)
                             logData.Update();
@@ -472,10 +474,13 @@ namespace WindowsFormsApp1
                         Globals.LAST_SUCCESS_ID = result.id;
                     }
 
-                    if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
+                    if (element_id == Action.RequestReview.Value)
                         LastSuccessUrl = ""; //Clear last success
                     else
-                        LastSuccessUrl = Globals.CurrentUrl;
+                        LastSuccessUrl = logData.url;
+
+                    LastSucessAction = element_id;
+                    
                 }
                 catch (AggregateException e)
                 {

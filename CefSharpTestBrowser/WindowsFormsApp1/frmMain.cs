@@ -393,14 +393,6 @@ namespace WindowsFormsApp1
 
         //    Find(true);
         //}
-        //private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-
-        //    Cef.GetGlobalCookieManager().DeleteCookies();
-        //    this.Close();
-
-        //}
-
 
         #endregion
 
@@ -907,6 +899,12 @@ namespace WindowsFormsApp1
                 sb.Append(hash[i].ToString("X2"));
             }
             return sb.ToString();
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cef.GetGlobalCookieManager().DeleteCookies();
+            this.Close();
         }
     }
 

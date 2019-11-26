@@ -189,6 +189,12 @@
     <Compile Include="frmPopup.Designer.cs">
       <DependentUpon>frmPopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmSetPreferences.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSetPreferences.Designer.cs">
+      <DependentUpon>frmSetPreferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Handlers\ContextMenuHandler.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -280,6 +286,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmQA.resx">
       <DependentUpon>frmQA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSetPreferences.resx">
+      <DependentUpon>frmSetPreferences.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

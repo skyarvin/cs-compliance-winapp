@@ -218,8 +218,14 @@ namespace WindowsFormsApp1
         {
             return Globals.Client != null;
         }
+        public static bool IsPreferenceSetupValid()
+        {
+            List<string> selected_preferences = Profiles.Select(m => m.Preference).ToList();
+            if (selected_preferences.Any(sp => sp.Contains("PT")) && selected_preferences.Any(sp => sp.Contains("CL")) && selected_preferences.Any(sp => sp.Contains("BO")))
+                return true;
 
-
+            return false;
+        }
     }
 
   

@@ -9,6 +9,7 @@ using SkydevCSTool;
 using SkydevCSTool.Class;
 using SkydevCSTool.Properties;
 using SkydevCSTool.Models;
+using CefSharp.WinForms.Internals;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -41,23 +42,24 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26506, "Devtools");
         model.AddItem((CefMenuCommand)26512, "Send Error Report");
+        model.AddItem((CefMenuCommand)26513, "Set Preference");
 
-        string defaultview = Settings.Default.preference;
-        IMenuModel submenu = model.AddSubMenu((CefMenuCommand)26508, "Preference");
-        submenu.AddCheckItem((CefMenuCommand)1, "Chatlog_user");
-        submenu.AddCheckItem((CefMenuCommand)2, "Bio");
-        submenu.AddCheckItem((CefMenuCommand)3, "Photos");
-        submenu.AddCheckItem((CefMenuCommand)4, "Bio and Chatlog_user ");
-        submenu.AddCheckItem((CefMenuCommand)5, "Chatlog_user and Photos");
-        submenu.AddCheckItem((CefMenuCommand)6, "Photos and Bio");
+        //string defaultview = Settings.Default.preference;
+        //IMenuModel submenu = model.AddSubMenu((CefMenuCommand)26508, "Preference");
+        //submenu.AddCheckItem((CefMenuCommand)1, "Chatlog_user");
+        //submenu.AddCheckItem((CefMenuCommand)2, "Bio");
+        //submenu.AddCheckItem((CefMenuCommand)3, "Photos");
+        //submenu.AddCheckItem((CefMenuCommand)4, "Bio and Chatlog_user ");
+        //submenu.AddCheckItem((CefMenuCommand)5, "Chatlog_user and Photos");
+        //submenu.AddCheckItem((CefMenuCommand)6, "Photos and Bio");
 
-        submenu.SetChecked((CefMenuCommand)1, defaultview == "CL");
-        submenu.SetChecked((CefMenuCommand)2, defaultview == "BO");
-        submenu.SetChecked((CefMenuCommand)3, defaultview == "PT");
+        //submenu.SetChecked((CefMenuCommand)1, defaultview == "CL");
+        //submenu.SetChecked((CefMenuCommand)2, defaultview == "BO");
+        //submenu.SetChecked((CefMenuCommand)3, defaultview == "PT");
 
-        submenu.SetChecked((CefMenuCommand)4, defaultview == "CLBO");
-        submenu.SetChecked((CefMenuCommand)5, defaultview == "PTCL");
-        submenu.SetChecked((CefMenuCommand)6, defaultview == "PTBO");
+        //submenu.SetChecked((CefMenuCommand)4, defaultview == "CLBO");
+        //submenu.SetChecked((CefMenuCommand)5, defaultview == "PTCL");
+        //submenu.SetChecked((CefMenuCommand)6, defaultview == "PTBO");
     }
 
     public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
@@ -117,6 +119,19 @@ public class MyCustomMenuHandler : IContextMenuHandler
             frmLogViewer.Show();
         }
 
+
+        if (commandId == (CefMenuCommand)26513)
+        {
+            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+            {
+                frmSetPreferences frmSetPreference = new frmSetPreferences();
+                frmSetPreference.ShowDialog(Globals.frmMain);
+            });
+
+
+            
+            
+        }
 
         if (commandId == (CefMenuCommand)1)
         {

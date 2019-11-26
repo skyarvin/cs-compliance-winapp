@@ -8,14 +8,30 @@ using System.Linq;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using System.Threading.Tasks;
+using System.Net.Sockets;
+using SkydevCSTool.Class;
+using System.Threading;
 
 namespace WindowsFormsApp1
 {
     static class Globals
     {
+        public static List<Socket> Connections = new List<Socket>();
+        public static Profile Profile { get; set; }
         public static string CurrentUrl { get; set; }
+        public static bool Paired { get; set; }
+        public static Int32 unixTimestamp { get; set; }
+        public static bool EnableTimer { get; set; }
+        public static int? LAST_GROUP_ID { get; set; }
+
+        public static List<Profile> Profiles = new List<Profile>();
+        public static string PartnerAgents = "";
+        public static frmMain frmMain;
+        public static frmQA FrmQA;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
+        public static UserAccount useraccount = new UserAccount();
+        public static ChromiumWebBrowser chromeBrowser;
         public static ChromiumWebBrowser chromePopup;
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;
@@ -25,14 +41,23 @@ namespace WindowsFormsApp1
         public static bool SKYPE_COMPLIANCE;
         public static int SC_THRESHOLD = 20000;
         public static List<string> UrlHistory = new List<string>();
-
-        private static frmMessage frm = new frmMessage();
-        public static void ShowMessage(Form parent)
+        public static Socket Client;
+        public static string MyIP;
+        public static List<string> ApprovedAgents = new List<string>();
+        public static bool ForceHideComliance = true;
+        public static int max_room_duration = 48;
+        public static int room_duration;
+        public static void ShowMessage(Form parent,string Message)
         {
-            if (frm.Visible != true){
-                frm.ShowDialog(parent);
-            }
-           
+            frmMessage frm = new frmMessage(Message);
+            frm.ShowDialog(parent);
+        }
+
+        public static DialogResult ShowMessageDialog(Form parent, string Message)
+        {
+            frmMessage frm = new frmMessage(Message);
+            frm.ShowDialog(parent);
+            return DialogResult.OK;
         }
         public static string myStr(object o, string label = "")
         {
@@ -64,7 +89,7 @@ namespace WindowsFormsApp1
             try
             {
                 string logFilePath = "";
-                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/SkydevCsTool/logs/");
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/SkydevCsTool/logs/", DateTime.Now.ToString("MM-dd-yyyy"), "/"));
                 switch (logtype)
                 {
                     case (int)LogType.Action:
@@ -107,6 +132,11 @@ namespace WindowsFormsApp1
 
             });
 
+        }
+
+        public static bool IsBuddySystem()
+        {
+            return Globals.Client != null || ServerAsync.HasConnections();
         }
 
         public static string CurrentVersion()
@@ -171,7 +201,20 @@ namespace WindowsFormsApp1
 
             Globals.activity.start_time = "";
         }
+        public static bool IsServer()
+        {
+            return Globals.Client == null && ServerAsync.HasConnections();
+        }
+
+        public static bool IsClient()
+        {
+            return Globals.Client != null;
+        }
+
+
     }
+
+  
 
     public enum LogType:int
     {
@@ -182,5 +225,4 @@ namespace WindowsFormsApp1
         UserClick = 5,
     }
 
-    
 }

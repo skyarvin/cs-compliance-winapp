@@ -13,7 +13,15 @@ namespace WindowsFormsApp1.Models
         public string photo { get; set; }
         public string review_date { get; set; }
         public string last_workshift { get; set; }
-
+        public string role { get; set; }
+        public string profile
+        {
+            get
+            {
+                var email_ = email.Split('@');
+                return email_[0];
+            }
+        }
         public static Agent Get(string email, string workshift)
         {
             using (var client = new HttpClient())

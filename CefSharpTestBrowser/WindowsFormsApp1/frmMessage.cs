@@ -14,24 +14,11 @@ namespace SkydevCSTool
 {
     public partial class frmMessage : Form
     {
-        public frmMessage()
+
+        public frmMessage(string Message)
         {
             InitializeComponent();
-        }
-
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-            Globals.SaveActivity();
-
-            Globals._wentIdle = DateTime.MaxValue;
-            Globals._idleTicks = 0;
-        }
-
-        private void FrmMessage_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = true;
+            lblMessage.Text = Message;
         }
     }
 }

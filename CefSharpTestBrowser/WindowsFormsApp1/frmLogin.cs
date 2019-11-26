@@ -1,6 +1,9 @@
-﻿using System;
+﻿using SkydevCSTool.Properties;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using System.IO.Compression;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 
@@ -49,25 +52,38 @@ namespace WindowsFormsApp1
                     if (Globals.ComplianceAgent != null)
                     {
                         bExitApp = false;
-                        frmMain Mainform = new frmMain();
-                        SkydevCSTool.Properties.Settings.Default.email = txtEmail.Text;
-                        SkydevCSTool.Properties.Settings.Default.workshift = workshift_list.SelectedValue.ToString();
-                        SkydevCSTool.Properties.Settings.Default.Save();
-                        if (Globals.ComplianceAgent.last_workshift == workshift_list.SelectedValue.ToString() || String.IsNullOrEmpty(Globals.ComplianceAgent.last_workshift))
-                        {
-                            Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
-                            Mainform.Show();
-                            this.Close();
-                            return;
-                        } 
+                        Settings.Default.user_type = cmbUtype.Text;
+                        Settings.Default.preference = null;
+                        Settings.Default.email = txtEmail.Text;
+                        Settings.Default.workshift = workshift_list.SelectedValue.ToString();
+                        Settings.Default.Save();
 
-                        DialogResult dialogResult = MessageBox.Show(string.Concat("Your previous shift is ",Globals.workshifts[Globals.ComplianceAgent.last_workshift],"\nAre you sure this is your workshift?"), "Workshift Change Detected", MessageBoxButtons.YesNo);
-                        if (dialogResult == DialogResult.Yes)
+                        if (Settings.Default.user_type == "Agent")
                         {
-                            Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
-                            Mainform.Show();
+                            Globals.frmMain = new frmMain();
+                            if (Globals.ComplianceAgent.last_workshift == workshift_list.SelectedValue.ToString() || String.IsNullOrEmpty(Globals.ComplianceAgent.last_workshift))
+                            {
+                                Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
+                                Globals.frmMain.Show();
+                                this.Close();
+                                return;
+                            }
+
+                            DialogResult dialogResult = MessageBox.Show(string.Concat("Your previous shift is ", Globals.workshifts[Globals.ComplianceAgent.last_workshift], "\nAre you sure this is your workshift?"), "Workshift Change Detected", MessageBoxButtons.YesNo);
+                            if (dialogResult == DialogResult.Yes)
+                            {
+                                Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
+                                Globals.frmMain.Show();
+                                this.Close();
+                            }
+                        }
+                        else {
+                            //new form
+                            Globals.FrmQA = new frmQA();
+                            Globals.FrmQA.Show();
                             this.Close();
                         }
+                     
                     }
                     else
                     {
@@ -102,9 +118,22 @@ namespace WindowsFormsApp1
             {
                 workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
             }
+            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.user_type))
+            {
+                cmbUtype.Text= SkydevCSTool.Properties.Settings.Default.user_type;
+            }
+
+            string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");
+            if (Directory.Exists(cache_path))
+                Directory.Delete(cache_path, true);
         }
 
         private void Workshift_list_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
+        }
+
+        private void cmbUtype_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
         }

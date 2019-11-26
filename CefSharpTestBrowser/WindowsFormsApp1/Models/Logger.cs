@@ -24,6 +24,9 @@ namespace WindowsFormsApp1.Models
         public string workshift { get; set; }
         public string review_date { get; set; }
         public string last_chatlog { get; set; }
+        public string last_photo { get; set; }
+        public string hash { get; set; }
+        public List<Profile> members { get; set; }
 
         public Logger Save()
         {
@@ -32,6 +35,7 @@ namespace WindowsFormsApp1.Models
             {
                 var uri = string.Concat(Url.API_URL, "/logs/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 var response = client.PostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
@@ -73,7 +77,7 @@ namespace WindowsFormsApp1.Models
 
         //Static Methods
         #region Static Methods
-        public static string GetLastChatlog(string url)
+        public static UrlInformation GetUrlInformation(string url)
         {
             using (var client = new HttpClient())
             {
@@ -89,12 +93,12 @@ namespace WindowsFormsApp1.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            return JsonConvert.DeserializeObject<Chatlog>(jsonString.Result).last_chatlog;
+                            return JsonConvert.DeserializeObject<UrlInformation>(jsonString.Result);
                         }
                     }
 
-                    return null;
-                }
+                    return new UrlInformation();
+                    }
                 else
                 {
                     throw new Exception("Api save request error, Please contact dev team");
@@ -131,8 +135,9 @@ namespace WindowsFormsApp1.Models
         #endregion
     }
 
-    public class Chatlog
+    public class UrlInformation
     {
         public string last_chatlog { get; set; }
+        public string last_photo { get; set; }
     }
 }

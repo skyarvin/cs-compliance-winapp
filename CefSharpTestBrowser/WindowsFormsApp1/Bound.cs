@@ -1,7 +1,10 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using SkydevCSTool.Class;
+using SkydevCSTool.Properties;
 using System;
+using System.Linq;
+using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
 
@@ -16,33 +19,32 @@ namespace SkydevCSTool
 
         public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
-            if (e.Frame.IsMain)
-            {
-                browser.EvaluateScriptAsync(@"
-                    var bounce = $(`body:contains('locked to another bouncer')`).length;
-                    if(bounce > 0){
-                        bound.saveAsBounce();
-                    }
-                ");
-
-                //var last_chatlog = Logger.GetLastChatlog(Globals.CurrentUrl);
-                //if (!string.IsNullOrEmpty(last_chatlog))
-                //{
-                //    browser.EvaluateScriptAsync("var chatlogs = $(`#chatlog_user .chatlog td.chatlog_date`);" +
-                //        "chatlogs.each(function(){" +
-                //        "if($.trim(this.innerText) == \"" + last_chatlog + "\"){" +
-                //        "$(this)[0].parentElement.style.background=\"green\";" +
-                //        "}" +
-                //        "})");
-                //}
-            }
+            
         }
         public void OnFrameLoadStart(object sender, FrameLoadStartEventArgs e)
         {
-            if (e.Frame.IsMain)
+            Console.WriteLine(e.Url);
+            if (!e.Frame.IsMain)
+                return;
+
+            if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && e.Url.Contains("/compliance/show"))
             {
-                browser.ExecuteScriptAsync(@"
-                    window.onclick = function(e) { 
+                
+                browser.ExecuteScriptAsync(
+                "function sleep(ms) {" +
+                    "return new Promise(resolve => setTimeout(resolve, ms));" +
+                "}" +
+
+                "document.addEventListener('DOMContentLoaded', " +
+                    "async function(){" +
+                        "await sleep(1000);" +
+                        "if(document.getElementById(\"data\") != null){" +
+                            "document.getElementById(\"data\").innerText = null;}" +
+                        "changeDiv('" + Settings.Default.compliance_default_view + "');});");
+            }
+
+            browser.ExecuteScriptAsync(@"
+                   window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
                         }
@@ -64,11 +66,14 @@ namespace SkydevCSTool
                             if ((e.target.value != undefined) && (element_values.hasOwnProperty(e.target.value))) {
                                     bound.onClicked(element_values[e.target.value][0]);
                             }
+                            
                         }
                     }
+                
+                    
                 ");
 
-                var submit_script = @"
+            var submit_script = @"
                     window.onmousemove = function(e) { 
                         bound.onBrowserEvent(); 
                     }
@@ -77,22 +82,143 @@ namespace SkydevCSTool
                     window.addEventListener('wheel', function(e) {
                         if (e.deltaY < 0) {
                              if(event.ctrlKey && zoomLevel < 2){
-                                    console.log('scrolling up');
                                     zoomLevel += 0.1;
                                      document.body.style.zoom = zoomLevel;
                              }     
                         }
                         if (e.deltaY > 0) {
                            if(event.ctrlKey && zoomLevel > 0.5){
-                                    console.log('scrolling down');
                                     zoomLevel -= 0.1;
                                     document.body.style.zoom = zoomLevel;
                             }
                         }
                     });
+
+                    function waitUntil(selector, max_ms_timeout){
+                        return new Promise( (resolve, reject) => {
+	                        var ms = 0;
+                            var finder = setInterval( () => {
+		                        if (ms >= max_ms_timeout){
+			                        clearInterval(finder);
+			                        reject(false);
+		                        }
+                                if (document.querySelectorAll(selector).length > 0){
+        	                        clearInterval(finder);
+                                    resolve(document.querySelectorAll(selector));
+                                }
+		                        ms+=100;
+                            }, 100);
+	
+                        });
+                    }
+
+                    function highlight(selector, last_chatlog)
+                    {
+                                
+                        var chatlog_position = 0;
+                        if (selector == null || selector.length == 0)
+                            return; 
+                        var found = false
+                        var row_index = 0;
+                                
+                        if (last_chatlog == '' || last_chatlog == undefined || last_chatlog == null){
+                            return selector.length;
+                        }
+                                
+                        selector.forEach(function(el)
+                        {
+                            row_index++;
+                                    
+                            el.childNodes.forEach(function(td)
+                            {
+                                if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_chatlog) >= 0))
+                                {
+                                    td.parentNode.style.background = '#da1b1b';
+                                    chatlog_position = row_index;
+                                }
+                            })
+
+                        });
+
+                        if (chatlog_position == 0)
+                            return row_index 
+
+                        return chatlog_position;
+                                
+                    }
                 ";
-                browser.EvaluateScriptAsync(submit_script);
+
+            browser.EvaluateScriptAsync(submit_script);
+
+            browser.EvaluateScriptAsync(@"
+                document.addEventListener('DOMContentLoaded', function(){
+                    var urlParams = new URLSearchParams(window.location.search);
+                    if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
+                        function qa_chatlog_highlight(){
+                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
+                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
+                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
+                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
+                        }
+                        qa_chatlog_highlight();
+                        document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
+                        {
+                            qa_chatlog_highlight();
+                        });
+                    } else {
+                        bound.evaluateMaxRoomDuration();
+                    }
+                    
+                    
+                    window.onkeydown = function(e){
+                        if (e.which == 112)
+                        {
+                            e.preventDefault();
+                            bound.disableForceHide();
+                        }
+
+                        if(e.ctrlKey == true && e.keyCode == 192){
+                            e.preventDefault();
+                        }
+                    }
+
+                    if (document.getElementsByTagName('body')[0].innerText.indexOf('locked to another bouncer') >= 0)
+                    {
+                        bound.saveAsBounce();
+                    }
+                });
+            ");
+
+
+
+
+            if (Globals.IsBuddySystem())
+            {
+
+                browser.ExecuteScriptAsync(@"
+                        window.addEventListener(`DOMContentLoaded`, function(){
+                            waitUntil(`#approve_button`,5000).then( 
+                                (el) => document.getElementById(`approve_button`).style.display = `none`,
+                                (err) => console.log(`approve not found`));
+                        });
+                    ");
+
             }
+
+            Globals.ForceHideComliance = true;
+            
+            if (Globals.IsServer())
+            {
+                Globals.ApprovedAgents.Clear();
+                ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count , Url = Globals.CurrentUrl});
+                Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
+            }
+        }
+
+        public void DisableForceHide()
+        {
+            Globals.ForceHideComliance = false;
+            browser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
         }
 
         public void WindowOnClicked(string element_id)
@@ -109,7 +235,7 @@ namespace SkydevCSTool
             try
             {
                 Logger log = new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" };
-                if(log.id != 0)
+                if (log.id != 0)
                     log.Update();
             }
             catch (AggregateException e)
@@ -135,6 +261,81 @@ namespace SkydevCSTool
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });
             }
         }
+
+        public void EvaluateMaxRoomDuration()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                try
+                {
+                    UrlInformation urlInfo = Logger.GetUrlInformation(Globals.CurrentUrl);
+                    
+                        string script = @"
+                            var last_room_chatlog = '{{global_chatlog}}';
+
+                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => 
+                            { 
+                                bound.updateMaxRoomDuration(highlight(element, last_room_chatlog));
+                            }, (error) => console.log(error));
+
+                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, last_room_chatlog), (error) => console.log(error));
+
+                            document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
+                            {
+                                waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => {
+                                    bound.updateMaxRoomDuration(highlight(element));
+                                }, (error) => console.log(error));
+                                waitUntil('#data .chatlog tbody tr', 5000).then( (element) => highlight(element), (error) => console.log(error));
+                            });
+
+
+                            console.log('checking images');
+                            waitUntil('#data .image_container .image center', 5000).then( (elements) => {
+                                elements.forEach( (el) => {
+                                    if(el.innerText != '{{last_photo}}')
+                                        return;
+		                            el.style.background = '#da1b1b';
+		                            el.style['color'] = 'white';
+                                });
+                            }, (error) => console.log(error));
+
+                            waitUntil('#photos .image_container .image center', 5000).then( (elements) => {
+                                elements.forEach( (el) => {
+                                    if(el.innerText != '{{last_photo}}')
+                                        return;
+		                            el.style.background = '#da1b1b';
+		                            el.style['color'] = 'white';
+                                });
+                            }, (error) => console.log(error));
+
+                        ";
+
+                        script = script.Replace("{{global_chatlog}}", urlInfo.last_chatlog).Replace("{{last_photo}}", urlInfo.last_photo);
+                        browser.ExecuteScriptAsync(script);
+                    
+                }
+                catch {}
+            });
+        }
+        
+        public void UpdateMaxRoomDuration(int chatlog_lines_count = 0)
+        {
+            Console.WriteLine("UpdateMaxRoomDuration: " + chatlog_lines_count);
+            if (Globals.IsServer()) {
+                ServerAsync.ChatlogRecomputeDurationThreshold(chatlog_lines_count);
+                ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
+            }
+            else if (Globals.IsClient())
+            {
+                AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "COMPUTE_TIME", Message = chatlog_lines_count.ToString() });
+            }
+        }
+
+        public void TriggerClear()
+        {
+            Globals.frmMain.ButtonClearClick();
+        }
+
         public class HtmlItemClickedEventArgs : EventArgs
         {
             public string Id { get; set; }

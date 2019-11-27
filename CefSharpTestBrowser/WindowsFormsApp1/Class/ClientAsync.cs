@@ -251,8 +251,11 @@ namespace SkydevCSTool.Class
                                         Globals.Profiles = JsonConvert.DeserializeObject<List<Profile>>(data.Message);
                                         if (!Globals.IsPreferenceSetupValid())
                                         {
-                                            if (Globals.FrmSetPreferences.Visible == false)
-                                                Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if (Globals.FrmSetPreferences.Visible == false)
+                                                    Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+                                            });
                                         }
                                         break;
 

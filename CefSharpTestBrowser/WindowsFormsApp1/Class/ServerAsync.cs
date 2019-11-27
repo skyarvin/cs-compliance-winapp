@@ -204,7 +204,8 @@ namespace SkydevCSTool.Class
                                         {
                                             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                                             {
-                                                Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+                                                if(Globals.FrmSetPreferences.Visible == false)
+                                                    Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
                                             });
                                         }
                                         break;

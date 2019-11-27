@@ -26,6 +26,7 @@ using Newtonsoft.Json;
 using System.Windows.Input;
 using SkydevCSTool.Properties;
 using System.Security.Cryptography;
+using SkydevCSTool.Models;
 
 namespace WindowsFormsApp1
 {
@@ -269,6 +270,18 @@ namespace WindowsFormsApp1
                 cmbURL.Text = sCurrAddress;
                 if (IsValidUrl(sCurrAddress))
                 {
+                    //Emailer for missed seed
+                    if (sCurrAddress.Contains("seed_failure") && (Globals.IsServer() || !Globals.IsBuddySystem()))
+                    {
+                        Emailer email = new Emailer();
+                        email.subject = "Missed Seed Notification";
+                        email.message = string.Concat("Url: ", sCurrAddress, 
+                            "\nLast Success Url: ", LastSuccessUrl, 
+                            "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
+                            "\nUser Id: ", Globals.Profile.AgentID);
+                        email.Send();
+                    }
+
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl != splitAddress[0])
                     {

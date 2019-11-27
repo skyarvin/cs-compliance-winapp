@@ -230,6 +230,19 @@ namespace WindowsFormsApp1
             return false;
         }
 
+        public static string MissingPreference()
+        {
+            List<string> selected_preferences = Profiles.Select(m => m.Preference).ToList();
+            string result ="Missing preference(";
+            if (!selected_preferences.Any(sp => sp.Contains("PT")))
+                result = result + ", Photo";
+            if (!selected_preferences.Any(sp => sp.Contains("CL")))
+                result = result + ", Chat";
+            if (!selected_preferences.Any(sp => sp.Contains("BO")))
+                result = result + ", Bio";
+            return result + ")";
+        }
+
         public static void BroadcastPreferenceChanges()
         {
             //Broadcast to server

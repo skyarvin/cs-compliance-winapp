@@ -1,4 +1,6 @@
-﻿using SkydevCSTool.Properties;
+﻿using CefSharp.WinForms.Internals;
+using SkydevCSTool.Class;
+using SkydevCSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -32,6 +34,9 @@ namespace WindowsFormsApp1
 
         private void frmSetPreferences_Load(object sender, EventArgs e)
         {
+            label1.Visible = false;
+            label2.Visible = true;
+
             comboPreferences.DataSource = new BindingSource(preferences, null);
             comboPreferences.DisplayMember = "Value";
             comboPreferences.ValueMember = "Key";
@@ -40,6 +45,14 @@ namespace WindowsFormsApp1
             {
                 comboPreferences.SelectedValue = Settings.Default.preference;
             }
+
+
+            if (Globals.IsBuddySystem() && !Globals.IsPreferenceSetupValid())
+            {
+                label1.Visible = true;
+                label2.Visible = false;
+            }
+
         }
 
         private void btnSelectPreference_Click(object sender, EventArgs e)
@@ -62,6 +75,19 @@ namespace WindowsFormsApp1
 
             Settings.Default.preference = comboPreferences.SelectedValue.ToString();
             Settings.Default.Save();
+
+            Globals.BroadcastPreferenceChanges();
+            
+            if (Globals.IsBuddySystem() && !Globals.IsPreferenceSetupValid())
+            {
+                label1.Visible = true;
+                label2.Visible = false;
+            }
+            else
+            {
+                this.Close();
+            }
+            
         }
     }
 }

@@ -206,6 +206,8 @@ namespace SkydevCSTool.Class
                                                 Preference = Settings.Default.preference
                                             });
                                             Globals.frmMain.SetBtnConnectText("DISCONNECT");
+
+                                          
                                         });
                                         break;
                                     // END HANDSHAKE BLOCK
@@ -247,6 +249,11 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "PARTNER_LIST":
                                         Globals.Profiles = JsonConvert.DeserializeObject<List<Profile>>(data.Message);
+                                        if (!Globals.IsPreferenceSetupValid())
+                                        {
+                                            if (Globals.FrmSetPreferences.Visible == false)
+                                                Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+                                        }
                                         break;
 
                                 }

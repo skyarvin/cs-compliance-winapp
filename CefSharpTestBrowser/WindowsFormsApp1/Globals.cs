@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using SkydevCSTool.Class;
 using System.Threading;
+using SkydevCSTool.Properties;
+using CefSharp.WinForms.Internals;
 
 namespace WindowsFormsApp1
 {
@@ -28,6 +30,7 @@ namespace WindowsFormsApp1
         public static string PartnerAgents = "";
         public static frmMain frmMain;
         public static frmQA FrmQA;
+        public static frmSetPreferences FrmSetPreferences = new frmSetPreferences();
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();
@@ -225,6 +228,23 @@ namespace WindowsFormsApp1
                 return true;
 
             return false;
+        }
+
+        public static void BroadcastPreferenceChanges()
+        {
+            //Broadcast to server
+            Globals.Profiles.Where(m => m.AgentID == Globals.ComplianceAgent.id).FirstOrDefault().Preference = Settings.Default.preference;
+            Globals.PartnerAgents = ServerAsync.ListOfPartners();
+            if (Globals.IsServer())
+            {
+                ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+               
+           
+            }
+            else if (Globals.IsClient())
+            {
+                AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_PREFERENCE", ProfileID = Globals.ComplianceAgent.id, Preference = Settings.Default.preference });
+            }
         }
     }
 

@@ -124,71 +124,10 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
-                frmSetPreferences frmSetPreference = new frmSetPreferences();
-                frmSetPreference.ShowDialog(Globals.frmMain);
+                Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
             });
-
-
-            
-            
         }
 
-        if (commandId == (CefMenuCommand)1)
-        {
-            Settings.Default.compliance_default_view = "chatlog_user";
-            Settings.Default.preference = "CL";
-            Settings.Default.Save();
-        }
-
-        if (commandId == (CefMenuCommand)2)
-        {
-            Settings.Default.compliance_default_view = "bio";
-            Settings.Default.preference = "BO";
-            Settings.Default.Save();
-        }
-        if (commandId == (CefMenuCommand)3)
-        {
-            Settings.Default.compliance_default_view = "photos";
-            Settings.Default.preference = "PT";
-            Settings.Default.Save();
-        }
-        if (commandId == (CefMenuCommand)4)
-        {
-            Settings.Default.compliance_default_view = "bio";
-            Settings.Default.preference = "CLBO";
-            Settings.Default.Save();
-        }
-        if (commandId == (CefMenuCommand)5)
-        {
-            Settings.Default.compliance_default_view = "chatlog_user";
-            Settings.Default.preference = "PTCL";
-            Settings.Default.Save();
-        }
-        if (commandId == (CefMenuCommand)6)
-        {
-            Settings.Default.compliance_default_view = "photos";
-            Settings.Default.preference = "PTBO";
-            Settings.Default.Save();
-        }
-        if (commandId == (CefMenuCommand)26512)
-        {
-            Emailer mailer = new Emailer();
-            mailer.subject = "Auto Approve Error Report";
-            mailer.message = ReadTextFile.Read();
-            mailer.Send();
-        }
-        //Broadcast update in preference
-        if ((int)commandId >= 1 && (int)commandId <= 6)
-        {
-            Globals.Profiles.Where(m => m.AgentID == Globals.ComplianceAgent.id).FirstOrDefault().Preference = Settings.Default.preference;
-            Globals.PartnerAgents = ServerAsync.ListOfPartners();
-            if (Globals.IsServer()) {
-                ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
-            }
-            else if(Globals.IsClient()) {
-                AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_PREFERENCE", ProfileID = Globals.ComplianceAgent.id, Preference = Settings.Default.preference });
-            }
-        }
         // Return false should ignore the selected option of the user !
         return false;
     }

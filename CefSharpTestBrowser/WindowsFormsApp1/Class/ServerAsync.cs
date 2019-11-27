@@ -200,6 +200,13 @@ namespace SkydevCSTool.Class
                                         SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count, Url = Globals.CurrentUrl });
                                         SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
                                         SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+                                        if (!Globals.IsPreferenceSetupValid())
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+                                            });
+                                        }
                                         break;
                                     case "REFRESH":
                                         Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
@@ -239,6 +246,16 @@ namespace SkydevCSTool.Class
                                         Globals.Profiles.Where(m => m.AgentID == data.ProfileID).FirstOrDefault().Preference = data.Preference;
                                         Globals.PartnerAgents = ServerAsync.ListOfPartners();
                                         ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+                                        if (!Globals.IsPreferenceSetupValid())
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if (Globals.FrmSetPreferences.Visible == false)
+                                                    Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+                                                
+                                                
+                                            });
+                                        }
                                         break;
                                 }
                             }

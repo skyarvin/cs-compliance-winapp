@@ -32,6 +32,7 @@
             this.btnSelectPreference = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.lblMissingPref = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // comboPreferences
@@ -78,6 +79,17 @@
             this.label2.Text = "Select Preference";
             this.label2.UseCompatibleTextRendering = true;
             // 
+            // lblMissingPref
+            // 
+            this.lblMissingPref.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblMissingPref.ForeColor = System.Drawing.Color.Red;
+            this.lblMissingPref.Location = new System.Drawing.Point(34, 109);
+            this.lblMissingPref.Name = "lblMissingPref";
+            this.lblMissingPref.Size = new System.Drawing.Size(298, 21);
+            this.lblMissingPref.TabIndex = 4;
+            this.lblMissingPref.Text = "Missing Preference:";
+            this.lblMissingPref.UseCompatibleTextRendering = true;
+            // 
             // frmSetPreferences
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -85,6 +97,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
             this.ClientSize = new System.Drawing.Size(367, 179);
             this.ControlBox = false;
+            this.Controls.Add(this.lblMissingPref);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSelectPreference);
@@ -104,5 +117,6 @@
         private System.Windows.Forms.Button btnSelectPreference;
         public System.Windows.Forms.Label label2;
         public System.Windows.Forms.Label label1;
+        public System.Windows.Forms.Label lblMissingPref;
     }
 }

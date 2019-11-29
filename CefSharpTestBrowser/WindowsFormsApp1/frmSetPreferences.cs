@@ -36,6 +36,7 @@ namespace WindowsFormsApp1
         {
             label1.Visible = false;
             label2.Visible = true;
+            lblMissingPref.Visible = false;
 
             comboPreferences.DataSource = new BindingSource(preferences, null);
             comboPreferences.DisplayMember = "Value";
@@ -51,6 +52,8 @@ namespace WindowsFormsApp1
             {
                 label1.Visible = true;
                 label2.Visible = false;
+                lblMissingPref.Text = string.Concat("Missing Preference: ", Globals.MissingPreference());
+                lblMissingPref.Visible = true;
             }
 
         }
@@ -82,6 +85,8 @@ namespace WindowsFormsApp1
             {
                 label1.Visible = true;
                 label2.Visible = false;
+                lblMissingPref.Text = string.Concat("Missing Preference: ", Globals.MissingPreference());
+                lblMissingPref.Visible = true;
             }
             else
             {

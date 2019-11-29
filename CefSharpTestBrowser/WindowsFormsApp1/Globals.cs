@@ -233,14 +233,14 @@ namespace WindowsFormsApp1
         public static string MissingPreference()
         {
             List<string> selected_preferences = Profiles.Select(m => m.Preference).ToList();
-            string result ="Missing preference(";
+            List<string> missing_preferences = new List<string>();
             if (!selected_preferences.Any(sp => sp.Contains("PT")))
-                result = result + ", Photo";
+                missing_preferences.Add("Photos");
             if (!selected_preferences.Any(sp => sp.Contains("CL")))
-                result = result + ", Chat";
+                missing_preferences.Add("Chatlog");
             if (!selected_preferences.Any(sp => sp.Contains("BO")))
-                result = result + ", Bio";
-            return result + ")";
+                missing_preferences.Add("Bio");
+            return string.Join(", ", missing_preferences);
         }
 
         public static void BroadcastPreferenceChanges()

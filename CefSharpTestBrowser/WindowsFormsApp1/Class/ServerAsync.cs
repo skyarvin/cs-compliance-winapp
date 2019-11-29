@@ -253,8 +253,16 @@ namespace SkydevCSTool.Class
                                             {
                                                 if (Globals.FrmSetPreferences.Visible == false)
                                                     Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
-                                                
-                                                
+
+                                                Globals.FrmSetPreferences.lblMissingPref.Text = string.Concat("Missing Preference: ", Globals.MissingPreference());
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if (Globals.FrmSetPreferences.Visible == true)
+                                                    Globals.FrmSetPreferences.Close();
                                             });
                                         }
                                         break;

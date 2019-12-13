@@ -226,6 +226,8 @@ namespace SkydevCSTool.Class
                                         {
                                             Directory.CreateDirectory(_temporary_cookies_directory);
                                         }
+
+                                        Globals.SaveToLogFile(string.Concat("Client switch: ", Globals.Profile.Name), (int)LogType.Action);
                                         string _path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
                                         File.WriteAllBytes(_path, bytes);
                                         Globals.frmMain.InvokeOnUiThreadIfRequired(() =>

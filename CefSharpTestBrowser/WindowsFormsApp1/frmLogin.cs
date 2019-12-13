@@ -48,34 +48,20 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    Globals.ComplianceAgent = Agent.Get(txtEmail.Text, workshift_list.SelectedValue.ToString());
+                    Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
                     if (Globals.ComplianceAgent != null)
                     {
                         bExitApp = false;
                         Settings.Default.user_type = cmbUtype.Text;
                         Settings.Default.preference = null;
                         Settings.Default.email = txtEmail.Text;
-                        Settings.Default.workshift = workshift_list.SelectedValue.ToString();
                         Settings.Default.Save();
 
                         if (Settings.Default.user_type == "Agent")
                         {
                             Globals.frmMain = new frmMain();
-                            if (Globals.ComplianceAgent.last_workshift == workshift_list.SelectedValue.ToString() || String.IsNullOrEmpty(Globals.ComplianceAgent.last_workshift))
-                            {
-                                Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
-                                Globals.frmMain.Show();
-                                this.Close();
-                                return;
-                            }
-
-                            DialogResult dialogResult = MessageBox.Show(string.Concat("Your previous shift is ", Globals.workshifts[Globals.ComplianceAgent.last_workshift], "\nAre you sure this is your workshift?"), "Workshift Change Detected", MessageBoxButtons.YesNo);
-                            if (dialogResult == DialogResult.Yes)
-                            {
-                                Globals.ComplianceAgent.last_workshift = workshift_list.SelectedValue.ToString();
-                                Globals.frmMain.Show();
-                                this.Close();
-                            }
+                            Globals.frmMain.Show();
+                            this.Close();
                         }
                         else {
                             //new form
@@ -106,18 +92,18 @@ namespace WindowsFormsApp1
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-            workshift_list.DataSource = new BindingSource(Globals.workshifts, null);
-            workshift_list.DisplayMember = "Value";
-            workshift_list.ValueMember = "Key";
+            //workshift_list.DataSource = new BindingSource(Globals.workshifts, null);
+            //workshift_list.DisplayMember = "Value";
+            //workshift_list.ValueMember = "Key";
 
             if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.email))
             {
                 txtEmail.Text = SkydevCSTool.Properties.Settings.Default.email;
             }
-            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.workshift))
-            {
-                workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
-            }
+            //if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.workshift))
+            //{
+            //    workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
+            //}
             if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.user_type))
             {
                 cmbUtype.Text= SkydevCSTool.Properties.Settings.Default.user_type;

@@ -11,8 +11,8 @@ namespace WindowsFormsApp1.Models
         public string name { get; set; }
         public string email { get; set; }
         public string photo { get; set; }
-        public string review_date { get; set; }
-        public string last_workshift { get; set; }
+        //public string review_date { get; set; }
+        //public string last_workshift { get; set; }
         public string role { get; set; }
         public string profile
         {
@@ -22,11 +22,11 @@ namespace WindowsFormsApp1.Models
                 return email_[0];
             }
         }
-        public static Agent Get(string email, string workshift)
+        public static Agent Get(string email)
         {
             using (var client = new HttpClient())
             {
-                var uri = string.Concat(Url.API_URL, "/agent/?email=", email,"&workshift=", workshift);
+                var uri = string.Concat(Url.API_URL, "/agent/?email=", email);
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

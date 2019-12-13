@@ -35,7 +35,8 @@ namespace WindowsFormsApp1
         private Timer _timer;
         private string LastSuccessUrl;
         private string LastSucessAction;
-        private DateTime StartTime;
+        private DateTime StartTime_BrowserChanged;
+        private DateTime StartTime_LastAction = DateTime.Now;
         private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -75,7 +76,7 @@ namespace WindowsFormsApp1
             }
 
             Cef.GetGlobalCookieManager().SetStoragePath(@path + "/SkydevCsTool/cookies/" + Globals.Profile.Name + "/", true);
-
+            Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
             requestContextSettings.PersistSessionCookies = true;
@@ -270,25 +271,25 @@ namespace WindowsFormsApp1
                 cmbURL.Text = sCurrAddress;
                 if (IsValidUrl(sCurrAddress))
                 {
-                    //Emailer for missed seed
-                    if (sCurrAddress.Contains("seed_failure") && (Globals.IsServer() || !Globals.IsBuddySystem()))
-                    {
-                        Emailer email = new Emailer();
-                        email.subject = "Missed Seed Notification";
-                        email.message = string.Concat("Url: ", sCurrAddress, 
-                            "\nLast Success Url: ", LastSuccessUrl, 
-                            "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
-                            "\nUser Id: ", Globals.Profile.AgentID);
-                        email.Send();
-                    }
-
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
+                        //Emailer for missed seed
+                        if (sCurrAddress.Contains("seed_failure") && (Globals.IsServer() || !Globals.IsBuddySystem()))
+                        {
+                            Emailer email = new Emailer();
+                            email.subject = "Missed Seed Notification";
+                            email.message = string.Concat("Url: ", sCurrAddress,
+                                "\nLast Success Url: ", LastSuccessUrl,
+                                "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
+                                "\nUser Id: ", Globals.Profile.AgentID);
+                            email.Send();
+                        }
+
                         Globals.AddToHistory(splitAddress[0]);
                         Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                         Globals.CurrentUrl = splitAddress[0];
-                        StartTime = DateTime.Now;
+                        StartTime_BrowserChanged = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
                         lblCountdown.Text = Globals.room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
@@ -440,18 +441,26 @@ namespace WindowsFormsApp1
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
 
+                var total_duration = Convert.ToInt32((DateTime.Now - StartTime_LastAction).TotalSeconds);
+                if ((StartTime_LastAction - StartTime_BrowserChanged).TotalSeconds > 30)
+                {
+                    total_duration = Convert.ToInt32((DateTime.Now - StartTime_BrowserChanged).TotalSeconds);
+                }
+
+                //total_duration = Convert.ToInt32((DateTime.Now - StartTime_BrowserChanged).TotalSeconds);
+
                 var logData = new Logger
                 {
                     url = Globals.CurrentUrl,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
                     remarks = String.Concat(violation, notes),
-                    duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
+                    duration = total_duration,
                     followers = followers,
                     sc = followers >= Globals.SC_THRESHOLD ? true : false,
                     rr = string.IsNullOrEmpty(reply) ? false : true,
-                    review_date = Globals.ComplianceAgent.review_date,
-                    workshift = Globals.ComplianceAgent.last_workshift,
+                    review_date = DateTime.Now.Date.ToString("yyyy-MM-dd"), //Globals.ComplianceAgent.review_date,
+                    workshift = "DS",
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
                     hash = HashMembers(),
@@ -497,6 +506,7 @@ namespace WindowsFormsApp1
                     Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                     Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
                 }
+                StartTime_LastAction = DateTime.Now;
             });
         }
 
@@ -571,6 +581,7 @@ namespace WindowsFormsApp1
             this.pnlBrowser.Controls.Clear();
             Globals.EnableTimer = false;
             var tempBrowser = Globals.chromeBrowser;
+            Globals.SaveToLogFile(string.Concat("Switch Cache: ", Globals.Profile.Name), (int)LogType.Action);
             InitializeChromium(Url.CB_COMPLIANCE_URL);
 
             Task.Factory.StartNew(() =>
@@ -731,6 +742,7 @@ namespace WindowsFormsApp1
                 System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                 Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                 string file = Convert.ToBase64String(sbytes);
+                Globals.SaveToLogFile(string.Concat("Server command switch: ", Globals.Profile.Name, " ", Globals.Profile.AgentID), (int)LogType.Action);
                 ServerAsync.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile.Name, ProfileID = Globals.Profile.AgentID, Message = file });
             }
             SwitchCache();

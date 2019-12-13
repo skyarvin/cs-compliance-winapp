@@ -447,8 +447,6 @@ namespace WindowsFormsApp1
                     total_duration = Convert.ToInt32((DateTime.Now - StartTime_BrowserChanged).TotalSeconds);
                 }
 
-                //total_duration = Convert.ToInt32((DateTime.Now - StartTime_BrowserChanged).TotalSeconds);
-
                 var logData = new Logger
                 {
                     url = Globals.CurrentUrl,

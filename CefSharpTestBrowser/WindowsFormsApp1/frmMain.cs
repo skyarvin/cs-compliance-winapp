@@ -310,7 +310,15 @@ namespace WindowsFormsApp1
 
                     }
                 }
-
+                else
+                {
+                    Emailer email = new Emailer();
+                    email.subject = "Invalid Url Notification";
+                    email.message = string.Concat("Url: ", sCurrAddress,
+                        "\nUser Id: ", Globals.Profile.AgentID,
+                        "\nUser name: ", Globals.Profile.Name);
+                    email.Send();
+                }
               
                 
             });

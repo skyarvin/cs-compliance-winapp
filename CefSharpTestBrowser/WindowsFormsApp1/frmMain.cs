@@ -441,10 +441,10 @@ namespace WindowsFormsApp1
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
 
-                var total_duration = Convert.ToInt32((DateTime.Now - StartTime_LastAction).TotalSeconds);
+                var total_duration = (DateTime.Now - StartTime_LastAction).TotalSeconds;
                 if ((StartTime_LastAction - StartTime_BrowserChanged).TotalSeconds > 30)
                 {
-                    total_duration = Convert.ToInt32((DateTime.Now - StartTime_BrowserChanged).TotalSeconds);
+                    total_duration = (DateTime.Now - StartTime_BrowserChanged).TotalSeconds;
                 }
 
                 var logData = new Logger

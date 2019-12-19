@@ -275,15 +275,28 @@ namespace WindowsFormsApp1
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
                         //Emailer for missed seed
-                        if (sCurrAddress.Contains("seed_failure") && (Globals.IsServer() || !Globals.IsBuddySystem()))
+                        if (sCurrAddress.Contains("seed_failure"))
                         {
-                            Emailer email = new Emailer();
-                            email.subject = "Missed Seed Notification";
-                            email.message = string.Concat("Url: ", sCurrAddress,
-                                "\nLast Success Url: ", LastSuccessUrl,
-                                "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
-                                "\nUser Id: ", Globals.Profile.AgentID);
-                            email.Send();
+                            //Send to API
+                            string[] urls = LastSuccessUrl.Split('/');
+                            if (sCurrAddress.Contains(urls[urls.Length - 2]))
+                            {
+                                Seed seed = new Seed();
+                                seed.log_id = Globals.LAST_SUCCESS_ID;
+                                seed.url = sCurrAddress;
+                                seed.Save();
+                            }
+
+                            if (!Globals.IsBuddySystem())
+                            {
+                                Emailer email = new Emailer();
+                                email.subject = "Missed Seed Notification";
+                                email.message = string.Concat("Url: ", sCurrAddress,
+                                    "\nLast Success Url: ", LastSuccessUrl,
+                                    "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
+                                    "\nUser Id: ", Globals.Profile.AgentID);
+                                email.Send();
+                            }
                         }
 
                         Globals.AddToHistory(splitAddress[0]);
@@ -310,16 +323,7 @@ namespace WindowsFormsApp1
 
                     }
                 }
-                else
-                {
-                    Emailer email = new Emailer();
-                    email.subject = "Invalid Url Notification";
-                    email.message = string.Concat("Url: ", sCurrAddress,
-                        "\nUser Id: ", Globals.Profile.AgentID,
-                        "\nUser name: ", Globals.Profile.Name);
-                    email.Send();
-                }
-              
+                            
                 
             });
         }
@@ -637,6 +641,15 @@ namespace WindowsFormsApp1
 
         private void LoadUrl(string url)
         {
+            if (!IsValidUrl(url))
+            {
+                Emailer email = new Emailer();
+                email.subject = "Invalid Url Notification";
+                email.message = string.Concat("Url: ", url,
+                    "\nUser Id: ", Globals.Profile.AgentID,
+                    "\nUser name: ", Globals.Profile.Name);
+                email.Send();
+            }
             Globals.chromeBrowser.Load(url);
         }
 

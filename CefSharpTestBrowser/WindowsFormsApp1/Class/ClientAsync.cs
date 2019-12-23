@@ -194,7 +194,7 @@ namespace SkydevCSTool.Class
                                         string file = Convert.ToBase64String(sbytes);
                                         Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
                                         // Finalize the handshake by switching to the server cache
-                                        Globals.Profile = new Profile { Name = data.Profile , AgentID = data.ProfileID };
+                                        Globals.Profile = new Profile { Name = data.Profile , AgentID = data.ProfileID,IsActive = true };
 
                                         Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                                         {
@@ -219,7 +219,7 @@ namespace SkydevCSTool.Class
                                     case "SWITCH":
                                        if (data.Profile == Globals.Profile.Name)
                                             break;
-                                        Globals.Profile = new Profile { Name = data.Profile, AgentID = data.ProfileID };
+                                        Globals.Profile = new Profile { Name = data.Profile, AgentID = data.ProfileID, IsActive = true };
                                         Byte[] bytes = Convert.FromBase64String(data.Message);
                                         string _temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name);
                                         if (!Directory.Exists(_temporary_cookies_directory))

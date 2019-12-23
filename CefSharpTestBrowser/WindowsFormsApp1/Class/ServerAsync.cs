@@ -190,7 +190,8 @@ namespace SkydevCSTool.Class
                                             RemoteAddress = handler.RemoteEndPoint.ToString(), 
                                             AgentID = data.ProfileID, 
                                             Preference = data.Preference,
-                                            Type = Client.Type
+                                            Type = Client.Type,
+                                            IsActive = true
                                         });
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
@@ -266,6 +267,9 @@ namespace SkydevCSTool.Class
                                             });
                                         }
                                         break;
+                                    case "USER_STATUS":
+                                        ChangeUserActivityStatus(data.ProfileID, data.Message == "INACTIVE" ? false : true);
+                                        break;  
                                 }
                             }
                             catch(Exception e)
@@ -390,6 +394,20 @@ namespace SkydevCSTool.Class
                 Globals.frmMain.SwitchCache();
                 Console.WriteLine("do switch");
             });
+        }
+
+        public static void ChangeUserActivityStatus(int profile_id, bool is_active)
+        {
+            Globals.Profiles.Where(m => m.AgentID == profile_id).FirstOrDefault().IsActive = is_active;
+            if (Globals.Profiles.Where(m => m.IsActive == true).Count() == 0)
+            {
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    Globals.frmMain.LoadOriginalProfile();
+                    var result = Globals.ShowMessageDialog(Globals.frmMain, "No group activity detected, all users has been disconnected.");
+                });
+                
+            }
         }
     }
 }

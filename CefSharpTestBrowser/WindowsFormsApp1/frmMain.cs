@@ -254,14 +254,15 @@ namespace WindowsFormsApp1
             }
 
             Console.WriteLine("INACTIVE TIME:" + WindowsActivityMonitor.GetInactiveTime());
-            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS)
+            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS && !Globals.IsBuddySystem())
             {
-                
+                _timer.Stop();
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
                         var result = Globals.ShowMessageDialog(this, "You have been idle for more than a minute. Your timer will reset.");
                         if (result == DialogResult.OK)
                         {
+                            _timer.Start();
                             Globals.room_duration = 0;
                             this.StartTime_BrowserChanged = DateTime.Now;
                             this.WindowState = FormWindowState.Maximized;

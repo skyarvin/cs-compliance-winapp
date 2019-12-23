@@ -15,7 +15,7 @@ namespace WindowsFormsApp1
         public frmLogin()
         {
             InitializeComponent();
-            lblVersion.Text = Globals.CurrentVersion();
+            lblVersion.Text = Globals.CurrentVersion();    
         }
         private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
         {

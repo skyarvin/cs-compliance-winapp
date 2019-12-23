@@ -11,7 +11,7 @@
     <ProjectGuid>{D9E5E89D-2CCE-4555-A950-AB2D61CA6537}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SkydevCSTool</RootNamespace>
-    <AssemblyName>COMPLIANCE_TOOL</AssemblyName>
+    <AssemblyName>COMPLIANCE_TOOL_QA</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -20,7 +20,7 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL\</PublishUrl>
+    <PublishUrl>\\10.10.10.20\apps\test_version\COMPLIANCE_TOOL_QA\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -30,12 +30,12 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <UpdateUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL\</UpdateUrl>
+    <UpdateUrl>\\10.10.10.20\apps\test_version\COMPLIANCE_TOOL_QA\</UpdateUrl>
     <ProductName>COMPLIANCE_TOOL</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.0.36</MinimumRequiredVersion>
-    <ApplicationRevision>37</ApplicationRevision>
-    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
+    <MinimumRequiredVersion>0.0.1.1</MinimumRequiredVersion>
+    <ApplicationRevision>2</ApplicationRevision>
+    <ApplicationVersion>0.0.1.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -121,6 +121,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Gma.System.MouseKeyHook, Version=5.6.130.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MouseKeyHook.5.6.0\lib\net40\Gma.System.MouseKeyHook.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -152,6 +155,7 @@
   <ItemGroup>
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
+    <Compile Include="Class\WindowsActivityMonitor.cs" />
     <Compile Include="frmQA.cs">
       <SubType>Form</SubType>
     </Compile>

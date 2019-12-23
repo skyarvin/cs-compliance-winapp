@@ -208,10 +208,10 @@ namespace WindowsFormsApp1
         public frmMain()
         {
             InitializeServer();
-            Globals.Profile = new Profile { 
-                Name = Globals.ComplianceAgent.profile , 
-                AgentID = Globals.ComplianceAgent.id, 
-                Type = Server.Type, 
+            Globals.Profile = new Profile {
+                Name = Globals.ComplianceAgent.profile ,
+                AgentID = Globals.ComplianceAgent.id,
+                Type = Server.Type,
                 Preference = Settings.Default.preference,
                 RemoteAddress = Globals.MyIP
             };
@@ -252,7 +252,27 @@ namespace WindowsFormsApp1
                     }
                 });
             }
+
+            Console.WriteLine("INACTIVE TIME:" + WindowsActivityMonitor.GetInactiveTime());
+            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS)
+            {
+                
+                    this.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        var result = Globals.ShowMessageDialog(this, "You have been idle for more than a minute. Your timer will reset.");
+                        if (result == DialogResult.OK)
+                        {
+                            Globals.room_duration = 0;
+                            this.StartTime_BrowserChanged = DateTime.Now;
+                            this.WindowState = FormWindowState.Maximized;
+
+                        }
+                    });
+                
+            }
+
             lblCountdown.Text = Globals.room_duration.ToString();
+
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
@@ -312,15 +332,15 @@ namespace WindowsFormsApp1
                 }
                 else
                 {
-                    Emailer email = new Emailer();
-                    email.subject = "Invalid Url Notification";
-                    email.message = string.Concat("Url: ", sCurrAddress,
-                        "\nUser Id: ", Globals.Profile.AgentID,
-                        "\nUser name: ", Globals.Profile.Name);
-                    email.Send();
-                }
-              
-                
+                        Emailer email = new Emailer();
+                        email.subject = "Invalid Url Notification";
+                        email.message = string.Concat("Url: ", sCurrAddress,
+                            "\nUser Id: ", Globals.Profile.AgentID,
+                            "\nUser name: ", Globals.Profile.Name);
+                        email.Send();
+                    }
+                    
+                         
             });
         }
 
@@ -359,7 +379,7 @@ namespace WindowsFormsApp1
             _timer.Interval = 1000;
             _timer.Start();
 
-            Globals.SaveToLogFile("Application START", (int)LogType.Activity);           
+            Globals.SaveToLogFile("Application START", (int)LogType.Activity);
             Globals.SaveActivity();
             bgWorkResync.RunWorkerAsync();
 

@@ -404,7 +404,9 @@ namespace SkydevCSTool.Class
                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
                     Globals.frmMain.LoadOriginalProfile();
+                    Globals.frmMain.ResetRoomDurationTimer();
                     var result = Globals.ShowMessageDialog(Globals.frmMain, "No group activity detected, all users has been disconnected.");
+
                 });
                 
             }

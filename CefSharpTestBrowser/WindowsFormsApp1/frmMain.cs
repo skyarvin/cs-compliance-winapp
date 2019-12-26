@@ -295,10 +295,7 @@ namespace WindowsFormsApp1
                         if (result == DialogResult.OK)
                         {
                             _timer.Start();
-                            Globals.room_duration = 0;
-                            this.StartTime_BrowserChanged = DateTime.Now;
-                            this.WindowState = FormWindowState.Maximized;
-
+                            this.ResetRoomDurationTimer();
                         }
                     });
                 }
@@ -308,6 +305,13 @@ namespace WindowsFormsApp1
 
             lblCountdown.Text = Globals.room_duration.ToString();
 
+        }
+
+        public void ResetRoomDurationTimer()
+        {
+            Globals.room_duration = 0;
+            this.StartTime_BrowserChanged = DateTime.Now;
+            this.WindowState = FormWindowState.Maximized;
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {

@@ -152,7 +152,8 @@ namespace WindowsFormsApp1
                     AgentID = Globals.ComplianceAgent.id,
                     Type = Server.Type,
                     Preference = Settings.Default.preference,
-                    RemoteAddress = Globals.MyIP
+                    RemoteAddress = Globals.MyIP,
+                    IsActive = true
                 };
                 Globals.max_room_duration = 48;
                 this.InvokeOnUiThreadIfRequired(() => SwitchCache());
@@ -190,7 +191,8 @@ namespace WindowsFormsApp1
                     AgentID = Globals.ComplianceAgent.id,
                     Type = Server.Type,
                     Preference = Settings.Default.preference,
-                    RemoteAddress = Globals.MyIP
+                    RemoteAddress = Globals.MyIP,
+                    IsActive = true
                 };
                 Globals.Profiles.Clear();
                 Globals.Profiles.Add(Globals.Profile);
@@ -208,12 +210,13 @@ namespace WindowsFormsApp1
         public frmMain()
         {
             InitializeServer();
-            Globals.Profile = new Profile { 
-                Name = Globals.ComplianceAgent.profile , 
-                AgentID = Globals.ComplianceAgent.id, 
-                Type = Server.Type, 
+            Globals.Profile = new Profile {
+                Name = Globals.ComplianceAgent.profile ,
+                AgentID = Globals.ComplianceAgent.id,
+                Type = Server.Type,
                 Preference = Settings.Default.preference,
-                RemoteAddress = Globals.MyIP
+                RemoteAddress = Globals.MyIP,
+                IsActive = true
             };
             Globals.Profiles.Add(Globals.Profile);
             InitializeComponent();
@@ -252,7 +255,63 @@ namespace WindowsFormsApp1
                     }
                 });
             }
+
+            Console.WriteLine("INACTIVE TIME:" + WindowsActivityMonitor.GetInactiveTime());
+            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS)
+            {
+
+                if (Globals.IsBuddySystem())
+                {
+                    // Set status to Inactive
+                    if (Globals.IsClient())
+                    {
+                        AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "USER_STATUS", ProfileID = Globals.ComplianceAgent.id, Message = "INACTIVE" });
+                    }
+                    else if (Globals.IsServer())
+                    {
+                        ServerAsync.ChangeUserActivityStatus(Globals.ComplianceAgent.id, false);
+                    }
+
+                    var result = Globals.ShowMessageDialog(this, "You have been idle for more than a minute.");
+                    // Go back being active as ( Client/ Server )
+                    if (result == DialogResult.OK)
+                    {
+                        //CHECK AGAIN TO ENSURE THAT CLIENT IS STILL CONNECTED TO SERVER. BECAUSE WERE NOT GUARANTEED THAT  IT IS STILL A CLIENT AT THIS POINT
+                        if (Globals.IsClient())
+                        {
+                            AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "USER_STATUS", ProfileID = Globals.ComplianceAgent.id, Message = "ACTIVE" });
+                        }else if (Globals.IsServer())
+                        {
+                            ServerAsync.ChangeUserActivityStatus(Globals.ComplianceAgent.id, true);
+                        }
+                    }
+                }
+                else
+                {
+                    _timer.Stop();
+                    this.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        var result = Globals.ShowMessageDialog(this, "You have been idle for more than a minute. Your timer will reset.");
+                        if (result == DialogResult.OK)
+                        {
+                            _timer.Start();
+                            this.ResetRoomDurationTimer();
+                        }
+                    });
+                }
+
+                
+            }
+
             lblCountdown.Text = Globals.room_duration.ToString();
+
+        }
+
+        public void ResetRoomDurationTimer()
+        {
+            Globals.room_duration = 0;
+            this.StartTime_BrowserChanged = DateTime.Now;
+            this.WindowState = FormWindowState.Maximized;
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
@@ -363,7 +422,7 @@ namespace WindowsFormsApp1
             _timer.Interval = 1000;
             _timer.Start();
 
-            Globals.SaveToLogFile("Application START", (int)LogType.Activity);           
+            Globals.SaveToLogFile("Application START", (int)LogType.Activity);
             Globals.SaveActivity();
             bgWorkResync.RunWorkerAsync();
 
@@ -703,37 +762,44 @@ namespace WindowsFormsApp1
             }
             else if (btn_text == "DISCONNECT")
             {
-                Globals.Profile = new Profile { 
-                    Name = Globals.ComplianceAgent.profile, 
-                    AgentID = Globals.ComplianceAgent.id,
-                    Type = Server.Type,
-                    Preference = Settings.Default.preference,
-                    RemoteAddress = Globals.MyIP
-                };
-                Globals.Profiles.Clear();
-                Globals.Profiles.Add(Globals.Profile);
-                Globals.max_room_duration = 48;
-                if (Globals.IsClient()) {
-                    //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
-                    Globals.Client.Dispose();
-                    Globals.Client.Close();
-                    Globals.Client = null;
-                }
-                else
-                {
-                    foreach (var handler in Globals.Connections)
-                    {
-                        handler.Dispose();
-                        handler.Close();
-                    }
-                    Globals.Connections = new List<Socket>();
-                    SwitchCache();
-                }
-                btnConnect.Text = "CONNECT";
-                pnlAction.Visible = false;
+                LoadOriginalProfile();
             }
             Globals.ApprovedAgents.Clear();
             Globals.PartnerAgents = "";
+        }
+        public void LoadOriginalProfile()
+        {
+            Globals.Profile = new Profile
+            {
+                Name = Globals.ComplianceAgent.profile,
+                AgentID = Globals.ComplianceAgent.id,
+                Type = Server.Type,
+                Preference = Settings.Default.preference,
+                RemoteAddress = Globals.MyIP,
+                IsActive = true
+            };
+            Globals.Profiles.Clear();
+            Globals.Profiles.Add(Globals.Profile);
+            Globals.max_room_duration = 48;
+            if (Globals.IsClient())
+            {
+                //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
+                Globals.Client.Dispose();
+                Globals.Client.Close();
+                Globals.Client = null;
+            }
+            else
+            {
+                foreach (var handler in Globals.Connections)
+                {
+                    handler.Dispose();
+                    handler.Close();
+                }
+                Globals.Connections = new List<Socket>();
+                SwitchCache();
+            }
+            btnConnect.Text = "CONNECT";
+            pnlAction.Visible = false;
         }
         public void SetBtnConnectText(string txt)
         {
@@ -753,7 +819,7 @@ namespace WindowsFormsApp1
             if (Globals.Profile.Name == sender.ToString())
                 return;
             Profile target_profile = Globals.Profiles.Find(p => p.Name == sender.ToString());
-            Globals.Profile = new Profile { Name = sender.ToString(), AgentID = target_profile != null ? target_profile.AgentID : 0 };
+            Globals.Profile = new Profile { Name = sender.ToString(), AgentID = target_profile != null ? target_profile.AgentID : 0, IsActive = true };
             foreach (var connection in Globals.Connections)
             {
                 string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");

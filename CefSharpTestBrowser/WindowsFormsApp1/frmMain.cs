@@ -334,7 +334,7 @@ namespace WindowsFormsApp1
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
                         //Emailer for missed seed
-                        if (sCurrAddress.Contains("seed_failure"))
+                        if (sCurrAddress.Contains("seed_failure") && LastSuccessUrl != "")
                         {
                             //Send to API
                             string[] urls = LastSuccessUrl.Split('/');
@@ -345,17 +345,20 @@ namespace WindowsFormsApp1
                                 seed.url = sCurrAddress;
                                 seed.Save();
                             }
-
-                            if (!Globals.IsBuddySystem())
+                            else
                             {
-                                Emailer email = new Emailer();
-                                email.subject = "Missed Seed Notification";
-                                email.message = string.Concat("Url: ", sCurrAddress,
-                                    "\nLast Success Url: ", LastSuccessUrl,
-                                    "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
-                                    "\nUser Id: ", Globals.Profile.AgentID);
-                                email.Send();
+                                if (!Globals.IsBuddySystem())
+                                {
+                                    Emailer email = new Emailer();
+                                    email.subject = "Missed Seed Notification";
+                                    email.message = string.Concat("Url: ", sCurrAddress,
+                                        "\nLast Success Url: ", LastSuccessUrl,
+                                        "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
+                                        "\nUser Id: ", Globals.Profile.AgentID);
+                                    email.Send();
+                                }
                             }
+                            LastSuccessUrl = "";
                         }
 
                         Globals.AddToHistory(splitAddress[0]);

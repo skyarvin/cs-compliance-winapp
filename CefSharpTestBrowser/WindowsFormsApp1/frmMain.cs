@@ -36,7 +36,7 @@ namespace WindowsFormsApp1
         private string LastSuccessUrl;
         private string LastSucessAction;
         private DateTime StartTime_BrowserChanged;
-        private DateTime StartTime_LastAction = DateTime.Now;
+        private DateTime? StartTime_LastAction = null;
         private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -334,8 +334,17 @@ namespace WindowsFormsApp1
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
                         //Emailer for missed seed
-                        if (sCurrAddress.Contains("seed_failure") && LastSuccessUrl != "")
+                        if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(LastSuccessUrl))
                         {
+                            Emailer email = new Emailer();
+                            email.subject = "Missed Seed Notification";
+                            email.message = string.Concat("Url: ", sCurrAddress,
+                                "\nLast Success Url: ", LastSuccessUrl,
+                                "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
+                                "\nUser Id: ", Globals.Profile.AgentID,
+                                "\nUsername: ", Globals.Profile.Name);
+                            email.Send();
+
                             //Send to API
                             string[] urls = LastSuccessUrl.Split('/');
                             if (sCurrAddress.Contains(urls[urls.Length - 2]))
@@ -344,21 +353,10 @@ namespace WindowsFormsApp1
                                 seed.log_id = Globals.LAST_SUCCESS_ID;
                                 seed.url = sCurrAddress;
                                 seed.Save();
+
+                                LastSuccessUrl = "";
                             }
-                            else
-                            {
-                                if (!Globals.IsBuddySystem())
-                                {
-                                    Emailer email = new Emailer();
-                                    email.subject = "Missed Seed Notification";
-                                    email.message = string.Concat("Url: ", sCurrAddress,
-                                        "\nLast Success Url: ", LastSuccessUrl,
-                                        "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
-                                        "\nUser Id: ", Globals.Profile.AgentID);
-                                    email.Send();
-                                }
-                            }
-                            LastSuccessUrl = "";
+
                         }
 
                         Globals.AddToHistory(splitAddress[0]);
@@ -515,8 +513,11 @@ namespace WindowsFormsApp1
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
 
-                var total_duration = (DateTime.Now - StartTime_LastAction).TotalSeconds;
-                if ((StartTime_LastAction - StartTime_BrowserChanged).TotalSeconds > 30)
+                if (!StartTime_LastAction.HasValue)
+                    StartTime_LastAction = StartTime_BrowserChanged;
+
+                var total_duration = (DateTime.Now - (DateTime)StartTime_LastAction).TotalSeconds;
+                if ((StartTime_BrowserChanged - (DateTime)StartTime_LastAction).TotalSeconds > 30)
                 {
                     total_duration = (DateTime.Now - StartTime_BrowserChanged).TotalSeconds;
                 }

@@ -336,14 +336,14 @@ namespace WindowsFormsApp1
                         //Emailer for missed seed
                         if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(LastSuccessUrl))
                         {
-                            Emailer email = new Emailer();
-                            email.subject = "Missed Seed Notification";
-                            email.message = string.Concat("Url: ", sCurrAddress,
-                                "\nLast Success Url: ", LastSuccessUrl,
-                                "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
-                                "\nUser Id: ", Globals.Profile.AgentID,
-                                "\nUsername: ", Globals.Profile.Name);
-                            email.Send();
+                            //Emailer email = new Emailer();
+                            //email.subject = "Missed Seed Notification";
+                            //email.message = string.Concat("Url: ", sCurrAddress,
+                            //    "\nLast Success Url: ", LastSuccessUrl,
+                            //    "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
+                            //    "\nUser Id: ", Globals.Profile.AgentID,
+                            //    "\nUsername: ", Globals.Profile.Name);
+                            //email.Send();
 
                             //Send to API
                             string[] urls = LastSuccessUrl.Split('/');

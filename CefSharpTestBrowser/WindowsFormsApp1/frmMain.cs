@@ -540,6 +540,7 @@ namespace WindowsFormsApp1
                     members = Globals.Profiles
                 };
 
+                StartTime_LastAction = DateTime.Now;
                 try
                 {
                     if (logData.url == LastSuccessUrl)
@@ -579,7 +580,6 @@ namespace WindowsFormsApp1
                     Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                     Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
                 }
-                StartTime_LastAction = DateTime.Now;
             });
         }
 

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Net.Sockets;
 using SkydevCSTool.Class;
 using System.Threading;
+using SkydevCSTool.Properties;
+using CefSharp.WinForms.Internals;
 
 namespace WindowsFormsApp1
 {
@@ -28,6 +30,7 @@ namespace WindowsFormsApp1
         public static string PartnerAgents = "";
         public static frmMain frmMain;
         public static frmQA FrmQA;
+        public static frmSetPreferences FrmSetPreferences = new frmSetPreferences();
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();
@@ -36,6 +39,7 @@ namespace WindowsFormsApp1
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;
         public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds 600
+        public static int NO_ACTIVITY_THRESHOLD_SECONDS = 60;
         public static DateTime _wentIdle;
         public static int _idleTicks;
         public static bool SKYPE_COMPLIANCE;
@@ -161,8 +165,9 @@ namespace WindowsFormsApp1
         {
             try
             {
+                Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 Globals.activity.agent_id = Globals.ComplianceAgent.id;
-                Globals.activity.work_date = Globals.ComplianceAgent.review_date;
+                Globals.activity.work_date = DateTime.Now.Date.ToString("yyyy-MM-dd"); //Globals.ComplianceAgent.review_date;
                 Globals.activity.Save();
             }
             catch (AggregateException e)
@@ -184,8 +189,15 @@ namespace WindowsFormsApp1
         {
             try
             {
-                Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                Globals.activity.Update();
+                if (Globals.activity.id.HasValue)
+                {
+                    Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    Globals.activity.Update();
+                }
+                else
+                {
+                    Globals.SaveActivity();
+                }
             }
             catch (AggregateException e)
             {
@@ -210,8 +222,44 @@ namespace WindowsFormsApp1
         {
             return Globals.Client != null;
         }
+        public static bool IsPreferenceSetupValid()
+        {
+            List<string> selected_preferences = Profiles.Select(m => m.Preference).ToList();
+            if (selected_preferences.Any(sp => sp.Contains("PT")) && selected_preferences.Any(sp => sp.Contains("CL")) && selected_preferences.Any(sp => sp.Contains("BO")))
+                return true;
 
+            return false;
+        }
 
+        public static string MissingPreference()
+        {
+            List<string> selected_preferences = Profiles.Select(m => m.Preference).ToList();
+            List<string> missing_preferences = new List<string>();
+            if (!selected_preferences.Any(sp => sp.Contains("PT")))
+                missing_preferences.Add("Photos");
+            if (!selected_preferences.Any(sp => sp.Contains("CL")))
+                missing_preferences.Add("Chatlog");
+            if (!selected_preferences.Any(sp => sp.Contains("BO")))
+                missing_preferences.Add("Bio");
+            return string.Join(", ", missing_preferences);
+        }
+
+        public static void BroadcastPreferenceChanges()
+        {
+            //Broadcast to server
+            Globals.Profiles.Where(m => m.AgentID == Globals.ComplianceAgent.id).FirstOrDefault().Preference = Settings.Default.preference;
+            Globals.PartnerAgents = ServerAsync.ListOfPartners();
+            if (Globals.IsServer())
+            {
+                ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+               
+           
+            }
+            else if (Globals.IsClient())
+            {
+                AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_PREFERENCE", ProfileID = Globals.ComplianceAgent.id, Preference = Settings.Default.preference });
+            }
+        }
     }
 
   

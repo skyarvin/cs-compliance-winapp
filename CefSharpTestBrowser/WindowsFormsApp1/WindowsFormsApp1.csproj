@@ -33,8 +33,8 @@
     <UpdateUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL\</UpdateUrl>
     <ProductName>COMPLIANCE_TOOL</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.0.31</MinimumRequiredVersion>
-    <ApplicationRevision>32</ApplicationRevision>
+    <MinimumRequiredVersion>2.0.0.47</MinimumRequiredVersion>
+    <ApplicationRevision>48</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -121,6 +121,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Gma.System.MouseKeyHook, Version=5.6.130.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MouseKeyHook.5.6.0\lib\net40\Gma.System.MouseKeyHook.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -152,6 +155,7 @@
   <ItemGroup>
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
+    <Compile Include="Class\WindowsActivityMonitor.cs" />
     <Compile Include="frmQA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -189,6 +193,12 @@
     <Compile Include="frmPopup.Designer.cs">
       <DependentUpon>frmPopup.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmSetPreferences.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSetPreferences.Designer.cs">
+      <DependentUpon>frmSetPreferences.cs</DependentUpon>
+    </Compile>
     <Compile Include="Handlers\ContextMenuHandler.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -215,6 +225,7 @@
     <Compile Include="Models\Emailer.cs" />
     <Compile Include="Models\ErrorLogs.cs" />
     <Compile Include="Models\Logger.cs" />
+    <Compile Include="Models\Seed.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -280,6 +291,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmQA.resx">
       <DependentUpon>frmQA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSetPreferences.resx">
+      <DependentUpon>frmSetPreferences.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

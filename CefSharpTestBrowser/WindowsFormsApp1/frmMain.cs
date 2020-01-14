@@ -26,6 +26,7 @@ using Newtonsoft.Json;
 using System.Windows.Input;
 using SkydevCSTool.Properties;
 using System.Security.Cryptography;
+using SkydevCSTool.Models;
 
 namespace WindowsFormsApp1
 {
@@ -33,7 +34,9 @@ namespace WindowsFormsApp1
     {
         private Timer _timer;
         private string LastSuccessUrl;
-        private DateTime StartTime;
+        private string LastSucessAction;
+        private DateTime StartTime_BrowserChanged;
+        private DateTime? StartTime_LastAction = null;
         private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -73,7 +76,7 @@ namespace WindowsFormsApp1
             }
 
             Cef.GetGlobalCookieManager().SetStoragePath(@path + "/SkydevCsTool/cookies/" + Globals.Profile.Name + "/", true);
-
+            Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
             requestContextSettings.PersistSessionCookies = true;
@@ -149,7 +152,8 @@ namespace WindowsFormsApp1
                     AgentID = Globals.ComplianceAgent.id,
                     Type = Server.Type,
                     Preference = Settings.Default.preference,
-                    RemoteAddress = Globals.MyIP
+                    RemoteAddress = Globals.MyIP,
+                    IsActive = true
                 };
                 Globals.max_room_duration = 48;
                 this.InvokeOnUiThreadIfRequired(() => SwitchCache());
@@ -187,7 +191,8 @@ namespace WindowsFormsApp1
                     AgentID = Globals.ComplianceAgent.id,
                     Type = Server.Type,
                     Preference = Settings.Default.preference,
-                    RemoteAddress = Globals.MyIP
+                    RemoteAddress = Globals.MyIP,
+                    IsActive = true
                 };
                 Globals.Profiles.Clear();
                 Globals.Profiles.Add(Globals.Profile);
@@ -205,12 +210,13 @@ namespace WindowsFormsApp1
         public frmMain()
         {
             InitializeServer();
-            Globals.Profile = new Profile { 
-                Name = Globals.ComplianceAgent.profile , 
-                AgentID = Globals.ComplianceAgent.id, 
-                Type = Server.Type, 
+            Globals.Profile = new Profile {
+                Name = Globals.ComplianceAgent.profile ,
+                AgentID = Globals.ComplianceAgent.id,
+                Type = Server.Type,
                 Preference = Settings.Default.preference,
-                RemoteAddress = Globals.MyIP
+                RemoteAddress = Globals.MyIP,
+                IsActive = true
             };
             Globals.Profiles.Add(Globals.Profile);
             InitializeComponent();
@@ -243,14 +249,69 @@ namespace WindowsFormsApp1
                     var result = Globals.ShowMessageDialog(this, "You have been Idle for too long");
                     if (result == DialogResult.OK)
                     {
-                        Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                         Globals.SaveActivity();
                         Globals._wentIdle = DateTime.MaxValue;
                         Globals._idleTicks = 0;
                     }
                 });
             }
+
+            Console.WriteLine("INACTIVE TIME:" + WindowsActivityMonitor.GetInactiveTime());
+            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS)
+            {
+
+                if (Globals.IsBuddySystem())
+                {
+                    // Set status to Inactive
+                    if (Globals.IsClient())
+                    {
+                        AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "USER_STATUS", ProfileID = Globals.ComplianceAgent.id, Message = "INACTIVE" });
+                    }
+                    else if (Globals.IsServer())
+                    {
+                        ServerAsync.ChangeUserActivityStatus(Globals.ComplianceAgent.id, false);
+                    }
+
+                    var result = Globals.ShowMessageDialog(this, "You have been idle for more than a minute.");
+                    // Go back being active as ( Client/ Server )
+                    if (result == DialogResult.OK)
+                    {
+                        //CHECK AGAIN TO ENSURE THAT CLIENT IS STILL CONNECTED TO SERVER. BECAUSE WERE NOT GUARANTEED THAT  IT IS STILL A CLIENT AT THIS POINT
+                        if (Globals.IsClient())
+                        {
+                            AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "USER_STATUS", ProfileID = Globals.ComplianceAgent.id, Message = "ACTIVE" });
+                        }else if (Globals.IsServer())
+                        {
+                            ServerAsync.ChangeUserActivityStatus(Globals.ComplianceAgent.id, true);
+                        }
+                    }
+                }
+                else
+                {
+                    _timer.Stop();
+                    this.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        var result = Globals.ShowMessageDialog(this, "You have been idle for more than a minute. Your timer will reset.");
+                        if (result == DialogResult.OK)
+                        {
+                            _timer.Start();
+                            this.ResetRoomDurationTimer();
+                        }
+                    });
+                }
+
+                
+            }
+
             lblCountdown.Text = Globals.room_duration.ToString();
+
+        }
+
+        public void ResetRoomDurationTimer()
+        {
+            Globals.room_duration = 0;
+            this.StartTime_BrowserChanged = DateTime.Now;
+            this.WindowState = FormWindowState.Maximized;
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
@@ -272,10 +333,36 @@ namespace WindowsFormsApp1
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
+                        //Emailer for missed seed
+                        if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(LastSuccessUrl))
+                        {
+                            //Emailer email = new Emailer();
+                            //email.subject = "Missed Seed Notification";
+                            //email.message = string.Concat("Url: ", sCurrAddress,
+                            //    "\nLast Success Url: ", LastSuccessUrl,
+                            //    "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
+                            //    "\nUser Id: ", Globals.Profile.AgentID,
+                            //    "\nUsername: ", Globals.Profile.Name);
+                            //email.Send();
+
+                            //Send to API
+                            string[] urls = LastSuccessUrl.Split('/');
+                            if (sCurrAddress.Contains(urls[urls.Length - 2]))
+                            {
+                                Seed seed = new Seed();
+                                seed.log_id = Globals.LAST_SUCCESS_ID;
+                                seed.url = sCurrAddress;
+                                seed.Save();
+
+                                LastSuccessUrl = "";
+                            }
+
+                        }
+
                         Globals.AddToHistory(splitAddress[0]);
                         Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                         Globals.CurrentUrl = splitAddress[0];
-                        StartTime = DateTime.Now;
+                        StartTime_BrowserChanged = DateTime.Now;
                         Globals.SKYPE_COMPLIANCE = false;
                         lblCountdown.Text = Globals.room_duration.ToString();
                         setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
@@ -296,6 +383,7 @@ namespace WindowsFormsApp1
 
                     }
                 }
+                            
                 
             });
         }
@@ -336,9 +424,7 @@ namespace WindowsFormsApp1
             _timer.Start();
 
             Globals.SaveToLogFile("Application START", (int)LogType.Activity);
-            Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             Globals.SaveActivity();
-
             bgWorkResync.RunWorkerAsync();
 
             this.Text += String.Concat(" ", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
@@ -395,14 +481,6 @@ namespace WindowsFormsApp1
 
         //    Find(true);
         //}
-        //private void LogoutToolStripMenuItem_Click(object sender, EventArgs e)
-        //{
-
-        //    Cef.GetGlobalCookieManager().DeleteCookies();
-        //    this.Close();
-
-        //}
-
 
         #endregion
 
@@ -435,24 +513,34 @@ namespace WindowsFormsApp1
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
 
+                if (!StartTime_LastAction.HasValue)
+                    StartTime_LastAction = StartTime_BrowserChanged;
+
+                var total_duration = (DateTime.Now - (DateTime)StartTime_LastAction).TotalSeconds;
+                if ((StartTime_BrowserChanged - (DateTime)StartTime_LastAction).TotalSeconds > 30)
+                {
+                    total_duration = (DateTime.Now - StartTime_BrowserChanged).TotalSeconds;
+                }
+
                 var logData = new Logger
                 {
                     url = Globals.CurrentUrl,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
                     remarks = String.Concat(violation, notes),
-                    duration = Convert.ToInt32((DateTime.Now - StartTime).TotalSeconds),
+                    duration = total_duration,
                     followers = followers,
                     sc = followers >= Globals.SC_THRESHOLD ? true : false,
                     rr = string.IsNullOrEmpty(reply) ? false : true,
-                    review_date = Globals.ComplianceAgent.review_date,
-                    workshift = Globals.ComplianceAgent.last_workshift,
+                    review_date = DateTime.Now.Date.ToString("yyyy-MM-dd"), //Globals.ComplianceAgent.review_date,
+                    workshift = "DS",
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
                     hash = HashMembers(),
                     members = Globals.Profiles
                 };
 
+                StartTime_LastAction = DateTime.Now;
                 try
                 {
                     if (Globals.CurrentUrl == LastSuccessUrl)
@@ -547,7 +635,7 @@ namespace WindowsFormsApp1
         private void UpdateWorkactivity_Tick(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(Globals.activity.start_time))
-            {
+            {                
                 Globals.UpdateActivity();
                 Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
@@ -562,6 +650,7 @@ namespace WindowsFormsApp1
             this.pnlBrowser.Controls.Clear();
             Globals.EnableTimer = false;
             var tempBrowser = Globals.chromeBrowser;
+            Globals.SaveToLogFile(string.Concat("Switch Cache: ", Globals.Profile.Name), (int)LogType.Action);
             InitializeChromium(Url.CB_COMPLIANCE_URL);
 
             Task.Factory.StartNew(() =>
@@ -611,6 +700,15 @@ namespace WindowsFormsApp1
 
         private void LoadUrl(string url)
         {
+            if (!IsValidUrl(url))
+            {
+                Emailer email = new Emailer();
+                email.subject = "Invalid Url Notification";
+                email.message = string.Concat("Url: ", url,
+                    "\nUser Id: ", Globals.Profile.AgentID,
+                    "\nUser name: ", Globals.Profile.Name);
+                email.Send();
+            }
             Globals.chromeBrowser.Load(url);
         }
 
@@ -664,37 +762,44 @@ namespace WindowsFormsApp1
             }
             else if (btn_text == "DISCONNECT")
             {
-                Globals.Profile = new Profile { 
-                    Name = Globals.ComplianceAgent.profile, 
-                    AgentID = Globals.ComplianceAgent.id,
-                    Type = Server.Type,
-                    Preference = Settings.Default.preference,
-                    RemoteAddress = Globals.MyIP
-                };
-                Globals.Profiles.Clear();
-                Globals.Profiles.Add(Globals.Profile);
-                Globals.max_room_duration = 48;
-                if (Globals.IsClient()) {
-                    //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
-                    Globals.Client.Dispose();
-                    Globals.Client.Close();
-                    Globals.Client = null;
-                }
-                else
-                {
-                    foreach (var handler in Globals.Connections)
-                    {
-                        handler.Dispose();
-                        handler.Close();
-                    }
-                    Globals.Connections = new List<Socket>();
-                    SwitchCache();
-                }
-                btnConnect.Text = "CONNECT";
-                pnlAction.Visible = false;
+                LoadOriginalProfile();
             }
             Globals.ApprovedAgents.Clear();
             Globals.PartnerAgents = "";
+        }
+        public void LoadOriginalProfile()
+        {
+            Globals.Profile = new Profile
+            {
+                Name = Globals.ComplianceAgent.profile,
+                AgentID = Globals.ComplianceAgent.id,
+                Type = Server.Type,
+                Preference = Settings.Default.preference,
+                RemoteAddress = Globals.MyIP,
+                IsActive = true
+            };
+            Globals.Profiles.Clear();
+            Globals.Profiles.Add(Globals.Profile);
+            Globals.max_room_duration = 48;
+            if (Globals.IsClient())
+            {
+                //TODO LOAD ORIGINAL PROFILE AFTER CLIENT DISCONNECT
+                Globals.Client.Dispose();
+                Globals.Client.Close();
+                Globals.Client = null;
+            }
+            else
+            {
+                foreach (var handler in Globals.Connections)
+                {
+                    handler.Dispose();
+                    handler.Close();
+                }
+                Globals.Connections = new List<Socket>();
+                SwitchCache();
+            }
+            btnConnect.Text = "CONNECT";
+            pnlAction.Visible = false;
         }
         public void SetBtnConnectText(string txt)
         {
@@ -714,7 +819,7 @@ namespace WindowsFormsApp1
             if (Globals.Profile.Name == sender.ToString())
                 return;
             Profile target_profile = Globals.Profiles.Find(p => p.Name == sender.ToString());
-            Globals.Profile = new Profile { Name = sender.ToString(), AgentID = target_profile != null ? target_profile.AgentID : 0 };
+            Globals.Profile = new Profile { Name = sender.ToString(), AgentID = target_profile != null ? target_profile.AgentID : 0, IsActive = true };
             foreach (var connection in Globals.Connections)
             {
                 string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
@@ -722,6 +827,7 @@ namespace WindowsFormsApp1
                 System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                 Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                 string file = Convert.ToBase64String(sbytes);
+                Globals.SaveToLogFile(string.Concat("Server command switch: ", Globals.Profile.Name, " ", Globals.Profile.AgentID), (int)LogType.Action);
                 ServerAsync.Send(connection, new PairCommand { Action = "SWITCH", Profile = Globals.Profile.Name, ProfileID = Globals.Profile.AgentID, Message = file });
             }
             SwitchCache();
@@ -905,6 +1011,12 @@ namespace WindowsFormsApp1
                 sb.Append(hash[i].ToString("X2"));
             }
             return sb.ToString();
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Cef.GetGlobalCookieManager().DeleteCookies();
+            this.Close();
         }
     }
 

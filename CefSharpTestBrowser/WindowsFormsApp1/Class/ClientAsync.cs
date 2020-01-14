@@ -194,7 +194,7 @@ namespace SkydevCSTool.Class
                                         string file = Convert.ToBase64String(sbytes);
                                         Send(client, new PairCommand { Action = "SAVE_CLIENT_CACHE", Message = file, Profile = Globals.ComplianceAgent.profile, ProfileID = Globals.ComplianceAgent.id });
                                         // Finalize the handshake by switching to the server cache
-                                        Globals.Profile = new Profile { Name = data.Profile , AgentID = data.ProfileID };
+                                        Globals.Profile = new Profile { Name = data.Profile , AgentID = data.ProfileID,IsActive = true };
 
                                         Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                                         {
@@ -206,6 +206,8 @@ namespace SkydevCSTool.Class
                                                 Preference = Settings.Default.preference
                                             });
                                             Globals.frmMain.SetBtnConnectText("DISCONNECT");
+
+                                          
                                         });
                                         break;
                                     // END HANDSHAKE BLOCK
@@ -217,13 +219,15 @@ namespace SkydevCSTool.Class
                                     case "SWITCH":
                                        if (data.Profile == Globals.Profile.Name)
                                             break;
-                                        Globals.Profile = new Profile { Name = data.Profile, AgentID = data.ProfileID };
+                                        Globals.Profile = new Profile { Name = data.Profile, AgentID = data.ProfileID, IsActive = true };
                                         Byte[] bytes = Convert.FromBase64String(data.Message);
                                         string _temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name);
                                         if (!Directory.Exists(_temporary_cookies_directory))
                                         {
                                             Directory.CreateDirectory(_temporary_cookies_directory);
                                         }
+
+                                        Globals.SaveToLogFile(string.Concat("Client switch: ", Globals.Profile.Name), (int)LogType.Action);
                                         string _path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
                                         File.WriteAllBytes(_path, bytes);
                                         Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
@@ -247,6 +251,24 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "PARTNER_LIST":
                                         Globals.Profiles = JsonConvert.DeserializeObject<List<Profile>>(data.Message);
+                                        if (!Globals.IsPreferenceSetupValid())
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if (Globals.FrmSetPreferences.Visible == false)
+                                                    Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+
+                                                Globals.FrmSetPreferences.lblMissingPref.Text = string.Concat("Missing Preference: ", Globals.MissingPreference());
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if (Globals.FrmSetPreferences.Visible == true)
+                                                    Globals.FrmSetPreferences.Close();
+                                            });
+                                        }
                                         break;
 
                                 }

@@ -35,8 +35,6 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.lblVersion = new System.Windows.Forms.Label();
             this.pnlFooter = new System.Windows.Forms.Panel();
-            this.workshift_list = new System.Windows.Forms.ComboBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbUtype = new System.Windows.Forms.ComboBox();
@@ -72,7 +70,7 @@
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogin.ForeColor = System.Drawing.Color.White;
-            this.btnLogin.Location = new System.Drawing.Point(31, 336);
+            this.btnLogin.Location = new System.Drawing.Point(31, 289);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(337, 39);
             this.btnLogin.TabIndex = 3;
@@ -87,7 +85,7 @@
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExit.ForeColor = System.Drawing.Color.White;
-            this.btnExit.Location = new System.Drawing.Point(31, 380);
+            this.btnExit.Location = new System.Drawing.Point(31, 333);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(337, 39);
             this.btnExit.TabIndex = 4;
@@ -110,38 +108,10 @@
             this.pnlFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
             this.pnlFooter.Controls.Add(this.lblVersion);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 431);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 400);
             this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Size = new System.Drawing.Size(396, 22);
             this.pnlFooter.TabIndex = 6;
-            // 
-            // workshift_list
-            // 
-            this.workshift_list.BackColor = System.Drawing.Color.White;
-            this.workshift_list.DisplayMember = "DS, MS, NS";
-            this.workshift_list.DropDownHeight = 130;
-            this.workshift_list.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.workshift_list.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.workshift_list.FormattingEnabled = true;
-            this.workshift_list.IntegralHeight = false;
-            this.workshift_list.ItemHeight = 21;
-            this.workshift_list.Location = new System.Drawing.Point(31, 235);
-            this.workshift_list.MaxDropDownItems = 3;
-            this.workshift_list.Name = "workshift_list";
-            this.workshift_list.Size = new System.Drawing.Size(337, 29);
-            this.workshift_list.TabIndex = 2;
-            this.workshift_list.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Workshift_list_KeyDown);
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label2.Location = new System.Drawing.Point(26, 208);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(92, 25);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "Workshift";
             // 
             // pbLogo
             // 
@@ -158,7 +128,7 @@
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.label3.Location = new System.Drawing.Point(26, 267);
+            this.label3.Location = new System.Drawing.Point(26, 220);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(94, 25);
             this.label3.TabIndex = 10;
@@ -177,7 +147,7 @@
             this.cmbUtype.Items.AddRange(new object[] {
             "Agent",
             "Customer Service QA"});
-            this.cmbUtype.Location = new System.Drawing.Point(31, 294);
+            this.cmbUtype.Location = new System.Drawing.Point(31, 247);
             this.cmbUtype.MaxDropDownItems = 3;
             this.cmbUtype.Name = "cmbUtype";
             this.cmbUtype.Size = new System.Drawing.Size(337, 29);
@@ -190,11 +160,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(396, 453);
+            this.ClientSize = new System.Drawing.Size(396, 422);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbUtype);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.workshift_list);
             this.Controls.Add(this.pnlFooter);
             this.Controls.Add(this.pbLogo);
             this.Controls.Add(this.btnExit);
@@ -227,8 +195,6 @@
         private System.Windows.Forms.Label lblVersion;
         private System.Windows.Forms.PictureBox pbLogo;
         private System.Windows.Forms.Panel pnlFooter;
-        private System.Windows.Forms.ComboBox workshift_list;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cmbUtype;
     }

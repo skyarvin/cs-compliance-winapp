@@ -190,7 +190,8 @@ namespace SkydevCSTool.Class
                                             RemoteAddress = handler.RemoteEndPoint.ToString(), 
                                             AgentID = data.ProfileID, 
                                             Preference = data.Preference,
-                                            Type = Client.Type
+                                            Type = Client.Type,
+                                            IsActive = true
                                         });
                                         Globals.frmMain.SetBtnConnectText("DISCONNECT");
                                         Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
@@ -200,6 +201,14 @@ namespace SkydevCSTool.Class
                                         SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count, Url = Globals.CurrentUrl });
                                         SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
                                         SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+                                        if (!Globals.IsPreferenceSetupValid())
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if(Globals.FrmSetPreferences.Visible == false)
+                                                    Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+                                            });
+                                        }
                                         break;
                                     case "REFRESH":
                                         Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
@@ -239,7 +248,28 @@ namespace SkydevCSTool.Class
                                         Globals.Profiles.Where(m => m.AgentID == data.ProfileID).FirstOrDefault().Preference = data.Preference;
                                         Globals.PartnerAgents = ServerAsync.ListOfPartners();
                                         ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+                                        if (!Globals.IsPreferenceSetupValid())
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if (Globals.FrmSetPreferences.Visible == false)
+                                                    Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+
+                                                Globals.FrmSetPreferences.lblMissingPref.Text = string.Concat("Missing Preference: ", Globals.MissingPreference());
+                                            });
+                                        }
+                                        else
+                                        {
+                                            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                                            {
+                                                if (Globals.FrmSetPreferences.Visible == true)
+                                                    Globals.FrmSetPreferences.Close();
+                                            });
+                                        }
                                         break;
+                                    case "USER_STATUS":
+                                        ChangeUserActivityStatus(data.ProfileID, data.Message == "INACTIVE" ? false : true);
+                                        break;  
                                 }
                             }
                             catch(Exception e)
@@ -364,6 +394,22 @@ namespace SkydevCSTool.Class
                 Globals.frmMain.SwitchCache();
                 Console.WriteLine("do switch");
             });
+        }
+
+        public static void ChangeUserActivityStatus(int profile_id, bool is_active)
+        {
+            Globals.Profiles.Where(m => m.AgentID == profile_id).FirstOrDefault().IsActive = is_active;
+            if (Globals.Profiles.Where(m => m.IsActive == true).Count() == 0)
+            {
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    Globals.frmMain.LoadOriginalProfile();
+                    Globals.frmMain.ResetRoomDurationTimer();
+                    var result = Globals.ShowMessageDialog(Globals.frmMain, "No group activity detected, all users has been disconnected.");
+
+                });
+                
+            }
         }
     }
 }

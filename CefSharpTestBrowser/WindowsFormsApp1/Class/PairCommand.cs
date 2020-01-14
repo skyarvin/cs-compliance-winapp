@@ -27,5 +27,6 @@ namespace SkydevCSTool.Class
         public int AgentID { get; set; }
         public string Type { get; set; }
         public string Preference { get; set; }
+        public bool IsActive { get; set; }
     }
 }

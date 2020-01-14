@@ -330,6 +330,15 @@ namespace WindowsFormsApp1
                 cmbURL.Text = sCurrAddress;
                 if (IsValidUrl(sCurrAddress))
                 {
+                    if (!IsComplianceUrl(sCurrAddress))
+                    {
+                        _timer.Stop();
+                        Globals.room_duration = 0;
+                    }
+                    else 
+                    {
+                        _timer.Start();
+                    }
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
@@ -421,7 +430,6 @@ namespace WindowsFormsApp1
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
             _timer.Interval = 1000;
-            _timer.Start();
 
             Globals.SaveToLogFile("Application START", (int)LogType.Activity);
             Globals.SaveActivity();
@@ -722,6 +730,14 @@ namespace WindowsFormsApp1
             if (url.Contains("chaturbate.com"))
                 return true;
         
+            return false;
+        }
+
+        private bool IsComplianceUrl(string url)
+        {
+            if (url.Contains("compliance"))
+                return true;
+
             return false;
         }
 

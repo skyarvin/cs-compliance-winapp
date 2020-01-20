@@ -33,7 +33,7 @@
     <UpdateUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL\</UpdateUrl>
     <ProductName>COMPLIANCE_TOOL</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.0.47</MinimumRequiredVersion>
+    <MinimumRequiredVersion>2.0.0.48</MinimumRequiredVersion>
     <ApplicationRevision>48</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>

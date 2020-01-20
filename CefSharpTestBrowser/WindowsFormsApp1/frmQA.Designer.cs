@@ -69,7 +69,7 @@
             this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlURL.Location = new System.Drawing.Point(0, 0);
             this.pnlURL.Name = "pnlURL";
-            this.pnlURL.Size = new System.Drawing.Size(438, 45);
+            this.pnlURL.Size = new System.Drawing.Size(399, 45);
             this.pnlURL.TabIndex = 2;
             // 
             // label1
@@ -90,7 +90,7 @@
             this.txtUrl.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.txtUrl.Location = new System.Drawing.Point(47, 11);
             this.txtUrl.Name = "txtUrl";
-            this.txtUrl.Size = new System.Drawing.Size(376, 25);
+            this.txtUrl.Size = new System.Drawing.Size(337, 25);
             this.txtUrl.TabIndex = 1;
             this.txtUrl.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtUrl_KeyPress);
             // 
@@ -102,9 +102,9 @@
             this.panel1.Controls.Add(this.label3);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(438, 0);
+            this.panel1.Location = new System.Drawing.Point(399, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(215, 45);
+            this.panel1.Size = new System.Drawing.Size(254, 45);
             this.panel1.TabIndex = 3;
             // 
             // lblChatEnd
@@ -114,7 +114,7 @@
             this.lblChatEnd.ForeColor = System.Drawing.Color.White;
             this.lblChatEnd.Location = new System.Drawing.Point(72, 23);
             this.lblChatEnd.Name = "lblChatEnd";
-            this.lblChatEnd.Size = new System.Drawing.Size(139, 22);
+            this.lblChatEnd.Size = new System.Drawing.Size(176, 22);
             this.lblChatEnd.TabIndex = 12;
             this.lblChatEnd.Text = "-";
             this.lblChatEnd.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -126,7 +126,7 @@
             this.lblChatStart.ForeColor = System.Drawing.Color.White;
             this.lblChatStart.Location = new System.Drawing.Point(72, 1);
             this.lblChatStart.Name = "lblChatStart";
-            this.lblChatStart.Size = new System.Drawing.Size(139, 22);
+            this.lblChatStart.Size = new System.Drawing.Size(176, 22);
             this.lblChatStart.TabIndex = 11;
             this.lblChatStart.Text = "-";
             this.lblChatStart.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

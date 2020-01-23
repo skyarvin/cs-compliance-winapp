@@ -26,6 +26,8 @@ namespace WindowsFormsApp1.Models
         public string last_chatlog { get; set; }
         public string last_photo { get; set; }
         public string hash { get; set; }
+        public string actual_start_time { get; set; }
+        public string actual_end_time { get; set; }
         public List<Profile> members { get; set; }
 
         public Logger Save()

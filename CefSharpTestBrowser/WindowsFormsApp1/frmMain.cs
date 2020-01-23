@@ -524,12 +524,15 @@ namespace WindowsFormsApp1
                 if (!StartTime_LastAction.HasValue)
                     StartTime_LastAction = StartTime_BrowserChanged;
 
+                var actual_start_time = StartTime_LastAction;
                 var total_duration = (DateTime.Now - (DateTime)StartTime_LastAction).TotalSeconds;
                 if ((StartTime_BrowserChanged - (DateTime)StartTime_LastAction).TotalSeconds > 30)
                 {
                     total_duration = (DateTime.Now - StartTime_BrowserChanged).TotalSeconds;
+                    actual_start_time = StartTime_BrowserChanged;
                 }
 
+                var actual_end_time =  DateTime.Now;
                 var logData = new Logger
                 {
                     url = Globals.CurrentUrl,
@@ -544,11 +547,14 @@ namespace WindowsFormsApp1
                     workshift = "DS",
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
+                    actual_start_time = actual_start_time.Value.ToString("yyyy-MM-dd HH:mm:sszzz"),
+                    actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:sszzz"),
                     hash = HashMembers(),
                     members = Globals.Profiles
                 };
 
-                StartTime_LastAction = DateTime.Now;
+                StartTime_LastAction = actual_end_time;
+
                 try
                 {
                     if (Globals.CurrentUrl == LastSuccessUrl)

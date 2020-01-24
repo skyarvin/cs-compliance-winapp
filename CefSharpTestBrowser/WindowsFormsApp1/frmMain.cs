@@ -502,6 +502,11 @@ namespace WindowsFormsApp1
                 string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
                 string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
                 string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+                string invalidator_chat;
+                if(!string.IsNullOrEmpty(reply))
+                {
+                    invalidator_chat = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#thread_container').outerHTML").Result.Result);
+                }
                 if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
                 if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
 

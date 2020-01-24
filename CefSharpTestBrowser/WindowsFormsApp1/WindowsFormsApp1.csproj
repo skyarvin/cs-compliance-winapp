@@ -103,10 +103,10 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>7ADAAF1FA81E656AFED035A104FCAE882A4F2ADC</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>647070B0261D5AB296B3643EED2215DDE0842039</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>WindowsFormsApp1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>WindowsFormsApp1_2_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
@@ -514,6 +514,7 @@
     <Content Include="v8_context_snapshot.bin">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="WindowsFormsApp1_2_TemporaryKey.pfx" />
     <None Include="WindowsFormsApp1_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

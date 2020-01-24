@@ -86,7 +86,7 @@ namespace SkydevCSTool.Class
                 // Signal that the connection has been made.  
                 connectDone.Set();
             }
-            catch (Exception e)
+            catch
             {
                 Globals.frmMain.ClientHandleSocketError("CON00");
                 connectDone.Set();
@@ -273,7 +273,7 @@ namespace SkydevCSTool.Class
 
                                 }
                             }
-                            catch (Exception ee)
+                            catch
                             {
                                 state.sb.Append(comm);
                             }

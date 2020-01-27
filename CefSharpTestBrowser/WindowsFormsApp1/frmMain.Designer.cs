@@ -33,7 +33,6 @@
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.pnlURL = new System.Windows.Forms.Panel();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlAction = new System.Windows.Forms.Panel();
             this.lblApproveCount = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
@@ -61,6 +60,9 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.knowledgeBaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -113,26 +115,6 @@
             this.pnlURL.Name = "pnlURL";
             this.pnlURL.Size = new System.Drawing.Size(278, 40);
             this.pnlURL.TabIndex = 14;
-            // 
-            // cmbURL
-            // 
-            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.cmbURL.ForeColor = System.Drawing.Color.White;
-            this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(7, 7);
-            this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(268, 25);
-            this.cmbURL.TabIndex = 8;
-            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
-            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
-            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
-            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
-            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
             // 
             // pnlAction
             // 
@@ -313,10 +295,11 @@
             // contextMenuStrip1
             // 
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.logoutToolStripMenuItem,
-            this.switchToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.switchToolStripMenuItem,
+            this.logoutToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 48);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(113, 70);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
             this.contextMenuStrip1.Opened += new System.EventHandler(this.ContextMenuStrip1_Opened);
             // 
@@ -418,6 +401,41 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.knowledgeBaseToolStripMenuItem});
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.helpToolStripMenuItem.Text = "Help";
+            // 
+            // knowledgeBaseToolStripMenuItem
+            // 
+            this.knowledgeBaseToolStripMenuItem.Name = "knowledgeBaseToolStripMenuItem";
+            this.knowledgeBaseToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.knowledgeBaseToolStripMenuItem.Text = "Knowledge Base";
+            this.knowledgeBaseToolStripMenuItem.Click += new System.EventHandler(this.knowledgeBaseToolStripMenuItem_Click);
+            // 
+            // cmbURL
+            // 
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(7, 7);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(268, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
+            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -482,6 +500,8 @@
         private System.Windows.Forms.ProgressBar pbProgress;
         private System.Windows.Forms.Panel pnlLoader;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem knowledgeBaseToolStripMenuItem;
     }
 }
 

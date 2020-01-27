@@ -1040,6 +1040,12 @@ namespace WindowsFormsApp1
             Cef.GetGlobalCookieManager().DeleteCookies();
             this.Close();
         }
+
+        private void knowledgeBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmPopup frmpop = new frmPopup(Url.KNOWLEDGE_BASE_URL);
+            frmpop.Show();
+        }
     }
 
 }

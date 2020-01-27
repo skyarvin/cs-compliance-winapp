@@ -525,10 +525,8 @@ namespace WindowsFormsApp1
                     StartTime_LastAction = StartTime_BrowserChanged;
 
                 var actual_start_time = StartTime_LastAction;
-                var total_duration = (DateTime.Now - (DateTime)StartTime_LastAction).TotalSeconds;
                 if ((StartTime_BrowserChanged - (DateTime)StartTime_LastAction).TotalSeconds > 30)
                 {
-                    total_duration = (DateTime.Now - StartTime_BrowserChanged).TotalSeconds;
                     actual_start_time = StartTime_BrowserChanged;
                 }
 
@@ -539,7 +537,6 @@ namespace WindowsFormsApp1
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
                     remarks = String.Concat(violation, notes),
-                    duration = total_duration,
                     followers = followers,
                     sc = followers >= Globals.SC_THRESHOLD ? true : false,
                     rr = string.IsNullOrEmpty(reply) ? false : true,
@@ -547,8 +544,8 @@ namespace WindowsFormsApp1
                     workshift = "DS",
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
-                    actual_start_time = actual_start_time.Value.ToString("yyyy-MM-dd HH:mm:sszzz"),
-                    actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:sszzz"),
+                    actual_start_time = actual_start_time.Value.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
+                    actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     hash = HashMembers(),
                     members = Globals.Profiles
                 };

@@ -10,6 +10,7 @@ namespace SkydevCSTool.Class
     {
         //##################SET TO FALSE WHEN DEPLOYING ON PRODUCTION #########################//
         public static bool DEBUG = false;
+        public static string KNOWLEDGE_BASE_URL = "http://bit.ly/sdsi-csqa-kb";
         //####################################################################################//
 
         // ## Production

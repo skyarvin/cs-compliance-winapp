@@ -148,10 +148,10 @@ namespace WindowsFormsApp1
             if (System.Deployment.Application.ApplicationDeployment.IsNetworkDeployed)
             {
                 System.Deployment.Application.ApplicationDeployment cd = System.Deployment.Application.ApplicationDeployment.CurrentDeployment;
-                return string.Concat("v.", cd.CurrentVersion.ToString());
+                return  cd.CurrentVersion.ToString();
             }
 
-            return "v.0.0.0.0";
+            return "0.0.0.0";
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>

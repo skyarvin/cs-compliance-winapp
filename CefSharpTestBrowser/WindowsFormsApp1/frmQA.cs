@@ -115,7 +115,7 @@ namespace WindowsFormsApp1
 
         private void frmQA_Load(object sender, EventArgs e)
         {
-            this.Text += String.Concat(" ", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
+            this.Text += String.Concat(" v.", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
         }
     }
     public class BoundObjectQA

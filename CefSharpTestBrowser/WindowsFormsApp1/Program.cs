@@ -37,7 +37,7 @@ namespace WindowsFormsApp1
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             string message = String.Concat(
-                "App Version: ", Globals.CurrentVersion(), "\n",
+                "App Version: v.", Globals.CurrentVersion(), "\n",
                 "IP Address: ", Globals.MyIP ?? "0.0.0.0", "\n",
                 "Profile: ", Settings.Default.email, "\n",
                 "Error: ", e.ExceptionObject.ToString(), "\n"

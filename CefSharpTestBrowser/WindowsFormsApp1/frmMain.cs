@@ -435,7 +435,7 @@ namespace WindowsFormsApp1
             Globals.SaveActivity();
             bgWorkResync.RunWorkerAsync();
 
-            this.Text += String.Concat(" ", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
+            this.Text += String.Concat(" v.", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

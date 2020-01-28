@@ -755,6 +755,7 @@ namespace WindowsFormsApp1
             panel4.BackColor = backcolor;
             pnlSplitter3.BackColor = backcolor;
             btnRefresh.BackColor = backcolor;
+            btnKb.BackColor = backcolor;
             pbImg.BackColor = backcolor;
             lblCountdown.BackColor = darkBackColor;
             lblCountdown.ForeColor = Color.White;
@@ -1038,7 +1039,7 @@ namespace WindowsFormsApp1
             this.Close();
         }
 
-        private void knowledgeBaseToolStripMenuItem_Click(object sender, EventArgs e)
+        private void btnKb_Click(object sender, EventArgs e)
         {
             frmPopup frmpop = new frmPopup(Url.KNOWLEDGE_BASE_URL);
             frmpop.Show();

@@ -543,7 +543,7 @@ namespace WindowsFormsApp1
                     remarks = String.Concat(violation, notes),
                     followers = followers,
                     sc = followers >= Globals.SC_THRESHOLD ? true : false,
-                    rr = string.IsNullOrEmpty(reply) ? false : true,
+                    rr = string.IsNullOrEmpty(reply.Trim()) ? false : true,
                     review_date = DateTime.Now.Date.ToString("yyyy-MM-dd"), //Globals.ComplianceAgent.review_date,
                     workshift = "DS",
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,

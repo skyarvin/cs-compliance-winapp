@@ -151,6 +151,11 @@ namespace WindowsFormsApp1
                 return  cd.CurrentVersion.ToString();
             }
 
+            if(Url.DEBUG)
+            {
+                return "999999";
+            }
+
             return "0.0.0.0";
         }
 

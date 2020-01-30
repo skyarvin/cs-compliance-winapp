@@ -551,8 +551,11 @@ namespace WindowsFormsApp1
                     actual_start_time = actual_start_time.Value.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     hash = HashMembers(),
-                    members = Globals.Profiles
+                    members = Globals.Profiles,
                 };
+
+                if (Globals.INTERNAL_RR.url == Globals.CurrentUrl && Globals.INTERNAL_RR.id != 0)
+                    logData.irr_id = Globals.INTERNAL_RR.id;
 
                 StartTime_LastAction = actual_end_time;
 
@@ -579,6 +582,8 @@ namespace WindowsFormsApp1
                         LastSuccessUrl = ""; //Clear last success
                     else
                         LastSuccessUrl = Globals.CurrentUrl;
+
+                    Globals.INTERNAL_RR = new InternalRequestReview();
                 }
                 catch (AggregateException e)
                 {

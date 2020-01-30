@@ -41,7 +41,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26507, "Log Viewer");
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26506, "Devtools");
-        model.AddItem((CefMenuCommand)26512, "Send Error Report");
+        model.AddItem((CefMenuCommand)26512, "Send Internal Request Review");
         model.AddItem((CefMenuCommand)26513, "Set Preference");
 
         //string defaultview = Settings.Default.preference;
@@ -128,7 +128,25 @@ public class MyCustomMenuHandler : IContextMenuHandler
             });
         }
 
-        // Return false should ignore the selected option of the user !
+        if (commandId == (CefMenuCommand)26512)
+        {
+            if (Globals.INTERNAL_RR.id != 0)
+            {
+                // MessageBox.Show("Already have pending request review!");
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    Globals.FrmInternalRequestReview.Show();
+                });
+                return false;
+            }
+
+            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+            {
+                Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
+            });
+        }
+
+            // Return false should ignore the selected option of the user !
         return false;
     }
 

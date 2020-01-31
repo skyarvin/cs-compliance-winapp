@@ -142,8 +142,10 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
-                Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
-                Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
+                //Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
+                Globals.FrmSendInternalRequestReview.Show(Globals.frmMain);
+                //if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)
+                //    Globals.FrmInternalRequestReview.Show();
             });
         }
 

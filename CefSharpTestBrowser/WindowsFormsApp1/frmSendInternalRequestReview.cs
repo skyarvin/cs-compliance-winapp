@@ -44,8 +44,10 @@ namespace WindowsFormsApp1
             var result = rr.Save();
             if (result != null) {
                 Globals.INTERNAL_RR = result;
+                //Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+                //this.DialogResult = DialogResult.OK;
                 Globals.FrmInternalRequestReview.Show();
-                this.DialogResult = DialogResult.OK;
+                this.Close();
             }
                 
         }

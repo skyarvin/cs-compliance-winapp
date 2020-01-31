@@ -596,7 +596,7 @@ namespace WindowsFormsApp1
                     Globals.INTERNAL_RR = new InternalRequestReview();
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
-                        Globals.FrmInternalRequestReview.Close();
+                        Globals.FrmInternalRequestReview.Hide();
                     });
                 }
                 catch (AggregateException e)

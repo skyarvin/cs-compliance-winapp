@@ -61,7 +61,7 @@ namespace WindowsFormsApp1
                         e.Cancel = true;
                     }
                     backgroundWorker1.CancelAsync();
-                    this.Close();
+                    this.Hide();
                     return;
                 }
                 var result = InternalRequestReview.Get(Globals.INTERNAL_RR.id);
@@ -125,7 +125,6 @@ namespace WindowsFormsApp1
         private void frmInternalRequestReview_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            this.Hide();
         }
 
         private void frmInternalRequestReview_Activated(object sender, EventArgs e)
@@ -143,7 +142,7 @@ namespace WindowsFormsApp1
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            this.Close();
+            this.Hide();
         }
     }
 }

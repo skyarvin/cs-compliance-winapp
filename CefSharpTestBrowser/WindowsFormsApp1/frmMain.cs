@@ -554,8 +554,16 @@ namespace WindowsFormsApp1
                     members = Globals.Profiles,
                 };
 
+                Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
                 if (Globals.INTERNAL_RR.url == logData.url && Globals.INTERNAL_RR.id != 0)
                     logData.irr_id = Globals.INTERNAL_RR.id;
+                else if(Globals.INTERNAL_RR.id > 0)
+                {
+                    Emailer email = new Emailer();
+                    email.subject = "IRR Error";
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR));
+                    email.Send();
+                }
 
                 StartTime_LastAction = actual_end_time;
 
@@ -584,6 +592,10 @@ namespace WindowsFormsApp1
                         LastSuccessUrl = Globals.CurrentUrl;
 
                     Globals.INTERNAL_RR = new InternalRequestReview();
+                    this.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        Globals.FrmInternalRequestReview.Close();
+                    });
                 }
                 catch (AggregateException e)
                 {

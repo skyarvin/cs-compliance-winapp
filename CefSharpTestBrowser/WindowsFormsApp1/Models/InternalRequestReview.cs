@@ -23,7 +23,7 @@ namespace SkydevCSTool.Models
 
         public InternalRequestReview Save()
         {
-            Globals.SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
+            Globals.SaveToLogFile(string.Concat("Save IRR: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
             using (var client = new HttpClient())
             {
                 var uri = string.Concat(Url.API_URL, "/irr/");

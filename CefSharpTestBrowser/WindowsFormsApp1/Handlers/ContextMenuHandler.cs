@@ -27,6 +27,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
             model.AddSeparator();
         }
 
+        model.AddItem((CefMenuCommand)26512, "Send Internal Request Review");
         model.AddItem((CefMenuCommand)26503, "Copy URL");
 
         // Add a new item to the list using the AddItem method of the model
@@ -41,7 +42,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26507, "Log Viewer");
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26506, "Devtools");
-        model.AddItem((CefMenuCommand)26512, "Send Internal Request Review");
         model.AddItem((CefMenuCommand)26513, "Set Preference");
 
         //string defaultview = Settings.Default.preference;

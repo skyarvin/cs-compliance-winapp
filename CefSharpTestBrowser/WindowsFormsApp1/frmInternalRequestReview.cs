@@ -60,6 +60,7 @@ namespace WindowsFormsApp1
                     {
                         e.Cancel = true;
                     }
+                    backgroundWorker1.CancelAsync();
                     this.Close();
                     return;
                 }
@@ -83,11 +84,19 @@ namespace WindowsFormsApp1
                     this.Height = 264;
                     this.BackColor = Color.Red;
                 }
+
                 lblUrl.Text = result.url;
                 txtNotes.Text = result.agent_notes;
                 txtReviewerNotes.Text = result.reviewer_notes;
 
                 Globals.INTERNAL_RR = result;
+
+                if (result.status != "New")
+                {
+                    backgroundWorker1.CancelAsync();
+                    if (!this.Visible)
+                        this.Show();
+                }
             });
 
             Thread.Sleep(2000);
@@ -116,7 +125,6 @@ namespace WindowsFormsApp1
         private void frmInternalRequestReview_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
-            backgroundWorker1.CancelAsync();
             this.Hide();
         }
 

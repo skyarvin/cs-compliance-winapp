@@ -33,7 +33,7 @@ namespace WindowsFormsApp1
             {
                 if (scrn.Bounds.Contains(this.Location))
                 {
-                    this.Location = new Point(scrn.Bounds.Right - this.Width, scrn.Bounds.Bottom - this.Height - 50);
+                    this.Location = new Point(scrn.Bounds.Right - this.Width -5, scrn.Bounds.Bottom - this.Height - 50);
                     return;
                 }
             }
@@ -56,6 +56,10 @@ namespace WindowsFormsApp1
                 if (Globals.INTERNAL_RR.id == 0)
                 {
                     reset_controls();
+                    if (helperBW.CancellationPending)
+                    {
+                        e.Cancel = true;
+                    }
                     this.Close();
                     return;
                 }
@@ -96,7 +100,8 @@ namespace WindowsFormsApp1
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-
+            if (e.Cancelled)
+                return;
             if (e.Error != null)
                 Globals.showMessage(e.Error.Message);
             else
@@ -128,5 +133,9 @@ namespace WindowsFormsApp1
 
         }
 
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

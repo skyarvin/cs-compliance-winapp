@@ -554,7 +554,7 @@ namespace WindowsFormsApp1
                     members = Globals.Profiles,
                 };
 
-                if (Globals.INTERNAL_RR.url == Globals.CurrentUrl && Globals.INTERNAL_RR.id != 0)
+                if (Globals.INTERNAL_RR.url == logData.url && Globals.INTERNAL_RR.id != 0)
                     logData.irr_id = Globals.INTERNAL_RR.id;
 
                 StartTime_LastAction = actual_end_time;

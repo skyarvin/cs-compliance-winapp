@@ -37,6 +37,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblUrl = new System.Windows.Forms.Label();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // label2
@@ -58,8 +59,10 @@
             this.txtNotes.Multiline = true;
             this.txtNotes.Name = "txtNotes";
             this.txtNotes.ReadOnly = true;
+            this.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtNotes.Size = new System.Drawing.Size(415, 100);
             this.txtNotes.TabIndex = 7;
+            this.txtNotes.TabStop = false;
             // 
             // label4
             // 
@@ -80,7 +83,8 @@
             this.txtReviewerNotes.Multiline = true;
             this.txtReviewerNotes.Name = "txtReviewerNotes";
             this.txtReviewerNotes.ReadOnly = true;
-            this.txtReviewerNotes.Size = new System.Drawing.Size(415, 88);
+            this.txtReviewerNotes.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.txtReviewerNotes.Size = new System.Drawing.Size(415, 91);
             this.txtReviewerNotes.TabIndex = 10;
             // 
             // lblStatus
@@ -133,13 +137,27 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.AutoSize = true;
+            this.linkLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkLabel1.LinkColor = System.Drawing.Color.LightCyan;
+            this.linkLabel1.Location = new System.Drawing.Point(481, 3);
+            this.linkLabel1.Name = "linkLabel1";
+            this.linkLabel1.Size = new System.Drawing.Size(17, 16);
+            this.linkLabel1.TabIndex = 14;
+            this.linkLabel1.TabStop = true;
+            this.linkLabel1.Text = "X";
+            this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // frmInternalRequestReview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.ClientSize = new System.Drawing.Size(501, 160);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(501, 264);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.txtReviewerNotes);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtNotes);
@@ -174,5 +192,6 @@
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.Label lblUrl;
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.Windows.Forms.LinkLabel linkLabel1;
     }
 }

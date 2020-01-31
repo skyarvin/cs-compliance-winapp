@@ -234,9 +234,9 @@ namespace SkydevCSTool
         {
             try
             {
-                Logger log = new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" };
-                if (log.id != 0)
-                    log.Update();
+                //Logger log = new Logger { id = Globals.LAST_SUCCESS_ID, action = "BN" };
+                //if (log.id != 0)
+                //    log.Update();
             }
             catch (AggregateException e)
             {

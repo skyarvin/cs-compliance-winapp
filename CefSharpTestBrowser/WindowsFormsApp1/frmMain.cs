@@ -447,7 +447,9 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
             Globals.UpdateActivity();
             Globals.EnableTimer = false;
-            Application.Exit();
+            
+            Environment.Exit(Environment.ExitCode);
+            //Application.Exit();
         }
 
         private void BtnRefresh_Click(object sender, EventArgs e)

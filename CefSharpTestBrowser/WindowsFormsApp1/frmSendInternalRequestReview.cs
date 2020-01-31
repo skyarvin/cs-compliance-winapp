@@ -29,9 +29,11 @@ namespace WindowsFormsApp1
 
         private void btnSendRR_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtNotes.Text.Trim()))
+            if (string.IsNullOrEmpty(txtNotes.Text.Trim())) {
                 MessageBox.Show("Notes cannot be empty!");
-
+                return;
+            }
+             
             InternalRequestReview rr = new InternalRequestReview()
             {
                 url = Globals.CurrentUrl,
@@ -42,8 +44,8 @@ namespace WindowsFormsApp1
             var result = rr.Save();
             if (result != null) {
                 Globals.INTERNAL_RR = result;
-                this.DialogResult = DialogResult.OK;
                 Globals.FrmInternalRequestReview.Show();
+                this.DialogResult = DialogResult.OK;
             }
                 
         }

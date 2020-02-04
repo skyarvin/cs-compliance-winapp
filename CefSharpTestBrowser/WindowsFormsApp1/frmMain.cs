@@ -373,6 +373,9 @@ namespace WindowsFormsApp1
                             if (Globals.INTERNAL_RR != null) {
                                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                                 {
+                                    if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+                                        Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+                                    StartbgWorkIRR();
                                     Globals.FrmInternalRequestReview.Show();
                                 });
                             }
@@ -606,9 +609,12 @@ namespace WindowsFormsApp1
                     Globals.INTERNAL_RR = new InternalRequestReview();
                     Settings.Default.irr_id = Globals.INTERNAL_RR.id;
                     Settings.Default.Save();
+                    if (bgWorkIRR.IsBusy)
+                        bgWorkIRR.CancelAsync();
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
-                        Globals.FrmInternalRequestReview.Hide();
+                        if(Globals.FrmInternalRequestReview != null)
+                            Globals.FrmInternalRequestReview.Close();
                     });
                 }
                 catch (AggregateException e)
@@ -1078,6 +1084,56 @@ namespace WindowsFormsApp1
         {
             frmPopup frmpop = new frmPopup(Url.KNOWLEDGE_BASE_URL);
             frmpop.Show();
+        }
+
+        public void StartbgWorkIRR()
+        {
+            bgWorkIRR.RunWorkerAsync();
+        }
+        private void bgWorkIRR_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker helperBW = sender as BackgroundWorker;
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (Globals.INTERNAL_RR.id == 0)
+                {
+                    if (helperBW.CancellationPending)
+                    {
+                        e.Cancel = true;
+                    }
+                    if(Globals.FrmInternalRequestReview != null)
+                        Globals.FrmInternalRequestReview.Close();
+                    bgWorkIRR.CancelAsync();
+                    return;
+                }
+
+                if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+                    Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+
+                Globals.FrmInternalRequestReview.update_info();
+                if (Globals.INTERNAL_RR.status != "New")
+                {
+                    bgWorkIRR.CancelAsync();
+                    Globals.FrmInternalRequestReview.Show();
+                }
+            });
+
+            Thread.Sleep(2000);
+            Console.WriteLine("Umaandar");
+            if (helperBW.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void bgWorkIRR_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                return;
+            if (e.Error != null)
+                Globals.showMessage(e.Error.Message);
+            else
+                bgWorkIRR.RunWorkerAsync();
         }
     }
 

@@ -45,6 +45,9 @@
             this.pnlSplitter3 = new System.Windows.Forms.Panel();
             this.btnConnect = new System.Windows.Forms.Button();
             this.pnlSplitter2 = new System.Windows.Forms.Panel();
+            this.pnlLoader = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.btnKb = new System.Windows.Forms.Button();
             this.pnlUser = new System.Windows.Forms.Panel();
             this.lblProfile = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
@@ -52,9 +55,6 @@
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.switchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.logoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pnlLoader = new System.Windows.Forms.Panel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.btnKb = new System.Windows.Forms.Button();
             this.pnlSplitter = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
             this.txtSearch = new System.Windows.Forms.TextBox();
@@ -62,15 +62,16 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
+            this.bgWorkIRR = new System.ComponentModel.BackgroundWorker();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
             this.pnlAction.SuspendLayout();
+            this.pnlLoader.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.pnlUser.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
-            this.pnlLoader.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -260,6 +261,44 @@
             this.pnlSplitter2.Size = new System.Drawing.Size(1, 40);
             this.pnlSplitter2.TabIndex = 11;
             // 
+            // pnlLoader
+            // 
+            this.pnlLoader.BackColor = System.Drawing.Color.Transparent;
+            this.pnlLoader.Controls.Add(this.pictureBox1);
+            this.pnlLoader.Dock = System.Windows.Forms.DockStyle.Left;
+            this.pnlLoader.Location = new System.Drawing.Point(0, 0);
+            this.pnlLoader.Name = "pnlLoader";
+            this.pnlLoader.Size = new System.Drawing.Size(35, 40);
+            this.pnlLoader.TabIndex = 15;
+            this.pnlLoader.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::SkydevCSTool.Properties.Resources.loader;
+            this.pictureBox1.Location = new System.Drawing.Point(5, 7);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(24, 25);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 9;
+            this.pictureBox1.TabStop = false;
+            // 
+            // btnKb
+            // 
+            this.btnKb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnKb.BackgroundImage = global::SkydevCSTool.Properties.Resources.kb_icon;
+            this.btnKb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnKb.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnKb.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnKb.FlatAppearance.BorderSize = 0;
+            this.btnKb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnKb.ImageKey = "(none)";
+            this.btnKb.Location = new System.Drawing.Point(649, 0);
+            this.btnKb.Name = "btnKb";
+            this.btnKb.Size = new System.Drawing.Size(49, 40);
+            this.btnKb.TabIndex = 16;
+            this.btnKb.UseVisualStyleBackColor = false;
+            this.btnKb.Click += new System.EventHandler(this.btnKb_Click);
+            // 
             // pnlUser
             // 
             this.pnlUser.Controls.Add(this.lblProfile);
@@ -336,44 +375,6 @@
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
-            // pnlLoader
-            // 
-            this.pnlLoader.BackColor = System.Drawing.Color.Transparent;
-            this.pnlLoader.Controls.Add(this.pictureBox1);
-            this.pnlLoader.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlLoader.Location = new System.Drawing.Point(0, 0);
-            this.pnlLoader.Name = "pnlLoader";
-            this.pnlLoader.Size = new System.Drawing.Size(35, 40);
-            this.pnlLoader.TabIndex = 15;
-            this.pnlLoader.Visible = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::SkydevCSTool.Properties.Resources.loader;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 7);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(24, 25);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
-            // 
-            // btnKb
-            // 
-            this.btnKb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnKb.BackgroundImage = global::SkydevCSTool.Properties.Resources.kb_icon;
-            this.btnKb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnKb.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnKb.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnKb.FlatAppearance.BorderSize = 0;
-            this.btnKb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnKb.ImageKey = "(none)";
-            this.btnKb.Location = new System.Drawing.Point(649, 0);
-            this.btnKb.Name = "btnKb";
-            this.btnKb.Size = new System.Drawing.Size(49, 40);
-            this.btnKb.TabIndex = 16;
-            this.btnKb.UseVisualStyleBackColor = false;
-            this.btnKb.Click += new System.EventHandler(this.btnKb_Click);
-            // 
             // pnlSplitter
             // 
             this.pnlSplitter.BackColor = System.Drawing.Color.White;
@@ -437,6 +438,12 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
+            // bgWorkIRR
+            // 
+            this.bgWorkIRR.WorkerSupportsCancellation = true;
+            this.bgWorkIRR.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkIRR_DoWork);
+            this.bgWorkIRR.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkIRR_RunWorkerCompleted);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,11 +465,11 @@
             this.pnlURL.ResumeLayout(false);
             this.pnlAction.ResumeLayout(false);
             this.pnlAction.PerformLayout();
+            this.pnlLoader.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.pnlUser.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pbImg)).EndInit();
             this.contextMenuStrip1.ResumeLayout(false);
-            this.pnlLoader.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
@@ -502,6 +509,7 @@
         private System.Windows.Forms.Panel pnlLoader;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnKb;
+        private System.ComponentModel.BackgroundWorker bgWorkIRR;
     }
 }
 

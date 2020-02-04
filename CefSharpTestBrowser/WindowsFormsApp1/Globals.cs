@@ -32,7 +32,7 @@ namespace WindowsFormsApp1
         public static frmQA FrmQA;
         public static frmSetPreferences FrmSetPreferences = new frmSetPreferences();
         public static frmSendInternalRequestReview FrmSendInternalRequestReview = new frmSendInternalRequestReview();
-        public static frmInternalRequestReview FrmInternalRequestReview = new frmInternalRequestReview();
+        public static frmInternalRequestReview FrmInternalRequestReview;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();

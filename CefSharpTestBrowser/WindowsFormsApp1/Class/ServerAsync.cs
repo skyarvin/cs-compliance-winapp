@@ -269,7 +269,12 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "USER_STATUS":
                                         ChangeUserActivityStatus(data.ProfileID, data.Message == "INACTIVE" ? false : true);
-                                        break;  
+                                        break;
+                                    case "IRR":
+                                        Globals.INTERNAL_RR.id = Convert.ToInt32(data.Message);
+                                        Globals.INTERNAL_RR.url = data.Url;
+                                        ServerAsync.SendToAll(new PairCommand { Action = "IRR", Message = data.Message, Url = data.Url });
+                                        break;
                                 }
                             }
                             catch(Exception e)

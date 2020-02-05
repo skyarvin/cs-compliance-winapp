@@ -47,6 +47,17 @@ namespace WindowsFormsApp1
                 Settings.Default.irr_id = Globals.INTERNAL_RR.id;
                 Settings.Default.Save();
                 Globals.frmMain.StartbgWorkIRR();
+
+                //Broadcast if in buddy system
+                if (Globals.IsServer())
+                {
+                    ServerAsync.SendToAll(new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.INTERNAL_RR.url });
+                }
+                else if (Globals.IsClient())
+                {
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.INTERNAL_RR.url });
+                }
+
                 this.DialogResult = DialogResult.OK;
             }
         }

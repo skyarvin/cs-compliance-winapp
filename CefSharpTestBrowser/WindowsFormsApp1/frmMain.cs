@@ -1088,6 +1088,8 @@ namespace WindowsFormsApp1
 
         public void StartbgWorkIRR()
         {
+            if (bgWorkIRR.IsBusy)
+                return;
             bgWorkIRR.RunWorkerAsync();
         }
         private void bgWorkIRR_DoWork(object sender, DoWorkEventArgs e)

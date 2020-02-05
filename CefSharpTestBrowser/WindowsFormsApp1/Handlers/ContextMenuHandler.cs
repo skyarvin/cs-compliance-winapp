@@ -132,15 +132,17 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             if (Globals.INTERNAL_RR.id != 0)
             {
-                // MessageBox.Show("Already have pending request review!");
-                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                if (Globals.INTERNAL_RR.url == Globals.CurrentUrl)
                 {
-                    if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                        Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                    Globals.FrmInternalRequestReview.update_info();
-                    Globals.FrmInternalRequestReview.Show();
-                });
-                return false;
+                    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+                            Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+                        Globals.FrmInternalRequestReview.update_info();
+                        Globals.FrmInternalRequestReview.Show();
+                    });
+                    return false;
+                }
             }
 
             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>

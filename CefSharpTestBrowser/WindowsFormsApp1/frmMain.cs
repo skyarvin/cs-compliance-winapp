@@ -571,7 +571,7 @@ namespace WindowsFormsApp1
 
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
                 if (Globals.INTERNAL_RR.url == logData.url && Globals.INTERNAL_RR.id != 0)
-                    logData.irr_id = Globals.INTERNAL_RR.id;
+                    logData.irs_id = Globals.INTERNAL_RR.id;
                 else if(Globals.INTERNAL_RR.id > 0)
                 {
                     Emailer email = new Emailer();

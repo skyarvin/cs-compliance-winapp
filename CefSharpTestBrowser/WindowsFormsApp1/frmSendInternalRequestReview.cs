@@ -51,11 +51,11 @@ namespace WindowsFormsApp1
                 //Broadcast if in buddy system
                 if (Globals.IsServer())
                 {
-                    ServerAsync.SendToAll(new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.INTERNAL_RR.url });
+                    ServerAsync.SendToAll(new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.CurrentUrl });
                 }
                 else if (Globals.IsClient())
                 {
-                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.INTERNAL_RR.url });
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.CurrentUrl });
                 }
 
                 this.DialogResult = DialogResult.OK;

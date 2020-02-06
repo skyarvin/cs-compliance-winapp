@@ -23,10 +23,10 @@ namespace SkydevCSTool.Models
 
         public InternalRequestReview Save()
         {
-            Globals.SaveToLogFile(string.Concat("Save IRR: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
+            Globals.SaveToLogFile(string.Concat("Save IRS: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
             using (var client = new HttpClient())
             {
-                var uri = string.Concat(Url.API_URL, "/irr/");
+                var uri = string.Concat(Url.API_URL, "/irs/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
@@ -53,7 +53,7 @@ namespace SkydevCSTool.Models
             using (var client = new HttpClient())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/irr/", rr_id);
+                var uri = string.Concat(Url.API_URL, "/irs/", rr_id);
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

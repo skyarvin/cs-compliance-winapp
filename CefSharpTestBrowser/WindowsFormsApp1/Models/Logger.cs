@@ -29,7 +29,7 @@ namespace WindowsFormsApp1.Models
         public string actual_start_time { get; set; }
         public string actual_end_time { get; set; }
         public List<Profile> members { get; set; }
-        public int? irr_id { get; set; }
+        public int? irs_id { get; set; }
 
         public Logger Save()
         {

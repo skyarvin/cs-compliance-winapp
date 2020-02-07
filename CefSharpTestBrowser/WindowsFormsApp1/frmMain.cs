@@ -1113,7 +1113,7 @@ namespace WindowsFormsApp1
                     Globals.FrmInternalRequestReview = new frmInternalRequestReview();
 
                 Globals.FrmInternalRequestReview.update_info();
-                if (Globals.INTERNAL_RR.status != "New")
+                if (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing")
                 {
                     bgWorkIRR.CancelAsync();
                     Globals.FrmInternalRequestReview.Show();

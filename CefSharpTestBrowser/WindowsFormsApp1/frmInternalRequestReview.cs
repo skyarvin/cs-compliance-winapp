@@ -71,6 +71,11 @@ namespace WindowsFormsApp1
                 this.Height = 264;
                 this.BackColor = Color.Red;
             }
+            if (result.status == "Processing")
+            {
+                this.BackColor = Color.FromArgb(230, 126, 34);
+                this.Height = 160;
+            }
 
             lblUrl.Text = result.url;
             txtNotes.Text = result.agent_notes;

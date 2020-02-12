@@ -35,8 +35,8 @@ namespace WindowsFormsApp1
         private Timer _timer;
         private string LastSuccessUrl;
         private string LastSucessAction;
-        private DateTime StartTime_BrowserChanged;
-        private DateTime? StartTime_LastAction = null;
+        public  DateTime StartTime_BrowserChanged;
+        public   DateTime? StartTime_LastAction = null;
         private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -257,7 +257,7 @@ namespace WindowsFormsApp1
             }
 
             Console.WriteLine("INACTIVE TIME:" + WindowsActivityMonitor.GetInactiveTime());
-            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS)
+            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS && Globals.INTERNAL_RR.id == 0)
             {
 
                 if (Globals.IsBuddySystem())

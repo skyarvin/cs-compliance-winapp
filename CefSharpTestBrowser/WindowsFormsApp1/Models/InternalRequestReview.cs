@@ -19,6 +19,7 @@ namespace SkydevCSTool.Models
         public string status { get; set; }
         public string reviewer_notes { get; set; }
         public string updated_at { get; set; }
+        public int duration { get; set; }
 
 
         public InternalRequestReview Save()

@@ -33,12 +33,18 @@ namespace WindowsFormsApp1
                 MessageBox.Show("Notes cannot be empty!");
                 return;
             }
-             
+
+            var start_time = Globals.frmMain.StartTime_LastAction;
+            if (start_time == null) {
+                start_time = Globals.frmMain.StartTime_BrowserChanged;
+            }
+
             InternalRequestReview rr = new InternalRequestReview()
             {
                 url = Globals.CurrentUrl,
                 agent_id = Globals.Profile.AgentID,
-                agent_notes = txtNotes.Text
+                agent_notes = txtNotes.Text,
+                duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds)
             };
 
             var result = rr.Save();

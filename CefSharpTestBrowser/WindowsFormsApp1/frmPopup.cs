@@ -10,6 +10,7 @@ namespace SkydevCSTool
     public partial class frmPopup : Form
     {
         public string url { get; set; }
+        private bool isBrowserInitialized = false;
 
         public frmPopup(string url)
         {
@@ -22,11 +23,15 @@ namespace SkydevCSTool
             Globals.chromePopup.FindHandler = new FindHandler(this);
             Globals.chromePopup.FrameLoadEnd += new EventHandler<FrameLoadEndEventArgs>(OnFrameLoadEnd);
             Globals.chromePopup.FrameLoadStart += new EventHandler<FrameLoadStartEventArgs>(onFrameLoadStart);
+            Globals.chromePopup.IsBrowserInitializedChanged += new EventHandler<IsBrowserInitializedChangedEventArgs>(OnIsBrowserInitiazedChanged);
            this.Text = url;
             
           
         }
-
+        private void OnIsBrowserInitiazedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
+        {
+            isBrowserInitialized = e.IsBrowserInitialized;
+        }
         public void UpdateTextSearchCount(int matchcount,int index)
         {
            this.InvokeOnUiThreadIfRequired(() => {
@@ -114,7 +119,8 @@ namespace SkydevCSTool
         }
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
-           
+            if (!isBrowserInitialized)
+                return;
             if (string.IsNullOrEmpty(txtSearch.Text.Trim()))
             {
                 lblFindCount.Text = "";
@@ -128,6 +134,8 @@ namespace SkydevCSTool
 
         private void txtSearch_KeyDown(object sender, KeyEventArgs e)
         {
+            if (!isBrowserInitialized)
+                return;
             if (e.KeyCode == Keys.Escape)
             {
                 hideSearchPanel();
@@ -162,16 +170,22 @@ namespace SkydevCSTool
 
         private void btnPrev_Click(object sender, EventArgs e)
         {
+            if (!isBrowserInitialized)
+                return;
             Globals.chromePopup.Find(0, txtSearch.Text, false, false, false);
         }
 
         private void btnNxt_Click(object sender, EventArgs e)
         {
+            if (!isBrowserInitialized)
+                return;
             Globals.chromePopup.Find(0, txtSearch.Text, true, false, false);
         }
 
         private void pnlSearch_VisibleChanged(object sender, EventArgs e)
         {
+            if (!isBrowserInitialized)
+                return;
             if (pnlSearch.Visible)
             {
                 txtSearch.SelectAll();

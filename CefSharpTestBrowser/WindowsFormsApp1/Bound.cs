@@ -217,7 +217,12 @@ namespace SkydevCSTool
 
         public void DisableForceHide()
         {
-            Globals.ForceHideComliance = false;
+            if (Globals.room_duration < Globals.max_room_duration)
+            {
+                Globals.frmMain.ShowKB();
+                return;
+            }
+                Globals.ForceHideComliance = false;
             browser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
         }
 

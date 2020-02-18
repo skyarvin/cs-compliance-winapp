@@ -1026,6 +1026,10 @@ namespace WindowsFormsApp1
         {
             if (e.KeyCode == (Keys.F1))
             {
+                if (Globals.room_duration < Globals.max_room_duration) {
+                    ShowKB();
+                    return;
+                }
                 Globals.ForceHideComliance = false;
                 Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
                 
@@ -1082,10 +1086,18 @@ namespace WindowsFormsApp1
 
         private void btnKb_Click(object sender, EventArgs e)
         {
-            frmPopup frmpop = new frmPopup(Url.KNOWLEDGE_BASE_URL);
-            frmpop.Show();
+            ShowKB();
         }
 
+        public void ShowKB()
+        {
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                frmPopup frmpop = new frmPopup(Url.KNOWLEDGE_BASE_URL);
+                frmpop.Show();
+            });
+              
+        }
         public void StartbgWorkIRR()
         {
             if (bgWorkIRR.IsBusy)

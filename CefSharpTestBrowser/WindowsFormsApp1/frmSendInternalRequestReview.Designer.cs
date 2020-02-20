@@ -33,13 +33,15 @@
             this.lblUrl = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.txtNotes = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.cmbViolation = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // btnSendRR
             // 
             this.btnSendRR.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
             this.btnSendRR.ForeColor = System.Drawing.Color.White;
-            this.btnSendRR.Location = new System.Drawing.Point(446, 181);
+            this.btnSendRR.Location = new System.Drawing.Point(475, 234);
             this.btnSendRR.Name = "btnSendRR";
             this.btnSendRR.Size = new System.Drawing.Size(101, 29);
             this.btnSendRR.TabIndex = 1;
@@ -62,9 +64,9 @@
             // 
             this.lblUrl.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUrl.ForeColor = System.Drawing.Color.White;
-            this.lblUrl.Location = new System.Drawing.Point(71, 25);
+            this.lblUrl.Location = new System.Drawing.Point(109, 25);
             this.lblUrl.Name = "lblUrl";
-            this.lblUrl.Size = new System.Drawing.Size(498, 29);
+            this.lblUrl.Size = new System.Drawing.Size(467, 29);
             this.lblUrl.TabIndex = 5;
             this.lblUrl.Text = "http://localhost:8080/cb/compliance/show/?id=1580348097#photos";
             this.lblUrl.UseCompatibleTextRendering = true;
@@ -73,7 +75,7 @@
             // 
             this.label2.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.label2.ForeColor = System.Drawing.Color.White;
-            this.label2.Location = new System.Drawing.Point(12, 57);
+            this.label2.Location = new System.Drawing.Point(12, 104);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(61, 29);
             this.label2.TabIndex = 6;
@@ -83,19 +85,45 @@
             // txtNotes
             // 
             this.txtNotes.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.txtNotes.Location = new System.Drawing.Point(80, 65);
+            this.txtNotes.Location = new System.Drawing.Point(109, 104);
             this.txtNotes.Multiline = true;
             this.txtNotes.Name = "txtNotes";
             this.txtNotes.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtNotes.Size = new System.Drawing.Size(467, 110);
             this.txtNotes.TabIndex = 7;
             // 
+            // label4
+            // 
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 14.25F);
+            this.label4.ForeColor = System.Drawing.Color.White;
+            this.label4.Location = new System.Drawing.Point(12, 54);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(91, 29);
+            this.label4.TabIndex = 22;
+            this.label4.Text = "Violation:";
+            this.label4.UseCompatibleTextRendering = true;
+            // 
+            // cmbViolation
+            // 
+            this.cmbViolation.AllowDrop = true;
+            this.cmbViolation.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.cmbViolation.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.cmbViolation.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbViolation.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbViolation.FormattingEnabled = true;
+            this.cmbViolation.Location = new System.Drawing.Point(109, 57);
+            this.cmbViolation.Name = "cmbViolation";
+            this.cmbViolation.Size = new System.Drawing.Size(467, 25);
+            this.cmbViolation.TabIndex = 21;
+            // 
             // frmSendInternalRequestReview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.ClientSize = new System.Drawing.Size(582, 229);
+            this.ClientSize = new System.Drawing.Size(592, 277);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.cmbViolation);
             this.Controls.Add(this.txtNotes);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblUrl);
@@ -120,5 +148,7 @@
         public System.Windows.Forms.Label lblUrl;
         public System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtNotes;
+        public System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox cmbViolation;
     }
 }

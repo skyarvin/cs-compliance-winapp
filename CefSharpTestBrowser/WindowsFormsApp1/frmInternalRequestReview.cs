@@ -26,7 +26,7 @@ namespace WindowsFormsApp1
         private void frmInternalRequestReview_Load(object sender, EventArgs e)
         {
             //height 501, 264
-           
+
         }
         private void frmInternalRequestReview_SizeChanged(object sender, EventArgs e)
         {
@@ -34,7 +34,7 @@ namespace WindowsFormsApp1
             {
                 if (scrn.Bounds.Contains(this.Location))
                 {
-                    this.Location = new Point(scrn.Bounds.Right - this.Width -5, scrn.Bounds.Bottom - this.Height - 50);
+                    this.Location = new Point(scrn.Bounds.Right - this.Width - 5, scrn.Bounds.Bottom - this.Height - 50);
                     return;
                 }
             }
@@ -46,7 +46,7 @@ namespace WindowsFormsApp1
             lblUrl.Text = "-";
             txtNotes.Text = "";
             txtReviewerNotes.Text = "";
-            this.Height = 160;
+            this.Height = 186;
         }
 
         public void update_info()
@@ -57,27 +57,28 @@ namespace WindowsFormsApp1
             {
                 this.BackColor = Color.Gray;
                 lblStatus.Text = "PENDING";
-                this.Height = 160;
+                this.Height = 186;
             }
 
             if (result.status == "Approved")
             {
-                this.Height = 264;
+                this.Height = 291;
                 this.BackColor = Color.Green;
             }
 
             if (result.status == "Denied")
             {
-                this.Height = 264;
+                this.Height = 291;
                 this.BackColor = Color.Red;
             }
             if (result.status == "Processing")
             {
                 this.BackColor = Color.FromArgb(230, 126, 34);
-                this.Height = 160;
+                this.Height = 186;
             }
 
             lblUrl.Text = result.url;
+            lblViolation.Text = result.violation_long_name;
             txtNotes.Text = result.agent_notes;
             txtReviewerNotes.Text = result.reviewer_notes;
 

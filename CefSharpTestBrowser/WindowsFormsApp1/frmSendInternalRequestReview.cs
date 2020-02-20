@@ -21,21 +21,36 @@ namespace WindowsFormsApp1
             InitializeComponent();
         }
 
+
         private void frmSendInternalRequestReview_Load(object sender, EventArgs e)
         {
             txtNotes.Text = "";
             lblUrl.Text = Globals.CurrentUrl;
+            cmbViolation.DataSource = new BindingSource(InternalRequestReview.violations, null);
+            cmbViolation.DisplayMember = "Value";
+            cmbViolation.ValueMember = "Key";
+            cmbViolation.Text = "";
         }
 
         private void btnSendRR_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(txtNotes.Text.Trim())) {
+            if (string.IsNullOrEmpty(cmbViolation.Text.Trim()))
+            {
+                MessageBox.Show("Violation cannot be empty!");
+                cmbViolation.Focus();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(txtNotes.Text.Trim()))
+            {
                 MessageBox.Show("Notes cannot be empty!");
+                txtNotes.Focus();
                 return;
             }
 
             var start_time = Globals.frmMain.StartTime_LastAction;
-            if (start_time == null) {
+            if (start_time == null)
+            {
                 start_time = Globals.frmMain.StartTime_BrowserChanged;
             }
 
@@ -44,11 +59,13 @@ namespace WindowsFormsApp1
                 url = Globals.CurrentUrl,
                 agent_id = Globals.Profile.AgentID,
                 agent_notes = txtNotes.Text,
-                duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds)
+                duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds),
+                violation = cmbViolation.SelectedValue.ToString()
             };
 
             var result = rr.Save();
-            if (result != null) {
+            if (result != null)
+            {
                 Globals.INTERNAL_RR = result;
                 Settings.Default.irr_id = Globals.INTERNAL_RR.id;
                 Settings.Default.Save();

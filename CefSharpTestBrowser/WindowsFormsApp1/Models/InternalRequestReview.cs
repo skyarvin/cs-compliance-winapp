@@ -20,6 +20,46 @@ namespace SkydevCSTool.Models
         public string reviewer_notes { get; set; }
         public string updated_at { get; set; }
         public int duration { get; set; }
+        public string violation { get; set; }
+        public static Dictionary<String, String> violations = new Dictionary<String, String>
+        {
+                {"", "" },
+                {"BST", "Beastiality" },
+                {"GTS","Goatse" },
+                {"NST","Incest" },
+                {"NON","No Nudity" },
+                {"PPB","Pee, Poo, Blood" },
+                {"UOC","With Nudity -- Underage on cam" },
+                {"COC","Child On Cam" },
+                {"FST","Fisting" },
+                {"AHB","Abusive or Harmful Behavior" },
+                {"AOP","Asking for offline payments" },
+                {"BPP","Broadcasting in Public Places" },
+                {"BMV","Broadcasting from a moving vehicle" },
+                {"BSU","Do not Broadcast in Service Uniforms" },
+                {"IOT","Inserting things other than proper sex toys" },
+                {"EXD", "Intoxicated -- excessive drinking even if over 21" },
+                {"EID","Intoxicated -- excessive or illegal drugs on cam" },
+                {"OLT","Overly large toys" },
+                {"SPV","Showing photos / videos of others is not allowed" },
+                {"STV","Showing television / movies / videogames on cam is not allowed" },
+                {"SYM","Skype, Yahoo Messenger" },
+                {"SOC","Sleeping on Camera" },
+                {"BAC","Broadcasting away from cam" },
+                {"IDM","ID Missing" },
+                {"SOR","Spammer/Recording" },
+                {"RR","Request Review" },
+
+        };
+        public string violation_long_name
+        {
+            get
+            { 
+                if(!String.IsNullOrEmpty(violation) && violations.ContainsKey(violation))
+                    return violations[violation];
+                return "";
+            }
+        }
 
 
         public InternalRequestReview Save()

@@ -1127,19 +1127,26 @@ namespace WindowsFormsApp1
                 Globals.FrmInternalRequestReview.update_info();
                 if (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing")
                 {
+                    showRequestReviewAndIdMissing();
                     bgWorkIRR.CancelAsync();
                     Globals.FrmInternalRequestReview.Show();
                 }
             });
 
             Thread.Sleep(2000);
-            Console.WriteLine("Umaandar");
             if (helperBW.CancellationPending)
             {
                 e.Cancel = true;
             }
         }
 
+        public void showRequestReviewAndIdMissing()
+        {
+            if (Globals.INTERNAL_RR.id != 0 && Globals.INTERNAL_RR.url == Globals.CurrentUrl && isBrowserInitialized && (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing"))
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'block'; });");
+            else
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'none'; });");
+        }
         private void bgWorkIRR_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)

@@ -29,7 +29,7 @@ namespace SkydevCSTool
 
             if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && e.Url.Contains("/compliance/show"))
             {
-                
+
                 browser.ExecuteScriptAsync(
                 "function sleep(ms) {" +
                     "return new Promise(resolve => setTimeout(resolve, ms));" +
@@ -153,6 +153,7 @@ namespace SkydevCSTool
             browser.EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
                     var urlParams = new URLSearchParams(window.location.search);
+                    document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'none'; });
                     if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
                         function qa_chatlog_highlight(){
                             waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
@@ -186,6 +187,7 @@ namespace SkydevCSTool
                     {
                         bound.saveAsBounce();
                     }
+                    bound.checkToShowRRIM();
                 });
             ");
 
@@ -339,6 +341,10 @@ namespace SkydevCSTool
         public void TriggerClear()
         {
             Globals.frmMain.ButtonClearClick();
+        }
+        public void CheckToShowRRIM()
+        {
+            Globals.frmMain.showRequestReviewAndIdMissing();
         }
 
         public class HtmlItemClickedEventArgs : EventArgs

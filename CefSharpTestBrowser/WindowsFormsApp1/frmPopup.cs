@@ -11,40 +11,40 @@ namespace SkydevCSTool
     {
         public string url { get; set; }
         private bool isBrowserInitialized = false;
-
+        private ChromiumWebBrowser chromePopUp;
         public frmPopup(string url)
         {
-            Globals.chromePopup = new ChromiumWebBrowser(url);
-            this.Controls.Add(Globals.chromePopup);
-            Globals.chromePopup.Dock = DockStyle.Fill;
+            chromePopUp = new ChromiumWebBrowser(url);
+            this.Controls.Add(chromePopUp);
+            chromePopUp.Dock = DockStyle.Fill;
             InitializeComponent();
             var obj = new BoundObjectPopUp(this);
-            Globals.chromePopup.RegisterJsObject("bound", obj);
-            Globals.chromePopup.FindHandler = new FindHandler(this);
-            Globals.chromePopup.FrameLoadEnd += new EventHandler<FrameLoadEndEventArgs>(OnFrameLoadEnd);
-            Globals.chromePopup.FrameLoadStart += new EventHandler<FrameLoadStartEventArgs>(onFrameLoadStart);
-            Globals.chromePopup.IsBrowserInitializedChanged += new EventHandler<IsBrowserInitializedChangedEventArgs>(OnIsBrowserInitiazedChanged);
-           this.Text = url;
-            
-          
+            chromePopUp.RegisterJsObject("bound", obj);
+            chromePopUp.FindHandler = new FindHandler(this);
+            chromePopUp.FrameLoadEnd += new EventHandler<FrameLoadEndEventArgs>(OnFrameLoadEnd);
+            chromePopUp.FrameLoadStart += new EventHandler<FrameLoadStartEventArgs>(onFrameLoadStart);
+            chromePopUp.IsBrowserInitializedChanged += new EventHandler<IsBrowserInitializedChangedEventArgs>(OnIsBrowserInitiazedChanged);
+            this.Text = url;
+
         }
         private void OnIsBrowserInitiazedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
         {
             isBrowserInitialized = e.IsBrowserInitialized;
+            Console.WriteLine(String.Concat("Initialize: ", isBrowserInitialized));
         }
-        public void UpdateTextSearchCount(int matchcount,int index)
+        public void UpdateTextSearchCount(int matchcount, int index)
         {
-           this.InvokeOnUiThreadIfRequired(() => {
-               if (matchcount == 0 && index == 0)
-               {
-                   lblFindCount.Visible = false;
-                   return;
-               }
-               lblFindCount.Visible = true;
-               lblFindCount.Text = String.Concat(index.ToString(),"/", matchcount.ToString());
+            this.InvokeOnUiThreadIfRequired(() => {
+                if (matchcount == 0 && index == 0)
+                {
+                    lblFindCount.Visible = false;
+                    return;
+                }
+                lblFindCount.Visible = true;
+                lblFindCount.Text = String.Concat(index.ToString(), "/", matchcount.ToString());
             });
         }
-        public void Find() 
+        public void Find()
         {
             this.InvokeOnUiThreadIfRequired(() => {
                 pnlSearch.BringToFront();
@@ -67,10 +67,10 @@ namespace SkydevCSTool
             {
                 this.Focus();
             });
-          
+
             if (e.Frame.IsMain)
             {
-                Globals.chromePopup.EvaluateScriptAsync(@"
+                chromePopUp.EvaluateScriptAsync(@"
                    var zoomLevel = 1;
                     window.addEventListener('wheel', function(e) {
                         if (e.deltaY < 0) {
@@ -109,7 +109,7 @@ namespace SkydevCSTool
 
         public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
-            
+
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -124,11 +124,11 @@ namespace SkydevCSTool
             if (string.IsNullOrEmpty(txtSearch.Text.Trim()))
             {
                 lblFindCount.Text = "";
-                Globals.chromePopup.StopFinding(true);
+                chromePopUp.StopFinding(true);
             }
-            else 
+            else
             {
-                Globals.chromePopup.Find(0, txtSearch.Text, true, false, false);
+                chromePopUp.Find(0, txtSearch.Text, true, false, false);
             }
         }
 
@@ -142,7 +142,7 @@ namespace SkydevCSTool
             }
             if (e.KeyCode == Keys.Enter)
             {
-                Globals.chromePopup.Find(0, txtSearch.Text, true, false, false);
+                chromePopUp.Find(0, txtSearch.Text, true, false, false);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -159,7 +159,7 @@ namespace SkydevCSTool
 
         private void frmPopup_Load(object sender, EventArgs e)
         {
-            Globals.chromePopup.BringToFront();
+            chromePopUp.BringToFront();
             this.Focus();
         }
 
@@ -172,14 +172,14 @@ namespace SkydevCSTool
         {
             if (!isBrowserInitialized)
                 return;
-            Globals.chromePopup.Find(0, txtSearch.Text, false, false, false);
+            chromePopUp.Find(0, txtSearch.Text, false, false, false);
         }
 
         private void btnNxt_Click(object sender, EventArgs e)
         {
             if (!isBrowserInitialized)
                 return;
-            Globals.chromePopup.Find(0, txtSearch.Text, true, false, false);
+            chromePopUp.Find(0, txtSearch.Text, true, false, false);
         }
 
         private void pnlSearch_VisibleChanged(object sender, EventArgs e)
@@ -190,15 +190,15 @@ namespace SkydevCSTool
             {
                 txtSearch.SelectAll();
             }
-            else 
+            else
             {
-                Globals.chromePopup.StopFinding(true);
+                chromePopUp.StopFinding(true);
             }
         }
     }
     public class BoundObjectPopUp
     {
-        private frmPopup  frmpopup;
+        private frmPopup frmpopup;
         public BoundObjectPopUp(frmPopup fp) { frmpopup = fp; }
         public void TriggerFind()
         {

@@ -23,6 +23,15 @@ namespace WindowsFormsApp1.Models
                 return email_[0];
             }
         }
+        public bool is_trainee
+        {
+            get
+            {
+                if (!String.IsNullOrEmpty(role) && role.ToUpper().Contains("TRAINEE"))
+                    return true;
+                return false;
+            }
+        }
         public static Agent Get(string email)
         {
             using (var client = new HttpClient())

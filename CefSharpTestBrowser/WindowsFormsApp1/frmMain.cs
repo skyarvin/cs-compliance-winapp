@@ -567,8 +567,8 @@ namespace WindowsFormsApp1
                     actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     hash = HashMembers(),
                     members = Globals.Profiles,
+                    is_trainee = Globals.ComplianceAgent.is_trainee
                 };
-
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
                 if (Globals.INTERNAL_RR.url == logData.url && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;

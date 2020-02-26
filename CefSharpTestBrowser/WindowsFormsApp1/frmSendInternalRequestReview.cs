@@ -60,9 +60,10 @@ namespace WindowsFormsApp1
                 agent_id = Globals.Profile.AgentID,
                 agent_notes = txtNotes.Text,
                 duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds),
-                violation = cmbViolation.SelectedValue.ToString()
+                violation = cmbViolation.SelectedValue.ToString(),
+                 is_trainee = Globals.ComplianceAgent.is_trainee
             };
-
+               
             var result = rr.Save();
             if (result != null)
             {

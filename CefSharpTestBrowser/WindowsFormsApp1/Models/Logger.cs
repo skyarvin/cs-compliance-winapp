@@ -30,6 +30,7 @@ namespace WindowsFormsApp1.Models
         public string actual_end_time { get; set; }
         public List<Profile> members { get; set; }
         public int? irs_id { get; set; }
+        public bool is_trainee { get; set; }
 
         public Logger Save()
         {

@@ -1142,7 +1142,7 @@ namespace WindowsFormsApp1
 
         public void showRequestReviewAndIdMissing()
         {
-            if (Globals.INTERNAL_RR.id != 0 && Globals.INTERNAL_RR.url == Globals.CurrentUrl && isBrowserInitialized && (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing"))
+            if (Globals.INTERNAL_RR.id != 0 && ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername( Globals.CurrentUrl) && isBrowserInitialized && (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing"))
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'block'; });");
             else
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'none'; });");
@@ -1156,6 +1156,21 @@ namespace WindowsFormsApp1
             else
                 bgWorkIRR.RunWorkerAsync();
         }
+        private string ExtractUsername(string url_)
+        {
+            if (string.IsNullOrEmpty(url_))
+                return "";
+            try
+            {
+                var splitAddress = url_.Split('/');
+                return splitAddress[5];
+            }
+            catch {
+                return "";
+            }
+
+        }
+
     }
 
 }

@@ -153,6 +153,15 @@ namespace SkydevCSTool
                         document.getElementById(`identificationproblem_button`).style.display = `none`;
                         bound.checkToShowRRIM();
                     }
+
+                    function cacheBuster()
+                    {
+                        var timestamp = new Date();
+                        var img_list = document.querySelectorAll('#id_image');
+                        for (let item of img_list) {
+                            item.src = item.src+'&'+timestamp.getTime();
+                        }
+                    }
                 ";
 
             browser.EvaluateScriptAsync(submit_script);
@@ -195,6 +204,7 @@ namespace SkydevCSTool
                     }
                     
                     waitUntil(`#request_review_button`,5000).then((el) => hideRRIM(), (err) => console.log(`rr not found`));
+                    waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
             ");
 

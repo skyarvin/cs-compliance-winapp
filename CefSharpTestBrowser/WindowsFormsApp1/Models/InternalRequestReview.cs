@@ -21,6 +21,7 @@ namespace SkydevCSTool.Models
         public string updated_at { get; set; }
         public int duration { get; set; }
         public string violation { get; set; }
+        public bool is_trainee { get; set; }
         public static Dictionary<String, String> violations = new Dictionary<String, String>
         {
                 {"", "" },
@@ -94,7 +95,9 @@ namespace SkydevCSTool.Models
             using (var client = new HttpClient())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/irs/", rr_id);
+                var uri = string.Concat(Url.API_URL, "/irs/", rr_id, "/");
+                if (Globals.ComplianceAgent.is_trainee)
+                    uri = string.Concat(uri, "?is_trainee=True");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

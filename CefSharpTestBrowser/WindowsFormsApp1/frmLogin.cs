@@ -52,6 +52,10 @@ namespace WindowsFormsApp1
                     if (Globals.ComplianceAgent != null)
                     {
                         bExitApp = false;
+                        if (txtEmail.Text != Settings.Default.email || (Settings.Default.role != Globals.ComplianceAgent.role)) {
+                            Settings.Default.irr_id = 0;
+                        }
+                        Settings.Default.role = Globals.ComplianceAgent.role;
                         Settings.Default.user_type = cmbUtype.Text;
                         Settings.Default.preference = null;
                         Settings.Default.email = txtEmail.Text;

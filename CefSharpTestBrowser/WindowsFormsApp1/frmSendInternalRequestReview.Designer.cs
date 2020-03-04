@@ -116,12 +116,26 @@
             this.cmbViolation.Size = new System.Drawing.Size(467, 25);
             this.cmbViolation.TabIndex = 21;
             // 
+            // chkSkypeCompliance
+            // 
+            this.chkSkypeCompliance.AutoSize = true;
+            this.chkSkypeCompliance.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.chkSkypeCompliance.ForeColor = System.Drawing.Color.WhiteSmoke;
+            this.chkSkypeCompliance.Location = new System.Drawing.Point(111, 228);
+            this.chkSkypeCompliance.Name = "chkSkypeCompliance";
+            this.chkSkypeCompliance.Size = new System.Drawing.Size(157, 25);
+            this.chkSkypeCompliance.TabIndex = 24;
+            this.chkSkypeCompliance.Text = "Skype Compliance";
+            this.chkSkypeCompliance.UseVisualStyleBackColor = true;
+            this.chkSkypeCompliance.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+            // 
             // frmSendInternalRequestReview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.ClientSize = new System.Drawing.Size(592, 277);
+            this.ClientSize = new System.Drawing.Size(592, 281);
+            this.Controls.Add(this.chkSkypeCompliance);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.cmbViolation);
             this.Controls.Add(this.txtNotes);
@@ -150,5 +164,6 @@
         private System.Windows.Forms.TextBox txtNotes;
         public System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox cmbViolation;
+        private System.Windows.Forms.CheckBox chkSkypeCompliance;
     }
 }

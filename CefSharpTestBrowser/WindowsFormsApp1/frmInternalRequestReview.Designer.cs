@@ -103,7 +103,7 @@
             // 
             this.label3.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.label3.ForeColor = System.Drawing.Color.White;
-            this.label3.Location = new System.Drawing.Point(13, 9);
+            this.label3.Location = new System.Drawing.Point(7, 9);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(61, 29);
             this.label3.TabIndex = 12;
@@ -168,12 +168,25 @@
             this.label6.Text = "Violation:";
             this.label6.UseCompatibleTextRendering = true;
             // 
+            // lblSkypeCompliance
+            // 
+            this.lblSkypeCompliance.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblSkypeCompliance.ForeColor = System.Drawing.Color.White;
+            this.lblSkypeCompliance.Location = new System.Drawing.Point(378, 9);
+            this.lblSkypeCompliance.Name = "lblSkypeCompliance";
+            this.lblSkypeCompliance.Size = new System.Drawing.Size(105, 26);
+            this.lblSkypeCompliance.TabIndex = 21;
+            this.lblSkypeCompliance.Text = "Skype Compliance";
+            this.lblSkypeCompliance.UseCompatibleTextRendering = true;
+            this.lblSkypeCompliance.Visible = false;
+            // 
             // frmInternalRequestReview
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(501, 291);
+            this.Controls.Add(this.lblSkypeCompliance);
             this.Controls.Add(this.lblViolation);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.linkLabel1);
@@ -210,5 +223,6 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         public System.Windows.Forms.Label lblViolation;
         public System.Windows.Forms.Label label6;
+        public System.Windows.Forms.Label lblSkypeCompliance;
     }
 }

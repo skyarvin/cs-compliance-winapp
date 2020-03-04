@@ -22,6 +22,7 @@ namespace SkydevCSTool.Models
         public int duration { get; set; }
         public string violation { get; set; }
         public bool is_trainee { get; set; }
+        public bool skype_compliance { get; set; }
         public static Dictionary<String, String> violations = new Dictionary<String, String>
         {
                 {"", "" },

@@ -81,6 +81,10 @@ namespace WindowsFormsApp1
             lblViolation.Text = result.violation_long_name;
             txtNotes.Text = result.agent_notes;
             txtReviewerNotes.Text = result.reviewer_notes;
+            if (result.skype_compliance) {
+                lblSkypeCompliance.Visible = true;
+             }
+            
 
             Globals.INTERNAL_RR = result;
         }

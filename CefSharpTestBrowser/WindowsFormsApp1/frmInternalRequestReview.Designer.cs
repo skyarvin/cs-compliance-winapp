@@ -39,6 +39,7 @@
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.lblViolation = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
+            this.lblSkypeCompliance = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label2
@@ -223,6 +224,6 @@
         private System.Windows.Forms.LinkLabel linkLabel1;
         public System.Windows.Forms.Label lblViolation;
         public System.Windows.Forms.Label label6;
-        public System.Windows.Forms.Label lblSkypeCompliance;
+        private System.Windows.Forms.Label lblSkypeCompliance;
     }
 }

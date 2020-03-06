@@ -33,7 +33,6 @@
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.pnlURL = new System.Windows.Forms.Panel();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlAction = new System.Windows.Forms.Panel();
             this.lblApproveCount = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
@@ -63,6 +62,7 @@
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
             this.bgWorkIRR = new System.ComponentModel.BackgroundWorker();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -116,26 +116,6 @@
             this.pnlURL.Name = "pnlURL";
             this.pnlURL.Size = new System.Drawing.Size(244, 40);
             this.pnlURL.TabIndex = 14;
-            // 
-            // cmbURL
-            // 
-            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.cmbURL.ForeColor = System.Drawing.Color.White;
-            this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(6, 7);
-            this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(232, 25);
-            this.cmbURL.TabIndex = 8;
-            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
-            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
-            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
-            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
-            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
             // 
             // pnlAction
             // 
@@ -443,6 +423,26 @@
             this.bgWorkIRR.WorkerSupportsCancellation = true;
             this.bgWorkIRR.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkIRR_DoWork);
             this.bgWorkIRR.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkIRR_RunWorkerCompleted);
+            // 
+            // cmbURL
+            // 
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(6, 7);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(232, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
+            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
             // 
             // frmMain
             // 

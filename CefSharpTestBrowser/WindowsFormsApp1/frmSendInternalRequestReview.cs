@@ -62,7 +62,7 @@ namespace WindowsFormsApp1
                 duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds),
                 violation = cmbViolation.SelectedValue.ToString(),
                 is_trainee = Globals.ComplianceAgent.is_trainee,
-                skype_compliance = chkSkypeCompliance.Checked
+                skype_compliance = checkBox1.Checked
         };
                
             var result = rr.Save();
@@ -85,16 +85,6 @@ namespace WindowsFormsApp1
 
                 this.DialogResult = DialogResult.OK;
             }
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

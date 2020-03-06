@@ -1125,7 +1125,7 @@ namespace WindowsFormsApp1
                     Globals.FrmInternalRequestReview = new frmInternalRequestReview();
 
                 Globals.FrmInternalRequestReview.update_info();
-                if (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing")
+                if (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing" && Globals.INTERNAL_RR.status != "Waiting SC")
                 {
                     showRequestReviewAndIdMissing();
                     bgWorkIRR.CancelAsync();
@@ -1142,7 +1142,7 @@ namespace WindowsFormsApp1
 
         public void showRequestReviewAndIdMissing()
         {
-            if (Globals.INTERNAL_RR.id != 0 && ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername( Globals.CurrentUrl) && isBrowserInitialized && (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing"))
+            if (Globals.INTERNAL_RR.id != 0 && ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername( Globals.CurrentUrl) && isBrowserInitialized && (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing" && Globals.INTERNAL_RR.status != "Waiting SC"))
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'block'; });");
             else
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'none'; });");

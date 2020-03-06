@@ -76,6 +76,11 @@ namespace WindowsFormsApp1
                 this.BackColor = Color.FromArgb(230, 126, 34);
                 this.Height = 186;
             }
+            if (result.status == "Waiting SC")
+            {
+                this.BackColor = Color.FromArgb(0, 0, 255);
+                this.Height = 186;
+            }
 
             lblUrl.Text = result.url;
             lblViolation.Text = result.violation_long_name;

@@ -95,7 +95,7 @@
             this.lblStatus.ForeColor = System.Drawing.Color.White;
             this.lblStatus.Location = new System.Drawing.Point(68, 9);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(61, 29);
+            this.lblStatus.Size = new System.Drawing.Size(264, 29);
             this.lblStatus.TabIndex = 13;
             this.lblStatus.Text = "PENDING";
             this.lblStatus.UseCompatibleTextRendering = true;

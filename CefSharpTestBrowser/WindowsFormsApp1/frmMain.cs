@@ -573,13 +573,13 @@ namespace WindowsFormsApp1
                     is_trainee = Globals.ComplianceAgent.is_trainee
                 };
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
-                if (Globals.INTERNAL_RR.url == logData.url && Globals.INTERNAL_RR.id != 0)
+                if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
                 else if(Globals.INTERNAL_RR.id > 0)
                 {
                     Emailer email = new Emailer();
                     email.subject = "IRR Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR));
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR), "\n\r", "Current Url: ", urlToSave);
                     email.Send();
                 }
 
@@ -1107,6 +1107,11 @@ namespace WindowsFormsApp1
             if (bgWorkIRR.IsBusy)
                 return;
             bgWorkIRR.RunWorkerAsync();
+        }
+        public void CancelbgWorkIRR()
+        {
+            if (bgWorkIRR.IsBusy)
+                bgWorkIRR.CancelAsync();
         }
         private void bgWorkIRR_DoWork(object sender, DoWorkEventArgs e)
         {

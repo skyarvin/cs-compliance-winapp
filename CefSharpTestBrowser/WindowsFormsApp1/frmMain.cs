@@ -513,6 +513,7 @@ namespace WindowsFormsApp1
         {
             Task.Factory.StartNew(() =>
             {
+                var urlToSave = Globals.CurrentUrl;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
                 string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
                 string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
@@ -552,7 +553,7 @@ namespace WindowsFormsApp1
                 var actual_end_time =  DateTime.Now;
                 var logData = new Logger
                 {
-                    url = Globals.CurrentUrl,
+                    url = urlToSave,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
                     remarks = String.Concat(violation, notes),
@@ -606,9 +607,6 @@ namespace WindowsFormsApp1
                     else
                         LastSuccessUrl = Globals.CurrentUrl;
 
-                    Globals.INTERNAL_RR = new InternalRequestReview();
-                    Settings.Default.irr_id = Globals.INTERNAL_RR.id;
-                    Settings.Default.Save();
                     if (bgWorkIRR.IsBusy)
                         bgWorkIRR.CancelAsync();
                     this.InvokeOnUiThreadIfRequired(() =>
@@ -616,6 +614,10 @@ namespace WindowsFormsApp1
                         if(Globals.FrmInternalRequestReview != null)
                             Globals.FrmInternalRequestReview.Close();
                     });
+
+                    Globals.INTERNAL_RR = new InternalRequestReview();
+                    Settings.Default.irr_id = 0;
+                    Settings.Default.Save();
                 }
                 catch (AggregateException e)
                 {

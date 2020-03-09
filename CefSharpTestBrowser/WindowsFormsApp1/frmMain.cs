@@ -518,7 +518,8 @@ namespace WindowsFormsApp1
                 string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
                 string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
                 string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
-                if(!string.IsNullOrEmpty(reply))
+                string remarks = String.Concat(violation, notes);
+                if (!string.IsNullOrEmpty(reply))
                 {
                     reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
                 }
@@ -527,6 +528,7 @@ namespace WindowsFormsApp1
 
                 if (element_id == Action.ChatReply.Value) notes = reply;
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
+                if (element_id == Action.Approve.Value) remarks = "";
 
                 string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
                 followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
@@ -556,7 +558,7 @@ namespace WindowsFormsApp1
                     url = urlToSave,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
-                    remarks = String.Concat(violation, notes),
+                    remarks = remarks,
                     followers = followers,
                     sc = followers >= Globals.SC_THRESHOLD ? true : false,
                     rr = string.IsNullOrEmpty(reply.Trim()) ? false : true,

@@ -271,15 +271,6 @@ namespace SkydevCSTool.Class
                                             });
                                         }
                                         break;
-                                    case "IRR":
-                                        Globals.INTERNAL_RR.id = Convert.ToInt32(data.Message);
-                                        Globals.INTERNAL_RR.url = data.Url;
-                                        break;
-                                    //case "CLEAR_IRR":
-                                    //    Globals.INTERNAL_RR = new InternalRequestReview();
-                                    //    Settings.Default.irr_id = Globals.INTERNAL_RR.id;
-                                    //    Settings.Default.Save();
-                                    //    break;
                                 }
                             }
                             catch

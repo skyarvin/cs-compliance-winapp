@@ -513,11 +513,13 @@ namespace WindowsFormsApp1
         {
             Task.Factory.StartNew(() =>
             {
+                var urlToSave = Globals.CurrentUrl;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
                 string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
                 string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
                 string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
-                if(!string.IsNullOrEmpty(reply))
+                string remarks = String.Concat(violation, notes);
+                if (!string.IsNullOrEmpty(reply))
                 {
                     reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
                 }
@@ -526,6 +528,7 @@ namespace WindowsFormsApp1
 
                 if (element_id == Action.ChatReply.Value) notes = reply;
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
+                if (element_id == Action.Approve.Value) remarks = "";
 
                 string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
                 followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
@@ -552,10 +555,10 @@ namespace WindowsFormsApp1
                 var actual_end_time =  DateTime.Now;
                 var logData = new Logger
                 {
-                    url = Globals.CurrentUrl,
+                    url = urlToSave,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
-                    remarks = String.Concat(violation, notes),
+                    remarks = remarks,
                     followers = followers,
                     sc = followers >= Globals.SC_THRESHOLD ? true : false,
                     rr = string.IsNullOrEmpty(reply.Trim()) ? false : true,
@@ -570,13 +573,13 @@ namespace WindowsFormsApp1
                     is_trainee = Globals.ComplianceAgent.is_trainee
                 };
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
-                if (Globals.INTERNAL_RR.url == logData.url && Globals.INTERNAL_RR.id != 0)
+                if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
                 else if(Globals.INTERNAL_RR.id > 0)
                 {
                     Emailer email = new Emailer();
                     email.subject = "IRR Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR));
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR), "\n\r", "Current Url: ", urlToSave);
                     email.Send();
                 }
 
@@ -606,9 +609,6 @@ namespace WindowsFormsApp1
                     else
                         LastSuccessUrl = Globals.CurrentUrl;
 
-                    Globals.INTERNAL_RR = new InternalRequestReview();
-                    Settings.Default.irr_id = Globals.INTERNAL_RR.id;
-                    Settings.Default.Save();
                     if (bgWorkIRR.IsBusy)
                         bgWorkIRR.CancelAsync();
                     this.InvokeOnUiThreadIfRequired(() =>
@@ -616,6 +616,10 @@ namespace WindowsFormsApp1
                         if(Globals.FrmInternalRequestReview != null)
                             Globals.FrmInternalRequestReview.Close();
                     });
+
+                    Globals.INTERNAL_RR = new InternalRequestReview();
+                    Settings.Default.irr_id = 0;
+                    Settings.Default.Save();
                 }
                 catch (AggregateException e)
                 {
@@ -1103,6 +1107,11 @@ namespace WindowsFormsApp1
             if (bgWorkIRR.IsBusy)
                 return;
             bgWorkIRR.RunWorkerAsync();
+        }
+        public void CancelbgWorkIRR()
+        {
+            if (bgWorkIRR.IsBusy)
+                bgWorkIRR.CancelAsync();
         }
         private void bgWorkIRR_DoWork(object sender, DoWorkEventArgs e)
         {

@@ -63,7 +63,7 @@ namespace WindowsFormsApp1
                 violation = cmbViolation.SelectedValue.ToString(),
                 is_trainee = Globals.ComplianceAgent.is_trainee,
                 skype_compliance = checkBox1.Checked
-        };
+            };
                
             var result = rr.Save();
             if (result != null)
@@ -72,16 +72,6 @@ namespace WindowsFormsApp1
                 Settings.Default.irr_id = Globals.INTERNAL_RR.id;
                 Settings.Default.Save();
                 Globals.frmMain.StartbgWorkIRR();
-
-                //Broadcast if in buddy system
-                if (Globals.IsServer())
-                {
-                    ServerAsync.SendToAll(new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.CurrentUrl });
-                }
-                else if (Globals.IsClient())
-                {
-                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "IRR", Message = Globals.INTERNAL_RR.id.ToString(), Url = Globals.CurrentUrl });
-                }
 
                 this.DialogResult = DialogResult.OK;
             }

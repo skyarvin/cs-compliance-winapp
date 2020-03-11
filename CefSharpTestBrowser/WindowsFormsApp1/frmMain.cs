@@ -542,7 +542,10 @@ namespace WindowsFormsApp1
                     last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
-
+                if(Globals.Paired && !Globals.start_time.HasValue)
+                {
+                    StartTime_LastAction = Globals.start_time;
+                }
                 if (!StartTime_LastAction.HasValue)
                     StartTime_LastAction = StartTime_BrowserChanged;
 
@@ -551,6 +554,7 @@ namespace WindowsFormsApp1
                 {
                     actual_start_time = StartTime_BrowserChanged;
                 }
+
 
                 var actual_end_time =  DateTime.Now;
                 var logData = new Logger
@@ -632,6 +636,17 @@ namespace WindowsFormsApp1
                     Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                     Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
                 }
+
+
+                if (Globals.IsClient())
+                {
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_START_TIME", ProfileID = Globals.ComplianceAgent.id, Message = StartTime_LastAction.ToString() });
+                }
+                else
+                {
+                    ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Profile = Globals.Profile.Name, ProfileID = Globals.Profile.AgentID, Message = StartTime_LastAction.ToString() });
+                }
+
             });
         }
 

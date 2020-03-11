@@ -270,6 +270,9 @@ namespace SkydevCSTool.Class
                                     case "USER_STATUS":
                                         ChangeUserActivityStatus(data.ProfileID, data.Message == "INACTIVE" ? false : true);
                                         break;
+                                    case "UPDATE_START_TIME":
+                                        Globals.start_time = DateTime.Parse(data.Message);
+                                        break;
                                 }
                             }
                             catch(Exception e)

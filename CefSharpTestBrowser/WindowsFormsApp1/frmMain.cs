@@ -609,14 +609,13 @@ namespace WindowsFormsApp1
                     else
                         LastSuccessUrl = Globals.CurrentUrl;
 
-                    if (bgWorkIRR.IsBusy)
-                        bgWorkIRR.CancelAsync();
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
-                        if(Globals.FrmInternalRequestReview != null)
+                        if (Globals.FrmInternalRequestReview != null)
                             Globals.FrmInternalRequestReview.Close();
                     });
-
+                    if (bgWorkIRR.IsBusy)
+                        bgWorkIRR.CancelAsync();
                     Globals.INTERNAL_RR = new InternalRequestReview();
                     Settings.Default.irr_id = 0;
                     Settings.Default.Save();

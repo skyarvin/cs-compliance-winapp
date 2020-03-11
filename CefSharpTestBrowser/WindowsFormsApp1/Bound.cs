@@ -1,8 +1,10 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using SkydevCSTool.Class;
+using SkydevCSTool.Models;
 using SkydevCSTool.Properties;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
@@ -16,7 +18,7 @@ namespace SkydevCSTool
         public event ItemClickedEventHandler HtmlItemClicked;
         private ChromiumWebBrowser browser;
         public BoundObject(ChromiumWebBrowser br) { browser = br; }
-
+        public List<string> sha256List { get; set; }
         public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
             
@@ -163,6 +165,34 @@ namespace SkydevCSTool
                             item.src = item.src+'&'+timestamp.getTime();
                         }
                     }
+
+                    function collectImages()
+                    {
+                        var ids = [];
+                        var img_list = document.querySelectorAll('#id_image');
+                        for (let item of img_list) {
+                            ids.push(item.src);
+                        }
+                        return ids;
+                    }
+
+                    function compareImages()
+                    {
+                        var ids = collectImages();
+                        if(ids.length > 0)
+                        {
+                            bound.compareImages(ids, window.location.pathname);
+                        }
+                    }
+
+                    function storeImages()
+                    {
+                        var ids = collectImages();
+                        if(ids.length > 0)
+                        {
+                            bound.storeImages(ids);
+                        }
+                    }
                 ";
 
             browser.EvaluateScriptAsync(submit_script);
@@ -209,8 +239,22 @@ namespace SkydevCSTool
                 });
             ");
 
-
-
+            if (e.Url.Contains("/compliance/seed_failure"))
+            {
+                browser.EvaluateScriptAsync(@"
+                    document.addEventListener('DOMContentLoaded', function(){
+                        waitUntil(`#id_photos`,5000).then((el) => compareImages(), (err) => console.log(`img for comparing not found`));
+                    });
+                ");
+            }
+            else
+            {
+                browser.EvaluateScriptAsync(@"
+                    document.addEventListener('DOMContentLoaded', function(){
+                        waitUntil(`#id_photos`,5000).then((el) => storeImages(), (err) => console.log(`img for storing not found`));
+                    });
+                ");
+            }
 
             if (Globals.IsBuddySystem())
             {
@@ -233,6 +277,41 @@ namespace SkydevCSTool
                 ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count , Url = Globals.CurrentUrl});
                 Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
             }
+        }
+
+        public void StoreImages(Object[] images)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                this.sha256List = new List<string>();
+                foreach (string src in images.ToList())
+                {
+                    this.sha256List.Add(Globals.ComputeSha256Hash(Globals.GetImage(src)));
+                }
+            });
+        }
+
+        public void CompareImages(Object[] images, string url)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                foreach (string src in images.ToList())
+                {
+                    var sha256 = Globals.ComputeSha256Hash(Globals.GetImage(src));
+                    if (!this.sha256List.Contains(sha256))
+                    {
+                        Emailer email = new Emailer();
+                        email.subject = "Images not match from seed";
+                        email.message = string.Concat("Url: ", url,
+                            "\nUser Id: ", Globals.Profile.AgentID,
+                            "\nUser name: ", Globals.Profile.Name,
+                            "\nMissing sha256: ", sha256,
+                            "\nImages in sha256: \n\t", string.Join("\n\t", this.sha256List));
+                        email.Send();
+                        return;
+                    }
+                }
+            });
         }
 
         public void DisableForceHide()
@@ -273,10 +352,7 @@ namespace SkydevCSTool
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
-
             }
-
-
         }
         public void OnClicked(string id)
         {

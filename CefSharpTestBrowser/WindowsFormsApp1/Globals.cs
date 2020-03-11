@@ -53,7 +53,7 @@ namespace WindowsFormsApp1
         public static bool ForceHideComliance = true;
         public static int max_room_duration = 48;
         public static int room_duration;
-        public static DateTime? start_time;
+        public static DateTime? StartTime_LastAction;
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
         public static void ShowMessage(Form parent,string Message)
         {

@@ -542,16 +542,13 @@ namespace WindowsFormsApp1
                     last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
-                if (Globals.Paired && !Globals.start_time.HasValue)
+             
+                if (!Globals.StartTime_LastAction.HasValue)
                 {
-                    StartTime_LastAction = Globals.start_time;
-                }
-                else if (!StartTime_LastAction.HasValue)
-                {
-                    StartTime_LastAction = StartTime_BrowserChanged;
+                    Globals.StartTime_LastAction = StartTime_BrowserChanged;
                 }
 
-                var actual_start_time = StartTime_LastAction;
+                var actual_start_time = Globals.StartTime_LastAction;
                 if ((StartTime_BrowserChanged - (DateTime)StartTime_LastAction).TotalSeconds > 30)
                 {
                     actual_start_time = StartTime_BrowserChanged;

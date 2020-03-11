@@ -272,7 +272,7 @@ namespace SkydevCSTool.Class
                                         }
                                         break;
                                     case "UPDATE_START_TIME":
-                                        Globals.start_time = DateTime.Parse(data.Message);
+                                        Globals.StartTime_LastAction = DateTime.Parse(data.Message);
                                         break;
                                 }
                             }

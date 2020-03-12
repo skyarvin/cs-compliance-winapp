@@ -271,6 +271,9 @@ namespace SkydevCSTool.Class
                                             });
                                         }
                                         break;
+                                    case "UPDATE_START_TIME":
+                                        Globals.StartTime_LastAction = DateTime.Parse(data.Message);
+                                        break;
                                 }
                             }
                             catch

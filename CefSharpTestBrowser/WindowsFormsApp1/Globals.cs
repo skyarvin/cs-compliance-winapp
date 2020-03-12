@@ -24,6 +24,7 @@ namespace WindowsFormsApp1
         public static List<Socket> Connections = new List<Socket>();
         public static Profile Profile { get; set; }
         public static string CurrentUrl { get; set; }
+        public static string LastSuccessUrl { get; set; }
         public static bool Paired { get; set; }
         public static Int32 unixTimestamp { get; set; }
         public static bool EnableTimer { get; set; }

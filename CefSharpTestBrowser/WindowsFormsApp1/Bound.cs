@@ -18,7 +18,8 @@ namespace SkydevCSTool
         public event ItemClickedEventHandler HtmlItemClicked;
         private ChromiumWebBrowser browser;
         public BoundObject(ChromiumWebBrowser br) { browser = br; }
-        public List<string> sha256List { get; set; }
+        public string sha256Image { get; set; }
+        public string prevImage { get; set; }
         public void OnFrameLoadEnd(object sender, FrameLoadEndEventArgs e)
         {
             
@@ -166,31 +167,21 @@ namespace SkydevCSTool
                         }
                     }
 
-                    function collectImages()
-                    {
-                        var ids = [];
-                        var img_list = document.querySelectorAll('#id_image');
-                        for (let item of img_list) {
-                            ids.push(item.src);
-                        }
-                        return ids;
-                    }
-
                     function compareImages()
                     {
-                        var ids = collectImages();
-                        if(ids.length > 0)
+                        var ids = document.querySelectorAll('#id_image')[0];
+                        if(ids != null)
                         {
-                            bound.compareImages(ids, window.location.pathname);
+                            bound.compareImages(ids.src, window.location.pathname);
                         }
                     }
 
                     function storeImages()
                     {
-                        var ids = collectImages();
-                        if(ids.length > 0)
+                        var ids = document.querySelectorAll('#id_image')[0];
+                        if(ids != null)
                         {
-                            bound.storeImages(ids);
+                            bound.storeImages(ids.src);
                         }
                     }
                 ";
@@ -239,7 +230,7 @@ namespace SkydevCSTool
                 });
             ");
 
-            if (e.Url.Contains("/compliance/seed_failure"))
+            if (e.Url.Contains("/compliance/seed_failure") && !string.IsNullOrEmpty(Globals.LastSuccessUrl) && e.Url.Contains(Globals.frmMain.ExtractUsername(Globals.LastSuccessUrl)))
             {
                 browser.EvaluateScriptAsync(@"
                     document.addEventListener('DOMContentLoaded', function(){
@@ -279,37 +270,27 @@ namespace SkydevCSTool
             }
         }
 
-        public void StoreImages(Object[] images)
+        public void StoreImages(Object images)
         {
-            Task.Factory.StartNew(() =>
-            {
-                this.sha256List = new List<string>();
-                foreach (string src in images.ToList())
-                {
-                    this.sha256List.Add(Globals.ComputeSha256Hash(Globals.GetImage(src)));
-                }
-            });
+            this.prevImage = images.ToString();
         }
 
-        public void CompareImages(Object[] images, string url)
+        public void CompareImages(Object images, string url)
         {
             Task.Factory.StartNew(() =>
             {
-                foreach (string src in images.ToList())
+                var prevSha256 = Globals.ComputeSha256Hash(Globals.GetImage(this.prevImage));
+                var seedSha256 = Globals.ComputeSha256Hash(Globals.GetImage(images.ToString()));
+                if(prevSha256 != seedSha256)
                 {
-                    var sha256 = Globals.ComputeSha256Hash(Globals.GetImage(src));
-                    if (!this.sha256List.Contains(sha256))
-                    {
-                        Emailer email = new Emailer();
-                        email.subject = "Images not match from seed";
-                        email.message = string.Concat("Url: ", url,
-                            "\nUser Id: ", Globals.Profile.AgentID,
-                            "\nUser name: ", Globals.Profile.Name,
-                            "\nMissing sha256: ", sha256,
-                            "\nImages in sha256: \n\t", string.Join("\n\t", this.sha256List));
-                        email.Send();
-                        return;
-                    }
+                    Emailer email = new Emailer();
+                    email.subject = "Images not match from seed";
+                    email.message = string.Concat("Url: ", url,
+                        "\nUser Id: ", Globals.Profile.AgentID,
+                        "\nUser name: ", Globals.Profile.Name,
+                        "\nSeed sha256: ", seedSha256,
+                        "\nPrev sha256: ", prevSha256);
+                    email.Send();
                 }
             });
         }

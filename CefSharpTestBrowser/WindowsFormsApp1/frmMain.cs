@@ -33,7 +33,6 @@ namespace WindowsFormsApp1
     public partial class frmMain : Form
     {
         private Timer _timer;
-        private string LastSuccessUrl;
         private string LastSucessAction;
         public  DateTime StartTime_BrowserChanged;
         public   DateTime? StartTime_LastAction = null;
@@ -343,27 +342,17 @@ namespace WindowsFormsApp1
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
                         //Emailer for missed seed
-                        if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(LastSuccessUrl))
+                        if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl))
                         {
-                            //Emailer email = new Emailer();
-                            //email.subject = "Missed Seed Notification";
-                            //email.message = string.Concat("Url: ", sCurrAddress,
-                            //    "\nLast Success Url: ", LastSuccessUrl,
-                            //    "\nLast Success Id: ", Globals.LAST_SUCCESS_ID,
-                            //    "\nUser Id: ", Globals.Profile.AgentID,
-                            //    "\nUsername: ", Globals.Profile.Name);
-                            //email.Send();
-
                             //Send to API
-                            string[] urls = LastSuccessUrl.Split('/');
-                            if (sCurrAddress.Contains(urls[urls.Length - 2]))
+                            if (sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl))) 
                             {
                                 Seed seed = new Seed();
                                 seed.log_id = Globals.LAST_SUCCESS_ID;
                                 seed.url = sCurrAddress;
                                 seed.Save();
 
-                                LastSuccessUrl = "";
+                                Globals.LastSuccessUrl = "";
                             }
 
                         }
@@ -587,7 +576,7 @@ namespace WindowsFormsApp1
 
                 try
                 {
-                    if (Globals.CurrentUrl == LastSuccessUrl)
+                    if (Globals.CurrentUrl == Globals.LastSuccessUrl)
                     {
                         logData.id = Globals.LAST_SUCCESS_ID;
                         if (logData.id != 0)
@@ -605,9 +594,9 @@ namespace WindowsFormsApp1
                     }
 
                     if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
-                        LastSuccessUrl = ""; //Clear last success
+                        Globals.LastSuccessUrl = ""; //Clear last success
                     else
-                        LastSuccessUrl = Globals.CurrentUrl;
+                        Globals.LastSuccessUrl = Globals.CurrentUrl;
 
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
@@ -1164,7 +1153,7 @@ namespace WindowsFormsApp1
             else
                 bgWorkIRR.RunWorkerAsync();
         }
-        private string ExtractUsername(string url_)
+        public string ExtractUsername(string url_)
         {
             if (string.IsNullOrEmpty(url_))
                 return "";

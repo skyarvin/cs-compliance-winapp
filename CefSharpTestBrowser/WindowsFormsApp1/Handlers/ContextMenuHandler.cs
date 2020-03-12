@@ -155,13 +155,15 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
-                Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
-                Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
-                if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)
-                {
-                    if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                        Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                    Globals.FrmInternalRequestReview.Show();
+                if (Globals.frmMain.isBrowserInitialized) {
+                    Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
+                    Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
+                    if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)
+                    {
+                        if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+                            Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+                        Globals.FrmInternalRequestReview.Show();
+                    }
                 }
             });
         }

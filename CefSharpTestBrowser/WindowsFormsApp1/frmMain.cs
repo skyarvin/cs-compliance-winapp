@@ -37,7 +37,7 @@ namespace WindowsFormsApp1
         private string LastSucessAction;
         public  DateTime StartTime_BrowserChanged;
         public   DateTime? StartTime_LastAction = null;
-        private bool isBrowserInitialized = false;
+        public bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },

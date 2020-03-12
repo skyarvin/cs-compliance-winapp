@@ -155,11 +155,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
-                string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
-                followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
-                if (!String.IsNullOrEmpty(followRaw)) Globals.followers = int.Parse(followRaw);
-                    
-
                 Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
                 Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
                 if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)

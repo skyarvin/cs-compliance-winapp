@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CefSharp;
 
 namespace WindowsFormsApp1
 {
@@ -30,7 +31,15 @@ namespace WindowsFormsApp1
             cmbViolation.DisplayMember = "Value";
             cmbViolation.ValueMember = "Key";
             cmbViolation.Text = "";
-            if (Globals.followers >= (Globals.ComplianceAgent.is_trainee ? Globals.SC_THRESHOLD_TRAINEE : Globals.SC_THRESHOLD)) chkSkypeCompliance.Checked = true;
+            int followers = 0;
+            string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
+            followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
+            if (!String.IsNullOrEmpty(followRaw)) followers = int.Parse(followRaw);
+
+            if (followers >= (Globals.ComplianceAgent.is_trainee ? Globals.SC_THRESHOLD_TRAINEE : Globals.SC_THRESHOLD))
+            { 
+                chkSkypeCompliance.Checked = true; 
+            }
        }
 
         private void btnSendRR_Click(object sender, EventArgs e)

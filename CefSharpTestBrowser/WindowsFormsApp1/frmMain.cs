@@ -36,7 +36,6 @@ namespace WindowsFormsApp1
         private string LastSuccessUrl;
         private string LastSucessAction;
         public  DateTime StartTime_BrowserChanged;
-        public   DateTime? StartTime_LastAction = null;
         private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -542,15 +541,18 @@ namespace WindowsFormsApp1
                     last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
+             
+                if (!Globals.StartTime_LastAction.HasValue)
+                {
+                    Globals.StartTime_LastAction = StartTime_BrowserChanged;
+                }
 
-                if (!StartTime_LastAction.HasValue)
-                    StartTime_LastAction = StartTime_BrowserChanged;
-
-                var actual_start_time = StartTime_LastAction;
-                if ((StartTime_BrowserChanged - (DateTime)StartTime_LastAction).TotalSeconds > 30)
+                var actual_start_time = Globals.StartTime_LastAction;
+                if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
                 {
                     actual_start_time = StartTime_BrowserChanged;
                 }
+
 
                 var actual_end_time =  DateTime.Now;
                 var logData = new Logger
@@ -583,7 +585,7 @@ namespace WindowsFormsApp1
                     email.Send();
                 }
 
-                StartTime_LastAction = actual_end_time;
+                Globals.StartTime_LastAction = actual_end_time;
 
                 try
                 {
@@ -632,6 +634,17 @@ namespace WindowsFormsApp1
                     Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                     Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
                 }
+
+
+                if (Globals.IsClient())
+                {
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
+                }
+                else
+                {
+                    ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
+                }
+
             });
         }
 

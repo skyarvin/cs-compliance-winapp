@@ -48,7 +48,7 @@ namespace WindowsFormsApp1
                 return;
             }
 
-            var start_time = Globals.frmMain.StartTime_LastAction;
+            var start_time = Globals.StartTime_LastAction;
             if (start_time == null)
             {
                 start_time = Globals.frmMain.StartTime_BrowserChanged;

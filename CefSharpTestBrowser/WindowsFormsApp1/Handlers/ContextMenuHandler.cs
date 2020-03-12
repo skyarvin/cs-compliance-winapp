@@ -71,6 +71,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
     public bool OnContextMenuCommand(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, CefMenuCommand commandId, CefEventFlags eventFlags)
     {
         // React to the first ID (show dev tools method)
+
         if (commandId == (CefMenuCommand)26501)
         {
             if (parameters.MediaType == CefSharp.ContextMenuMediaType.Image) {
@@ -136,12 +137,13 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)26512)
         {
-            if (Globals.INTERNAL_RR.id != 0)
+           if (Globals.INTERNAL_RR.id != 0)
             {
                 if (Globals.INTERNAL_RR.url == Globals.CurrentUrl)
                 {
                     Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                     {
+
                         if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
                             Globals.FrmInternalRequestReview = new frmInternalRequestReview();
                         Globals.FrmInternalRequestReview.update_info();
@@ -153,6 +155,11 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
+                string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
+                followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
+                if (!String.IsNullOrEmpty(followRaw)) Globals.followers = int.Parse(followRaw);
+                    
+
                 Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
                 Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
                 if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)

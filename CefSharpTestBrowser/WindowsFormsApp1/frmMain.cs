@@ -402,7 +402,6 @@ namespace WindowsFormsApp1
                             AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
                         }
                         else Globals.room_duration = 0;
-
                     }
                 }
                             

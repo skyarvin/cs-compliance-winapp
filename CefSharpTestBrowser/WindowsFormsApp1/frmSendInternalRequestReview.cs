@@ -30,7 +30,8 @@ namespace WindowsFormsApp1
             cmbViolation.DisplayMember = "Value";
             cmbViolation.ValueMember = "Key";
             cmbViolation.Text = "";
-        }
+            if (Globals.followers >= (Globals.ComplianceAgent.is_trainee ? Globals.SC_THRESHOLD_TRAINEE : Globals.SC_THRESHOLD)) chkSkypeCompliance.Checked = true;
+       }
 
         private void btnSendRR_Click(object sender, EventArgs e)
         {
@@ -62,7 +63,7 @@ namespace WindowsFormsApp1
                 duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds),
                 violation = cmbViolation.SelectedValue.ToString(),
                 is_trainee = Globals.ComplianceAgent.is_trainee,
-                skype_compliance = checkBox1.Checked
+                skype_compliance = chkSkypeCompliance.Checked
             };
                
             var result = rr.Save();

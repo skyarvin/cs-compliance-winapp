@@ -36,7 +36,6 @@ namespace WindowsFormsApp1
         private string LastSuccessUrl;
         private string LastSucessAction;
         public  DateTime StartTime_BrowserChanged;
-        public   DateTime? StartTime_LastAction = null;
         private bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -549,7 +548,7 @@ namespace WindowsFormsApp1
                 }
 
                 var actual_start_time = Globals.StartTime_LastAction;
-                if ((StartTime_BrowserChanged - (DateTime)StartTime_LastAction).TotalSeconds > 30)
+                if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
                 {
                     actual_start_time = StartTime_BrowserChanged;
                 }
@@ -586,7 +585,7 @@ namespace WindowsFormsApp1
                     email.Send();
                 }
 
-                StartTime_LastAction = actual_end_time;
+                Globals.StartTime_LastAction = actual_end_time;
 
                 try
                 {
@@ -639,11 +638,11 @@ namespace WindowsFormsApp1
 
                 if (Globals.IsClient())
                 {
-                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_START_TIME", ProfileID = Globals.ComplianceAgent.id, Message = StartTime_LastAction.ToString() });
+                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
                 else
                 {
-                    ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Profile = Globals.Profile.Name, ProfileID = Globals.Profile.AgentID, Message = StartTime_LastAction.ToString() });
+                    ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
 
             });

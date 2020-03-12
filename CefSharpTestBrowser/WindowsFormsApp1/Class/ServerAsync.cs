@@ -272,6 +272,7 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "UPDATE_START_TIME":
                                         Globals.StartTime_LastAction = DateTime.Parse(data.Message);
+                                        SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                                         break;
                                 }
                             }

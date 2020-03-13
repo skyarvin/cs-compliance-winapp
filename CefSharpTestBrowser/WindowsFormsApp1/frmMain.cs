@@ -342,6 +342,10 @@ namespace WindowsFormsApp1
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl != splitAddress[0])
                     {
+                        if (!Globals.StartTime_LastAction.HasValue)
+                        {
+                            Globals.StartTime_LastAction = StartTime_BrowserChanged;
+                        }
                         //Emailer for missed seed
                         if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(LastSuccessUrl))
                         {
@@ -542,11 +546,6 @@ namespace WindowsFormsApp1
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
              
-                if (!Globals.StartTime_LastAction.HasValue)
-                {
-                    Globals.StartTime_LastAction = StartTime_BrowserChanged;
-                }
-
                 var actual_start_time = Globals.StartTime_LastAction;
                 if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
                 {

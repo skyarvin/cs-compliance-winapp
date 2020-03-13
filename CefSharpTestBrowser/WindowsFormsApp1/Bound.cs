@@ -270,17 +270,17 @@ namespace SkydevCSTool
             }
         }
 
-        public void StoreImages(Object images)
+        public void StoreImages(string images)
         {
-            this.prevImage = images.ToString();
+            this.prevImage = images;
         }
 
-        public void CompareImages(Object images, string url)
+        public void CompareImages(string images, string url)
         {
             Task.Factory.StartNew(() =>
             {
                 var prevSha256 = Globals.ComputeSha256Hash(Globals.GetImage(this.prevImage));
-                var seedSha256 = Globals.ComputeSha256Hash(Globals.GetImage(images.ToString()));
+                var seedSha256 = Globals.ComputeSha256Hash(Globals.GetImage(images));
                 if(prevSha256 != seedSha256)
                 {
                     Emailer email = new Emailer();

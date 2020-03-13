@@ -50,6 +50,7 @@ namespace WindowsFormsApp1
         public static int _idleTicks;
         public static bool SKYPE_COMPLIANCE;
         public static int SC_THRESHOLD = 20000;
+        public static int SC_THRESHOLD_TRAINEE = 10000;
         public static List<string> UrlHistory = new List<string>();
         public static Socket Client;
         public static string MyIP;
@@ -57,6 +58,7 @@ namespace WindowsFormsApp1
         public static bool ForceHideComliance = true;
         public static int max_room_duration = 48;
         public static int room_duration;
+        public static DateTime? StartTime_LastAction;
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
         public static void ShowMessage(Form parent,string Message)
         {

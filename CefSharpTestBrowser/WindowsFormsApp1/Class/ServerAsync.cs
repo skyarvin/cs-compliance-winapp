@@ -201,6 +201,7 @@ namespace SkydevCSTool.Class
                                         SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count, Url = Globals.CurrentUrl });
                                         SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
                                         SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
+                                        SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                                         if (!Globals.IsPreferenceSetupValid())
                                         {
                                             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
@@ -269,6 +270,10 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "USER_STATUS":
                                         ChangeUserActivityStatus(data.ProfileID, data.Message == "INACTIVE" ? false : true);
+                                        break;
+                                    case "UPDATE_START_TIME":
+                                        Globals.StartTime_LastAction = DateTime.Parse(data.Message);
+                                        SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                                         break;
                                 }
                             }

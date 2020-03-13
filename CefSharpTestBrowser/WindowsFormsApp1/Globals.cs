@@ -46,6 +46,7 @@ namespace WindowsFormsApp1
         public static int _idleTicks;
         public static bool SKYPE_COMPLIANCE;
         public static int SC_THRESHOLD = 20000;
+        public static int SC_THRESHOLD_TRAINEE = 10000;
         public static List<string> UrlHistory = new List<string>();
         public static Socket Client;
         public static string MyIP;

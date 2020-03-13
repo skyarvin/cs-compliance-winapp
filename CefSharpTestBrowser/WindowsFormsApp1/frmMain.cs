@@ -36,7 +36,8 @@ namespace WindowsFormsApp1
         private string LastSuccessUrl;
         private string LastSucessAction;
         public  DateTime StartTime_BrowserChanged;
-        private bool isBrowserInitialized = false;
+        public   DateTime? StartTime_LastAction = null;
+        public bool isBrowserInitialized = false;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },
@@ -401,7 +402,6 @@ namespace WindowsFormsApp1
                             AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
                         }
                         else Globals.room_duration = 0;
-
                     }
                 }
                             

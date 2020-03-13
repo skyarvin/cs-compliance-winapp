@@ -13,6 +13,9 @@ using SkydevCSTool.Class;
 using System.Threading;
 using SkydevCSTool.Properties;
 using CefSharp.WinForms.Internals;
+using System.Text;
+using System.Net;
+using System.Security.Cryptography;
 
 namespace WindowsFormsApp1
 {
@@ -21,6 +24,7 @@ namespace WindowsFormsApp1
         public static List<Socket> Connections = new List<Socket>();
         public static Profile Profile { get; set; }
         public static string CurrentUrl { get; set; }
+        public static string LastSuccessUrl { get; set; }
         public static bool Paired { get; set; }
         public static Int32 unixTimestamp { get; set; }
         public static bool EnableTimer { get; set; }
@@ -268,6 +272,53 @@ namespace WindowsFormsApp1
             else if (Globals.IsClient())
             {
                 AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "UPDATE_PREFERENCE", ProfileID = Globals.ComplianceAgent.id, Preference = Settings.Default.preference });
+            }
+        }
+
+        public static byte[] GetImage(string url)
+        {
+            Stream stream = null;
+            byte[] buf = null;
+
+            try
+            {
+                WebProxy myProxy = new WebProxy();
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+
+                HttpWebResponse response = (HttpWebResponse)req.GetResponse();
+                stream = response.GetResponseStream();
+
+                using (BinaryReader br = new BinaryReader(stream))
+                {
+                    int len = (int)(response.ContentLength);
+                    buf = br.ReadBytes(len);
+                    br.Close();
+                }
+
+                stream.Close();
+                response.Close();
+            }
+            catch { }
+
+            return (buf);
+        }
+
+        public static string ComputeSha256Hash(byte[] rawData)
+        {
+            //var test = Encoding.UTF8.GetBytes("tae");
+            // Create a SHA256   
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                // ComputeHash - returns byte array  
+                byte[] bytes = sha256Hash.ComputeHash(rawData);
+
+                // Convert byte array to a string   
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
             }
         }
     }

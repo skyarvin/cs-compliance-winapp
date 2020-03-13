@@ -11,7 +11,7 @@
     <ProjectGuid>{D9E5E89D-2CCE-4555-A950-AB2D61CA6537}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>SkydevCSTool</RootNamespace>
-    <AssemblyName>COMPLIANCE_TOOL_TEST</AssemblyName>
+    <AssemblyName>COMPLIANCE_TOOL</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -20,7 +20,7 @@
     </NuGetPackageImportStamp>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>\\10.10.10.20\apps\temp\test\COMPLIANCE_TOOL\</PublishUrl>
+    <PublishUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -30,11 +30,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <UpdateUrl>\\10.10.10.20\apps\temp\test\COMPLIANCE_TOOL\</UpdateUrl>
-    <ProductName>COMPLIANCE_TOOL_TEST</ProductName>
+    <UpdateUrl>\\10.10.10.20\apps\COMPLIANCE_TOOL\</UpdateUrl>
+    <ProductName>COMPLIANCE_TOOL</ProductName>
     <PublisherName>Skydev Solutions</PublisherName>
-    <MinimumRequiredVersion>2.0.0.85</MinimumRequiredVersion>
-    <ApplicationRevision>86</ApplicationRevision>
+    <MinimumRequiredVersion>2.0.0.83</MinimumRequiredVersion>
+    <ApplicationRevision>83</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

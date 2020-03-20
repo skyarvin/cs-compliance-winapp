@@ -139,7 +139,7 @@ namespace SkydevCSTool.Handlers
             Globals.SaveToLogFile(Globals.LAST_SUCCESS_ID.ToString(), (int)LogType.Request_Handler);
             Globals.SaveToLogFile(Globals.StartTime_LastAction.ToString(), (int)LogType.Request_Handler);
             Globals.SaveToLogFile(request.ReferrerUrl, (int)LogType.Request_Handler);
-            
+            Globals.SaveToLogFile(Globals.CurrentUrl, (int)LogType.Request_Handler);
 
         }
 

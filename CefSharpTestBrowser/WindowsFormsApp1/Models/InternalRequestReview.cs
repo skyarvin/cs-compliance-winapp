@@ -10,6 +10,10 @@ using WindowsFormsApp1;
 
 namespace SkydevCSTool.Models
 {
+    public class irs_result
+    {
+        public List<InternalRequestReview> irs { get; set; }
+    }
     public class InternalRequestReview
     {
         public int id { get; set; }
@@ -109,6 +113,32 @@ namespace SkydevCSTool.Models
                             var jsonString = content.ReadAsStringAsync();
                             jsonString.Wait();
                             return JsonConvert.DeserializeObject<InternalRequestReview>(jsonString.Result);
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        public static irs_result Get(List<int> agent_ids)
+        {
+            using (var client = new HttpClient())
+            {
+                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
+                var uri = string.Concat(Url.API_URL, "/irs/agent/", string.Join(",", agent_ids), "/");
+                if (Globals.ComplianceAgent.is_trainee)
+                    uri = string.Concat(uri, "?is_trainee=True");
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (HttpContent content = response.Content)
+                        {
+                            var jsonString = content.ReadAsStringAsync();
+                            jsonString.Wait();
+                            return JsonConvert.DeserializeObject<irs_result>(jsonString.Result);
                         }
                     }
                 }

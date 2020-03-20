@@ -343,7 +343,7 @@ namespace WindowsFormsApp1
                     {
                         if (!Globals.StartTime_LastAction.HasValue)
                         {
-                            Globals.StartTime_LastAction = StartTime_BrowserChanged;
+                            Globals.StartTime_LastAction = DateTime.Now;
                         }
                         //Emailer for missed seed
                         if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl))
@@ -441,6 +441,19 @@ namespace WindowsFormsApp1
             bgWorkResync.RunWorkerAsync();
 
             this.Text += String.Concat(" v.", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
+
+            var agent_irs = InternalRequestReview.Get(new List<int>() { Globals.Profile.AgentID });
+            if (agent_irs != null && agent_irs.irs.Count() > 0)
+            {
+                Globals.INTERNAL_RR = agent_irs.irs.First();
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+                        Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+                    StartbgWorkIRR();
+                    Globals.FrmInternalRequestReview.Show();
+                });
+            }
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)

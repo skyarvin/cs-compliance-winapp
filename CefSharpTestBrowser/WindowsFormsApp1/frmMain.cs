@@ -360,19 +360,6 @@ namespace WindowsFormsApp1
                             }
 
                         }
-                        if (SkydevCSTool.Properties.Settings.Default.irr_id != 0 && Globals.INTERNAL_RR.id == 0)
-                        {
-                            Globals.INTERNAL_RR = InternalRequestReview.Get(Settings.Default.irr_id);
-                            if (Globals.INTERNAL_RR != null) {
-                                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-                                {
-                                    if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                                        Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                                    StartbgWorkIRR();
-                                    Globals.FrmInternalRequestReview.Show();
-                                });
-                            }
-                        }
 
                         Globals.AddToHistory(splitAddress[0]);
                         Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
@@ -620,8 +607,6 @@ namespace WindowsFormsApp1
                     if (bgWorkIRR.IsBusy)
                         bgWorkIRR.CancelAsync();
                     Globals.INTERNAL_RR = new InternalRequestReview();
-                    Settings.Default.irr_id = 0;
-                    Settings.Default.Save();
                 }
                 catch (AggregateException e)
                 {

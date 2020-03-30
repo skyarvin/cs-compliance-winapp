@@ -120,6 +120,9 @@ namespace WindowsFormsApp1
                     case (int)LogType.UserClick:
                         logFilePath = @path + "user_click_log.txt";
                         break;
+                    case (int)LogType.Request_Handler:
+                        logFilePath = @path + "request_handler.txt";
+                        break;
                 }
 
                 FileInfo logFileInfo = new FileInfo(logFilePath);
@@ -332,6 +335,7 @@ namespace WindowsFormsApp1
         Error = 3,
         Activity = 4,
         UserClick = 5,
+        Request_Handler = 6,
     }
 
 }

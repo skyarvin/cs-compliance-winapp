@@ -97,7 +97,7 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.LoadingStateChanged += OnLoadingStateChanged;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
-            //Globals.chromeBrowser.RequestHandler = new BrowserRequestHandler();
+            Globals.chromeBrowser.RequestHandler = new BrowserRequestHandler();
 
 
             lblUser.Text = Globals.ComplianceAgent.name;

@@ -136,11 +136,12 @@ namespace SkydevCSTool.Handlers
             //        AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "AUTO_SWITCH" });
             //    }
             //}
-            Globals.SaveToLogFile(Globals.LAST_SUCCESS_ID.ToString(), (int)LogType.Request_Handler);
-            Globals.SaveToLogFile(Globals.StartTime_LastAction.ToString(), (int)LogType.Request_Handler);
-            Globals.SaveToLogFile(request.ReferrerUrl, (int)LogType.Request_Handler);
-            Globals.SaveToLogFile(Globals.CurrentUrl, (int)LogType.Request_Handler);
 
+            string logData = string.Concat("Last Success Id: ", Globals.LAST_SUCCESS_ID, 
+                ", StartTime_LastAction: ", Globals.StartTime_LastAction, 
+                ", ReferrerUrl: ", request.ReferrerUrl,
+                ", CurrentUrl: ", Globals.CurrentUrl, "/", newUrl);
+            Globals.SaveToLogFile(logData, (int)LogType.Request_Handler);
         }
 
         public bool OnResourceResponse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response)

@@ -37,6 +37,8 @@ namespace WindowsFormsApp1
         public  DateTime StartTime_BrowserChanged;
         public   DateTime? StartTime_LastAction = null;
         public bool isBrowserInitialized = false;
+        public bool send_id_checker = true;
+        public IdChecker ID_CHECKER = new IdChecker();
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },
@@ -339,50 +341,65 @@ namespace WindowsFormsApp1
                         _timer.Start();
                     }
                     var splitAddress = sCurrAddress.Split('#');
-                    if (Globals.CurrentUrl != splitAddress[0])
+                    if (Globals.CurrentUrl == splitAddress[0])
                     {
-                        if (!Globals.StartTime_LastAction.HasValue)
-                        {
-                            Globals.StartTime_LastAction = DateTime.Now;
-                        }
-                        //Emailer for missed seed
-                        if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl))
-                        {
-                            //Send to API
-                            if (sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl))) 
-                            {
-                                Seed seed = new Seed();
-                                seed.log_id = Globals.LAST_SUCCESS_ID;
-                                seed.url = sCurrAddress;
-                                seed.Save();
-
-                                Globals.LastSuccessUrl = "";
-                            }
-
-                        }
-
-                        Globals.AddToHistory(splitAddress[0]);
-                        Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
-                        Globals.CurrentUrl = splitAddress[0];
-                        StartTime_BrowserChanged = DateTime.Now;
-                        Globals.SKYPE_COMPLIANCE = false;
-                        lblCountdown.Text = Globals.room_duration.ToString();
-                        setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
-                        PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
-                        if (Globals.IsServer())
-                        {
-                            Globals.room_duration = 0;
-                            Globals.max_room_duration = ServerAsync.DurationThreshold();
-                            ServerAsync.SendToAll(redirectCommand);
-                            ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
-                        }
-                        else if (Globals.IsClient())
-                        {
-                            AsynchronousClient.Send(Globals.Client, redirectCommand);
-                            AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
-                        }
-                        else Globals.room_duration = 0;
+                        return;
                     }
+
+                    if (!Globals.StartTime_LastAction.HasValue)
+                    {
+                        Globals.StartTime_LastAction = DateTime.Now;
+                    }
+
+                    Console.WriteLine("ID CHECKER: " + this.send_id_checker);
+                    //Emailer for missed seed
+                    if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
+                    {
+                        //Send to API
+                        Seed seed = new Seed();
+                        seed.log_id = Globals.LAST_SUCCESS_ID;
+                        seed.url = sCurrAddress;
+                        seed.Save();
+
+                        Globals.LastSuccessUrl = "";
+                    }
+                    else
+                    {
+                        if (this.send_id_checker && IsComplianceUrl(sCurrAddress))
+                        {
+                            IdChecker id_checker = new IdChecker();
+                            id_checker.agent_id = Globals.ComplianceAgent.id;
+                            id_checker.url = sCurrAddress;
+                            var result = id_checker.Save();
+                            this.ID_CHECKER = new IdChecker();
+                            if (result != null)
+                            {
+                                this.ID_CHECKER = result;
+                            }
+                        }
+                    }
+                    this.send_id_checker = true;
+                    Globals.AddToHistory(splitAddress[0]);
+                    Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
+                    Globals.CurrentUrl = splitAddress[0];
+                    StartTime_BrowserChanged = DateTime.Now;
+                    Globals.SKYPE_COMPLIANCE = false;
+                    lblCountdown.Text = Globals.room_duration.ToString();
+                    setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
+                    PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
+                    if (Globals.IsServer())
+                    {
+                        Globals.room_duration = 0;
+                        Globals.max_room_duration = ServerAsync.DurationThreshold();
+                        ServerAsync.SendToAll(redirectCommand);
+                        ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
+                    }
+                    else if (Globals.IsClient())
+                    {
+                        AsynchronousClient.Send(Globals.Client, redirectCommand);
+                        AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
+                    }
+                    else Globals.room_duration = 0;
                 }
                             
                 
@@ -441,6 +458,8 @@ namespace WindowsFormsApp1
                     Globals.FrmInternalRequestReview.Show();
                 });
             }
+
+            bgWorkID.RunWorkerAsync();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -754,6 +773,7 @@ namespace WindowsFormsApp1
 
         private void LoadUrl(string url)
         {
+            this.send_id_checker = false;
             if (!IsValidUrl(url))
             {
                 Emailer email = new Emailer();
@@ -781,7 +801,7 @@ namespace WindowsFormsApp1
 
         private bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance"))
+            if (url.Contains("compliance/show"))
                 return true;
 
             return false;
@@ -1178,6 +1198,63 @@ namespace WindowsFormsApp1
 
         }
 
+        private void bgWorkID_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker helperBW = sender as BackgroundWorker;
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (this.ID_CHECKER.id == 0)
+                {
+                    return;
+                }
+
+                var idchecker = IdChecker.Get(this.ID_CHECKER.id);
+                if (idchecker != null)
+                {
+                    switch (idchecker.status)
+                    {
+                        case "New":
+                            lblIdStatus.BackColor = Color.FromArgb(255, 255, 192);
+                            lblIdStatus.Text = "PENDING";
+                            break;
+                        case "Yes":
+                            lblIdStatus.BackColor = Color.Green;
+                            lblIdStatus.Text = "ID APPROVED";
+                            break;
+                        case "No":
+                            lblIdStatus.BackColor = Color.Red;
+                            lblIdStatus.Text = "ID MISSING";
+                            break;
+                        case "Processing":
+                            lblIdStatus.BackColor = Color.FromArgb(230, 126, 34);
+                            lblIdStatus.Text = "PROCESSING";
+                            break;
+                    }
+                }
+
+                showIdMissing();
+            });
+
+            Thread.Sleep(2000);
+        }
+
+        private void bgWorkID_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            //if (e.Cancelled)
+            //    return;
+            if (e.Error != null)
+                Globals.showMessage(e.Error.Message);
+            else
+                bgWorkID.RunWorkerAsync();
+        }
+
+        public void showIdMissing()
+        {
+            if (this.ID_CHECKER.id != 0 && ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(Globals.CurrentUrl) && isBrowserInitialized && (this.ID_CHECKER.status != "New" && this.ID_CHECKER.status != "Processing"))
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
+            else
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");
+        }
     }
 
 }

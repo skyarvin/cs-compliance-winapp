@@ -1170,9 +1170,9 @@ namespace WindowsFormsApp1
         public void showRequestReviewAndIdMissing()
         {
             if (Globals.INTERNAL_RR.id != 0 && ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername( Globals.CurrentUrl) && isBrowserInitialized && (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing" && Globals.INTERNAL_RR.status != "Waiting SC"))
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'block'; });");
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#request_review_button').forEach(function(el){ el.style.display = 'block'; });");
             else
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #request_review_button').forEach(function(el){ el.style.display = 'none'; });");
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#request_review_button').forEach(function(el){ el.style.display = 'none'; });");
         }
         private void bgWorkIRR_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
@@ -1203,27 +1203,38 @@ namespace WindowsFormsApp1
             BackgroundWorker helperBW = sender as BackgroundWorker;
             this.InvokeOnUiThreadIfRequired(() =>
             {
+                showIdMissing();
                 if (this.ID_CHECKER.id == 0)
                 {
+                    lblIdStatus.Visible = false;
                     return;
                 }
 
                 var idchecker = IdChecker.Get(this.ID_CHECKER.id);
                 if (idchecker != null)
                 {
+                    this.ID_CHECKER = idchecker;
+                    if (ExtractUsername(Globals.CurrentUrl) != ExtractUsername(idchecker.url))
+                    {
+                        lblIdStatus.Visible = false;
+                        return;
+                    }
+                    lblIdStatus.Visible = true;
+                    lblIdStatus.ForeColor = Color.Black;
                     switch (idchecker.status)
                     {
                         case "New":
                             lblIdStatus.BackColor = Color.FromArgb(255, 255, 192);
-                            lblIdStatus.Text = "PENDING";
+                            lblIdStatus.Text = "PENDING FOR ID CHECKING";
                             break;
-                        case "Yes":
+                        case "Approve":
                             lblIdStatus.BackColor = Color.Green;
                             lblIdStatus.Text = "ID APPROVED";
                             break;
-                        case "No":
+                        case "Id Missing":
                             lblIdStatus.BackColor = Color.Red;
-                            lblIdStatus.Text = "ID MISSING";
+                            lblIdStatus.Text = "REPORT FOR ID MISSING";
+                            lblIdStatus.ForeColor = Color.White;
                             break;
                         case "Processing":
                             lblIdStatus.BackColor = Color.FromArgb(230, 126, 34);
@@ -1231,8 +1242,6 @@ namespace WindowsFormsApp1
                             break;
                     }
                 }
-
-                showIdMissing();
             });
 
             Thread.Sleep(2000);
@@ -1250,7 +1259,7 @@ namespace WindowsFormsApp1
 
         public void showIdMissing()
         {
-            if (this.ID_CHECKER.id != 0 && ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(Globals.CurrentUrl) && isBrowserInitialized && (this.ID_CHECKER.status != "New" && this.ID_CHECKER.status != "Processing"))
+            if (this.ID_CHECKER.id != 0 && ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(Globals.CurrentUrl) && isBrowserInitialized && (this.ID_CHECKER.status == "Id Missing"))
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
             else
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");

@@ -63,8 +63,8 @@
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
             this.bgWorkIRR = new System.ComponentModel.BackgroundWorker();
             this.bgWorkID = new System.ComponentModel.BackgroundWorker();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.lblIdStatus = new System.Windows.Forms.Label();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -404,9 +404,9 @@
             // pnlBrowser
             // 
             this.pnlBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlBrowser.Location = new System.Drawing.Point(0, 63);
+            this.pnlBrowser.Location = new System.Drawing.Point(0, 87);
             this.pnlBrowser.Name = "pnlBrowser";
-            this.pnlBrowser.Size = new System.Drawing.Size(1128, 454);
+            this.pnlBrowser.Size = new System.Drawing.Size(1128, 430);
             this.pnlBrowser.TabIndex = 2;
             // 
             // bgWorkResync
@@ -432,6 +432,21 @@
             this.bgWorkID.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkID_DoWork);
             this.bgWorkID.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkID_RunWorkerCompleted);
             // 
+            // lblIdStatus
+            // 
+            this.lblIdStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.lblIdStatus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblIdStatus.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblIdStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIdStatus.Location = new System.Drawing.Point(0, 40);
+            this.lblIdStatus.Name = "lblIdStatus";
+            this.lblIdStatus.Size = new System.Drawing.Size(1128, 47);
+            this.lblIdStatus.TabIndex = 3;
+            this.lblIdStatus.Text = "ID CHECKING";
+            this.lblIdStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblIdStatus.Visible = false;
+            this.lblIdStatus.Click += new System.EventHandler(this.lblIdStatus_Click);
+            // 
             // cmbURL
             // 
             this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -451,19 +466,6 @@
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
             this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
             this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
-            // 
-            // lblIdStatus
-            // 
-            this.lblIdStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
-            this.lblIdStatus.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblIdStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblIdStatus.Location = new System.Drawing.Point(0, 40);
-            this.lblIdStatus.Name = "lblIdStatus";
-            this.lblIdStatus.Size = new System.Drawing.Size(1128, 23);
-            this.lblIdStatus.TabIndex = 3;
-            this.lblIdStatus.Text = "ID CHECKING";
-            this.lblIdStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblIdStatus.Visible = false;
             // 
             // frmMain
             // 

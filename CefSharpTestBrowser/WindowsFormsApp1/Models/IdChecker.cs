@@ -16,7 +16,7 @@ namespace SkydevCSTool.Models
         public int agent_id { get; set; }
         public string url { get; set; }
         public string status { get; set; }
-
+        public string reviewer_notes { get; set; }
         public IdChecker Save()
         {
             Globals.SaveToLogFile(string.Concat("Send Id checker: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);

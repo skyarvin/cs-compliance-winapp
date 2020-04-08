@@ -581,6 +581,8 @@ namespace WindowsFormsApp1
                     members = Globals.Profiles,
                     is_trainee = Globals.ComplianceAgent.is_trainee
                 };
+                if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
+                    logData.idc_id = this.ID_CHECKER.id;
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
                 if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
@@ -1203,54 +1205,56 @@ namespace WindowsFormsApp1
             BackgroundWorker helperBW = sender as BackgroundWorker;
             this.InvokeOnUiThreadIfRequired(() =>
             {
-                showIdMissing();
                 if (this.ID_CHECKER.id == 0)
                 {
                     lblIdStatus.Visible = false;
+                    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
                     return;
                 }
 
                 var idchecker = IdChecker.Get(this.ID_CHECKER.id);
-                if (idchecker != null)
+                if (idchecker == null)
+                    return;
+
+                this.ID_CHECKER = idchecker;
+                if (ExtractUsername(Globals.CurrentUrl) != ExtractUsername(idchecker.url))
                 {
-                    this.ID_CHECKER = idchecker;
-                    if (ExtractUsername(Globals.CurrentUrl) != ExtractUsername(idchecker.url))
-                    {
-                        lblIdStatus.Visible = false;
-                        return;
-                    }
-                    lblIdStatus.Visible = true;
-                    lblIdStatus.ForeColor = Color.Black;
-                    switch (idchecker.status)
-                    {
-                        case "New":
-                            lblIdStatus.BackColor = Color.FromArgb(255, 255, 192);
-                            lblIdStatus.Text = "PENDING FOR ID CHECKING";
-                            break;
-                        case "Approve":
-                            lblIdStatus.BackColor = Color.Green;
-                            lblIdStatus.Text = "ID APPROVED";
-                            break;
-                        case "Id Missing":
-                            lblIdStatus.BackColor = Color.Red;
-                            lblIdStatus.Text = "REPORT FOR ID MISSING";
-                            lblIdStatus.ForeColor = Color.White;
-                            break;
-                        case "Processing":
-                            lblIdStatus.BackColor = Color.FromArgb(230, 126, 34);
-                            lblIdStatus.Text = "PROCESSING";
-                            break;
-                    }
+                    lblIdStatus.Visible = false;
+                    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
+                    return;
+                }
+                showIdMissing();
+                lblIdStatus.Visible = true;
+                lblIdStatus.ForeColor = Color.Black;
+                lblIdStatus.Tag = idchecker.reviewer_notes;
+                switch (idchecker.status)
+                {
+                    case "New":
+                        lblIdStatus.BackColor = Color.FromArgb(255, 255, 192);
+                        lblIdStatus.Text = "PENDING FOR ID CHECKING";
+                        break;
+                    case "Approve":
+                        lblIdStatus.BackColor = Color.Green;
+                        lblIdStatus.Text = string.Concat("ID APPROVED", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
+                        lblIdStatus.ForeColor = Color.White;
+                        break;
+                    case "Id Missing":
+                        lblIdStatus.BackColor = Color.Red;
+                        lblIdStatus.Text = string.Concat("REPORT FOR ID MISSING", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
+                        lblIdStatus.ForeColor = Color.White;
+                        break;
+                    case "Processing":
+                        lblIdStatus.BackColor = Color.FromArgb(230, 126, 34);
+                        lblIdStatus.Text = "PROCESSING";
+                        break;
                 }
             });
 
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
         }
 
         private void bgWorkID_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            //if (e.Cancelled)
-            //    return;
             if (e.Error != null)
                 Globals.showMessage(e.Error.Message);
             else
@@ -1259,10 +1263,28 @@ namespace WindowsFormsApp1
 
         public void showIdMissing()
         {
-            if (this.ID_CHECKER.id != 0 && ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(Globals.CurrentUrl) && isBrowserInitialized && (this.ID_CHECKER.status == "Id Missing"))
+            if(this.ID_CHECKER.id == 0 || ExtractUsername(this.ID_CHECKER.url) != ExtractUsername(Globals.CurrentUrl) || !isBrowserInitialized)
+            {
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #approve_button').forEach(function(el){ el.style.display = 'none'; });");
+                return;
+            }
+
+            Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'none'; });");
+            Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");
+            if (this.ID_CHECKER.status == "Id Missing")
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
-            else
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");
+            else if (this.ID_CHECKER.status == "Approve")
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
+        }
+
+        private void lblIdStatus_Click(object sender, EventArgs e)
+        {
+            if (lblIdStatus.Tag == null)
+                return;
+            if (!String.IsNullOrEmpty(lblIdStatus.Tag.ToString()))
+            {
+                Clipboard.SetText(lblIdStatus.Tag.ToString());
+            }
         }
     }
 

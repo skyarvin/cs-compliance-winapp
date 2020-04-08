@@ -50,18 +50,26 @@ namespace SkydevCSTool.Models
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/idc/", id, "/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                try
                 {
-                    if (response.IsSuccessStatusCode)
+                    using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                     {
-                        using (HttpContent content = response.Content)
+                        if (response.IsSuccessStatusCode)
                         {
-                            var jsonString = content.ReadAsStringAsync();
-                            jsonString.Wait();
-                            return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
+                            using (HttpContent content = response.Content)
+                            {
+                                var jsonString = content.ReadAsStringAsync();
+                                jsonString.Wait();
+                                return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
+                            }
+                        }
+                        else
+                        {
+                            Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error);
                         }
                     }
                 }
+                catch { Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error); }
             }
 
             return null;

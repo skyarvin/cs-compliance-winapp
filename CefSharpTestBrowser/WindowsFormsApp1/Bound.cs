@@ -426,5 +426,10 @@ namespace SkydevCSTool
         {
             public string Id { get; set; }
         }
+
+        public void SendToIdChecking()
+        {
+            Globals.frmMain.SendToIdChecking();
+        }
     }
 }

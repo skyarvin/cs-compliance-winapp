@@ -518,6 +518,7 @@ namespace WindowsFormsApp1
         {
             Task.Factory.StartNew(() =>
             {
+                this.send_id_checker = true;
                 var urlToSave = Globals.CurrentUrl;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
                 string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
@@ -547,7 +548,7 @@ namespace WindowsFormsApp1
                     last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
                     last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
-             
+
                 var actual_start_time = Globals.StartTime_LastAction;
                 if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
                 {
@@ -737,6 +738,7 @@ namespace WindowsFormsApp1
         {
             if (e.KeyChar == (char)13)
             {
+                this.send_id_checker = false;
                 LoadUrl(cmbURL.Text.ToString());
             }
         }
@@ -756,7 +758,7 @@ namespace WindowsFormsApp1
 
         private void CmbURL_Click_1(object sender, EventArgs e)
         {
-
+            this.send_id_checker = false;
         }
 
         private void CmbURL_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -766,10 +768,8 @@ namespace WindowsFormsApp1
                 LoadUrl(cmbURL.SelectedItem.ToString());
             }
         }
-
         private void LoadUrl(string url)
         {
-            this.send_id_checker = false;
             if (!IsValidUrl(url))
             {
                 Emailer email = new Emailer();
@@ -1197,17 +1197,17 @@ namespace WindowsFormsApp1
         private void bgWorkID_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
-            
+            Console.WriteLine("bg IDC");
             if (this.ID_CHECKER.id == 0)
             {
+                bgWorkID.CancelAsync();
                 if (helperBW.CancellationPending)
                 {
                     e.Cancel = true;
                 }
-                bgWorkID.CancelAsync();
                 this.InvokeOnUiThreadIfRequired(() => lblIdStatus.Visible = false);
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
-                return;
+                return; 
             }
 
             var idchecker = IdChecker.Get(this.ID_CHECKER.id);
@@ -1219,11 +1219,11 @@ namespace WindowsFormsApp1
             //this.ID_CHECKER = idchecker;
             if (ExtractUsername(Globals.CurrentUrl) != ExtractUsername(idchecker.url))
             {
+                bgWorkID.CancelAsync();
                 if (helperBW.CancellationPending)
                 {
                     e.Cancel = true;
                 }
-                bgWorkID.CancelAsync();
                 this.InvokeOnUiThreadIfRequired(() => lblIdStatus.Visible = false);
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
                 return;
@@ -1258,7 +1258,7 @@ namespace WindowsFormsApp1
                         break;
                 }
             });
-            Console.WriteLine("bg IDC");
+            
             Thread.Sleep(3000);
             if (helperBW.CancellationPending)
             {
@@ -1311,11 +1311,16 @@ namespace WindowsFormsApp1
 
         public void SendToIdChecking()
         {
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                lblIdStatus.Visible = true;
+                lblIdStatus.Text = "SENDING TO CHECKER";
+                lblIdStatus.BackColor = Color.FromArgb(255, 255, 192);
+            });
             IdChecker id_checker = new IdChecker();
             id_checker.agent_id = Globals.ComplianceAgent.id;
             id_checker.url = Globals.CurrentUrl;
             var result = id_checker.Save();
-            result = null;
             this.ID_CHECKER = new IdChecker();
             if (result != null)
             {
@@ -1334,6 +1339,8 @@ namespace WindowsFormsApp1
             }
 
         }
+
+        
     }
 
 }

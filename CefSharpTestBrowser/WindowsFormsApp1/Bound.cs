@@ -30,9 +30,9 @@ namespace SkydevCSTool
             if (!e.Frame.IsMain)
                 return;
 
+            Globals.frmMain.hideBanner();
             if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && e.Url.Contains("/compliance/show"))
             {
-
                 browser.ExecuteScriptAsync(
                 "function sleep(ms) {" +
                     "return new Promise(resolve => setTimeout(resolve, ms));" +
@@ -153,7 +153,6 @@ namespace SkydevCSTool
                     function hideRRIM()
                     {
                         document.getElementById(`request_review_button`).style.display = `none`;
-                        document.getElementById(`identificationproblem_button`).style.display = `none`;
                         bound.checkToShowRRIM();
                     }
 

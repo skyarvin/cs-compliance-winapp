@@ -346,7 +346,6 @@ namespace WindowsFormsApp1
                     {
                         if(!sCurrAddress.Contains("seed_failure"))
                         {
-                            //lblIdStatus.Visible = false;
                             if (this.send_id_checker && IsComplianceUrl(sCurrAddress))
                             {
                                 Globals.chromeBrowser.ExecuteScriptAsync(@"
@@ -369,7 +368,6 @@ namespace WindowsFormsApp1
                     }
                     else
                     {
-                        //lblIdStatus.Visible = false;
                         if (this.send_id_checker && IsComplianceUrl(sCurrAddress))
                         {
                             Globals.chromeBrowser.ExecuteScriptAsync(@"
@@ -1214,15 +1212,16 @@ namespace WindowsFormsApp1
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
             Console.WriteLine("bg IDC");
+
             if (this.ID_CHECKER.id == 0)
             {
-                bgWorkID.CancelAsync();
-                if (helperBW.CancellationPending)
-                {
-                    e.Cancel = true;
-                }
+                //bgWorkID.CancelAsync();
+                //if (helperBW.CancellationPending)
+                //{
+                //    e.Cancel = true;
+                //}
                 this.InvokeOnUiThreadIfRequired(() => lblIdStatus.Visible = false);
-                return; 
+                return;
             }
 
             var idchecker = IdChecker.Get(this.ID_CHECKER.id);
@@ -1233,11 +1232,11 @@ namespace WindowsFormsApp1
 
             if (ExtractUsername(Globals.CurrentUrl) != ExtractUsername(idchecker.url))
             {
-                bgWorkID.CancelAsync();
-                if (helperBW.CancellationPending)
-                {
-                    e.Cancel = true;
-                }
+                //bgWorkID.CancelAsync();
+                //if (helperBW.CancellationPending)
+                //{
+                //    e.Cancel = true;
+                //}
                 this.InvokeOnUiThreadIfRequired(() => lblIdStatus.Visible = false);
                 return;
             }
@@ -1260,7 +1259,7 @@ namespace WindowsFormsApp1
                         lblIdStatus.BackColor = Color.Green;
                         lblIdStatus.Text = string.Concat("ID APPROVED", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
                         lblIdStatus.ForeColor = Color.White;
-                        bgWorkID.CancelAsync();
+                        //bgWorkID.CancelAsync();
                         break;
                     case "Id Missing":
                         Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
@@ -1268,7 +1267,7 @@ namespace WindowsFormsApp1
                         lblIdStatus.BackColor = Color.Red;
                         lblIdStatus.Text = string.Concat("REPORT FOR ID MISSING", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
                         lblIdStatus.ForeColor = Color.White;
-                        bgWorkID.CancelAsync();
+                        //bgWorkID.CancelAsync();
                         break;
                     case "Processing":
                         hideIMAP();
@@ -1327,7 +1326,6 @@ namespace WindowsFormsApp1
                 }
                 Clipboard.SetText(lblIdStatus.Tag.ToString());
             }
-
         }
 
 
@@ -1337,6 +1335,7 @@ namespace WindowsFormsApp1
             {
                 lblIdStatus.Visible = true;
                 lblIdStatus.Text = "SENDING TO CHECKER";
+                lblIdStatus.ForeColor = Color.Black;
                 lblIdStatus.BackColor = Color.FromArgb(255, 255, 192);
             });
             IdChecker id_checker = new IdChecker();

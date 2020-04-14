@@ -33,6 +33,7 @@
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.pnlURL = new System.Windows.Forms.Panel();
+            this.cmbURL = new SkydevCSTool.CustomComboBox();
             this.pnlAction = new System.Windows.Forms.Panel();
             this.lblApproveCount = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
@@ -62,7 +63,8 @@
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
             this.bgWorkIRR = new System.ComponentModel.BackgroundWorker();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
+            this.bgWorkID = new System.ComponentModel.BackgroundWorker();
+            this.lblIdStatus = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -116,6 +118,26 @@
             this.pnlURL.Name = "pnlURL";
             this.pnlURL.Size = new System.Drawing.Size(244, 40);
             this.pnlURL.TabIndex = 14;
+            // 
+            // cmbURL
+            // 
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(6, 7);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(232, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
+            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
             // 
             // pnlAction
             // 
@@ -402,9 +424,9 @@
             // pnlBrowser
             // 
             this.pnlBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlBrowser.Location = new System.Drawing.Point(0, 40);
+            this.pnlBrowser.Location = new System.Drawing.Point(0, 87);
             this.pnlBrowser.Name = "pnlBrowser";
-            this.pnlBrowser.Size = new System.Drawing.Size(1128, 477);
+            this.pnlBrowser.Size = new System.Drawing.Size(1128, 430);
             this.pnlBrowser.TabIndex = 2;
             // 
             // bgWorkResync
@@ -424,25 +446,26 @@
             this.bgWorkIRR.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkIRR_DoWork);
             this.bgWorkIRR.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkIRR_RunWorkerCompleted);
             // 
-            // cmbURL
+            // bgWorkID
             // 
-            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.cmbURL.ForeColor = System.Drawing.Color.White;
-            this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(6, 7);
-            this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(232, 25);
-            this.cmbURL.TabIndex = 8;
-            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
-            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
-            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
-            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
-            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
+            this.bgWorkID.WorkerSupportsCancellation = true;
+            this.bgWorkID.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkID_DoWork);
+            this.bgWorkID.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkID_RunWorkerCompleted);
+            // 
+            // lblIdStatus
+            // 
+            this.lblIdStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));
+            this.lblIdStatus.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblIdStatus.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblIdStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIdStatus.Location = new System.Drawing.Point(0, 40);
+            this.lblIdStatus.Name = "lblIdStatus";
+            this.lblIdStatus.Size = new System.Drawing.Size(1128, 47);
+            this.lblIdStatus.TabIndex = 3;
+            this.lblIdStatus.Text = "ID CHECKING";
+            this.lblIdStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblIdStatus.Visible = false;
+            this.lblIdStatus.Click += new System.EventHandler(this.lblIdStatus_Click);
             // 
             // frmMain
             // 
@@ -450,6 +473,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 517);
             this.Controls.Add(this.pnlBrowser);
+            this.Controls.Add(this.lblIdStatus);
             this.Controls.Add(this.pnlHeader);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
@@ -510,6 +534,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button btnKb;
         private System.ComponentModel.BackgroundWorker bgWorkIRR;
+        private System.ComponentModel.BackgroundWorker bgWorkID;
+        private System.Windows.Forms.Label lblIdStatus;
     }
 }
 

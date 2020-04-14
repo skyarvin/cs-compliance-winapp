@@ -60,6 +60,7 @@ namespace WindowsFormsApp1
         public static int room_duration;
         public static DateTime? StartTime_LastAction;
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
+
         public static void ShowMessage(Form parent,string Message)
         {
             frmMessage frm = new frmMessage(Message);
@@ -120,6 +121,9 @@ namespace WindowsFormsApp1
                     case (int)LogType.UserClick:
                         logFilePath = @path + "user_click_log.txt";
                         break;
+                    case (int)LogType.Request_Handler:
+                        logFilePath = @path + "request_handler.txt";
+                        break;
                 }
 
                 FileInfo logFileInfo = new FileInfo(logFilePath);
@@ -165,7 +169,7 @@ namespace WindowsFormsApp1
                 return "999999";
             }
 
-            return "0.0.0.0";
+            return "3.0.0.0.6";
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>
@@ -332,6 +336,7 @@ namespace WindowsFormsApp1
         Error = 3,
         Activity = 4,
         UserClick = 5,
+        Request_Handler = 6,
     }
 
 }

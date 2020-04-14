@@ -121,21 +121,27 @@ namespace SkydevCSTool.Handlers
 
         public void OnResourceRedirect(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response, ref string newUrl)
         {
-            if (!Globals.IsBuddySystem())
-                return;
+            //if (!Globals.IsBuddySystem())
+            //    return;
 
-            if (Globals.CurrentUrl == request.ReferrerUrl && response.StatusCode == 302 && newUrl == String.Concat(Url.CB_COMPLIANCE_URL,"/")) {
-                browser.StopLoad();
-                //DO SWITCH
-                if(Globals.IsServer())
-                {
-                    ServerAsync.SwitchToNextProfile();
-                }
-                else if(Globals.IsClient())
-                {
-                    AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "AUTO_SWITCH" });
-                }
-            }
+            //if (Globals.CurrentUrl == request.ReferrerUrl && response.StatusCode == 302 && newUrl == String.Concat(Url.CB_COMPLIANCE_URL,"/")) {
+            //    browser.StopLoad();
+            //    //DO SWITCH
+            //    if(Globals.IsServer())
+            //    {
+            //        ServerAsync.SwitchToNextProfile();
+            //    }
+            //    else if(Globals.IsClient())
+            //    {
+            //        AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "AUTO_SWITCH" });
+            //    }
+            //}
+
+            string logData = string.Concat("Last Success Id: ", Globals.LAST_SUCCESS_ID, 
+                ", StartTime_LastAction: ", Globals.StartTime_LastAction, 
+                ", ReferrerUrl: ", request.ReferrerUrl,
+                ", CurrentUrl: ", Globals.CurrentUrl, "/", newUrl);
+            Globals.SaveToLogFile(logData, (int)LogType.Request_Handler);
         }
 
         public bool OnResourceResponse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response)

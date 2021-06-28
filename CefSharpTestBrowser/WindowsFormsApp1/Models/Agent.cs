@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SkydevCSTool.Class;
+using CSTool.Class;
 using System;
 using System.Net.Http;
 using System.Windows.Forms;
@@ -15,6 +15,7 @@ namespace WindowsFormsApp1.Models
         //public string review_date { get; set; }
         //public string last_workshift { get; set; }
         public string role { get; set; }
+        public bool id_checking { get; set; }
         public string profile
         {
             get
@@ -32,12 +33,12 @@ namespace WindowsFormsApp1.Models
                 return false;
             }
         }
-        public static Agent Get(string email)
+        public static Agent Get(string username)
         {
             using (var client = new HttpClient())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/agent/?email=", email,"&version=", appversion);
+                var uri = string.Concat(Url.API_URL, "/agent/?username=", username,"&version=", appversion);
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

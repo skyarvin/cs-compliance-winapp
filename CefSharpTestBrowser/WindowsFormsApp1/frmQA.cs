@@ -1,6 +1,7 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
+using CSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +25,7 @@ namespace WindowsFormsApp1
         public frmQA()
         {
             InitializeComponent();
-            InitializeChromium("https://chaturbate.com");
+            InitializeChromium(Url.CB_HOME);
         }
         public void InitializeChromium(string url)
         {
@@ -38,7 +39,7 @@ namespace WindowsFormsApp1
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/SkydevCsTool/cookies/" + Globals.ComplianceAgent.profile + "_qa/", true);
+            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.ComplianceAgent.profile + "_qa/", true);
 
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";

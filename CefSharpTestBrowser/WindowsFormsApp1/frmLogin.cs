@@ -1,4 +1,4 @@
-﻿using SkydevCSTool.Properties;
+﻿using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,8 +42,8 @@ namespace WindowsFormsApp1
         }
         private void Login()
         {
-            if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || (!(new EmailAddressAttribute().IsValid(txtEmail.Text))))
-                MessageBox.Show("Invalid Email", "Error");
+            if (string.IsNullOrEmpty(txtEmail.Text.Trim()))
+                MessageBox.Show("Invalid Username", "Error");
             else
             {
                 try
@@ -77,14 +77,14 @@ namespace WindowsFormsApp1
                     }
                     else
                     {
-                        MessageBox.Show("We cannot find an account with that email address.", "Error");
+                        MessageBox.Show("We cannot find an account with that username.", "Error");
                     }
                 }
                 catch (AggregateException e)
                 {
                     Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                    MessageBox.Show(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+                    MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
                 }
                 catch (Exception e)
                 {
@@ -100,17 +100,17 @@ namespace WindowsFormsApp1
             //workshift_list.DisplayMember = "Value";
             //workshift_list.ValueMember = "Key";
 
-            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.email))
+            if (!string.IsNullOrEmpty(CSTool.Properties.Settings.Default.email))
             {
-                txtEmail.Text = SkydevCSTool.Properties.Settings.Default.email;
+                txtEmail.Text = CSTool.Properties.Settings.Default.email;
             }
-            //if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.workshift))
+            //if (!string.IsNullOrEmpty(CSTool.Properties.Settings.Default.workshift))
             //{
-            //    workshift_list.SelectedValue = SkydevCSTool.Properties.Settings.Default.workshift;
+            //    workshift_list.SelectedValue = CSTool.Properties.Settings.Default.workshift;
             //}
-            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.user_type))
+            if (!string.IsNullOrEmpty(CSTool.Properties.Settings.Default.user_type))
             {
-                cmbUtype.Text= SkydevCSTool.Properties.Settings.Default.user_type;
+                cmbUtype.Text= CSTool.Properties.Settings.Default.user_type;
             }
 
             string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");

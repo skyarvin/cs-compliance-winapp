@@ -1,6 +1,6 @@
 ﻿using CefSharp.WinForms.Internals;
 using Newtonsoft.Json;
-using SkydevCSTool.Properties;
+using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1;
 
-namespace SkydevCSTool.Class
+namespace CSTool.Class
 {
     public class Server
     {
@@ -165,8 +165,8 @@ namespace SkydevCSTool.Class
                                         }
                                         break;
                                     case "REQUEST_CACHE":
-                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
-                                        string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
+                                        string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool");
                                         System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                                         Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                                         string file = Convert.ToBase64String(sbytes);
@@ -174,12 +174,12 @@ namespace SkydevCSTool.Class
                                         break;
                                     case "SAVE_CLIENT_CACHE":
                                         Byte[] rbytes = Convert.FromBase64String(data.Message);
-                                        string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile);
+                                        string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", data.Profile);
                                         if (!Directory.Exists(temporary_cookies_directory))
                                         {
                                             Directory.CreateDirectory(temporary_cookies_directory);
                                         }
-                                        string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
+                                        string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", data.Profile, "\\Cookies");
                                         File.WriteAllBytes(path, rbytes);
                                         break;
                                     case "BEGIN_SEND":
@@ -386,8 +386,8 @@ namespace SkydevCSTool.Class
 
             foreach (var connection in Globals.Connections)
             {
-                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
-                string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
+                string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool");
                 System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                 Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                 string file = Convert.ToBase64String(sbytes);

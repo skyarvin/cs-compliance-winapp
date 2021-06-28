@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SkydevCSTool.Class;
+using CSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 
-namespace SkydevCSTool.Models
+namespace CSTool.Models
 {
     class Emailer
     {

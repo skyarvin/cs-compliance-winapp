@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Gma.System.MouseKeyHook;
 using WindowsFormsApp1;
 
-namespace SkydevCSTool.Class
+namespace CSTool.Class
 {
     class WindowsActivityMonitor
     {

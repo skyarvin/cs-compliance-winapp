@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using SkydevCSTool.Class;
+using CSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;

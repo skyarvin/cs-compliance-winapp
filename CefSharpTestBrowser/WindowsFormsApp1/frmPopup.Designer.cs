@@ -1,4 +1,4 @@
-﻿namespace SkydevCSTool
+﻿namespace CSTool
 {
     partial class frmPopup
     {
@@ -112,7 +112,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::SkydevCSTool.Properties.Resources.find;
+            this.pictureBox1.Image = global::CSTool.Properties.Resources.find;
             this.pictureBox1.Location = new System.Drawing.Point(3, 7);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(25, 24);

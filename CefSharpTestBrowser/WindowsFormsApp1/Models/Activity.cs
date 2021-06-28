@@ -1,12 +1,12 @@
 ﻿using Newtonsoft.Json;
-using SkydevCSTool.Class;
+using CSTool.Class;
 using System;
 using System.Net.Http;
 using System.Text;
 using System.Windows.Forms;
 using WindowsFormsApp1;
 
-namespace SkydevCSTool.Models
+namespace CSTool.Models
 {
     public class Activity
     {

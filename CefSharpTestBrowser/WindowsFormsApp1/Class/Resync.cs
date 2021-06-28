@@ -7,12 +7,12 @@ using System.Data.SQLite;
 using System.Data.SqlClient;
 using System.Data;
 using Dapper;
-using SkydevCSTool.Models;
+using CSTool.Models;
 using WindowsFormsApp1.Models;
 using System.Threading;
 using WindowsFormsApp1;
 
-namespace SkydevCSTool.Class
+namespace CSTool.Class
 {
    public class Resync
     {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 
-namespace SkydevCSTool.Class
+namespace CSTool.Class
 {
     public class PairCommand
     {

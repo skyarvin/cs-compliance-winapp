@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Net.Sockets;
 
-namespace SkydevCSTool.Class
+namespace CSTool.Class
 {
     public class Sockets
     {

@@ -1,6 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
-using SkydevCSTool.Class;
+using CSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +13,7 @@ using WindowsFormsApp1;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using CefSharp.WinForms.Internals;
 
-namespace SkydevCSTool.Handlers
+namespace CSTool.Handlers
 {
     public class BrowserLifeSpanHandler : ILifeSpanHandler
     {

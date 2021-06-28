@@ -1,5 +1,5 @@
-﻿using SkydevCSTool.Models;
-using SkydevCSTool.Properties;
+﻿using CSTool.Models;
+using CSTool.Properties;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,7 +16,7 @@ namespace WindowsFormsApp1
         [STAThread]
         static void Main()
         {
-            const string appName = "SkydevCSTool";
+            const string appName = "CSTool";
             bool createdNew;
             mutex = new Mutex(true, appName, out createdNew);
             if (!createdNew)

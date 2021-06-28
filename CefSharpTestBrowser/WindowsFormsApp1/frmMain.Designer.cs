@@ -33,7 +33,7 @@
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.pnlURL = new System.Windows.Forms.Panel();
-            this.cmbURL = new SkydevCSTool.CustomComboBox();
+            this.cmbURL = new CSTool.CustomComboBox();
             this.pnlAction = new System.Windows.Forms.Panel();
             this.lblApproveCount = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
@@ -276,7 +276,7 @@
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = global::SkydevCSTool.Properties.Resources.loader;
+            this.pictureBox1.Image = global::CSTool.Properties.Resources.loader;
             this.pictureBox1.Location = new System.Drawing.Point(5, 7);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 25);
@@ -287,7 +287,7 @@
             // btnKb
             // 
             this.btnKb.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnKb.BackgroundImage = global::SkydevCSTool.Properties.Resources.kb_icon;
+            this.btnKb.BackgroundImage = global::CSTool.Properties.Resources.kb_icon;
             this.btnKb.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnKb.Dock = System.Windows.Forms.DockStyle.Right;
             this.btnKb.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
@@ -407,7 +407,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.BackgroundImage = global::SkydevCSTool.Properties.Resources.home;
+            this.btnRefresh.BackgroundImage = global::CSTool.Properties.Resources.home;
             this.btnRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.btnRefresh.Dock = System.Windows.Forms.DockStyle.Left;
             this.btnRefresh.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
@@ -475,10 +475,9 @@
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.lblIdStatus);
             this.Controls.Add(this.pnlHeader);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.Name = "frmMain";
-            this.Text = "Skydev Browser";
+            this.Text = "Compliance Browser";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMain_FormClosed);
@@ -510,7 +509,7 @@
         private System.Windows.Forms.Panel pnlSplitter;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel pnlSearch;
-        private SkydevCSTool.CustomComboBox cmbURL;
+        private CSTool.CustomComboBox cmbURL;
         private System.ComponentModel.BackgroundWorker bgWorkResync;
         private System.Windows.Forms.Timer updateWorkactivity;
         private System.Windows.Forms.ToolStripMenuItem switchToolStripMenuItem;

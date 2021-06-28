@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using SkydevCSTool.Class;
+using CSTool.Class;
 
-namespace SkydevCSTool
+namespace CSTool
 {
     public partial class frmLogViewer : Form
     {

@@ -1,8 +1,8 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
-using SkydevCSTool.Class;
-using SkydevCSTool.Models;
-using SkydevCSTool.Properties;
+using CSTool.Class;
+using CSTool.Models;
+using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
 
-namespace SkydevCSTool
+namespace CSTool
 {
     public class BoundObject
     {
@@ -225,7 +225,7 @@ namespace SkydevCSTool
                     }
                     
                     waitUntil(`#request_review_button`,5000).then((el) => hideRRIM(), (err) => console.log(`rr not found`));
-                    waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
+                    //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
             ");
 
@@ -325,8 +325,8 @@ namespace SkydevCSTool
             catch (AggregateException e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                Globals.showMessage(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"));
+                Globals.showMessage(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"));
             }
             catch (Exception e)
             {
@@ -427,8 +427,11 @@ namespace SkydevCSTool
         }
 
         public void SendToIdChecking()
-        {
-            Globals.frmMain.SendToIdChecking();
+        {   
+            if (Globals.ComplianceAgent.id_checking)
+            {
+                Globals.frmMain.SendToIdChecking();
+            }
         }
     }
 }

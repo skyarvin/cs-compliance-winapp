@@ -9,10 +9,10 @@ using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using CefSharp.WinForms.Internals;
-using SkydevCSTool.Properties;
-using SkydevCSTool.Models;
+using CSTool.Properties;
+using CSTool.Models;
 
-namespace SkydevCSTool.Class
+namespace CSTool.Class
 {
     public class Client
     {
@@ -180,16 +180,16 @@ namespace SkydevCSTool.Class
                                         }
                                         // Receive the cache from server
                                         Byte[] rbytes = Convert.FromBase64String(data.Message);
-                                        string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile);
+                                        string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", data.Profile);
                                         if (!Directory.Exists(temporary_cookies_directory))
                                         {
                                             Directory.CreateDirectory(temporary_cookies_directory);
                                         }
-                                        string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", data.Profile, "\\Cookies");
+                                        string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", data.Profile, "\\Cookies");
                                         File.WriteAllBytes(path, rbytes);
                                         // Give local cache back to server
-                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
-                                        string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                                        string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", Globals.ComplianceAgent.profile, "\\Cookies");
+                                        string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool");
                                         System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                                         Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                                         string file = Convert.ToBase64String(sbytes);
@@ -222,14 +222,14 @@ namespace SkydevCSTool.Class
                                             break;
                                         Globals.Profile = new Profile { Name = data.Profile, AgentID = data.ProfileID, IsActive = true };
                                         Byte[] bytes = Convert.FromBase64String(data.Message);
-                                        string _temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name);
+                                        string _temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", Globals.Profile.Name);
                                         if (!Directory.Exists(_temporary_cookies_directory))
                                         {
                                             Directory.CreateDirectory(_temporary_cookies_directory);
                                         }
 
                                         Globals.SaveToLogFile(string.Concat("Client switch: ", Globals.Profile.Name), (int)LogType.Action);
-                                        string _path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
+                                        string _path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
                                         File.WriteAllBytes(_path, bytes);
                                         Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                                         {

@@ -1,6 +1,6 @@
 ﻿using CefSharp.WinForms.Internals;
-using SkydevCSTool.Class;
-using SkydevCSTool.Properties;
+using CSTool.Class;
+using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

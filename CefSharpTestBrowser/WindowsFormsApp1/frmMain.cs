@@ -1,9 +1,9 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using CefSharp.WinForms.Internals;
-using SkydevCSTool;
-using SkydevCSTool.Class;
-using SkydevCSTool.Handlers;
+using CSTool;
+using CSTool.Class;
+using CSTool.Handlers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,9 +24,9 @@ using System.Diagnostics;
 using System.Reflection;
 using Newtonsoft.Json;
 using System.Windows.Input;
-using SkydevCSTool.Properties;
+using CSTool.Properties;
 using System.Security.Cryptography;
-using SkydevCSTool.Models;
+using CSTool.Models;
 
 namespace WindowsFormsApp1
 {
@@ -76,7 +76,7 @@ namespace WindowsFormsApp1
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/SkydevCsTool/cookies/" + Globals.Profile.Name + "/", true);
+            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.Profile.Name + "/", true);
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
@@ -124,12 +124,12 @@ namespace WindowsFormsApp1
         private void InitializeAppFolders()
         {
             // TODO : Refactor this !
-            string temporary_cache_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\temp");
+            string temporary_cache_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\temp");
             if (!Directory.Exists(temporary_cache_directory))
             {
                 Directory.CreateDirectory(temporary_cache_directory);
             }
-            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name);
+            string temporary_cookies_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", Globals.Profile.Name);
             if (!Directory.Exists(temporary_cookies_directory))
             {
                 Directory.CreateDirectory(temporary_cookies_directory);
@@ -355,6 +355,13 @@ namespace WindowsFormsApp1
                         this.send_id_checker = false;
                         return;
                     }
+                    var RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[1];
+                    var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[1] : "";
+                    if (OldRoomName == RoomName)
+                    {
+                        this.send_id_checker = false;
+                    }
+
                     //Emailer for missed seed
                     if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
                     {
@@ -379,7 +386,6 @@ namespace WindowsFormsApp1
                     {
                         Globals.StartTime_LastAction = DateTime.Now;
                     }
-
                     this.send_id_checker = false;
                     Globals.AddToHistory(splitAddress[0]);
                     Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
@@ -641,8 +647,8 @@ namespace WindowsFormsApp1
                 catch (AggregateException e)
                 {
                     Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                    Globals.showMessage(String.Concat("Error connecting to Chaturbate servers!", System.Environment.NewLine, "Please refresh and try again.",
-                        System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"));
+                    Globals.showMessage(String.Concat("Error connecting to Compliance servers!", System.Environment.NewLine, "Please refresh and try again.",
+                        System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"));
                 }
                 catch (Exception e)
                 {
@@ -803,7 +809,7 @@ namespace WindowsFormsApp1
             if (String.IsNullOrEmpty(url))
                 return false;
 
-            if (url.Contains("chaturbate.com"))
+            if (url.Contains(Url.DOMAIN))
                 return true;
         
             return false;
@@ -915,8 +921,8 @@ namespace WindowsFormsApp1
             Globals.Profile = new Profile { Name = sender.ToString(), AgentID = target_profile != null ? target_profile.AgentID : 0, IsActive = true };
             foreach (var connection in Globals.Connections)
             {
-                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
-                string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\SkydevCsTool");
+                string source_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool\\cookies\\", Globals.Profile.Name, "\\Cookies");
+                string output_directory = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "\\CsTool");
                 System.IO.File.Copy(source_path, String.Concat(output_directory, "\\temp\\Cookies_me"), true);
                 Byte[] sbytes = File.ReadAllBytes(String.Concat(output_directory, "\\temp\\Cookies_me"));
                 string file = Convert.ToBase64String(sbytes);
@@ -1170,7 +1176,7 @@ namespace WindowsFormsApp1
                 }
             });
             Console.WriteLine("bg IRR");
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             if (helperBW.CancellationPending)
             {
                 e.Cancel = true;
@@ -1277,7 +1283,7 @@ namespace WindowsFormsApp1
                 }
             });
             
-            Thread.Sleep(2000);
+            Thread.Sleep(5000);
             if (helperBW.CancellationPending)
             {
                 e.Cancel = true;
@@ -1359,8 +1365,6 @@ namespace WindowsFormsApp1
             }
 
         }
-
-        
     }
 
 }

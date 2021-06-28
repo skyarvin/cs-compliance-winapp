@@ -1,6 +1,6 @@
 ﻿using CefSharp.WinForms;
-using SkydevCSTool;
-using SkydevCSTool.Models;
+using CSTool;
+using CSTool.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,9 +9,9 @@ using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using System.Threading.Tasks;
 using System.Net.Sockets;
-using SkydevCSTool.Class;
+using CSTool.Class;
 using System.Threading;
-using SkydevCSTool.Properties;
+using CSTool.Properties;
 using CefSharp.WinForms.Internals;
 using System.Text;
 using System.Net;
@@ -103,7 +103,7 @@ namespace WindowsFormsApp1
             try
             {
                 string logFilePath = "";
-                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/SkydevCsTool/logs/", DateTime.Now.ToString("MM-dd-yyyy"), "/"));
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/CsTool/logs/", DateTime.Now.ToString("MM-dd-yyyy"), "/"));
                 switch (logtype)
                 {
                     case (int)LogType.Action:
@@ -169,7 +169,7 @@ namespace WindowsFormsApp1
                 return "999999";
             }
 
-            return "3.0.0.0.6";
+            return "3.0.0.0.14";
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>
@@ -191,8 +191,8 @@ namespace WindowsFormsApp1
             catch (AggregateException e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
             }
             catch (Exception e)
             {
@@ -220,8 +220,8 @@ namespace WindowsFormsApp1
             catch (AggregateException e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat("Error connecting to Chaturbate servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If chaturbate/internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
             }
             catch (Exception e)
             {

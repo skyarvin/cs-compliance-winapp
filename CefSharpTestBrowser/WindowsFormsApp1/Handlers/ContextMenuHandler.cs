@@ -5,10 +5,10 @@ using System.Diagnostics;
 using System.Web;
 using System.Linq;
 using WindowsFormsApp1;
-using SkydevCSTool;
-using SkydevCSTool.Class;
-using SkydevCSTool.Properties;
-using SkydevCSTool.Models;
+using CSTool;
+using CSTool.Class;
+using CSTool.Properties;
+using CSTool.Models;
 using CefSharp.WinForms.Internals;
 
 public class MyCustomMenuHandler : IContextMenuHandler

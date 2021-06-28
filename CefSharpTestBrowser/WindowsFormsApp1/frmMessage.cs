@@ -1,4 +1,4 @@
-﻿using SkydevCSTool.Models;
+﻿using CSTool.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1;
 
-namespace SkydevCSTool
+namespace CSTool
 {
     public partial class frmMessage : Form
     {

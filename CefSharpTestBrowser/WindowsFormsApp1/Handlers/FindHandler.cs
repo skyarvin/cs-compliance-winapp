@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using CefSharp;
 using CefSharp.Structs;
 
-namespace SkydevCSTool.Handlers
+namespace CSTool.Handlers
 {
     class FindHandler : IFindHandler
     {

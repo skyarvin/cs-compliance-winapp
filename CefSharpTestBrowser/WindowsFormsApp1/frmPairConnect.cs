@@ -1,5 +1,5 @@
 ﻿using CefSharp.WinForms.Internals;
-using SkydevCSTool.Class;
+using CSTool.Class;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -15,7 +15,7 @@ using WindowsFormsApp1;
 using System.IO;
 using System.Threading;
 
-namespace SkydevCSTool
+namespace CSTool
 {
     public partial class frmPairConnect : Form
     {
@@ -46,8 +46,8 @@ namespace SkydevCSTool
 
         private void FrmPairConnect_Load(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(SkydevCSTool.Properties.Settings.Default.server_ip))
-                txtIPaddress.Text = SkydevCSTool.Properties.Settings.Default.server_ip;
+            if (!string.IsNullOrEmpty(CSTool.Properties.Settings.Default.server_ip))
+                txtIPaddress.Text = CSTool.Properties.Settings.Default.server_ip;
         }
 
         private void TxtIPaddress_KeyDown(object sender, KeyEventArgs e)
@@ -63,8 +63,8 @@ namespace SkydevCSTool
             {
 
                 string target_ip = txtIPaddress.Text;
-                SkydevCSTool.Properties.Settings.Default.server_ip = target_ip;
-                SkydevCSTool.Properties.Settings.Default.Save();
+                CSTool.Properties.Settings.Default.server_ip = target_ip;
+                CSTool.Properties.Settings.Default.Save();
                 Globals.frmMain.SetBtnConnectText("Waiting..");
                 Application.DoEvents();
                 Task.Factory.StartNew(() =>

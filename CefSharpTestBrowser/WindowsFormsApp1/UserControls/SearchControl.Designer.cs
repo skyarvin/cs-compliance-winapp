@@ -1,4 +1,4 @@
-﻿namespace SkydevCSTool
+﻿namespace CSTool
 {
     partial class CustomComboBox
     {

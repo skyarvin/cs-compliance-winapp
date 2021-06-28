@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SkydevCSTool.Models
+namespace CSTool.Models
 {
     public class UserAccount
     {

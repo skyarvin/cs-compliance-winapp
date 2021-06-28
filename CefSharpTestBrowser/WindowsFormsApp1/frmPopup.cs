@@ -4,8 +4,8 @@ using CefSharp.WinForms.Internals;
 using System;
 using System.Windows.Forms;
 using WindowsFormsApp1;
-using SkydevCSTool.Handlers;
-namespace SkydevCSTool
+using CSTool.Handlers;
+namespace CSTool
 {
     public partial class frmPopup : Form
     {

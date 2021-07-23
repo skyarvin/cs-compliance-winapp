@@ -60,6 +60,7 @@ namespace WindowsFormsApp1
         public static int room_duration;
         public static DateTime? StartTime_LastAction;
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
+        public static Announcements AnnouncementsList = new Announcements();
 
         public static void ShowMessage(Form parent,string Message)
         {
@@ -169,7 +170,7 @@ namespace WindowsFormsApp1
                 return "999999";
             }
 
-            return "3.0.0.0.14";
+            return "3.0.0.0.15";
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>

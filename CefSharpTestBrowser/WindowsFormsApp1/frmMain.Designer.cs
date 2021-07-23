@@ -49,6 +49,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnKb = new System.Windows.Forms.Button();
             this.pnlUser = new System.Windows.Forms.Panel();
+            this.btnAnnouncement = new System.Windows.Forms.Button();
             this.lblProfile = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
             this.pbImg = new System.Windows.Forms.PictureBox();
@@ -65,6 +66,8 @@
             this.bgWorkIRR = new System.ComponentModel.BackgroundWorker();
             this.bgWorkID = new System.ComponentModel.BackgroundWorker();
             this.lblIdStatus = new System.Windows.Forms.Label();
+            this.bgWorkAnnouncement = new System.ComponentModel.BackgroundWorker();
+            this.flpAnnouncementList = new System.Windows.Forms.FlowLayoutPanel();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -303,6 +306,7 @@
             // 
             // pnlUser
             // 
+            this.pnlUser.Controls.Add(this.btnAnnouncement);
             this.pnlUser.Controls.Add(this.lblProfile);
             this.pnlUser.Controls.Add(this.lblUser);
             this.pnlUser.Controls.Add(this.pbImg);
@@ -311,6 +315,21 @@
             this.pnlUser.Name = "pnlUser";
             this.pnlUser.Size = new System.Drawing.Size(250, 40);
             this.pnlUser.TabIndex = 0;
+            // 
+            // btnAnnouncement
+            // 
+            this.btnAnnouncement.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnAnnouncement.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAnnouncement.BackgroundImage")));
+            this.btnAnnouncement.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnAnnouncement.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
+            this.btnAnnouncement.FlatAppearance.BorderSize = 0;
+            this.btnAnnouncement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAnnouncement.Location = new System.Drawing.Point(1, -2);
+            this.btnAnnouncement.Name = "btnAnnouncement";
+            this.btnAnnouncement.Size = new System.Drawing.Size(52, 42);
+            this.btnAnnouncement.TabIndex = 4;
+            this.btnAnnouncement.UseVisualStyleBackColor = false;
+            this.btnAnnouncement.Click += new System.EventHandler(this.btnAnnouncement_Click);
             // 
             // lblProfile
             // 
@@ -423,6 +442,7 @@
             // 
             // pnlBrowser
             // 
+            this.pnlBrowser.AutoSize = true;
             this.pnlBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlBrowser.Location = new System.Drawing.Point(0, 87);
             this.pnlBrowser.Name = "pnlBrowser";
@@ -467,11 +487,32 @@
             this.lblIdStatus.Visible = false;
             this.lblIdStatus.Click += new System.EventHandler(this.lblIdStatus_Click);
             // 
+            // bgWorkAnnouncement
+            // 
+            this.bgWorkAnnouncement.WorkerSupportsCancellation = true;
+            this.bgWorkAnnouncement.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkAnnouncement_DoWork);
+            this.bgWorkAnnouncement.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkAnnouncement_RunWorkerCompleted);
+            // 
+            // flpAnnouncementList
+            // 
+            this.flpAnnouncementList.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.flpAnnouncementList.AutoScroll = true;
+            this.flpAnnouncementList.AutoSize = true;
+            this.flpAnnouncementList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpAnnouncementList.Location = new System.Drawing.Point(878, 40);
+            this.flpAnnouncementList.MaximumSize = new System.Drawing.Size(250, 229);
+            this.flpAnnouncementList.MinimumSize = new System.Drawing.Size(250, 25);
+            this.flpAnnouncementList.Name = "flpAnnouncementList";
+            this.flpAnnouncementList.Size = new System.Drawing.Size(250, 25);
+            this.flpAnnouncementList.TabIndex = 0;
+            this.flpAnnouncementList.Visible = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 517);
+            this.Controls.Add(this.flpAnnouncementList);
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.lblIdStatus);
             this.Controls.Add(this.pnlHeader);
@@ -496,6 +537,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -535,6 +577,9 @@
         private System.ComponentModel.BackgroundWorker bgWorkIRR;
         private System.ComponentModel.BackgroundWorker bgWorkID;
         private System.Windows.Forms.Label lblIdStatus;
+        private System.Windows.Forms.Button btnAnnouncement;
+        private System.ComponentModel.BackgroundWorker bgWorkAnnouncement;
+        private System.Windows.Forms.FlowLayoutPanel flpAnnouncementList;
     }
 }
 

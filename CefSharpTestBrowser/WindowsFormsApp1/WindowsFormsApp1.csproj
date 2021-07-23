@@ -157,6 +157,12 @@
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
     <Compile Include="Class\WindowsActivityMonitor.cs" />
+    <Compile Include="frmAnnouncement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmAnnouncement.Designer.cs">
+      <DependentUpon>frmAnnouncement.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmQA.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +242,7 @@
     <Compile Include="Handlers\Handlers.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
+    <Compile Include="Models\Announcements.cs" />
     <Compile Include="Models\Emailer.cs" />
     <Compile Include="Models\ErrorLogs.cs" />
     <Compile Include="Models\IdChecker.cs" />
@@ -251,14 +258,25 @@
     <Compile Include="UserControls\SearchControl.Designer.cs">
       <DependentUpon>SearchControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="UserControls\usrCtrlAnnouncement.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\usrCtrlAnnouncement.Designer.cs">
+      <DependentUpon>usrCtrlAnnouncement.cs</DependentUpon>
+    </Compile>
     <Content Include="cscb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="UserControls\usrCtrlAnnouncement.resx">
+      <DependentUpon>usrCtrlAnnouncement.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Resources\home.png" />
     <Content Include="favicon.ico" />
     <Content Include="logo_qa.ico" />
     <Content Include="logo_qa_qa.ico.png" />
     <None Include="Resources\kb_icon.png" />
+    <None Include="Resources\announcement-unread-icon.png" />
+    <None Include="Resources\announcement-icon.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -284,6 +302,9 @@
     <Content Include="swiftshader\libGLESv2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="frmAnnouncement.resx">
+      <DependentUpon>frmAnnouncement.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmConfirm.resx">
       <DependentUpon>frmConfirm.cs</DependentUpon>
     </EmbeddedResource>

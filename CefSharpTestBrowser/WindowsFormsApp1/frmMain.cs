@@ -473,6 +473,16 @@ namespace WindowsFormsApp1
             }
 
             bgWorkID.RunWorkerAsync();
+
+            Globals.AnnouncementsList = Announcements.FetchAnnouncements();
+            var announcement = Globals.AnnouncementsList.announcements.FindLast(x => x.read_status == false);
+            if (announcement != null)
+            {
+                var FrmAnnouncement = new frmAnnouncement(announcement);
+                FrmAnnouncement.ShowDialog();
+            }
+
+            bgWorkAnnouncement.RunWorkerAsync();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -1364,6 +1374,61 @@ namespace WindowsFormsApp1
                 });
             }
 
+        }
+
+        private void PopulateAnnouncementList()
+        {
+            Globals.AnnouncementsList = Announcements.FetchAnnouncements();
+            btnAnnouncement.BackgroundImage = Globals.AnnouncementsList.announcements.Find(x => x.read_status == false) != null ? Resources.announcement_unread_icon : Resources.announcement_icon;
+            int AnnouncementCount = Globals.AnnouncementsList.announcements.Count;
+            flpAnnouncementList.Controls.Clear();
+            if (AnnouncementCount > 0)
+            {
+                flpAnnouncementList.Controls.Clear();
+                foreach (var announcement in Globals.AnnouncementsList.announcements)
+                {
+                    usrCtrlAnnouncement ctrl_announcement = new usrCtrlAnnouncement(announcement);
+                    ctrl_announcement.Width = AnnouncementCount > 3 ? ctrl_announcement.Width - 10 : ctrl_announcement.Width + 5;
+                    flpAnnouncementList.Controls.Add(ctrl_announcement);
+                }
+            } else
+            {
+                Label lblNoAnnouncements = new Label();
+                lblNoAnnouncements.AutoSize = true;
+                lblNoAnnouncements.Text = "No announcements posted";
+                lblNoAnnouncements.TextAlign = ContentAlignment.TopCenter;
+                lblNoAnnouncements.Dock = DockStyle.Top;
+                flpAnnouncementList.Controls.Add(lblNoAnnouncements);
+            }
+        }
+
+        private void btnAnnouncement_Click(object sender, EventArgs e)
+        {
+            flpAnnouncementList.Visible = flpAnnouncementList.Visible == true ? false : true;
+        }
+
+        private void bgWorkAnnouncement_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker helperBW = sender as BackgroundWorker;
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                PopulateAnnouncementList();
+            });
+            Thread.Sleep(60000);
+            if (helperBW.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void bgWorkAnnouncement_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                return;
+            if (e.Error != null)
+                Globals.showMessage(e.Error.Message);
+            else
+                bgWorkAnnouncement.RunWorkerAsync();
         }
     }
 

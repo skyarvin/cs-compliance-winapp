@@ -11,6 +11,7 @@ namespace WindowsFormsApp1
         private Announcement announcement;
         private int PreviousIndex;
         private int NextIndex;
+        private Announcements ReverseAnnouncements = new Announcements();
 
         public frmAnnouncement(Announcement announcement)
         {
@@ -36,24 +37,25 @@ namespace WindowsFormsApp1
                 chkboxMarkAsRead.Checked = this.announcement.read_status == true ? true : false;
                 chkboxMarkAsRead.Enabled = this.chkboxMarkAsRead.Checked == true ? false : true;
 
-                var index = Globals.AnnouncementsList.announcements.FindIndex(x => x.id == this.announcement.id);
-                btnPrevious.Enabled = Globals.AnnouncementsList.announcements.ElementAtOrDefault(index - 1) != null ? true : false;
+                this.ReverseAnnouncements.announcements = Globals.AnnouncementsList.announcements.Reverse<Announcement>().ToList();
+                var index = this.ReverseAnnouncements.announcements.FindIndex(x => x.id == this.announcement.id);
+                btnPrevious.Enabled = this.ReverseAnnouncements.announcements.ElementAtOrDefault(index - 1) != null ? true : false;
                 this.PreviousIndex = btnPrevious.Enabled == true ? index - 1 : 0;
-                btnNext.Enabled = Globals.AnnouncementsList.announcements.ElementAtOrDefault(index + 1) != null ? true : false;
+                btnNext.Enabled = this.ReverseAnnouncements.announcements.ElementAtOrDefault(index + 1) != null ? true : false;
                 this.NextIndex = btnNext.Enabled == true ? index + 1 : 0;
             }
         }
 
         private void btnNext_Click(object sender, EventArgs e)
         {
-            this.announcement = Globals.AnnouncementsList.announcements.ElementAtOrDefault(this.NextIndex);
-            DisplayAnnouncement();
+            this.announcement = this.ReverseAnnouncements.announcements.ElementAtOrDefault(this.NextIndex);
+            this.DisplayAnnouncement();
         }
 
         private void btnPrevious_Click(object sender, EventArgs e)
         {
-            this.announcement = Globals.AnnouncementsList.announcements.ElementAtOrDefault(this.PreviousIndex);
-            DisplayAnnouncement();
+            this.announcement = this.ReverseAnnouncements.announcements.ElementAtOrDefault(this.PreviousIndex);
+            this.DisplayAnnouncement();
         }
 
         private void btnClose_Click(object sender, EventArgs e)

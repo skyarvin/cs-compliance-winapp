@@ -827,7 +827,7 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance/show"))
+            if (url.Contains("compliance/show") || url.Contains("compliance/photoset"))
                 return true;
 
             return false;

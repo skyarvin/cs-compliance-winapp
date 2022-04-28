@@ -78,8 +78,8 @@ namespace WindowsFormsApp1
         {
             try
             {
-                if (o.ToString() != "--" && !string.IsNullOrEmpty(o.ToString()))
-                    return string.Concat(label, o.ToString(), System.Environment.NewLine, " ");
+                if (o?.ToString() != "--" && !string.IsNullOrEmpty(o?.ToString()))
+                    return string.Concat(label, o?.ToString(), System.Environment.NewLine, " ");
                 else
                     return "";
             }
@@ -170,7 +170,7 @@ namespace WindowsFormsApp1
                 return "999999";
             }
 
-            return "3.0.0.0.15";
+            return "3.0.0.0.16";
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>

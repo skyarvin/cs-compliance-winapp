@@ -31,7 +31,7 @@ namespace CSTool
                 return;
 
             Globals.frmMain.hideBanner();
-            if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && e.Url.Contains("/compliance/show"))
+            if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && (e.Url.Contains("/compliance/show") || e.Url.Contains("/compliance/photoset")))
             {
                 browser.ExecuteScriptAsync(
                 "function sleep(ms) {" +

@@ -3,6 +3,7 @@ using CSTool.Class;
 using System;
 using System.Net.Http;
 using System.Windows.Forms;
+using CSTool.Properties;
 
 namespace WindowsFormsApp1.Models
 {
@@ -28,7 +29,7 @@ namespace WindowsFormsApp1.Models
         {
             get
             {
-                if (!String.IsNullOrEmpty(role) && role.ToUpper().Contains("TRAINEE"))
+                if (Settings.Default.user_type.ToUpper().Contains("TRAINEE"))
                     return true;
                 return false;
             }

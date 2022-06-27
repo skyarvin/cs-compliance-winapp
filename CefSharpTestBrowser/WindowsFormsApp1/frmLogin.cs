@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.IO.Compression;
+using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 
@@ -61,19 +62,25 @@ namespace WindowsFormsApp1
                         Settings.Default.email = txtEmail.Text;
                         Settings.Default.Save();
 
-                        if (Settings.Default.user_type == "Agent")
+                        if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
+                            Settings.Default.user_type.ToUpper().Contains("TRAINEE") && Settings.Default.role == "TRAINEE")
                         {
                             Globals.frmMain = new frmMain();
                             Globals.frmMain.Show();
                             this.Close();
                         }
-                        else {
+                        else if (Settings.Default.user_type.ToUpper().Contains("QA") && Settings.Default.role == "CSQA")
+                        {
                             //new form
                             Globals.FrmQA = new frmQA();
                             Globals.FrmQA.Show();
                             this.Close();
                         }
-                     
+                        else
+                        {
+                            //MessageBox.Show("Please check your User Type.", "Error");
+                            Thread.Sleep(60000);
+                        }
                     }
                     else
                     {

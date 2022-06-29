@@ -35,47 +35,68 @@ namespace WindowsFormsApp1.Models
 
         public Logger Save()
         {
-            Globals.SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpClient())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/logs/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                client.Timeout = TimeSpan.FromSeconds(5);
-                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                Globals.SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
+                using (var client = new HttpClient())
                 {
-                    using (HttpContent data = response.Content)
+                    var uri = string.Concat(Url.API_URL, "/logs/");
+
+                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                    client.Timeout = TimeSpan.FromSeconds(5);
+
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    var response = client.PostAsync(uri, content).Result;
+
+                    if (response.IsSuccessStatusCode)
                     {
-                        var jsonString = data.ReadAsStringAsync();
-                        jsonString.Wait();
-                        return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                        }
+                    }
+                    else
+                    {
+                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                        Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
+                        throw new Exception("Api save request error, Please contact dev team");
                     }
                 }
-                else
-                {
-                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
-                    throw new Exception("Api save request error, Please contact dev team");
-                }
+            }
+            catch
+            {
+                Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
+                throw new Exception("Action can't be processed right now, encountered error while saving.");
             }
         }
 
         public void Update()
         {
-            Globals.SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpClient())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/logs/", this.id);
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.PutAsync(uri, content).Result;
-                if (!response.IsSuccessStatusCode)
+                Globals.SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
+                using (var client = new HttpClient())
                 {
-                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    Resync.SavetoDB(JsonConvert.SerializeObject(this), "Update");
-                    throw new Exception("Api Update request error, Please contact dev team");
+                    var uri = string.Concat(Url.API_URL, "/logs/", this.id);
+                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    var response = client.PutAsync(uri, content).Result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                        Resync.SavetoDB(JsonConvert.SerializeObject(this), "Update");
+                        throw new Exception("Api Update request error, Please contact dev team");
+                    }
                 }
+            }
+            catch
+            {
+                Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                Resync.SavetoDB(JsonConvert.SerializeObject(this), "Update");
+                throw new Exception("Action can't be processed right now, encountered error during update.");
             }
         }
 

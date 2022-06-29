@@ -561,7 +561,6 @@ namespace WindowsFormsApp1
                 }
                 if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
                 if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
-
                 if (element_id == Action.ChatReply.Value) notes = reply;
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
                 if (element_id == Action.Approve.Value) remarks = "";
@@ -585,10 +584,9 @@ namespace WindowsFormsApp1
                     actual_start_time = StartTime_BrowserChanged;
                 }
 
-
-                var actual_end_time =  DateTime.Now;
-                var logData = new Logger
-                {
+                var actual_end_time = DateTime.Now;
+                    var logData = new Logger
+                    {
                     url = urlToSave,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
@@ -611,7 +609,7 @@ namespace WindowsFormsApp1
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
                 if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
-                else if(Globals.INTERNAL_RR.id > 0)
+                else if (Globals.INTERNAL_RR.id > 0)
                 {
                     Emailer email = new Emailer();
                     email.subject = "IRR Error";
@@ -627,7 +625,9 @@ namespace WindowsFormsApp1
                     {
                         logData.id = Globals.LAST_SUCCESS_ID;
                         if (logData.id != 0)
+                        {
                             logData.Update();
+                        }
                         else
                         {
                             var result = logData.Save();
@@ -675,7 +675,6 @@ namespace WindowsFormsApp1
                 {
                     ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
-
             });
         }
 

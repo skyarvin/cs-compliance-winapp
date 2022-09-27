@@ -51,6 +51,7 @@ namespace WindowsFormsApp1
             {Action.ChangeGender.Value, "CG" },
             {Action.Approve.Value, "AP" },
             {Action.ChatReply.Value, "AP" },
+            {Action.RequestFacePhoto.Value, "RFP" },
         };
 
         private List<string> Violations = new List<string>
@@ -58,7 +59,8 @@ namespace WindowsFormsApp1
            Action.Violation.Value,
            Action.IdMissing.Value,
            Action.SpammerSubmit.Value,
-           Action.RequestReview.Value
+           Action.RequestReview.Value,
+           Action.RequestFacePhoto.Value
         };
 
         #region Init
@@ -559,7 +561,7 @@ namespace WindowsFormsApp1
                 {
                     reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
                 }
-                if (Violations.Contains(element_id) && string.IsNullOrEmpty(notes)) return;
+                if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes)) return;
                 if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
                 if (element_id == Action.ChatReply.Value) notes = reply;
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
@@ -709,6 +711,7 @@ namespace WindowsFormsApp1
             public static Action Disagree { get { return new Action("disagree_button"); } }
             public static Action SetExpiration { get { return new Action("set_expr"); } }
             public static Action ChatReply { get { return new Action("reply_button"); } }
+            public static Action RequestFacePhoto { get { return new Action("request_photo_button"); } }
         }
 
         private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)

@@ -52,11 +52,22 @@ namespace CSTool
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
                         }
 
-                        if (e.target.id != null || e.target.id.length > 0 || e.target.value) {
-                            var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button'];
-                            if ((e.target.id != undefined) && (element_ids.includes(e.target.id))){
+                        if (e.target.id != undefined && e.target.id != null || e.target.id.length > 0 || e.target.value) {
+                            var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button'];
+                            var pre_request_photo_button = ['pre_request_photo_button'];
+
+                            if (element_ids.includes(e.target.id)) {
                                 console.log(e.target.id);
                                 bound.onClicked(e.target.id);
+                                return;
+                            }
+
+                            if (pre_request_photo_button.includes(e.target.id)) {
+                                $('.cambouncernotes').each(function(e) 
+                                    if (this.textContent.indexOf('DO NOT ""Request Face Photo"" ON THIS BROADCASTER') >= 0) {
+                                        disableRequestFacePhoto();
+                                    }
+                                });
                                 return;
                             }
 
@@ -66,7 +77,7 @@ namespace CSTool
                                   'Change Gender': ['change_gender']
                             }
 
-                            if ((e.target.value != undefined) && (element_values.hasOwnProperty(e.target.value))) {
+                            if (element_values.hasOwnProperty(e.target.value)) {
                                     bound.onClicked(element_values[e.target.value][0]);
                             }
                             
@@ -156,6 +167,13 @@ namespace CSTool
                         bound.checkToShowRRIM();
                     }
 
+                    function disableRequestFacePhoto()
+                    {
+                        var request_photo_button = document.getElementById(`request_photo_button`);
+                        request_photo_button.disabled = true;
+                        request_photo_button.style.opacity = '0.6';
+                        request_photo_button.style.cursor = 'no-drop';
+                    }
 
                     function cacheBuster()
                     {

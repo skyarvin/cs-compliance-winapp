@@ -1143,8 +1143,7 @@ namespace WindowsFormsApp1
         {
             this.InvokeOnUiThreadIfRequired(() =>
             {
-                frmPopup frmpop = new frmPopup(Url.KNOWLEDGE_BASE_URL);
-                frmpop.Show();
+                Process.Start(Url.KNOWLEDGE_BASE_URL);
             });
               
         }

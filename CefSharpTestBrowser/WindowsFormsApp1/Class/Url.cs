@@ -10,7 +10,7 @@ namespace CSTool.Class
     {
         //##################SET TO FALSE WHEN DEPLOYING ON PRODUCTION #########################//
         public static bool DEBUG = false;
-        public static string KNOWLEDGE_BASE_URL = "http://bit.ly/sdsi-csqa-kb";
+        public static string KNOWLEDGE_BASE_URL = "https://staffme.online/knowledge-base/";
         //####################################################################################//
 
         // ## Production CSCB-Staff Me
@@ -41,6 +41,6 @@ namespace CSTool.Class
         //public static string CB_COMPLIANCE_URL = "http://127.0.0.1:8000/compliance/show/";
         //public static string CB_COMPLIANCE_SET_ID_EXP_URL = "http://127.0.0.1:8000/compliance/update_expiration_date_form";
         //public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
-        //public static string API_URL = "https://cscb-dev1.staffme.online/api";
+        //public static string API_URL = "http://127.0.0.1:9000/api";
     }
 }

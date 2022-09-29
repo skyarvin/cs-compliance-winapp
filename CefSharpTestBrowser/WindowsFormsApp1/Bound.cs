@@ -63,7 +63,7 @@ namespace CSTool
                             }
 
                             if (pre_request_photo_button.includes(e.target.id)) {
-                                $('.cambouncernotes').each(function(e) 
+                                $('.cambouncernotes').each(function(e) {
                                     if (this.textContent.indexOf('DO NOT ""Request Face Photo"" ON THIS BROADCASTER') >= 0) {
                                         disableRequestFacePhoto();
                                     }

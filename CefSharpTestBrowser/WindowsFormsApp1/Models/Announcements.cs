@@ -19,7 +19,7 @@ namespace CSTool.Models
                 var agent_id = Globals.ComplianceAgent.id;
                 var uri = $"{Url.API_URL}/agent/{agent_id}/announcements/";
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                 var response = client.GetAsync(uri).Result;
+                var response = client.GetAsync(uri).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent content = response.Content)

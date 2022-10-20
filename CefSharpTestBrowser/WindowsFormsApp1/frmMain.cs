@@ -388,7 +388,7 @@ namespace WindowsFormsApp1
                     {
                         Globals.StartTime_LastAction = DateTime.Now;
                     }
-                    this.send_id_checker = false;
+                    this.send_id_checker = true;
                     Globals.AddToHistory(splitAddress[0]);
                     Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                     Globals.CurrentUrl = splitAddress[0];
@@ -821,7 +821,7 @@ namespace WindowsFormsApp1
             if (String.IsNullOrEmpty(url))
                 return false;
 
-            if (url.Contains(Url.DOMAIN))
+            if (url.Contains(Url.CB_COMPLIANCE_URL))
                 return true;
         
             return false;
@@ -1232,11 +1232,11 @@ namespace WindowsFormsApp1
 
             if (this.ID_CHECKER.id == 0)
             {
-                //bgWorkID.CancelAsync();
-                //if (helperBW.CancellationPending)
-                //{
-                //    e.Cancel = true;
-                //}
+                bgWorkID.CancelAsync();
+                if (helperBW.CancellationPending)
+                {
+                    e.Cancel = true;
+                }
                 this.InvokeOnUiThreadIfRequired(() => lblIdStatus.Visible = false);
                 return;
             }
@@ -1249,14 +1249,15 @@ namespace WindowsFormsApp1
 
             if (ExtractUsername(Globals.CurrentUrl) != ExtractUsername(idchecker.url))
             {
-                //bgWorkID.CancelAsync();
-                //if (helperBW.CancellationPending)
-                //{
-                //    e.Cancel = true;
-                //}
+                bgWorkID.CancelAsync();
+                if (helperBW.CancellationPending)
+                {
+                    e.Cancel = true;
+                }
                 this.InvokeOnUiThreadIfRequired(() => lblIdStatus.Visible = false);
                 return;
             }
+            showIdMissing(idchecker);
             
             this.InvokeOnUiThreadIfRequired(() =>
             {
@@ -1276,7 +1277,7 @@ namespace WindowsFormsApp1
                         lblIdStatus.BackColor = Color.Green;
                         lblIdStatus.Text = string.Concat("ID APPROVED", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
                         lblIdStatus.ForeColor = Color.White;
-                        //bgWorkID.CancelAsync();
+                        bgWorkID.CancelAsync();
                         break;
                     case "Id Missing":
                         Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
@@ -1284,7 +1285,7 @@ namespace WindowsFormsApp1
                         lblIdStatus.BackColor = Color.Red;
                         lblIdStatus.Text = string.Concat("REPORT FOR ID MISSING", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
                         lblIdStatus.ForeColor = Color.White;
-                        //bgWorkID.CancelAsync();
+                        bgWorkID.CancelAsync();
                         break;
                     case "Processing":
                         hideIMAP();
@@ -1313,11 +1314,11 @@ namespace WindowsFormsApp1
 
         public void showIdMissing(IdChecker idChecker)
         {
-            //if(idChecker.id == 0 || ExtractUsername(idChecker.url) != ExtractUsername(Globals.CurrentUrl) || !isBrowserInitialized)
-            //{
-            //    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #approve_button').forEach(function(el){ el.style.display = 'none'; });");
-            //    return;
-            //}
+            if(idChecker.id == 0 || ExtractUsername(idChecker.url) != ExtractUsername(Globals.CurrentUrl) || !isBrowserInitialized)
+            {
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #approve_button').forEach(function(el){ el.style.display = 'none'; });");
+                return;
+            }
         }
 
         public void showIMAP()

@@ -30,7 +30,7 @@ namespace CSTool
             if (!e.Frame.IsMain)
                 return;
 
-            Globals.frmMain.hideBanner();
+            //Globals.frmMain.hideBanner();
             if (!string.IsNullOrEmpty(Settings.Default.compliance_default_view) && (e.Url.Contains("/compliance/show") || e.Url.Contains("/compliance/photoset")))
             {
                 browser.ExecuteScriptAsync(

@@ -150,12 +150,6 @@ namespace CSTool
                         return chatlog_position;
                                 
                     }
-                    
-                    function hideRRIM()
-                    {
-                        document.getElementById(`request_review_button`).style.display = `none`;
-                        bound.checkToShowRRIM();
-                    }
 
                     function cacheBuster()
                     {
@@ -223,8 +217,6 @@ namespace CSTool
                     {
                         bound.saveAsBounce();
                     }
-                    
-                    waitUntil(`#request_review_button`,5000).then((el) => hideRRIM(), (err) => console.log(`rr not found`));
                     //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
             ");
@@ -415,10 +407,6 @@ namespace CSTool
         public void TriggerClear()
         {
             Globals.frmMain.ButtonClearClick();
-        }
-        public void CheckToShowRRIM()
-        {
-            Globals.frmMain.showRequestReviewAndIdMissing();
         }
 
         public class HtmlItemClickedEventArgs : EventArgs

@@ -829,7 +829,7 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance/show") || url.Contains("compliance/photoset"))
+            if (url.Contains("compliance") && url.Contains("show") || url.Contains("compliance") && url.Contains("photoset"))
                 return true;
 
             return false;
@@ -1181,7 +1181,6 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestReview.update_info());
                 if (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing" && Globals.INTERNAL_RR.status != "Waiting SC")
                 {
-                    showRequestReviewAndIdMissing();
                     bgWorkIRR.CancelAsync();
                     Globals.FrmInternalRequestReview.Show();
                 }
@@ -1194,13 +1193,6 @@ namespace WindowsFormsApp1
             }
         }
 
-        public void showRequestReviewAndIdMissing()
-        {
-            if (Globals.INTERNAL_RR.id != 0 && ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername( Globals.CurrentUrl) && isBrowserInitialized && (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing" && Globals.INTERNAL_RR.status != "Waiting SC"))
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#request_review_button').forEach(function(el){ el.style.display = 'block'; });");
-            else
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#request_review_button').forEach(function(el){ el.style.display = 'none'; });");
-        }
         private void bgWorkIRR_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)

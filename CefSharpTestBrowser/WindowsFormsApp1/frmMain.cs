@@ -505,7 +505,7 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-            Globals.chromeBrowser.Load(Url.CB_COMPLIANCE_URL);
+            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Settings.Default.tier_level));
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -516,7 +516,7 @@ namespace WindowsFormsApp1
                 AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
 
-
+           
         }
 
         private void BtnFind_Click(object sender, EventArgs e)

@@ -43,6 +43,10 @@ namespace WindowsFormsApp1
         }
         private void Login()
         {
+            if (string.IsNullOrEmpty(cmbTierLevel.Text)) {
+                MessageBox.Show("Tier level is required", "Error");
+                return;
+            }
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()))
                 MessageBox.Show("Invalid Username", "Error");
             else
@@ -60,6 +64,7 @@ namespace WindowsFormsApp1
                         Settings.Default.user_type = cmbUtype.Text;
                         Settings.Default.preference = null;
                         Settings.Default.email = txtEmail.Text;
+                        Settings.Default.tier_level = cmbTierLevel.Text;
                         Settings.Default.Save();
 
                         if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
@@ -119,6 +124,10 @@ namespace WindowsFormsApp1
             {
                 cmbUtype.Text= CSTool.Properties.Settings.Default.user_type;
             }
+            if (!string.IsNullOrEmpty(CSTool.Properties.Settings.Default.tier_level))
+            {
+                cmbTierLevel.Text = CSTool.Properties.Settings.Default.tier_level;
+            }
 
             string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");
             if (Directory.Exists(cache_path))
@@ -133,6 +142,11 @@ namespace WindowsFormsApp1
         private void cmbUtype_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
+        }
+
+        private void cmbTierLevel_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress= true;
         }
     }
 }

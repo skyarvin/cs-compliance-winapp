@@ -11,6 +11,7 @@ namespace WindowsFormsApp1.Models
     {
         public int id { get; set; }
         public string name { get; set; }
+        public int? tier_level { get; set; }
         public string email { get; set; }
         public string photo { get; set; }
         //public string review_date { get; set; }
@@ -33,6 +34,30 @@ namespace WindowsFormsApp1.Models
                     return true;
                 return false;
             }
+        }
+        public bool is_correct_follower(int followers)
+        {
+            if (this.tier_level == 1)
+            {
+                return followers > 10000;
+            } 
+            else if (this.tier_level == 2)
+            {
+                return followers > 3000 && followers <= 10000;
+            }
+            else if (this.tier_level == 3)
+            {
+                return followers > 1000 && followers <= 3000;
+            }
+            else if (this.tier_level == 4)
+            {
+                return followers > 500 && followers <= 1000;
+            }
+            else if (this.tier_level == 5)
+            {
+                return followers <= 500;
+            }
+            return false;
         }
         public static Agent Get(string username)
         {

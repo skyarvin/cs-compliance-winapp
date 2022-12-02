@@ -43,10 +43,6 @@ namespace WindowsFormsApp1
         }
         private void Login()
         {
-            if (string.IsNullOrEmpty(cmbTierLevel.Text)) {
-                MessageBox.Show("Tier level is required", "Error");
-                return;
-            }
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()))
                 MessageBox.Show("Invalid Username", "Error");
             else
@@ -56,6 +52,13 @@ namespace WindowsFormsApp1
                     Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
                     if (Globals.ComplianceAgent != null)
                     {
+
+                        if (Globals.ComplianceAgent.tier_level is null)
+                        {
+                            MessageBox.Show("Tier level is not registered! Please contact admin.", "Error");
+                            return;
+                        }
+
                         bExitApp = false;
                         if (txtEmail.Text != Settings.Default.email || (Settings.Default.role != Globals.ComplianceAgent.role)) {
                             Settings.Default.irr_id = 0;
@@ -64,7 +67,7 @@ namespace WindowsFormsApp1
                         Settings.Default.user_type = cmbUtype.Text;
                         Settings.Default.preference = null;
                         Settings.Default.email = txtEmail.Text;
-                        Settings.Default.tier_level = cmbTierLevel.Text;
+                        Settings.Default.tier_level = Convert.ToInt32(Globals.ComplianceAgent.tier_level);
                         Settings.Default.Save();
 
                         if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
@@ -124,10 +127,6 @@ namespace WindowsFormsApp1
             {
                 cmbUtype.Text= CSTool.Properties.Settings.Default.user_type;
             }
-            if (!string.IsNullOrEmpty(CSTool.Properties.Settings.Default.tier_level))
-            {
-                cmbTierLevel.Text = CSTool.Properties.Settings.Default.tier_level;
-            }
 
             string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");
             if (Directory.Exists(cache_path))
@@ -142,11 +141,6 @@ namespace WindowsFormsApp1
         private void cmbUtype_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
-        }
-
-        private void cmbTierLevel_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.SuppressKeyPress= true;
         }
     }
 }

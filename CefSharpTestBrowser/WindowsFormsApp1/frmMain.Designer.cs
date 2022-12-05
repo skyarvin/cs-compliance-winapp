@@ -33,6 +33,7 @@
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.pnlURL = new System.Windows.Forms.Panel();
+            this.cmbURL = new CSTool.CustomComboBox();
             this.pnlAction = new System.Windows.Forms.Panel();
             this.lblApproveCount = new System.Windows.Forms.Label();
             this.lblProgress = new System.Windows.Forms.Label();
@@ -67,8 +68,6 @@
             this.lblIdStatus = new System.Windows.Forms.Label();
             this.bgWorkAnnouncement = new System.ComponentModel.BackgroundWorker();
             this.flpAnnouncementList = new System.Windows.Forms.FlowLayoutPanel();
-            this.cmbURL = new CSTool.CustomComboBox();
-            this.lblTierLvlBanner = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -122,6 +121,26 @@
             this.pnlURL.Name = "pnlURL";
             this.pnlURL.Size = new System.Drawing.Size(244, 40);
             this.pnlURL.TabIndex = 14;
+            // 
+            // cmbURL
+            // 
+            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
+            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
+            this.cmbURL.ForeColor = System.Drawing.Color.White;
+            this.cmbURL.FormattingEnabled = true;
+            this.cmbURL.Location = new System.Drawing.Point(6, 7);
+            this.cmbURL.Name = "cmbURL";
+            this.cmbURL.Size = new System.Drawing.Size(232, 25);
+            this.cmbURL.TabIndex = 8;
+            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
+            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
+            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
+            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
+            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
             // 
             // pnlAction
             // 
@@ -487,47 +506,12 @@
             this.flpAnnouncementList.Size = new System.Drawing.Size(250, 25);
             this.flpAnnouncementList.TabIndex = 0;
             this.flpAnnouncementList.Visible = false;
-            //
-            // cmbURL
             // 
-            this.cmbURL.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.cmbURL.Font = new System.Drawing.Font("Segoe UI", 9.75F);
-            this.cmbURL.ForeColor = System.Drawing.Color.White;
-            this.cmbURL.FormattingEnabled = true;
-            this.cmbURL.Location = new System.Drawing.Point(6, 7);
-            this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(232, 25);
-            this.cmbURL.TabIndex = 8;
-            this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
-            this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
-            this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
-            this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
-            // 
-            // lblTierLvlBanner
-            // 
-            this.lblTierLvlBanner.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
-            this.lblTierLvlBanner.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.lblTierLvlBanner.Dock = System.Windows.Forms.DockStyle.Top;
-            this.lblTierLvlBanner.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTierLvlBanner.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.lblTierLvlBanner.Location = new System.Drawing.Point(0, 87);
-            this.lblTierLvlBanner.Name = "lblTierLvlBanner";
-            this.lblTierLvlBanner.Size = new System.Drawing.Size(1128, 47);
-            this.lblTierLvlBanner.TabIndex = 4;
-            this.lblTierLvlBanner.Text = "Number of followers does not match with Tier Level!";
-            this.lblTierLvlBanner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblTierLvlBanner.Visible = false;
-            //
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 517);
-            this.Controls.Add(this.lblTierLvlBanner);
             this.Controls.Add(this.flpAnnouncementList);
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.lblIdStatus);
@@ -596,7 +580,6 @@
         private System.Windows.Forms.Button btnAnnouncement;
         private System.ComponentModel.BackgroundWorker bgWorkAnnouncement;
         private System.Windows.Forms.FlowLayoutPanel flpAnnouncementList;
-        private System.Windows.Forms.Label lblTierLvlBanner;
     }
 }
 

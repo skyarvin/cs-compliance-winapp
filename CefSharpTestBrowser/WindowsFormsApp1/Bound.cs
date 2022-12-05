@@ -217,10 +217,6 @@ namespace CSTool
                     {
                         bound.saveAsBounce();
                     }
-
-                    var followRaw = $('#room_info').children().eq(2).text();
-                    bound.showTierLevelBanner(followRaw);
-
                     //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
             ");
@@ -299,11 +295,6 @@ namespace CSTool
             }
                 Globals.ForceHideComliance = false;
             browser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
-        }
-
-        public void showTierLevelBanner(string followRaw)
-        {
-            Globals.frmMain.showTierLevelWarning(followRaw);
         }
 
         public void WindowOnClicked(string element_id)

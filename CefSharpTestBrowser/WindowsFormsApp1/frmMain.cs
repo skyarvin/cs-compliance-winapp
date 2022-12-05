@@ -412,7 +412,6 @@ namespace WindowsFormsApp1
                     else Globals.room_duration = 0;
                 }
 
-                lblTierLvlBanner.Visible = false;
                 cmbURL.Text = sCurrAddress;
             });
         }
@@ -506,7 +505,7 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
+            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Settings.Default.tier_level));
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -517,7 +516,7 @@ namespace WindowsFormsApp1
                 AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
 
-
+           
         }
 
         private void BtnFind_Click(object sender, EventArgs e)
@@ -568,7 +567,7 @@ namespace WindowsFormsApp1
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
                 if (element_id == Action.Approve.Value) remarks = "";
 
-                string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[2].textContent").Result.Result);
+                string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[1].textContent").Result.Result);
                 followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
                 int followers = 0;
                 if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
@@ -769,15 +768,10 @@ namespace WindowsFormsApp1
 
         private void CmbURL_KeyPress(object sender, KeyPressEventArgs e)
         {
-            
             if (e.KeyChar == (char)13)
             {
                 this.send_id_checker = false;
                 LoadUrl(cmbURL.Text.ToString());
-            }
-            else
-            {
-                e.Handled = true;
             }
         }
 
@@ -1255,7 +1249,7 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => lblIdStatus.Visible = false);
                 return;
             }
-
+            
             this.InvokeOnUiThreadIfRequired(() =>
             {
                 lblIdStatus.Visible = true;
@@ -1291,7 +1285,7 @@ namespace WindowsFormsApp1
                         break;
                 }
             });
-
+            
             Thread.Sleep(5000);
             if (helperBW.CancellationPending)
             {
@@ -1373,14 +1367,6 @@ namespace WindowsFormsApp1
                 });
             }
 
-        }
-
-        public void showTierLevelWarning(string followRaw)
-        {
-            followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
-            int followers = 0;
-            Int32.TryParse(followRaw, out followers);
-            this.InvokeOnUiThreadIfRequired(() => lblTierLvlBanner.Visible = !Globals.ComplianceAgent.is_correct_follower(followers));
         }
 
         private void PopulateAnnouncementList()

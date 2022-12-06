@@ -357,13 +357,12 @@ namespace WindowsFormsApp1
                         this.send_id_checker = false;
                         return;
                     }
-                    var RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[1];
-                    var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[1] : "";
+                    var RoomName = sCurrAddress.Replace(String.Concat(Url.CB_COMPLIANCE_URL, "/", Settings.Default.tier_level), "").Split('/')[2];
+                    var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(String.Concat(Url.CB_COMPLIANCE_URL, "/", Settings.Default.tier_level), "").Split('/')[2] : "";
                     if (OldRoomName == RoomName)
                     {
                         this.send_id_checker = false;
                     }
-
                     //Emailer for missed seed
                     if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
                     {
@@ -642,7 +641,7 @@ namespace WindowsFormsApp1
                         Globals.LAST_SUCCESS_ID = result.id;
                     }
 
-                    if (element_id == Action.RequestReview.Value || element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
+                    if (element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
                         Globals.LastSuccessUrl = ""; //Clear last success
                     else
                         Globals.LastSuccessUrl = Globals.CurrentUrl;
@@ -1359,8 +1358,10 @@ namespace WindowsFormsApp1
                     return;
                 bgWorkID.RunWorkerAsync();
             }
-            else {
-                this.InvokeOnUiThreadIfRequired(() => {
+            else
+            {
+                this.InvokeOnUiThreadIfRequired(() =>
+                {
                     lblIdStatus.Visible = true;
                     lblIdStatus.Text = "Error: Connecting to server. Click to retry.";
                     lblIdStatus.Tag = "Retry";

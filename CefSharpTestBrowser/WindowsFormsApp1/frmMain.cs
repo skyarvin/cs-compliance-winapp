@@ -1389,7 +1389,10 @@ namespace WindowsFormsApp1
             followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
             int followers = 0;
             Int32.TryParse(followRaw, out followers);
-            this.InvokeOnUiThreadIfRequired(() => lblTierLvlBanner.Visible = !Globals.ComplianceAgent.is_correct_follower(followers));
+            if (!Globals.ComplianceAgent.is_correct_follower(followers) && cmbURL.Items.Contains(Url.CB_COMPLIANCE_URL) && cmbURL.Items.Contains("show"))
+            {
+                this.InvokeOnUiThreadIfRequired(() => lblTierLvlBanner.Visible = true);
+            }
         }
 
         private void PopulateAnnouncementList()

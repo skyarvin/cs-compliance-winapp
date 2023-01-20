@@ -48,8 +48,9 @@
             this.pnlLoader = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnKb = new System.Windows.Forms.Button();
-            this.pnlUser = new System.Windows.Forms.Panel();
             this.btnAnnouncement = new System.Windows.Forms.Button();
+            this.btnTierLevel = new System.Windows.Forms.Button();
+            this.pnlUser = new System.Windows.Forms.Panel();
             this.lblProfile = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
             this.pbImg = new System.Windows.Forms.PictureBox();
@@ -68,6 +69,7 @@
             this.lblIdStatus = new System.Windows.Forms.Label();
             this.bgWorkAnnouncement = new System.ComponentModel.BackgroundWorker();
             this.flpAnnouncementList = new System.Windows.Forms.FlowLayoutPanel();
+            this.lblTierLvlBanner = new System.Windows.Forms.Label();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -105,6 +107,8 @@
             this.pnlSearch.Controls.Add(this.pnlSplitter2);
             this.pnlSearch.Controls.Add(this.pnlLoader);
             this.pnlSearch.Controls.Add(this.btnKb);
+            this.pnlSearch.Controls.Add(this.btnAnnouncement);
+            this.pnlSearch.Controls.Add(this.btnTierLevel);
             this.pnlSearch.Controls.Add(this.pnlUser);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSearch.Location = new System.Drawing.Point(180, 0);
@@ -119,7 +123,7 @@
             this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlURL.Location = new System.Drawing.Point(35, 0);
             this.pnlURL.Name = "pnlURL";
-            this.pnlURL.Size = new System.Drawing.Size(244, 40);
+            this.pnlURL.Size = new System.Drawing.Size(146, 40);
             this.pnlURL.TabIndex = 14;
             // 
             // cmbURL
@@ -134,10 +138,9 @@
             this.cmbURL.FormattingEnabled = true;
             this.cmbURL.Location = new System.Drawing.Point(6, 7);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(232, 25);
+            this.cmbURL.Size = new System.Drawing.Size(134, 25);
             this.cmbURL.TabIndex = 8;
             this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
-            this.cmbURL.SelectedIndexChanged += new System.EventHandler(this.CmbURL_SelectedIndexChanged_1);
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
             this.cmbURL.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.CmbURL_KeyPress);
             this.cmbURL.Resize += new System.EventHandler(this.CmbURL_Resize);
@@ -150,7 +153,7 @@
             this.pnlAction.Controls.Add(this.pbProgress);
             this.pnlAction.Controls.Add(this.btnClear);
             this.pnlAction.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlAction.Location = new System.Drawing.Point(279, 0);
+            this.pnlAction.Location = new System.Drawing.Point(181, 0);
             this.pnlAction.Name = "pnlAction";
             this.pnlAction.Size = new System.Drawing.Size(197, 40);
             this.pnlAction.TabIndex = 10;
@@ -215,7 +218,7 @@
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel4.Location = new System.Drawing.Point(476, 0);
+            this.panel4.Location = new System.Drawing.Point(378, 0);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1, 40);
             this.panel4.TabIndex = 13;
@@ -225,7 +228,7 @@
             this.lblCountdown.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblCountdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCountdown.ForeColor = System.Drawing.Color.White;
-            this.lblCountdown.Location = new System.Drawing.Point(477, 0);
+            this.lblCountdown.Location = new System.Drawing.Point(379, 0);
             this.lblCountdown.Name = "lblCountdown";
             this.lblCountdown.Size = new System.Drawing.Size(55, 40);
             this.lblCountdown.TabIndex = 9;
@@ -236,7 +239,7 @@
             // 
             this.pnlSplitter3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.pnlSplitter3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlSplitter3.Location = new System.Drawing.Point(532, 0);
+            this.pnlSplitter3.Location = new System.Drawing.Point(434, 0);
             this.pnlSplitter3.Name = "pnlSplitter3";
             this.pnlSplitter3.Size = new System.Drawing.Size(1, 40);
             this.pnlSplitter3.TabIndex = 12;
@@ -249,7 +252,7 @@
             this.btnConnect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnConnect.ForeColor = System.Drawing.Color.White;
-            this.btnConnect.Location = new System.Drawing.Point(533, 0);
+            this.btnConnect.Location = new System.Drawing.Point(435, 0);
             this.btnConnect.Name = "btnConnect";
             this.btnConnect.Size = new System.Drawing.Size(115, 40);
             this.btnConnect.TabIndex = 1;
@@ -261,7 +264,7 @@
             // 
             this.pnlSplitter2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.pnlSplitter2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlSplitter2.Location = new System.Drawing.Point(648, 0);
+            this.pnlSplitter2.Location = new System.Drawing.Point(550, 0);
             this.pnlSplitter2.Name = "pnlSplitter2";
             this.pnlSplitter2.Size = new System.Drawing.Size(1, 40);
             this.pnlSplitter2.TabIndex = 11;
@@ -297,16 +300,50 @@
             this.btnKb.FlatAppearance.BorderSize = 0;
             this.btnKb.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnKb.ImageKey = "(none)";
-            this.btnKb.Location = new System.Drawing.Point(649, 0);
+            this.btnKb.Location = new System.Drawing.Point(551, 0);
             this.btnKb.Name = "btnKb";
             this.btnKb.Size = new System.Drawing.Size(49, 40);
-            this.btnKb.TabIndex = 16;
+            this.btnKb.TabIndex = 17;
             this.btnKb.UseVisualStyleBackColor = false;
-            this.btnKb.Click += new System.EventHandler(this.btnKb_Click);
+            this.btnKb.Click += new System.EventHandler(this.btnKb_Click_1);
+            // 
+            // btnAnnouncement
+            // 
+            this.btnAnnouncement.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnAnnouncement.BackgroundImage = global::CSTool.Properties.Resources.announcement_icon;
+            this.btnAnnouncement.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
+            this.btnAnnouncement.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnAnnouncement.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnAnnouncement.FlatAppearance.BorderSize = 0;
+            this.btnAnnouncement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAnnouncement.ImageKey = "(none)";
+            this.btnAnnouncement.Location = new System.Drawing.Point(600, 0);
+            this.btnAnnouncement.Name = "btnAnnouncement";
+            this.btnAnnouncement.Size = new System.Drawing.Size(49, 40);
+            this.btnAnnouncement.TabIndex = 18;
+            this.btnAnnouncement.UseVisualStyleBackColor = false;
+            this.btnAnnouncement.Click += new System.EventHandler(this.btnAnnouncement_Click_1);
+            // 
+            // btnTierLevel
+            // 
+            this.btnTierLevel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnTierLevel.BackgroundImage = global::CSTool.Properties.Resources.tierlvl_change;
+            this.btnTierLevel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTierLevel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnTierLevel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnTierLevel.FlatAppearance.BorderSize = 0;
+            this.btnTierLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTierLevel.ImageKey = "(none)";
+            this.btnTierLevel.Location = new System.Drawing.Point(649, 0);
+            this.btnTierLevel.Name = "btnTierLevel";
+            this.btnTierLevel.Size = new System.Drawing.Size(49, 40);
+            this.btnTierLevel.TabIndex = 19;
+            this.btnTierLevel.UseVisualStyleBackColor = false;
+            this.btnTierLevel.Visible = false;
+            this.btnTierLevel.Click += new System.EventHandler(this.btnTierLevel_Click);
             // 
             // pnlUser
             // 
-            this.pnlUser.Controls.Add(this.btnAnnouncement);
             this.pnlUser.Controls.Add(this.lblProfile);
             this.pnlUser.Controls.Add(this.lblUser);
             this.pnlUser.Controls.Add(this.pbImg);
@@ -316,25 +353,10 @@
             this.pnlUser.Size = new System.Drawing.Size(250, 40);
             this.pnlUser.TabIndex = 0;
             // 
-            // btnAnnouncement
-            // 
-            this.btnAnnouncement.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnAnnouncement.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("btnAnnouncement.BackgroundImage")));
-            this.btnAnnouncement.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
-            this.btnAnnouncement.FlatAppearance.BorderColor = System.Drawing.Color.WhiteSmoke;
-            this.btnAnnouncement.FlatAppearance.BorderSize = 0;
-            this.btnAnnouncement.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAnnouncement.Location = new System.Drawing.Point(1, -2);
-            this.btnAnnouncement.Name = "btnAnnouncement";
-            this.btnAnnouncement.Size = new System.Drawing.Size(52, 42);
-            this.btnAnnouncement.TabIndex = 4;
-            this.btnAnnouncement.UseVisualStyleBackColor = false;
-            this.btnAnnouncement.Click += new System.EventHandler(this.btnAnnouncement_Click);
-            // 
             // lblProfile
             // 
             this.lblProfile.BackColor = System.Drawing.Color.Transparent;
-            this.lblProfile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblProfile.Dock = System.Windows.Forms.DockStyle.Left;
             this.lblProfile.Font = new System.Drawing.Font("Segoe UI Light", 9.25F);
             this.lblProfile.ForeColor = System.Drawing.Color.MediumSpringGreen;
             this.lblProfile.Location = new System.Drawing.Point(0, 22);
@@ -507,11 +529,27 @@
             this.flpAnnouncementList.TabIndex = 0;
             this.flpAnnouncementList.Visible = false;
             // 
+            // lblTierLvlBanner
+            // 
+            this.lblTierLvlBanner.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(0)))));
+            this.lblTierLvlBanner.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblTierLvlBanner.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblTierLvlBanner.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTierLvlBanner.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.lblTierLvlBanner.Location = new System.Drawing.Point(0, 87);
+            this.lblTierLvlBanner.Name = "lblTierLvlBanner";
+            this.lblTierLvlBanner.Size = new System.Drawing.Size(1128, 47);
+            this.lblTierLvlBanner.TabIndex = 4;
+            this.lblTierLvlBanner.Text = "Count of Viewers in this room does not match the Tier Level!";
+            this.lblTierLvlBanner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblTierLvlBanner.Visible = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1128, 517);
+            this.Controls.Add(this.lblTierLvlBanner);
             this.Controls.Add(this.flpAnnouncementList);
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.lblIdStatus);
@@ -573,13 +611,15 @@
         private System.Windows.Forms.ProgressBar pbProgress;
         private System.Windows.Forms.Panel pnlLoader;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button btnKb;
         private System.ComponentModel.BackgroundWorker bgWorkIRR;
         private System.ComponentModel.BackgroundWorker bgWorkID;
         private System.Windows.Forms.Label lblIdStatus;
-        private System.Windows.Forms.Button btnAnnouncement;
         private System.ComponentModel.BackgroundWorker bgWorkAnnouncement;
         private System.Windows.Forms.FlowLayoutPanel flpAnnouncementList;
+        private System.Windows.Forms.Label lblTierLvlBanner;
+        private System.Windows.Forms.Button btnKb;
+        private System.Windows.Forms.Button btnTierLevel;
+        private System.Windows.Forms.Button btnAnnouncement;
     }
 }
 

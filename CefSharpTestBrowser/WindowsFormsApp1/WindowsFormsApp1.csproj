@@ -277,6 +277,7 @@
     <None Include="Resources\kb_icon.png" />
     <None Include="Resources\announcement-unread-icon.png" />
     <None Include="Resources\announcement-icon.png" />
+    <None Include="Resources\tierlvl_change.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

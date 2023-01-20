@@ -122,9 +122,9 @@ namespace CSTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public string tier_level {
+        public int tier_level {
             get {
-                return ((string)(this["tier_level"]));
+                return ((int)(this["tier_level"]));
             }
             set {
                 this["tier_level"] = value;

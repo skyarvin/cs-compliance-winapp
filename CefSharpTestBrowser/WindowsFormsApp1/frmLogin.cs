@@ -43,67 +43,69 @@ namespace WindowsFormsApp1
         }
         private void Login()
         {
-            if (string.IsNullOrEmpty(cmbTierLevel.Text)) {
-                MessageBox.Show("Tier level is required", "Error");
-                return;
-            }
-            if (string.IsNullOrEmpty(txtEmail.Text.Trim()))
+            if (string.IsNullOrEmpty(txtEmail.Text.Trim())) {
                 MessageBox.Show("Invalid Username", "Error");
-            else
+                return;
+            }           
+            try
             {
-                try
+                Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
+                if (Globals.ComplianceAgent != null)
                 {
-                    Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
-                    if (Globals.ComplianceAgent != null)
-                    {
-                        bExitApp = false;
-                        if (txtEmail.Text != Settings.Default.email || (Settings.Default.role != Globals.ComplianceAgent.role)) {
-                            Settings.Default.irr_id = 0;
-                        }
-                        Settings.Default.role = Globals.ComplianceAgent.role;
-                        Settings.Default.user_type = cmbUtype.Text;
-                        Settings.Default.preference = null;
-                        Settings.Default.email = txtEmail.Text;
-                        Settings.Default.tier_level = cmbTierLevel.Text;
-                        Settings.Default.Save();
 
-                        if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
-                            Settings.Default.user_type.ToUpper().Contains("TRAINEE") && Settings.Default.role == "TRAINEE")
-                        {
-                            Globals.frmMain = new frmMain();
-                            Globals.frmMain.Show();
-                            this.Close();
-                        }
-                        else if (Settings.Default.user_type.ToUpper().Contains("QA") && Settings.Default.role == "CSQA")
-                        {
-                            //new form
-                            Globals.FrmQA = new frmQA();
-                            Globals.FrmQA.Show();
-                            this.Close();
-                        }
-                        else
-                        {
-                            //MessageBox.Show("Please check your User Type.", "Error");
-                            Thread.Sleep(60000);
-                        }
+                    if (Globals.ComplianceAgent.tier_level is null)
+                    {
+                        MessageBox.Show("Tier level is not registered! Please contact admin.", "Error");
+                        return;
+                    }
+
+                    bExitApp = false;
+                    if (txtEmail.Text != Settings.Default.email || (Settings.Default.role != Globals.ComplianceAgent.role)) {
+                        Settings.Default.irr_id = 0;
+                    }
+                    Settings.Default.role = Globals.ComplianceAgent.role;
+                    Settings.Default.user_type = cmbUtype.Text;
+                    Settings.Default.preference = null;
+                    Settings.Default.email = txtEmail.Text;
+                    Settings.Default.tier_level = Convert.ToInt32(Globals.ComplianceAgent.tier_level);
+                    Settings.Default.Save();
+
+                    if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
+                        Settings.Default.user_type.ToUpper().Contains("TRAINEE") && Settings.Default.role == "TRAINEE")
+                    {
+                        Globals.frmMain = new frmMain();
+                        Globals.frmMain.Show();
+                        this.Close();
+                    }
+                    else if (Settings.Default.user_type.ToUpper().Contains("QA") && Settings.Default.role == "CSQA")
+                    {
+                        //new form
+                        Globals.FrmQA = new frmQA();
+                        Globals.FrmQA.Show();
+                        this.Close();
                     }
                     else
                     {
-                        MessageBox.Show("We cannot find an account with that username.", "Error");
+                        //MessageBox.Show("Please check your User Type.", "Error");
+                        Thread.Sleep(60000);
                     }
                 }
-                catch (AggregateException e)
+                else
                 {
-                    Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                    MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
-                }
-                catch (Exception e)
-                {
-                    Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                    MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+                    MessageBox.Show("We cannot find an account with that username.", "Error");
                 }
             }
+            catch (AggregateException e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+            }
+            catch (Exception e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+            }            
         }
 
         private void FrmLogin_Load(object sender, EventArgs e)
@@ -124,10 +126,6 @@ namespace WindowsFormsApp1
             {
                 cmbUtype.Text= CSTool.Properties.Settings.Default.user_type;
             }
-            if (!string.IsNullOrEmpty(CSTool.Properties.Settings.Default.tier_level))
-            {
-                cmbTierLevel.Text = CSTool.Properties.Settings.Default.tier_level;
-            }
 
             string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");
             if (Directory.Exists(cache_path))
@@ -142,11 +140,6 @@ namespace WindowsFormsApp1
         private void cmbUtype_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
-        }
-
-        private void cmbTierLevel_KeyDown(object sender, KeyEventArgs e)
-        {
-            e.SuppressKeyPress= true;
         }
     }
 }

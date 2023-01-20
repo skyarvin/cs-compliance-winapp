@@ -37,8 +37,9 @@ namespace CSTool.Class
         //public static string API_URL = "https://cscb.staffme.online/api";
 
         // ## Pure Local Testing with MockSite
-        //public static string CB_HOME = "http://127.0.0.1:8000/compliance/show/";
-        //public static string CB_COMPLIANCE_URL = "http://127.0.0.1:8000/compliance/show/";
+        //public static string CB_HOME = "http://127.0.0.1:8000/compliance/show/razer";
+        //public static string CB_HOME = "http://127.0.0.1:8000/compliance/";
+        //public static string CB_COMPLIANCE_URL = "http://127.0.0.1:8000/compliance";
         //public static string CB_COMPLIANCE_SET_ID_EXP_URL = "http://127.0.0.1:8000/compliance/update_expiration_date_form";
         //public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
         //public static string API_URL = "http://127.0.0.1:9000/api";

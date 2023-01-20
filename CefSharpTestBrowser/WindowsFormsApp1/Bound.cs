@@ -116,40 +116,40 @@ namespace CSTool
                         });
                     }
 
-                    function highlight(selector, last_chatlog)
-                    {
+                    //function highlight(selector, last_chatlog)
+                    //{
                                 
-                        var chatlog_position = 0;
-                        if (selector == null || selector.length == 0)
-                            return; 
-                        var found = false
-                        var row_index = 0;
+                    //    var chatlog_position = 0;
+                    //    if (selector == null || selector.length == 0)
+                    //        return; 
+                    //    var found = false
+                    //    var row_index = 0;
                                 
-                        if (last_chatlog == '' || last_chatlog == undefined || last_chatlog == null){
-                            return selector.length;
-                        }
+                    //    if (last_chatlog == '' || last_chatlog == undefined || last_chatlog == null){
+                    //        return selector.length;
+                    //    }
                                 
-                        selector.forEach(function(el)
-                        {
-                            row_index++;
+                    //    selector.forEach(function(el)
+                    //    {
+                    //        row_index++;
                                     
-                            el.childNodes.forEach(function(td)
-                            {
-                                if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_chatlog) >= 0))
-                                {
-                                    td.parentNode.style.background = '#da1b1b';
-                                    chatlog_position = row_index;
-                                }
-                            })
+                    //        el.childNodes.forEach(function(td)
+                    //        {
+                    //            if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_chatlog) >= 0))
+                    //            {
+                    //                td.parentNode.style.background = '#da1b1b';
+                    //                chatlog_position = row_index;
+                    //            }
+                    //        })
 
-                        });
+                    //    });
 
-                        if (chatlog_position == 0)
-                            return row_index 
+                    //    if (chatlog_position == 0)
+                    //        return row_index 
 
-                        return chatlog_position;
+                    //    return chatlog_position;
                                 
-                    }
+                    //}
 
                     function cacheBuster()
                     {
@@ -183,22 +183,22 @@ namespace CSTool
 
             browser.EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
-                    var urlParams = new URLSearchParams(window.location.search);
-                    if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
-                        function qa_chatlog_highlight(){
-                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
-                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
-                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
-                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
-                        }
-                        qa_chatlog_highlight();
-                        document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
-                        {
-                            qa_chatlog_highlight();
-                        });
-                    } else {
-                        bound.evaluateMaxRoomDuration();
-                    }
+                    //var urlParams = new URLSearchParams(window.location.search);
+                    //if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
+                    //    function qa_chatlog_highlight(){
+                    //        waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
+                    //        waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
+                    //        waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
+                    //        waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
+                    //    }
+                    //    qa_chatlog_highlight();
+                    //    document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
+                    //    {
+                    //        qa_chatlog_highlight();
+                    //    });
+                    //} else {
+                    //    bound.evaluateMaxRoomDuration();
+                    //}
                     
                     
                     window.onkeydown = function(e){
@@ -217,6 +217,16 @@ namespace CSTool
                     {
                         bound.saveAsBounce();
                     }
+
+                    if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0)
+                    {
+                        bound.displayTierBtn();
+                    }
+                    
+
+                    var followRaw = $('#room_info').children().eq(2).text();
+                    bound.showTierLevelBanner(followRaw);
+
                     //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
             ");
@@ -259,8 +269,8 @@ namespace CSTool
                 ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count , Url = Globals.CurrentUrl});
                 Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
             }
-        }
 
+        }
         public void StoreImages(string images)
         {
             this.prevImage = images;
@@ -297,6 +307,11 @@ namespace CSTool
             browser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
         }
 
+        public void showTierLevelBanner(string followRaw)
+        {
+            Globals.frmMain.showTierLevelWarning(followRaw);
+        }
+
         public void WindowOnClicked(string element_id)
         {
             Globals.SaveToLogFile(String.Concat("Window OnClicked: ", element_id), (int)LogType.UserClick);
@@ -326,6 +341,10 @@ namespace CSTool
                 Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
             }
         }
+        public void DisplayTierBtn()
+        {
+            Globals.frmMain.showNextTierLevelBtn();
+        }
         public void OnClicked(string id)
         {
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
@@ -335,61 +354,61 @@ namespace CSTool
             }
         }
 
-        public void EvaluateMaxRoomDuration()
-        {
-            Task.Factory.StartNew(() =>
-            {
-                try
-                {
-                    UrlInformation urlInfo = Logger.GetUrlInformation(Globals.CurrentUrl);
+        //public void EvaluateMaxRoomDuration()
+        //{
+        //    Task.Factory.StartNew(() =>
+        //    {
+        //        try
+        //        {
+        //            UrlInformation urlInfo = Logger.GetUrlInformation(Globals.CurrentUrl);
                     
-                        string script = @"
-                            var last_room_chatlog = '{{global_chatlog}}';
+        //                string script = @"
+        //                    var last_room_chatlog = '{{global_chatlog}}';
 
-                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => 
-                            { 
-                                bound.updateMaxRoomDuration(highlight(element, last_room_chatlog));
-                            }, (error) => console.log(error));
+        //                    waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => 
+        //                    { 
+        //                        bound.updateMaxRoomDuration(highlight(element, last_room_chatlog));
+        //                    }, (error) => console.log(error));
 
-                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, last_room_chatlog), (error) => console.log(error));
+        //                    waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, last_room_chatlog), (error) => console.log(error));
 
-                            document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
-                            {
-                                waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => {
-                                    bound.updateMaxRoomDuration(highlight(element));
-                                }, (error) => console.log(error));
-                                waitUntil('#data .chatlog tbody tr', 5000).then( (element) => highlight(element), (error) => console.log(error));
-                            });
+        //                    document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
+        //                    {
+        //                        waitUntil('#chatlog_user .chatlog tbody tr', 5000).then( (element) => {
+        //                            bound.updateMaxRoomDuration(highlight(element));
+        //                        }, (error) => console.log(error));
+        //                        waitUntil('#data .chatlog tbody tr', 5000).then( (element) => highlight(element), (error) => console.log(error));
+        //                    });
 
 
-                            console.log('checking images');
-                            waitUntil('#data .image_container .image center', 5000).then( (elements) => {
-                                elements.forEach( (el) => {
-                                    if(el.innerText != '{{last_photo}}')
-                                        return;
-		                            el.style.background = '#da1b1b';
-		                            el.style['color'] = 'white';
-                                });
-                            }, (error) => console.log(error));
+        //                    console.log('checking images');
+        //                    waitUntil('#data .image_container .image center', 5000).then( (elements) => {
+        //                        elements.forEach( (el) => {
+        //                            if(el.innerText != '{{last_photo}}')
+        //                                return;
+		      //                      el.style.background = '#da1b1b';
+		      //                      el.style['color'] = 'white';
+        //                        });
+        //                    }, (error) => console.log(error));
 
-                            waitUntil('#photos .image_container .image center', 5000).then( (elements) => {
-                                elements.forEach( (el) => {
-                                    if(el.innerText != '{{last_photo}}')
-                                        return;
-		                            el.style.background = '#da1b1b';
-		                            el.style['color'] = 'white';
-                                });
-                            }, (error) => console.log(error));
+        //                    waitUntil('#photos .image_container .image center', 5000).then( (elements) => {
+        //                        elements.forEach( (el) => {
+        //                            if(el.innerText != '{{last_photo}}')
+        //                                return;
+		      //                      el.style.background = '#da1b1b';
+		      //                      el.style['color'] = 'white';
+        //                        });
+        //                    }, (error) => console.log(error));
 
-                        ";
+        //                ";
 
-                        script = script.Replace("{{global_chatlog}}", urlInfo.last_chatlog).Replace("{{last_photo}}", urlInfo.last_photo);
-                        browser.ExecuteScriptAsync(script);
+        //                script = script.Replace("{{global_chatlog}}", urlInfo.last_chatlog).Replace("{{last_photo}}", urlInfo.last_photo);
+        //                browser.ExecuteScriptAsync(script);
                     
-                }
-                catch {}
-            });
-        }
+        //        }
+        //        catch {}
+        //    });
+        //}
         
         public void UpdateMaxRoomDuration(int chatlog_lines_count = 0)
         {

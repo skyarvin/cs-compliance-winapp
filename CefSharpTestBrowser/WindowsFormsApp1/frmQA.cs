@@ -26,6 +26,9 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             InitializeChromium(Url.CB_HOME);
+
+            // ## Pure Local Testing with MockSite
+            //InitializeChromium(string.Concat(Url.CB_HOME, Globals.ComplianceAgent.tier_level, "/show/razer"));
         }
         public void InitializeChromium(string url)
         {
@@ -176,69 +179,69 @@ namespace WindowsFormsApp1
                         });
                     }
 
-                    function highlight(selector, last_chatlog, color)
-                    {
-                        if (!color){
-                            color = '#da1b1b';
-                        }
-                        var chatlog_position = 0;
-                        if (selector == null || selector.length == 0)
-                            return; 
-                        var found = false
-                        var row_index = 0;
+                    //function highlight(selector, last_chatlog, color)
+                    //{
+                    //    if (!color){
+                    //        color = '#da1b1b';
+                    //    }
+                    //    var chatlog_position = 0;
+                    //    if (selector == null || selector.length == 0)
+                    //        return; 
+                    //    var found = false
+                    //    var row_index = 0;
                                 
-                        if (last_chatlog == '' || last_chatlog == undefined || last_chatlog == null){
-                            return selector.length;
-                        }
+                    //    if (last_chatlog == '' || last_chatlog == undefined || last_chatlog == null){
+                    //        return selector.length;
+                    //    }
                                 
-                        selector.forEach(function(el)
-                        {
-                            row_index++;
+                    //    selector.forEach(function(el)
+                    //    {
+                    //        row_index++;
                                     
-                            el.childNodes.forEach(function(td)
-                            {
-                                if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_chatlog) >= 0))
-                                {
+                    //        el.childNodes.forEach(function(td)
+                    //        {
+                    //            if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_chatlog) >= 0))
+                    //            {
                                     
-                                    td.parentNode.style.background = color;
-                                    chatlog_position = row_index;
-                                }
-                            })
+                    //                td.parentNode.style.background = color;
+                    //                chatlog_position = row_index;
+                    //            }
+                    //        })
 
-                        });
+                    //    });
 
-                        if (chatlog_position == 0)
-                            return row_index 
+                    //    if (chatlog_position == 0)
+                    //        return row_index 
 
-                        return chatlog_position;
+                    //    return chatlog_position;
                                 
-                    }
+                    //}
                 ";
 
             browser.EvaluateScriptAsync(submit_script);
-            if (!String.IsNullOrEmpty(formQA.chatStart) && !String.IsNullOrEmpty(formQA.chatEnd))
-            {
-                browser.EvaluateScriptAsync(@"
-                    document.addEventListener('DOMContentLoaded', function(){
+            //if (!String.IsNullOrEmpty(formQA.chatStart) && !String.IsNullOrEmpty(formQA.chatEnd))
+            //{
+            //    browser.EvaluateScriptAsync(@"
+            //        document.addEventListener('DOMContentLoaded', function(){
                         
-                        function qa_chatlog_highlight(){
-                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_start}}','#0f0'), (error) => console.log(error));
-                            waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_end}}' ), (error) => console.log(error));
-                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_start}}', '#0f0'), (error) => console.log(error));
-                            waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_end}}' ), (error) => console.log(error));
-                        }
-                        qa_chatlog_highlight();
-                        document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
-                        {
-                            qa_chatlog_highlight();
-                        });
+            //            function qa_chatlog_highlight(){
+            //                waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_start}}','#0f0'), (error) => console.log(error));
+            //                waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_end}}' ), (error) => console.log(error));
+            //                waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_start}}', '#0f0'), (error) => console.log(error));
+            //                waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_end}}' ), (error) => console.log(error));
+            //            }
+            //            qa_chatlog_highlight();
+            //            document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
+            //            {
+            //                qa_chatlog_highlight();
+            //            });
                        
-                    });
-                ".Replace("{{chat_start}}", formQA.chatStart)
-                 .Replace("{{chat_end}}",formQA.chatEnd)
-                 );
+            //        });
+            //    ".Replace("{{chat_start}}", formQA.chatStart)
+            //     .Replace("{{chat_end}}",formQA.chatEnd)
+            //     );
 
-            }
+            //}
 
 
 

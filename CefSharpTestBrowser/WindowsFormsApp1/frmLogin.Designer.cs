@@ -37,8 +37,6 @@
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbUtype = new System.Windows.Forms.ComboBox();
-            this.lblTier = new System.Windows.Forms.Label();
-            this.cmbTierLevel = new System.Windows.Forms.ComboBox();
             this.pnlFooter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
@@ -71,7 +69,7 @@
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLogin.ForeColor = System.Drawing.Color.White;
-            this.btnLogin.Location = new System.Drawing.Point(31, 359);
+            this.btnLogin.Location = new System.Drawing.Point(31, 289);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(337, 39);
             this.btnLogin.TabIndex = 3;
@@ -86,7 +84,7 @@
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExit.ForeColor = System.Drawing.Color.White;
-            this.btnExit.Location = new System.Drawing.Point(31, 403);
+            this.btnExit.Location = new System.Drawing.Point(31, 333);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(337, 39);
             this.btnExit.TabIndex = 4;
@@ -109,7 +107,7 @@
             this.pnlFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
             this.pnlFooter.Controls.Add(this.lblVersion);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 472);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 400);
             this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Size = new System.Drawing.Size(396, 22);
             this.pnlFooter.TabIndex = 6;
@@ -157,48 +155,12 @@
             this.cmbUtype.Text = "Agent";
             this.cmbUtype.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbUtype_KeyDown);
             // 
-            // lblTier
-            // 
-            this.lblTier.AutoSize = true;
-            this.lblTier.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTier.ForeColor = System.Drawing.SystemColors.ControlDarkDark;
-            this.lblTier.Location = new System.Drawing.Point(26, 281);
-            this.lblTier.Name = "lblTier";
-            this.lblTier.Size = new System.Drawing.Size(92, 25);
-            this.lblTier.TabIndex = 12;
-            this.lblTier.Text = "Tier Level";
-            // 
-            // cmbTierLevel
-            // 
-            this.cmbTierLevel.BackColor = System.Drawing.Color.White;
-            this.cmbTierLevel.DisplayMember = "DS, MS, NS";
-            this.cmbTierLevel.DropDownHeight = 130;
-            this.cmbTierLevel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cmbTierLevel.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.cmbTierLevel.FormattingEnabled = true;
-            this.cmbTierLevel.IntegralHeight = false;
-            this.cmbTierLevel.ItemHeight = 21;
-            this.cmbTierLevel.Items.AddRange(new object[] {
-            "1",
-            "2",
-            "3",
-            "4",
-            "5"});
-            this.cmbTierLevel.Location = new System.Drawing.Point(31, 308);
-            this.cmbTierLevel.MaxDropDownItems = 3;
-            this.cmbTierLevel.Name = "cmbTierLevel";
-            this.cmbTierLevel.Size = new System.Drawing.Size(337, 29);
-            this.cmbTierLevel.TabIndex = 11;
-            this.cmbTierLevel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbTierLevel_KeyDown);
-            // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(396, 494);
-            this.Controls.Add(this.lblTier);
-            this.Controls.Add(this.cmbTierLevel);
+            this.ClientSize = new System.Drawing.Size(396, 422);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbUtype);
             this.Controls.Add(this.pnlFooter);
@@ -234,7 +196,5 @@
         private System.Windows.Forms.Panel pnlFooter;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cmbUtype;
-        private System.Windows.Forms.Label lblTier;
-        private System.Windows.Forms.ComboBox cmbTierLevel;
     }
 }

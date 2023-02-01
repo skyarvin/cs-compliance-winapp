@@ -360,12 +360,22 @@ namespace WindowsFormsApp1
                         this.send_id_checker = false;
                         return;
                     }
-                    var RoomName = sCurrAddress.Replace(String.Concat(Url.CB_COMPLIANCE_URL, "/", Settings.Default.tier_level), "").Split('/')[2];
-                    var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(String.Concat(Url.CB_COMPLIANCE_URL, "/", Settings.Default.tier_level), "").Split('/')[2] : "";
-                    if (OldRoomName == RoomName)
+
+                    try
                     {
-                        this.send_id_checker = false;
+                        var RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3];
+                        var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3] : "";
+                        if (OldRoomName == RoomName)
+                        {
+                            this.send_id_checker = false;
+                        }
                     }
+
+                    catch 
+                    {
+                        return;
+                    }
+
                     //Emailer for missed seed
                     if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
                     {
@@ -680,7 +690,7 @@ namespace WindowsFormsApp1
                 {
                     ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
-                if (!Globals.CurrentUrl.Contains(Globals.ComplianceAgent.tier_level.ToString())) 
+                if (!Globals.CurrentUrl.Contains(Globals.ComplianceAgent.tier_level.ToString()))
                 {
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
                 }
@@ -1456,8 +1466,8 @@ namespace WindowsFormsApp1
         }
         private void btnTierLevel_Click(object sender, EventArgs e)
         {
+            this.InvokeOnUiThreadIfRequired(() => btnTierLevel.Visible = false);
             GoToTierLevelThree();
-            btnTierLevel.Visible = false;
         }
 
         public void GoToTierLevelThree()

@@ -516,6 +516,11 @@ namespace WindowsFormsApp1
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
+            this.RefreshBrowser();
+        }
+
+        private void RefreshBrowser()
+        {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
@@ -528,8 +533,6 @@ namespace WindowsFormsApp1
             {
                 AsynchronousClient.Send(Globals.Client, refreshCommand);
             }
-
-
         }
 
         private void BtnFind_Click(object sender, EventArgs e)
@@ -692,9 +695,8 @@ namespace WindowsFormsApp1
                 }
                 if (!Globals.CurrentUrl.Contains(Globals.ComplianceAgent.tier_level.ToString()))
                 {
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
+                    this.RefreshBrowser();
                 }
-
             });
         }
 

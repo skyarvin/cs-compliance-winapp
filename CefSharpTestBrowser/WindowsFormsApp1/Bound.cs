@@ -47,6 +47,16 @@ namespace CSTool
             }
 
             browser.ExecuteScriptAsync(@"
+                   window.onload = function(e) {
+                        $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
+                            $(this).attr('buttonClicked', true);
+
+                            if ($('#tab_chatlog_user').attr('buttonClicked') && $('#tab_abuselog').attr('buttonClicked')) {
+                                bound.displayApproveBtn();
+                            }
+                        });
+                   }
+
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
@@ -70,14 +80,6 @@ namespace CSTool
                             if (element_values.hasOwnProperty(e.target.value)) {
                                     bound.onClicked(element_values[e.target.value][0]);
                             }
-
-                            $(document).on('click', '#tab_chatlog_user, #tab_abuselog', function(event) {
-		                        $(this).attr('buttonClicked', true);
-
-                                if ($('#tab_chatlog_user').attr('buttonClicked') && $('#tab_abuselog').attr('buttonClicked')) {
-    	                            bound.displayApproveBtn();
-                                }
-                            });
                         }
                     }
                 ");

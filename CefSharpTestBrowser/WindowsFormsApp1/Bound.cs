@@ -70,11 +70,16 @@ namespace CSTool
                             if (element_values.hasOwnProperty(e.target.value)) {
                                     bound.onClicked(element_values[e.target.value][0]);
                             }
-                            
+
+                            $(document).on('click', '#tab_chatlog_user, #tab_abuselog', function(event) {
+		                        $(this).attr('buttonClicked', true);
+
+                                if ($('#tab_chatlog_user').attr('buttonClicked') && $('#tab_abuselog').attr('buttonClicked')) {
+    	                            bound.displayApproveBtn();
+                                }
+                            });
                         }
                     }
-                
-                    
                 ");
 
             var submit_script = @"
@@ -199,7 +204,11 @@ namespace CSTool
                     //} else {
                     //    bound.evaluateMaxRoomDuration();
                     //}
-                    
+
+                    approve_btn = document.getElementById('approve_button');
+                    if (approve_btn) {
+                        approve_btn.style.display = 'none';
+                    }
                     
                     window.onkeydown = function(e){
                         if (e.which == 112)
@@ -262,7 +271,8 @@ namespace CSTool
             }
 
             Globals.ForceHideComliance = true;
-            
+            Globals.LogsTabButtonClicked = false;
+
             if (Globals.IsServer())
             {
                 Globals.ApprovedAgents.Clear();
@@ -439,6 +449,12 @@ namespace CSTool
             {
                 Globals.frmMain.SendToIdChecking();
             }
+        }
+
+        public void DisplayApproveBtn()
+        {
+            Globals.LogsTabButtonClicked = true;
+            Globals.frmMain.ShowApproveButton();
         }
     }
 }

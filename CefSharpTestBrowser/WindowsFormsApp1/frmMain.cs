@@ -248,6 +248,8 @@ namespace WindowsFormsApp1
                     Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'block'; });");
             }
 
+            ShowApproveButton();
+
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
@@ -1475,6 +1477,14 @@ namespace WindowsFormsApp1
         public void GoToTierLevelThree()
         {
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/3"));
+        }
+
+        public void ShowApproveButton()
+        {
+            if (Globals.LogsTabButtonClicked && Globals.room_duration >= 10)
+            {
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
+            }
         }
     }
 

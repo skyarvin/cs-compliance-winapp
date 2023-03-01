@@ -248,7 +248,7 @@ namespace WindowsFormsApp1
                     Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'block'; });");
             }
 
-            ShowApproveButton();
+            ShowRequestPhotoAndApproveButton();
 
             if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
@@ -1479,11 +1479,11 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/3"));
         }
 
-        public void ShowApproveButton()
+        public void ShowRequestPhotoAndApproveButton()
         {
             if (Globals.LogsTabButtonClicked && Globals.room_duration >= 10)
             {
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button, #pre_request_photo_button').forEach(function(el){ el.style.display = 'block'; });");
             }
         }
     }

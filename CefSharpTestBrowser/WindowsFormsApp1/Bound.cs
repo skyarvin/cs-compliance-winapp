@@ -52,7 +52,7 @@ namespace CSTool
                             $(this).attr('buttonClicked', true);
 
                             if ($('#tab_chatlog_user').attr('buttonClicked') && $('#tab_abuselog').attr('buttonClicked')) {
-                                bound.displayApproveBtn();
+                                bound.displayRequestPhotoAndApproveBtn();
                             }
                         });
                    }
@@ -207,9 +207,8 @@ namespace CSTool
                     //    bound.evaluateMaxRoomDuration();
                     //}
 
-                    approve_btn = document.getElementById('approve_button');
-                    if (approve_btn) {
-                        approve_btn.style.display = 'none';
+                    if ($('#approve_button, #pre_request_photo_button').length != 0) {
+                        document.querySelectorAll('#approve_button, #pre_request_photo_button').forEach(function(el){ el.style.display = 'none'; });
                     }
                     
                     window.onkeydown = function(e){
@@ -453,10 +452,10 @@ namespace CSTool
             }
         }
 
-        public void DisplayApproveBtn()
+        public void DisplayRequestPhotoAndApproveBtn()
         {
             Globals.LogsTabButtonClicked = true;
-            Globals.frmMain.ShowApproveButton();
+            Globals.frmMain.ShowRequestPhotoAndApproveButton();
         }
     }
 }

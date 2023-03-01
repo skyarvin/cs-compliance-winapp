@@ -106,7 +106,7 @@ namespace CSTool.Handlers
 
         public void OnRenderProcessTerminated(IWebBrowser chromiumWebBrowser, IBrowser browser, CefTerminationStatus status)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public void OnRenderViewReady(IWebBrowser chromiumWebBrowser, IBrowser browser)

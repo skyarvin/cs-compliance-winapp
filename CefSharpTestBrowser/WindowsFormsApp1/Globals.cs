@@ -171,7 +171,7 @@ namespace WindowsFormsApp1
                 return "999999";
             }
 
-            return "3.0.0.0.27";
+            return "3.0.0.0.28";
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>

@@ -32,6 +32,7 @@ namespace WindowsFormsApp1
 {
     public partial class frmMain : Form
     {
+        private const int DISABLE_CLOSE_BUTTON = 0x200;
         private Timer _timer;
         private string LastSucessAction;
         public  DateTime StartTime_BrowserChanged;
@@ -504,7 +505,14 @@ namespace WindowsFormsApp1
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Cef.Shutdown();
+            if (ModifierKeys == Keys.Alt && ModifierKeys == Keys.F4)
+            {
+                e.Cancel = true;
+            }
+            else
+            {
+                Cef.Shutdown();
+            }
         }
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -711,7 +719,7 @@ namespace WindowsFormsApp1
             get
             {
                 CreateParams handleParam = base.CreateParams;
-                handleParam.ExStyle |= 0x02000000;
+                handleParam.ClassStyle = handleParam.ClassStyle | DISABLE_CLOSE_BUTTON;
                 return handleParam;
             }
         }

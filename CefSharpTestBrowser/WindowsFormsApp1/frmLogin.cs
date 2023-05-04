@@ -1,4 +1,5 @@
-﻿using CSTool.Properties;
+﻿using CSTool;
+using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -108,8 +109,10 @@ namespace WindowsFormsApp1
             }            
         }
 
+
         private void FrmLogin_Load(object sender, EventArgs e)
         {
+        
             //workshift_list.DataSource = new BindingSource(Globals.workshifts, null);
             //workshift_list.DisplayMember = "Value";
             //workshift_list.ValueMember = "Key";

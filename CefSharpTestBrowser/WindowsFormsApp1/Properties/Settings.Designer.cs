@@ -130,5 +130,17 @@ namespace CSTool.Properties {
                 this["tier_level"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string cam_source {
+            get {
+                return ((string)(this["cam_source"]));
+            }
+            set {
+                this["cam_source"] = value;
+            }
+        }
     }
 }

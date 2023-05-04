@@ -27,6 +27,9 @@ using System.Windows.Input;
 using CSTool.Properties;
 using System.Security.Cryptography;
 using CSTool.Models;
+using AForge.Video;
+using AForge.Video.DirectShow;
+using System.Timers;
 
 namespace WindowsFormsApp1
 {
@@ -35,11 +38,12 @@ namespace WindowsFormsApp1
         private const int DISABLE_CLOSE_BUTTON = 0x200;
         private Timer _timer;
         private string LastSucessAction;
-        public  DateTime StartTime_BrowserChanged;
-        public   DateTime? StartTime_LastAction = null;
+        public DateTime StartTime_BrowserChanged;
+        public DateTime? StartTime_LastAction = null;
         public bool isBrowserInitialized = false;
         public bool send_id_checker = true;
         public IdChecker ID_CHECKER = new IdChecker();
+        private List<int> scheduledCaptureTimeList = new List<int>();
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },
@@ -151,8 +155,8 @@ namespace WindowsFormsApp1
                 //TODO Try to reconnect. If failed, run code below. Revert back to original profile.
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, "SERVER CONNECTION LOST. CLICK 'CONNECT' BUTTON TO RECONNECT."));
                 SetBtnConnectText("CONNECT");
-                Globals.Profile = new Profile { 
-                    Name = Globals.ComplianceAgent.profile, 
+                Globals.Profile = new Profile {
+                    Name = Globals.ComplianceAgent.profile,
                     AgentID = Globals.ComplianceAgent.id,
                     Type = Server.Type,
                     Preference = Settings.Default.preference,
@@ -190,8 +194,8 @@ namespace WindowsFormsApp1
             if (ServerAsync.HasConnections() == false)
             {
                 Globals.PartnerAgents = "";
-                Globals.Profile = new Profile { 
-                    Name = Globals.ComplianceAgent.profile, 
+                Globals.Profile = new Profile {
+                    Name = Globals.ComplianceAgent.profile,
                     AgentID = Globals.ComplianceAgent.id,
                     Type = Server.Type,
                     Preference = Settings.Default.preference,
@@ -207,7 +211,7 @@ namespace WindowsFormsApp1
                 Globals.PartnerAgents = ServerAsync.ListOfPartners();
                 ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
             }
-            
+
             Globals.max_room_duration = ServerAsync.DurationThreshold();
         }
 
@@ -215,7 +219,7 @@ namespace WindowsFormsApp1
         {
             InitializeServer();
             Globals.Profile = new Profile {
-                Name = Globals.ComplianceAgent.profile ,
+                Name = Globals.ComplianceAgent.profile,
                 AgentID = Globals.ComplianceAgent.id,
                 Type = Server.Type,
                 Preference = Settings.Default.preference,
@@ -226,7 +230,6 @@ namespace WindowsFormsApp1
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
-
             // ## Pure Local Testing with MockSite
             //InitializeChromium(string.Concat(Url.CB_HOME, Globals.ComplianceAgent.tier_level, "/show/razer"));
         }
@@ -289,7 +292,7 @@ namespace WindowsFormsApp1
                         if (Globals.IsClient())
                         {
                             AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "USER_STATUS", ProfileID = Globals.ComplianceAgent.id, Message = "ACTIVE" });
-                        }else if (Globals.IsServer())
+                        } else if (Globals.IsServer())
                         {
                             ServerAsync.ChangeUserActivityStatus(Globals.ComplianceAgent.id, true);
                         }
@@ -309,7 +312,7 @@ namespace WindowsFormsApp1
                     });
                 }
 
-                
+
             }
 
             lblCountdown.Text = Globals.room_duration.ToString();
@@ -343,7 +346,7 @@ namespace WindowsFormsApp1
                         _timer.Stop();
                         Globals.room_duration = 0;
                     }
-                    else 
+                    else
                     {
                         _timer.Start();
                     }
@@ -352,7 +355,7 @@ namespace WindowsFormsApp1
                     var splitAddress = sCurrAddress.Split('#');
                     if (Globals.CurrentUrl == splitAddress[0])
                     {
-                        if(!sCurrAddress.Contains("seed_failure"))
+                        if (!sCurrAddress.Contains("seed_failure"))
                         {
                             if (this.send_id_checker && IsComplianceUrl(sCurrAddress))
                             {
@@ -374,7 +377,7 @@ namespace WindowsFormsApp1
                         }
                     }
 
-                    catch 
+                    catch
                     {
                         return;
                     }
@@ -464,8 +467,26 @@ namespace WindowsFormsApp1
         #endregion
 
         #region Form Events
+        private void setScheduledCaptureTime()
+        {
+            DateTime now = DateTime.UtcNow;
+            Random rnd = new Random();
+            foreach (int value in Enumerable.Range(1, 432))
+            {
+                var end = now.AddMinutes(10);
+                DateTime epoch = new DateTime(1970, 1, 1);
+                TimeSpan startTs = now - epoch;
+                TimeSpan endTs = end - epoch;
+                int startRangeSinceEpoch = (int)startTs.TotalSeconds;
+                int endrangeSinceEpoch = (int)endTs.TotalSeconds;
+                int nextCapture = rnd.Next(startRangeSinceEpoch, endrangeSinceEpoch + 1);
+                scheduledCaptureTimeList.Add(nextCapture);
+                now = end;
+            }
+        }
         private void Form1_Load(object sender, EventArgs e)
         {
+
             Application.Idle += new EventHandler(Application_OnIdle);
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
@@ -501,6 +522,15 @@ namespace WindowsFormsApp1
             }
 
             bgWorkAnnouncement.RunWorkerAsync();
+            setScheduledCaptureTime();
+            System.Timers.Timer activityMonitorTimer = new System.Timers.Timer(1000);
+            activityMonitorTimer.Elapsed += timer_Elapsed;
+            activityMonitorTimer.Start();
+        }
+
+        private void timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            monitorActivity();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -519,7 +549,7 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
             Globals.UpdateActivity();
             Globals.EnableTimer = false;
-            
+
             Environment.Exit(Environment.ExitCode);
             //Application.Exit();
         }
@@ -613,8 +643,8 @@ namespace WindowsFormsApp1
                 }
 
                 var actual_end_time = DateTime.Now;
-                    var logData = new Logger
-                    {
+                var logData = new Logger
+                {
                     url = urlToSave,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
@@ -723,7 +753,7 @@ namespace WindowsFormsApp1
                 return handleParam;
             }
         }
-                #endregion
+        #endregion
 
         public class Action
         {
@@ -767,7 +797,7 @@ namespace WindowsFormsApp1
         private void UpdateWorkactivity_Tick(object sender, EventArgs e)
         {
             if (!string.IsNullOrEmpty(Globals.activity.start_time))
-            {                
+            {
                 Globals.UpdateActivity();
                 Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             }
@@ -777,7 +807,7 @@ namespace WindowsFormsApp1
 
         public void SwitchCache()
         {
-            
+
             isBrowserInitialized = false;
             this.pnlBrowser.Controls.Clear();
             Globals.EnableTimer = false;
@@ -798,7 +828,7 @@ namespace WindowsFormsApp1
 
         private void CmbURL_KeyPress(object sender, KeyPressEventArgs e)
         {
-            
+
             if (e.KeyChar == (char)13)
             {
                 this.send_id_checker = false;
@@ -858,7 +888,7 @@ namespace WindowsFormsApp1
 
             if (url.Contains(Url.DOMAIN))
                 return true;
-        
+
             return false;
         }
 
@@ -896,7 +926,7 @@ namespace WindowsFormsApp1
         {
             if (string.IsNullOrEmpty(Settings.Default.preference))
             {
-                Globals.ShowMessage(this,"Please set your View Preference first and Try again");
+                Globals.ShowMessage(this, "Please set your View Preference first and Try again");
                 return;
             }
 
@@ -993,7 +1023,7 @@ namespace WindowsFormsApp1
         {
             switchToolStripMenuItem.Visible = false;
             if (ServerAsync.HasConnections() && Globals.IsServer())
-            { 
+            {
                 switchToolStripMenuItem.Visible = true;
             }
         }
@@ -1029,7 +1059,7 @@ namespace WindowsFormsApp1
                         Globals.ApprovedAgents.Add(Globals.ComplianceAgent.profile);
                     }
                     Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
-                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count , Url = Globals.CurrentUrl});
+                    ServerAsync.SendToAll(new PairCommand { Action = "CLEARED_AGENTS", Message = Globals.ApprovedAgents.Count.ToString(), NumberofActiveProfiles = Globals.Profiles.Count, Url = Globals.CurrentUrl });
                 }
                 else if (Globals.IsClient())
                 {
@@ -1056,15 +1086,15 @@ namespace WindowsFormsApp1
             }
         }
 
-        public void DisplayRoomApprovalRate (int number_of_approve_agents, int number_of_agents, string url)
+        public void DisplayRoomApprovalRate(int number_of_approve_agents, int number_of_agents, string url)
         {
             Console.WriteLine("Peer Approval URL:" + url);
-            Console.WriteLine("Peer Approval Status:" + number_of_approve_agents +"/"+number_of_agents);
+            Console.WriteLine("Peer Approval Status:" + number_of_approve_agents + "/" + number_of_agents);
             Decimal approval_percentage = ((Decimal)number_of_approve_agents / (Decimal)number_of_agents) * 100;
             this.InvokeOnUiThreadIfRequired(() =>
             {
                 pbProgress.Value = (int)approval_percentage;
-                lblApproveCount.Text = String.Concat(number_of_approve_agents,"/",number_of_agents);
+                lblApproveCount.Text = String.Concat(number_of_approve_agents, "/", number_of_agents);
                 btnClear.Enabled = true;
                 if (number_of_approve_agents == 0)
                 {
@@ -1089,7 +1119,7 @@ namespace WindowsFormsApp1
                         document.getElementById(`approve_button`).click();
                     } else {
                         console.log('Url not match not clicking {{target_url}} vs '+ window.location.href.replace(location.hash, ''));
-                    }".Replace("{{target_url}}", url) );
+                    }".Replace("{{target_url}}", url));
                 }
             }
             else if (number_of_approve_agents > 0) {
@@ -1104,7 +1134,7 @@ namespace WindowsFormsApp1
                     ");
 
             }
-           
+
         }
 
         private void FrmMain_KeyDown(object sender, System.Windows.Forms.KeyEventArgs e)
@@ -1117,9 +1147,9 @@ namespace WindowsFormsApp1
                 }
                 Globals.ForceHideComliance = false;
                 Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
-                
+
             }
-            else if (e.Control && e.KeyCode == Keys.Oemtilde )
+            else if (e.Control && e.KeyCode == Keys.Oemtilde)
             {
                 //ButtonClearClick();
             }
@@ -1142,7 +1172,7 @@ namespace WindowsFormsApp1
             var final = "";
             foreach (var profile in Globals.Profiles.OrderBy(a => a.AgentID))
             {
-                final += string.Concat(profile.AgentID, ":", profile.Preference,":", profile.Type, ";");
+                final += string.Concat(profile.AgentID, ":", profile.Preference, ":", profile.Type, ";");
             }
             return CalculateMD5Hash(final);
         }
@@ -1180,7 +1210,7 @@ namespace WindowsFormsApp1
             {
                 Process.Start(Url.KNOWLEDGE_BASE_URL);
             });
-              
+
         }
         public void StartbgWorkIRR()
         {
@@ -1204,13 +1234,13 @@ namespace WindowsFormsApp1
                     {
                         e.Cancel = true;
                     }
-                    if(Globals.FrmInternalRequestReview != null)
+                    if (Globals.FrmInternalRequestReview != null)
                         Globals.FrmInternalRequestReview.Close();
                     bgWorkIRR.CancelAsync();
                     return;
                 }
 
-                if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+                if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
                     Globals.FrmInternalRequestReview = new frmInternalRequestReview();
 
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestReview.update_info());
@@ -1493,6 +1523,73 @@ namespace WindowsFormsApp1
             {
                 Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button, #pre_request_photo_button').forEach(function(el){ el.style.display = 'block'; });");
             }
+        }
+
+        private void startCamCapture(string camFileName)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                StaffCam staffCam = new StaffCam();
+                staffCam.startCamera(Settings.Default.cam_source);
+                Thread.Sleep(5000);
+                if (staffCam.isRunning())
+                {
+                    staffCam.captureImage(camFileName);
+                    Thread.Sleep(1000);
+                    staffCam.stopCamera();
+                    if (Globals.activity.PostCameraCapture(camFileName))
+                    {
+                        FileUtil.deleteFile(camFileName);
+                    }
+                }
+                else
+                {
+                    Globals.frmMain.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(Globals.frmMain, "Please set your camera"));
+
+                }
+            });
+        }
+        private void startScreenCapture(string scFileName)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                StaffScreenshot staffscreenshot = new StaffScreenshot();
+                staffscreenshot.captureScreenshot(scFileName);
+                if (Globals.activity.PostScreenshot(scFileName))
+                {
+                    FileUtil.deleteFile(scFileName);
+                }
+            });
+        }
+
+        private void monitorActivity()
+        {
+            DateTime now = DateTime.UtcNow;
+            TimeSpan ts = now - new DateTime(1970, 1, 1);
+            int nowUnixTime = (int)ts.TotalSeconds;
+            if (scheduledCaptureTimeList.Contains(nowUnixTime))
+            {
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", DateTime.Now.ToString("MM-dd-yyyy"), "\\"));
+                FileInfo logFileInfo = new FileInfo(path);
+                DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
+                if (!logDirInfo.Exists) logDirInfo.Create();
+                string nowStr = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+                //string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
+                string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
+                //startCamCapture(camFileName);
+                startScreenCapture(scFileName);
+            }
+        }
+
+        private void cameraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmCamSettings frmCamSettings = new frmCamSettings();
+            frmCamSettings.ShowDialog(this);
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 

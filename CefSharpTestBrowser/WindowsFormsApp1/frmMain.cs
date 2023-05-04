@@ -15,20 +15,15 @@ using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using Timer = System.Windows.Forms.Timer;
-using System.Media;
 using System.Net;
 using System.Threading.Tasks;
 using System.Text;
 using System.Net.Sockets;
 using System.Diagnostics;
-using System.Reflection;
 using Newtonsoft.Json;
-using System.Windows.Input;
 using CSTool.Properties;
 using System.Security.Cryptography;
 using CSTool.Models;
-using AForge.Video;
-using AForge.Video.DirectShow;
 using System.Timers;
 
 namespace WindowsFormsApp1
@@ -1555,9 +1550,8 @@ namespace WindowsFormsApp1
             {
                 StaffScreenshot staffscreenshot = new StaffScreenshot();
                 staffscreenshot.captureScreenshot(scFileName);
-                if (Globals.activity.PostScreenshot(scFileName))
-                {
-                    FileUtil.deleteFile(scFileName);
+                if (!uploadImage(scFileName)) {
+                    retryUpload(scFileName);
                 }
             });
         }
@@ -1578,6 +1572,7 @@ namespace WindowsFormsApp1
                 string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
                 //startCamCapture(camFileName);
                 startScreenCapture(scFileName);
+                findAndploadFailedImages();
             }
         }
 
@@ -1591,6 +1586,53 @@ namespace WindowsFormsApp1
         {
             this.Close();
         }
-    }
 
-}
+        private void retryUpload(string path)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                if (uploadImage(path))
+                {
+                    break;
+                }
+
+                Thread.Sleep(30000);
+            }
+        }
+
+        private bool uploadImage(string path)
+        {
+            bool lockWasTaken = false;
+
+            try
+            {
+                Monitor.Enter(path, ref lockWasTaken);
+
+                if (Globals.activity.PostScreenshot(path))
+                {
+                    FileUtil.deleteFile(path);
+                    return true;
+                }
+            }
+            finally
+            {
+                if (lockWasTaken) Monitor.Exit(path);
+            }
+
+            return false;
+        }
+
+        private void findAndploadFailedImages()
+        {
+            Task.Factory.StartNew(() =>
+            {
+                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", DateTime.Now.ToString("MM-dd-yyyy"), "\\"));
+
+                foreach (string file in Directory.GetFiles(path, "*.jpeg"))
+                {
+                    retryUpload(file);
+                }
+            });
+        }
+    }
+ }

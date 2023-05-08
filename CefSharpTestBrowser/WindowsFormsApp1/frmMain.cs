@@ -1520,30 +1520,6 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void startCamCapture(string camFileName)
-        {
-            Task.Factory.StartNew(() =>
-            {
-                StaffCam staffCam = new StaffCam();
-                staffCam.startCamera(Settings.Default.cam_source);
-                Thread.Sleep(5000);
-                if (staffCam.isRunning())
-                {
-                    staffCam.captureImage(camFileName);
-                    Thread.Sleep(1000);
-                    staffCam.stopCamera();
-                    if (Globals.activity.PostCameraCapture(camFileName))
-                    {
-                        FileUtil.deleteFile(camFileName);
-                    }
-                }
-                else
-                {
-                    Globals.frmMain.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(Globals.frmMain, "Please set your camera"));
-
-                }
-            });
-        }
         private void startScreenCapture(string scFileName)
         {
             Task.Factory.StartNew(() =>
@@ -1574,12 +1550,6 @@ namespace WindowsFormsApp1
                 startScreenCapture(scFileName);
                 findAndploadFailedImages();
             }
-        }
-
-        private void cameraToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmCamSettings frmCamSettings = new frmCamSettings();
-            frmCamSettings.ShowDialog(this);
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)

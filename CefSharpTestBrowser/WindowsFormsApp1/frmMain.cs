@@ -1496,20 +1496,44 @@ namespace WindowsFormsApp1
             else
                 bgWorkAnnouncement.RunWorkerAsync();
         }
-        public void showNextTierLevelBtn()
+
+        public string getUrlSegment()
         {
-            if (Globals.ComplianceAgent.tier_level == 4)
-                this.InvokeOnUiThreadIfRequired(() => btnTierLevel.Visible = true);
-        }
-        private void btnTierLevel_Click(object sender, EventArgs e)
-        {
-            this.InvokeOnUiThreadIfRequired(() => btnTierLevel.Visible = false);
-            GoToTierLevelThree();
+            try
+            {
+                Uri uri = new Uri(Globals.CurrentUrl);
+                string[] segments = uri.Segments;
+                return segments[2];
+            }
+            catch
+            {
+                return "";
+            }
         }
 
-        public void GoToTierLevelThree()
+        private bool isTierLevelNumeric()
         {
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/3"));
+            return int.TryParse(getUrlSegment().TrimEnd('/'), out _);
+        }
+
+        private int getCurrentTier()
+        {
+            return int.Parse(getUrlSegment().TrimEnd('/'));
+        }
+
+        public void showNextTierLevelBtn()
+        {
+            if (isTierLevelNumeric())
+            {
+                bool should_show_button = getCurrentTier() != 1;
+                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = should_show_button);
+            }
+        }
+
+        private void btnDecreaseTierLevel_Click(object sender, EventArgs e)
+        {
+            this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
+            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", getCurrentTier() - 1));
         }
 
         public void ShowRequestPhotoAndApproveButton()
@@ -1522,7 +1546,7 @@ namespace WindowsFormsApp1
 
         private void startScreenCapture(string scFileName)
         {
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 StaffScreenshot staffscreenshot = new StaffScreenshot();
                 staffscreenshot.captureScreenshot(scFileName);
@@ -1544,11 +1568,9 @@ namespace WindowsFormsApp1
                 DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
                 if (!logDirInfo.Exists) logDirInfo.Create();
                 string nowStr = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
-                //string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
                 string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
-                //startCamCapture(camFileName);
                 startScreenCapture(scFileName);
-                findAndploadFailedImages();
+                findAndUploadFailedImages();
             }
         }
 
@@ -1592,9 +1614,9 @@ namespace WindowsFormsApp1
             return false;
         }
 
-        private void findAndploadFailedImages()
+        private void findAndUploadFailedImages()
         {
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", DateTime.Now.ToString("MM-dd-yyyy"), "\\"));
 

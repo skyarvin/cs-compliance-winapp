@@ -49,7 +49,7 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnKb = new System.Windows.Forms.Button();
             this.btnAnnouncement = new System.Windows.Forms.Button();
-            this.btnDecreaseTierLevel = new System.Windows.Forms.Button();
+            this.btnTierLevel = new System.Windows.Forms.Button();
             this.pnlUser = new System.Windows.Forms.Panel();
             this.lblProfile = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
@@ -112,7 +112,7 @@
             this.pnlSearch.Controls.Add(this.pnlLoader);
             this.pnlSearch.Controls.Add(this.btnKb);
             this.pnlSearch.Controls.Add(this.btnAnnouncement);
-            this.pnlSearch.Controls.Add(this.btnDecreaseTierLevel);
+            this.pnlSearch.Controls.Add(this.btnTierLevel);
             this.pnlSearch.Controls.Add(this.pnlUser);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSearch.Location = new System.Drawing.Point(180, 0);
@@ -328,23 +328,23 @@
             this.btnAnnouncement.UseVisualStyleBackColor = false;
             this.btnAnnouncement.Click += new System.EventHandler(this.btnAnnouncement_Click_1);
             // 
-            // btnDecreaseTierLevel
+            // btnTierLevel
             // 
-            this.btnDecreaseTierLevel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnDecreaseTierLevel.BackgroundImage = global::CSTool.Properties.Resources.tierlvl_change;
-            this.btnDecreaseTierLevel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnDecreaseTierLevel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnDecreaseTierLevel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnDecreaseTierLevel.FlatAppearance.BorderSize = 0;
-            this.btnDecreaseTierLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDecreaseTierLevel.ImageKey = "(none)";
-            this.btnDecreaseTierLevel.Location = new System.Drawing.Point(649, 0);
-            this.btnDecreaseTierLevel.Name = "btnDecreaseTierLevel";
-            this.btnDecreaseTierLevel.Size = new System.Drawing.Size(49, 40);
-            this.btnDecreaseTierLevel.TabIndex = 19;
-            this.btnDecreaseTierLevel.UseVisualStyleBackColor = false;
-            this.btnDecreaseTierLevel.Visible = false;
-            this.btnDecreaseTierLevel.Click += new System.EventHandler(this.btnDecreaseTierLevel_Click);
+            this.btnTierLevel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnTierLevel.BackgroundImage = global::CSTool.Properties.Resources.tierlvl_change;
+            this.btnTierLevel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnTierLevel.Dock = System.Windows.Forms.DockStyle.Right;
+            this.btnTierLevel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
+            this.btnTierLevel.FlatAppearance.BorderSize = 0;
+            this.btnTierLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTierLevel.ImageKey = "(none)";
+            this.btnTierLevel.Location = new System.Drawing.Point(649, 0);
+            this.btnTierLevel.Name = "btnTierLevel";
+            this.btnTierLevel.Size = new System.Drawing.Size(49, 40);
+            this.btnTierLevel.TabIndex = 19;
+            this.btnTierLevel.UseVisualStyleBackColor = false;
+            this.btnTierLevel.Visible = false;
+            this.btnTierLevel.Click += new System.EventHandler(this.btnTierLevel_Click);
             // 
             // pnlUser
             // 
@@ -406,14 +406,14 @@
             this.logoutToolStripMenuItem,
             this.closeToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(117, 92);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(181, 114);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStrip1_Opening);
             this.contextMenuStrip1.Opened += new System.EventHandler(this.ContextMenuStrip1_Opened);
             // 
             // switchToolStripMenuItem
             // 
             this.switchToolStripMenuItem.Name = "switchToolStripMenuItem";
-            this.switchToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.switchToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.switchToolStripMenuItem.Text = "Switch";
             this.switchToolStripMenuItem.Visible = false;
             // 
@@ -422,27 +422,27 @@
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.cameraToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.settingsToolStripMenuItem.Text = "Settings";
             this.settingsToolStripMenuItem.Visible = false;
             // 
             // cameraToolStripMenuItem
             // 
             this.cameraToolStripMenuItem.Name = "cameraToolStripMenuItem";
-            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
+            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cameraToolStripMenuItem.Text = "Camera";
             // 
             // logoutToolStripMenuItem
             // 
             this.logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.logoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.logoutToolStripMenuItem.Text = "Logout";
             this.logoutToolStripMenuItem.Click += new System.EventHandler(this.logoutToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
@@ -646,7 +646,7 @@
         private System.Windows.Forms.FlowLayoutPanel flpAnnouncementList;
         private System.Windows.Forms.Label lblTierLvlBanner;
         private System.Windows.Forms.Button btnKb;
-        private System.Windows.Forms.Button btnDecreaseTierLevel;
+        private System.Windows.Forms.Button btnTierLevel;
         private System.Windows.Forms.Button btnAnnouncement;
         private System.ComponentModel.BackgroundWorker bgWorkerActivityMonitor;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;

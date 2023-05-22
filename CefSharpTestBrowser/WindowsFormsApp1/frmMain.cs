@@ -598,9 +598,16 @@ namespace WindowsFormsApp1
         #region Actions
 
         private void ProcessActionButtons(string element_id)
-        {
+        { 
             Task.Factory.StartNew(() =>
             {
+                bool createdNew;
+                var mutex = new Mutex(true, Globals.CurrentUrl, out createdNew);
+                if (!createdNew)
+                {
+                    return;
+                }
+
                 this.send_id_checker = true;
                 var urlToSave = Globals.CurrentUrl;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
@@ -696,7 +703,7 @@ namespace WindowsFormsApp1
                     if (element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
                         Globals.LastSuccessUrl = ""; //Clear last success
                     else
-                        Globals.LastSuccessUrl = Globals.CurrentUrl;
+                        Globals.LastSuccessUrl = urlToSave;
 
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
@@ -732,9 +739,10 @@ namespace WindowsFormsApp1
                 {
                     this.RefreshBrowser();
                 }
+
+                mutex.Dispose();
             });
         }
-
 
         #endregion
 
@@ -1522,7 +1530,7 @@ namespace WindowsFormsApp1
 
         private void startScreenCapture(string scFileName)
         {
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 StaffScreenshot staffscreenshot = new StaffScreenshot();
                 staffscreenshot.captureScreenshot(scFileName);
@@ -1544,11 +1552,9 @@ namespace WindowsFormsApp1
                 DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
                 if (!logDirInfo.Exists) logDirInfo.Create();
                 string nowStr = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
-                //string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
                 string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
-                //startCamCapture(camFileName);
                 startScreenCapture(scFileName);
-                findAndploadFailedImages();
+                findAndUploadFailedImages();
             }
         }
 
@@ -1592,9 +1598,9 @@ namespace WindowsFormsApp1
             return false;
         }
 
-        private void findAndploadFailedImages()
+        private void findAndUploadFailedImages()
         {
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", DateTime.Now.ToString("MM-dd-yyyy"), "\\"));
 

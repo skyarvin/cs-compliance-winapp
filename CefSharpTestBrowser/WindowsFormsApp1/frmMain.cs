@@ -1504,20 +1504,44 @@ namespace WindowsFormsApp1
             else
                 bgWorkAnnouncement.RunWorkerAsync();
         }
-        public void showNextTierLevelBtn()
+
+        public string getUrlSegment()
         {
-            if (Globals.ComplianceAgent.tier_level == 4)
-                this.InvokeOnUiThreadIfRequired(() => btnTierLevel.Visible = true);
-        }
-        private void btnTierLevel_Click(object sender, EventArgs e)
-        {
-            this.InvokeOnUiThreadIfRequired(() => btnTierLevel.Visible = false);
-            GoToTierLevelThree();
+            try
+            {
+                Uri uri = new Uri(Globals.CurrentUrl);
+                string[] segments = uri.Segments;
+                return segments[2];
+            }
+            catch
+            {
+                return "";
+            }
         }
 
-        public void GoToTierLevelThree()
+        private bool isTierLevelNumeric()
         {
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/3"));
+            return int.TryParse(getUrlSegment().TrimEnd('/'), out _);
+        }
+
+        private int getCurrentTier()
+        {
+            return int.Parse(getUrlSegment().TrimEnd('/'));
+        }
+
+        public void showNextTierLevelBtn()
+        {
+            if (isTierLevelNumeric())
+            {
+                bool should_show_button = getCurrentTier() != 1;
+                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = should_show_button);
+            }
+        }
+
+        private void btnDecreaseTierLevel_Click(object sender, EventArgs e)
+        {
+            this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
+            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", getCurrentTier() - 1));
         }
 
         public void ShowRequestPhotoAndApproveButton()

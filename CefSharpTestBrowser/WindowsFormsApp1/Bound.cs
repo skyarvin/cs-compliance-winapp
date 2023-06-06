@@ -359,6 +359,7 @@ namespace CSTool
         {
             Globals.frmMain.showNextTierLevelBtn();
         }
+
         public void OnClicked(string id)
         {
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);

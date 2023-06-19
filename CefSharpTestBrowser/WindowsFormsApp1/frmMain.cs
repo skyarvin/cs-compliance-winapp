@@ -1288,7 +1288,7 @@ namespace WindowsFormsApp1
         private void bgWorkID_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
-            Console.WriteLine("bg IDC");
+            //Console.WriteLine("bg IDC");
 
             if (this.ID_CHECKER.id == 0)
             {
@@ -1584,6 +1584,23 @@ namespace WindowsFormsApp1
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.check_agent_session();
+        }
+
+        private void check_agent_session()
+        {
+            Globals.activity = Activity.Get(Globals.ComplianceAgent.id);
+            Console.WriteLine(DateTime.Now + " " + DateTime.Parse(Globals.activity.end_time));
+
+            double timediff = (DateTime.Now - DateTime.Parse(Globals.activity.end_time)).TotalHours;
+            Console.WriteLine(timediff);
+            if (timediff >= 1)
+            {
+                Console.WriteLine("Agent logout");
+                Cef.GetGlobalCookieManager().DeleteCookies();
+            }
+
+            Console.WriteLine("Refresh browser");
             this.Close();
         }
 

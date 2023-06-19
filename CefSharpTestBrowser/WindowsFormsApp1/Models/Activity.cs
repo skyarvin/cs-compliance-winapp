@@ -8,6 +8,7 @@ using WindowsFormsApp1;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Net.Mime;
+using WindowsFormsApp1.Models;
 
 namespace CSTool.Models
 {
@@ -70,7 +71,35 @@ namespace CSTool.Models
                     throw new Exception("Api Activity update request error, Please contact dev team");
                 }
             }
+        }
 
+        public static Activity Get(int agent_id)
+        {
+            using (var client = new HttpClient())
+            {
+                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
+                var uri = string.Concat(Url.API_URL, "/activity/agent/?agent_id=", agent_id, "&version=", appversion);
+                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (HttpContent content = response.Content)
+                        {
+                            var jsonString = content.ReadAsStringAsync();
+                            jsonString.Wait();
+                            return JsonConvert.DeserializeObject<Activity>(jsonString.Result);
+                        }
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Gone)
+                    {
+                        MessageBox.Show("Invalid app version. Please update your application.", "Error");
+                        Application.Exit();
+                    }
+                }
+            }
+
+            return null;
         }
 
         public bool PostScreenshot(string filename)

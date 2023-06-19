@@ -621,6 +621,11 @@ namespace WindowsFormsApp1
                 }
                 if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes)) return;
                 if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
+                if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
+                {
+                    Globals.chromeBrowser.EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
+                    Globals.chromeBrowser.EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
+                }
                 if (element_id == Action.ChatReply.Value) notes = reply;
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
                 if (element_id == Action.Approve.Value) remarks = "";

@@ -557,16 +557,15 @@ namespace WindowsFormsApp1
 
         private void check_agent_session()
         {
-            Globals.activity = Activity.Get(Globals.ComplianceAgent.id);
-            Console.WriteLine(DateTime.Now + " " + DateTime.Parse(Globals.activity.end_time));
-            double timediff = (DateTime.Now - DateTime.Parse(Globals.activity.end_time)).TotalHours;
-            Console.WriteLine(timediff);
-            if (timediff >= 1)
+            Logger data = Logger.Get(Globals.ComplianceAgent.id);
+            if (data != null)
             {
-                Console.WriteLine("Agent logout");
-                Cef.GetGlobalCookieManager().DeleteCookies();
+                double timediff = (DateTime.Now - DateTime.Parse(data.actual_end_time)).TotalHours;
+                if (timediff >= 1)
+                {
+                    Cef.GetGlobalCookieManager().DeleteCookies();
+                }
             }
-            Console.WriteLine("Refresh browser");
             this.RefreshBrowser();
         }
 

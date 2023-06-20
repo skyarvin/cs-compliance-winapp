@@ -8,7 +8,6 @@ using WindowsFormsApp1;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Net.Mime;
-using WindowsFormsApp1.Models;
 
 namespace CSTool.Models
 {

@@ -1308,7 +1308,7 @@ namespace WindowsFormsApp1
         private void bgWorkID_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
-            //Console.WriteLine("bg IDC");
+            Console.WriteLine("bg IDC");
 
             if (this.ID_CHECKER.id == 0)
             {
@@ -1606,7 +1606,6 @@ namespace WindowsFormsApp1
         {
             this.Close();
         }
-
 
         private void retryUpload(string path)
         {

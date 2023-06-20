@@ -66,7 +66,6 @@ namespace CSTool
                             var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button'];
 
                             if (element_ids.includes(e.target.id)) {
-                                $(`#${e.target.id}`).prop('disabled', true);
                                 console.log(e.target.id);
                                 bound.onClicked(e.target.id);
                                 return;

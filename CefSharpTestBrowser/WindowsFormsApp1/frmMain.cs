@@ -551,6 +551,22 @@ namespace WindowsFormsApp1
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
+            this.check_agent_session();
+        }
+
+
+        private void check_agent_session()
+        {
+            Globals.activity = Activity.Get(Globals.ComplianceAgent.id);
+            Console.WriteLine(DateTime.Now + " " + DateTime.Parse(Globals.activity.end_time));
+            double timediff = (DateTime.Now - DateTime.Parse(Globals.activity.end_time)).TotalHours;
+            Console.WriteLine(timediff);
+            if (timediff >= 1)
+            {
+                Console.WriteLine("Agent logout");
+                Cef.GetGlobalCookieManager().DeleteCookies();
+            }
+            Console.WriteLine("Refresh browser");
             this.RefreshBrowser();
         }
 
@@ -1589,25 +1605,9 @@ namespace WindowsFormsApp1
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.check_agent_session();
-        }
-
-        private void check_agent_session()
-        {
-            Globals.activity = Activity.Get(Globals.ComplianceAgent.id);
-            Console.WriteLine(DateTime.Now + " " + DateTime.Parse(Globals.activity.end_time));
-
-            double timediff = (DateTime.Now - DateTime.Parse(Globals.activity.end_time)).TotalHours;
-            Console.WriteLine(timediff);
-            if (timediff >= 1)
-            {
-                Console.WriteLine("Agent logout");
-                Cef.GetGlobalCookieManager().DeleteCookies();
-            }
-
-            Console.WriteLine("Refresh browser");
             this.Close();
         }
+
 
         private void retryUpload(string path)
         {

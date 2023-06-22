@@ -1,4 +1,5 @@
-﻿using CSTool;
+﻿using CefSharp;
+using CSTool;
 using CSTool.Properties;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 
@@ -77,6 +79,7 @@ namespace WindowsFormsApp1
                     {
                         Globals.frmMain = new frmMain();
                         Globals.frmMain.Show();
+                        Globals.Check_agent_session();
                         this.Close();
                     }
                     else if (Settings.Default.user_type.ToUpper().Contains("QA") && Settings.Default.role == "CSQA")
@@ -109,6 +112,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
             }            
         }
+
 
 
         private void FrmLogin_Load(object sender, EventArgs e)

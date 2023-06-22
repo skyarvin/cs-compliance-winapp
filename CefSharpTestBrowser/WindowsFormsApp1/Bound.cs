@@ -68,6 +68,7 @@ namespace CSTool
                             if (element_ids.includes(e.target.id)) {
                                 console.log(e.target.id);
                                 bound.onClicked(e.target.id);
+                                bound.extendAgentCookie();
                                 return;
                             }
 
@@ -306,6 +307,26 @@ namespace CSTool
                         "\nSeed sha256: ", seedSha256,
                         "\nPrev sha256: ", prevSha256);
                     email.Send();
+                }
+            });
+        }
+
+        public void extendAgentCookie()
+        {
+            Cef.GetGlobalCookieManager().VisitUrlCookiesAsync("http:127.0.0.1", true).ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    var cookies = t.Result;
+                    foreach (var cookie in cookies)
+                    {
+                        if (cookie.Name == "test")
+                        {
+                            cookie.Expires = DateTime.Now.AddMinutes(2);
+                            Cef.GetGlobalCookieManager().SetCookieAsync("http:127.0.0.1", cookie);
+                        }
+                        Console.WriteLine("CookieName: " + cookie.Name);
+                    }
                 }
             });
         }

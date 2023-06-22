@@ -16,6 +16,7 @@ using CefSharp.WinForms.Internals;
 using System.Text;
 using System.Net;
 using System.Security.Cryptography;
+using CefSharp;
 
 namespace WindowsFormsApp1
 {
@@ -326,6 +327,29 @@ namespace WindowsFormsApp1
                 }
                 return builder.ToString();
             }
+        }
+
+        public static void Check_agent_session()
+        {
+            Cef.GetGlobalCookieManager().VisitUrlCookiesAsync("http:127.0.0.1", true).ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    var cookies = t.Result;
+                    foreach (var cookie in cookies)
+                    {
+                        if (cookie.Name == "test")
+                        {
+                            if (DateTime.Now > DateTime.Parse(cookie.Expires.ToString()))
+                            {
+                                Cef.GetGlobalCookieManager().DeleteCookies("test");
+                            }
+                        }
+                        Console.WriteLine("CookieName: " + cookie.Name);
+                    }
+                }
+            });
+
         }
     }
 

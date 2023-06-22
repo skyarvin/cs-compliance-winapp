@@ -551,29 +551,15 @@ namespace WindowsFormsApp1
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
-            this.check_agent_session();
-        }
-
-
-        private void check_agent_session()
-        {
-            Logger data = Logger.Get(Globals.ComplianceAgent.id);
-            if (data != null)
-            {
-                double timediff = (DateTime.Now - DateTime.Parse(data.actual_end_time)).TotalHours;
-                if (timediff >= 1)
-                {
-                    Cef.GetGlobalCookieManager().DeleteCookies();
-                }
-            }
             this.RefreshBrowser();
         }
 
         private void RefreshBrowser()
         {
+            Globals.Check_agent_session();
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
+            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level, "/show/razer"));
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -1308,7 +1294,7 @@ namespace WindowsFormsApp1
         private void bgWorkID_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
-            Console.WriteLine("bg IDC");
+            //Console.WriteLine("bg IDC");
 
             if (this.ID_CHECKER.id == 0)
             {

@@ -6,6 +6,7 @@ using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
@@ -48,6 +49,8 @@ namespace CSTool
 
             browser.ExecuteScriptAsync(@"
                    window.onload = function(e) {
+                        bound.checkAgentCookie();
+
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                             $(this).attr('buttonClicked', true);
 
@@ -311,7 +314,7 @@ namespace CSTool
             });
         }
 
-        public void extendAgentCookie()
+        public void ExtendAgentCookie()
         {
             Cef.GetGlobalCookieManager().VisitUrlCookiesAsync("http:127.0.0.1", true).ContinueWith(t =>
             {
@@ -322,10 +325,35 @@ namespace CSTool
                     {
                         if (cookie.Name == "test")
                         {
-                            cookie.Expires = DateTime.Now.AddMinutes(2);
+                            Console.WriteLine("Extend");
+                            cookie.Expires = DateTime.Now.AddHours(2);
                             Cef.GetGlobalCookieManager().SetCookieAsync("http:127.0.0.1", cookie);
                         }
-                        Console.WriteLine("CookieName: " + cookie.Name);
+                    }
+                }
+            });
+        }
+
+        public void CheckAgentCookie()
+        {
+            Cef.GetGlobalCookieManager().VisitUrlCookiesAsync("http:127.0.0.1", true).ContinueWith(t =>
+            {
+                if (t.Status == TaskStatus.RanToCompletion)
+                {
+                    var cookies = t.Result;
+                    foreach (var cookie in cookies)
+                    {
+                        if (cookie.Name == "test")
+                        {
+                            double timediff = (DateTime.Parse(cookie.Expires.ToString()) - DateTime.Now).TotalHours;
+                            Console.WriteLine(cookie.Expires + " " + DateTime.Now + " " + (timediff));
+                            if(timediff > 1)
+                            {
+                                cookie.Expires = DateTime.Now.AddMinutes(2);
+                                Console.WriteLine("Check: " + cookie.Expires);
+                                Cef.GetGlobalCookieManager().SetCookieAsync("http:127.0.0.1", cookie);
+                            }
+                        }
                     }
                 }
             });

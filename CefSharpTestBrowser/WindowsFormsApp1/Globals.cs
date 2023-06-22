@@ -340,9 +340,17 @@ namespace WindowsFormsApp1
                     {
                         if (cookie.Name == "test")
                         {
-                            if (DateTime.Now > DateTime.Parse(cookie.Expires.ToString()))
+                            try
                             {
-                                Cef.GetGlobalCookieManager().DeleteCookies("test");
+                                Console.WriteLine(DateTime.Now + " " + DateTime.Parse(cookie.Expires.ToString()));
+                                if (DateTime.Now > DateTime.Parse(cookie.Expires.ToString()))
+                                {
+                                    Console.WriteLine("Remove cookie");
+                                    Cef.GetGlobalCookieManager().DeleteCookies("test");
+                                }
+                            }catch (Exception ex)
+                            {
+                                Console.WriteLine("Error: " + ex);
                             }
                         }
                         Console.WriteLine("CookieName: " + cookie.Name);

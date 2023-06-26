@@ -100,7 +100,7 @@ namespace WindowsFormsApp1.Models
             }
         }
 
-        public static Logger Get(int agent_id)
+        public static Logger FetchLastAgentLog(int agent_id)
         {
             using (var client = new HttpClient())
             {

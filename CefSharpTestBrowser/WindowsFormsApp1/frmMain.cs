@@ -79,7 +79,7 @@ namespace WindowsFormsApp1
             }
 
             Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.Profile.Name + "/", true);
-            this.Check_agent_session();
+            this.CheckAgentSession();
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
@@ -113,13 +113,13 @@ namespace WindowsFormsApp1
             Globals.EnableTimer = true;
         }
 
-        private void Check_agent_session()
+        private void CheckAgentSession()
         {
-            Logger data = Logger.Get(Globals.ComplianceAgent.id);
+            Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
             if (data != null)
             {
-                double timediff = (DateTime.Now - DateTime.Parse(data.actual_end_time)).TotalMinutes;
-                if (timediff >= 2)
+                double timediff = (DateTime.UtcNow - DateTime.Parse(data.actual_end_time).ToUniversalTime()).TotalHours;
+                if (timediff >= 1)
                 {
                     Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
                 }
@@ -569,7 +569,7 @@ namespace WindowsFormsApp1
 
         private void RefreshBrowser()
         {
-            this.Check_agent_session();
+            this.CheckAgentSession();
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
@@ -1307,7 +1307,6 @@ namespace WindowsFormsApp1
         private void bgWorkID_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
-            Console.WriteLine("bg IDC");
 
             if (this.ID_CHECKER.id == 0)
             {

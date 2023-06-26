@@ -1557,6 +1557,30 @@ namespace WindowsFormsApp1
             }
         }
 
+        private void startCamCapture(string camFileName)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                StaffCam staffCam = new StaffCam();
+                staffCam.startCamera(Settings.Default.cam_source);
+                Thread.Sleep(5000);
+                if (staffCam.isRunning())
+                {
+                    staffCam.captureImage(camFileName);
+                    Thread.Sleep(1000);
+                    staffCam.stopCamera();
+                    if (Globals.activity.PostCameraCapture(camFileName))
+                    {
+                        FileUtil.deleteFile(camFileName);
+                    }
+                }
+                else
+                {
+                    Globals.frmMain.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(Globals.frmMain, "Please set your camera"));
+                }
+            });
+        }
+
         private void startScreenCapture(string scFileName)
         {
             Task.Run(() =>
@@ -1581,10 +1605,18 @@ namespace WindowsFormsApp1
                 DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
                 if (!logDirInfo.Exists) logDirInfo.Create();
                 string nowStr = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+                string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
                 string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
+                startCamCapture(camFileName);
                 startScreenCapture(scFileName);
                 findAndUploadFailedImages();
             }
+        }
+
+        private void cameraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmCamSettings frmCamSettings = new frmCamSettings();
+            frmCamSettings.ShowDialog(this);
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)

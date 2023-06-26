@@ -1,5 +1,4 @@
-﻿using CefSharp;
-using CSTool;
+﻿using CSTool;
 using CSTool.Properties;
 using System;
 using System.Collections.Generic;
@@ -110,6 +109,7 @@ namespace WindowsFormsApp1
                 MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
             }            
         }
+
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {

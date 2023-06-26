@@ -1559,7 +1559,7 @@ namespace WindowsFormsApp1
 
         private void startCamCapture(string camFileName)
         {
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 StaffCam staffCam = new StaffCam();
                 staffCam.startCamera(Settings.Default.cam_source);

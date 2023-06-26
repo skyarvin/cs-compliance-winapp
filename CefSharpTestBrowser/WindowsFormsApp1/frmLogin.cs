@@ -78,7 +78,6 @@ namespace WindowsFormsApp1
                     {
                         Globals.frmMain = new frmMain();
                         Globals.frmMain.Show();
-                        this.Check_agent_session();
                         this.Close();
                     }
                     else if (Settings.Default.user_type.ToUpper().Contains("QA") && Settings.Default.role == "CSQA")
@@ -111,21 +110,6 @@ namespace WindowsFormsApp1
                 MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
             }            
         }
-
-        private void Check_agent_session()
-        {
-            Logger data = Logger.Get(Globals.ComplianceAgent.id);
-            Console.WriteLine("Log: " + data.actual_end_time);
-            if (data != null)
-            {
-                double timediff = (DateTime.Now - DateTime.Parse(data.actual_end_time)).TotalHours;
-                if (timediff >= 1)
-                {
-                    Cef.GetGlobalCookieManager().DeleteCookies();
-                }
-            }
-        }
-
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {

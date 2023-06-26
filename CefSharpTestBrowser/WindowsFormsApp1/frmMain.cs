@@ -79,6 +79,7 @@ namespace WindowsFormsApp1
             }
 
             Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.Profile.Name + "/", true);
+            this.Check_agent_session();
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
@@ -112,6 +113,18 @@ namespace WindowsFormsApp1
             Globals.EnableTimer = true;
         }
 
+        private void Check_agent_session()
+        {
+            Logger data = Logger.Get(Globals.ComplianceAgent.id);
+            if (data != null)
+            {
+                double timediff = (DateTime.Now - DateTime.Parse(data.actual_end_time)).TotalMinutes;
+                if (timediff >= 2)
+                {
+                    Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
+                }
+            }
+        }
         private void InitializeServer()
         {
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
@@ -556,6 +569,7 @@ namespace WindowsFormsApp1
 
         private void RefreshBrowser()
         {
+            this.Check_agent_session();
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));

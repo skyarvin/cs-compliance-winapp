@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace CSTool.Class
@@ -8,11 +9,7 @@ namespace CSTool.Class
     {
         public Bitmap CaptureDesktop()
         {
-            Rectangle combinedBounds = Rectangle.Empty;
-            foreach (Screen screen in Screen.AllScreens)
-            {
-                combinedBounds = Rectangle.Union(combinedBounds, screen.Bounds);
-            }
+            Rectangle combinedBounds = Screen.AllScreens.Select(screen => screen.Bounds).Aggregate(Rectangle.Union);
             Bitmap screenshot = new Bitmap(combinedBounds.Width, combinedBounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             using (Graphics graphics = Graphics.FromImage(screenshot))

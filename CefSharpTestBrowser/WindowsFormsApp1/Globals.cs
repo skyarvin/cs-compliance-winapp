@@ -334,7 +334,7 @@ namespace WindowsFormsApp1
             {
                 try
                 {
-                    var datetime = client.GetAsync(Url.CB_HOME, System.Net.Http.HttpCompletionOption.ResponseHeadersRead).Result;
+                    var datetime = client.GetAsync("https://cscb.staffme.online", System.Net.Http.HttpCompletionOption.ResponseHeadersRead).Result;
                     return DateTime.Parse(datetime.Headers.Date.ToString()).ToUniversalTime();
                 }
                 catch

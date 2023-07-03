@@ -118,8 +118,8 @@ namespace WindowsFormsApp1
             Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
             if (data != null)
             {
-                double timediff = (DateTime.UtcNow - DateTime.Parse(data.actual_end_time).ToUniversalTime()).TotalHours;
-                if (timediff >= 1)
+                double timediff = Math.Abs((Globals.GetCurrentTime() - DateTime.Parse(data.actual_end_time).ToUniversalTime()).TotalMinutes);
+                if (timediff >= 60)
                 {
                     Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
                 }
@@ -564,12 +564,12 @@ namespace WindowsFormsApp1
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
+            this.CheckAgentSession();
             this.RefreshBrowser();
         }
 
         private void RefreshBrowser()
         {
-            this.CheckAgentSession();
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));

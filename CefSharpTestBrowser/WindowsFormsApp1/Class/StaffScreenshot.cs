@@ -1,61 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace CSTool.Class
 {
     public class StaffScreenshot
     {
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetWindowRect(IntPtr hWnd, ref Rect rect);
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct Rect
+        public Bitmap CaptureDesktop()
         {
-            public int Left;
-            public int Top;
-            public int Right;
-            public int Bottom;
-        }
+            Rectangle combinedBounds = Screen.AllScreens.Select(screen => screen.Bounds).Aggregate(Rectangle.Union);
+            Bitmap screenshot = new Bitmap(combinedBounds.Width, combinedBounds.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        public static extern IntPtr GetDesktopWindow();
-
-
-        public static Bitmap CaptureActiveWindow()
-        {
-            return CaptureWindow(GetForegroundWindow());
-        }
-
-        public static Bitmap CaptureWindow(IntPtr handle)
-        {
-            var rect = new Rect();
-            GetWindowRect(handle, ref rect);
-            var bounds = new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
-            var result = new Bitmap(bounds.Width, bounds.Height);
-
-            using (var graphics = Graphics.FromImage(result))
+            using (Graphics graphics = Graphics.FromImage(screenshot))
             {
-                graphics.CopyFromScreen(new Point(bounds.Left, bounds.Top), Point.Empty, bounds.Size);
+                foreach (Screen screen in Screen.AllScreens)
+                {
+                    graphics.CopyFromScreen(screen.Bounds.X, screen.Bounds.Y, screen.Bounds.X - combinedBounds.X, screen.Bounds.Y - combinedBounds.Y, screen.Bounds.Size);
+                }
             }
 
-            return result;
+            return screenshot;
         }
 
         public void captureScreenshot(string filename)
         {
             try {
-                var image = CaptureActiveWindow();
+                var image = CaptureDesktop();
                 image.Save(filename, ImageFormat.Jpeg);
             }
 

@@ -118,8 +118,9 @@ namespace WindowsFormsApp1
             Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
             if (data != null)
             {
-                double timediff = Math.Abs((Globals.GetCurrentTime() - DateTime.Parse(data.actual_end_time).ToUniversalTime()).TotalMinutes);
-                if (timediff >= 60)
+                Globals.LastActionLog = DateTime.Parse(data.actual_end_time).ToUniversalTime();
+                double timediff = Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes);
+                if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
                 {
                     Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
                 }
@@ -244,14 +245,19 @@ namespace WindowsFormsApp1
         #endregion
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
-        {
+        {   
             if (!Globals.EnableTimer)
                 return;
 
+            if (Globals.LastActionLog != null && Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes) >= Globals.SIXTY_MINUTES_IDLE_TIME)
+            {
+                this.CheckAgentSession();
+            }
+
             if (++Globals.room_duration >= Globals.max_room_duration) {
-                setHeaderColor(Color.Red, Color.DarkRed);
-                if (isBrowserInitialized && Globals.ForceHideComliance)
-                    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
+            setHeaderColor(Color.Red, Color.DarkRed);
+            if (isBrowserInitialized && Globals.ForceHideComliance)
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
             }
             else
             {
@@ -276,7 +282,6 @@ namespace WindowsFormsApp1
                 });
             }
 
-            Console.WriteLine("INACTIVE TIME:" + WindowsActivityMonitor.GetInactiveTime());
             if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS && Globals.INTERNAL_RR.id == 0)
             {
 

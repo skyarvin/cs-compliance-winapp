@@ -330,22 +330,6 @@ namespace WindowsFormsApp1
             }
         }
 
-        public static DateTime GetCurrentTime()
-        {
-            using (var client = new System.Net.Http.HttpClient())
-            {
-                try
-                {
-                    var datetime = client.GetAsync("https://cscb.staffme.online", System.Net.Http.HttpCompletionOption.ResponseHeadersRead).Result;
-                    return DateTime.Parse(datetime.Headers.Date.ToString()).ToUniversalTime();
-                }
-                catch
-                {
-                    return DateTime.UtcNow;
-                }
-            }
-        }
-
     }
 
   

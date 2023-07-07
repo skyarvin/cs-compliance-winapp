@@ -115,16 +115,16 @@ namespace WindowsFormsApp1
 
         private void CheckAgentSession()
         {
-                Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
-                if (data != null)
+            Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
+            if (data != null)
+            {
+                Globals.LastActionLog = DateTime.Parse(data.actual_end_time).ToUniversalTime();
+                double timediff = Math.Abs((DateTime.UtcNow - Globals.LastActionLog).TotalMinutes);
+                if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
                 {
-                    Globals.LastActionLog = DateTime.Parse(data.actual_end_time).ToUniversalTime();
-                    double timediff = Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes);
-                    if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
-                    {
-                        Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
-                    }
+                    Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
                 }
+            }
         }
         private void InitializeServer()
         {
@@ -251,7 +251,7 @@ namespace WindowsFormsApp1
 
             Task.Run(() => 
             {
-                var timediff = Math.Floor(Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes));
+                var timediff = Math.Floor(Math.Abs((DateTime.UtcNow - Globals.LastActionLog).TotalMinutes));
                 if (Globals.LastActionLog != null && timediff >= Globals.SIXTY_MINUTES_IDLE_TIME && (Globals.SIXTY_MINUTES_IDLE_TIME % timediff) == 0)
                 {
                     this.CheckAgentSession();

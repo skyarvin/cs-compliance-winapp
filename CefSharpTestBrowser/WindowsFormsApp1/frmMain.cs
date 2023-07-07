@@ -115,16 +115,16 @@ namespace WindowsFormsApp1
 
         private void CheckAgentSession()
         {
-            Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
-            if (data != null)
-            {
-                Globals.LastActionLog = DateTime.Parse(data.actual_end_time).ToUniversalTime();
-                double timediff = Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes);
-                if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
+                Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
+                if (data != null)
                 {
-                    Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
+                    Globals.LastActionLog = DateTime.Parse(data.actual_end_time).ToUniversalTime();
+                    double timediff = Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes);
+                    if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
+                    {
+                        Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
+                    }
                 }
-            }
         }
         private void InitializeServer()
         {
@@ -245,14 +245,18 @@ namespace WindowsFormsApp1
         #endregion
         #region ActivityMonitor
         private void Timer_Expired(object sender, EventArgs e)
-        {   
+        {
             if (!Globals.EnableTimer)
                 return;
 
-            if (Globals.LastActionLog != null && Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes) >= Globals.SIXTY_MINUTES_IDLE_TIME)
+            Task.Run(() => 
             {
-                this.CheckAgentSession();
-            }
+                var timediff = Math.Floor(Math.Abs((Globals.GetCurrentTime() - Globals.LastActionLog).TotalMinutes));
+                if (Globals.LastActionLog != null && timediff >= Globals.SIXTY_MINUTES_IDLE_TIME && (Globals.SIXTY_MINUTES_IDLE_TIME % timediff) == 0)
+                {
+                    this.CheckAgentSession();
+                }
+            });
 
             if (++Globals.room_duration >= Globals.max_room_duration) {
             setHeaderColor(Color.Red, Color.DarkRed);

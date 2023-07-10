@@ -122,7 +122,7 @@ namespace WindowsFormsApp1
                 double timediff = Math.Abs((DateTime.UtcNow - Globals.LastActionLog).TotalMinutes);
                 if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
                 {
-                    Cef.GetGlobalCookieManager().DeleteCookies("sessionid");
+                    Cef.GetGlobalCookieManager().DeleteCookies();
                 }
             }
         }

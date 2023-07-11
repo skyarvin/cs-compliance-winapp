@@ -79,6 +79,7 @@ namespace WindowsFormsApp1
             }
 
             Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.Profile.Name + "/", true);
+            this.CheckAgentSession();
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
@@ -112,6 +113,19 @@ namespace WindowsFormsApp1
             Globals.EnableTimer = true;
         }
 
+        private void CheckAgentSession()
+        {
+            Logger data = Logger.FetchLastAgentLog(Globals.ComplianceAgent.id);
+            if (data != null)
+            {
+                Globals.LastActionLog = DateTime.Parse(data.actual_end_time).ToUniversalTime();
+                double timediff = Math.Abs((DateTime.UtcNow - Globals.LastActionLog).TotalMinutes);
+                if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
+                {
+                    Cef.GetGlobalCookieManager().DeleteCookies();
+                }
+            }
+        }
         private void InitializeServer()
         {
             IPHostEntry ipHost = Dns.GetHostEntry(Dns.GetHostName());
@@ -235,10 +249,19 @@ namespace WindowsFormsApp1
             if (!Globals.EnableTimer)
                 return;
 
+            Task.Run(() => 
+            {
+                var timediff = Math.Floor(Math.Abs((DateTime.UtcNow - Globals.LastActionLog).TotalMinutes));
+                if (Globals.LastActionLog != null && timediff >= Globals.SIXTY_MINUTES_IDLE_TIME && (Globals.SIXTY_MINUTES_IDLE_TIME % timediff) == 0)
+                {
+                    this.CheckAgentSession();
+                }
+            });
+
             if (++Globals.room_duration >= Globals.max_room_duration) {
-                setHeaderColor(Color.Red, Color.DarkRed);
-                if (isBrowserInitialized && Globals.ForceHideComliance)
-                    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
+            setHeaderColor(Color.Red, Color.DarkRed);
+            if (isBrowserInitialized && Globals.ForceHideComliance)
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
             }
             else
             {
@@ -263,7 +286,6 @@ namespace WindowsFormsApp1
                 });
             }
 
-            Console.WriteLine("INACTIVE TIME:" + WindowsActivityMonitor.GetInactiveTime());
             if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS && Globals.INTERNAL_RR.id == 0)
             {
 
@@ -468,7 +490,7 @@ namespace WindowsFormsApp1
             Random rnd = new Random();
             foreach (int value in Enumerable.Range(1, 432))
             {
-                var end = now.AddMinutes(10);
+                var end = now.AddMinutes(3);
                 DateTime epoch = new DateTime(1970, 1, 1);
                 TimeSpan startTs = now - epoch;
                 TimeSpan endTs = end - epoch;
@@ -551,6 +573,7 @@ namespace WindowsFormsApp1
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
+            this.CheckAgentSession();
             this.RefreshBrowser();
         }
 
@@ -1293,7 +1316,6 @@ namespace WindowsFormsApp1
         private void bgWorkID_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
-            Console.WriteLine("bg IDC");
 
             if (this.ID_CHECKER.id == 0)
             {

@@ -104,8 +104,7 @@ namespace WindowsFormsApp1.Models
         {
             using (var client = new HttpClient())
             {
-                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id, "&version=", appversion);
+                var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {
@@ -117,11 +116,6 @@ namespace WindowsFormsApp1.Models
                             jsonString.Wait();
                             return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
                         }
-                    }
-                    else if (response.StatusCode == System.Net.HttpStatusCode.Gone)
-                    {
-                        MessageBox.Show("Invalid app version. Please update your application.", "Error");
-                        Application.Exit();
                     }
                 }
             }

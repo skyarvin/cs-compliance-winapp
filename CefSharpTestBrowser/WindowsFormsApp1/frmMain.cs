@@ -125,6 +125,11 @@ namespace WindowsFormsApp1
                     Cef.GetGlobalCookieManager().DeleteCookies();
                 }
             }
+            else
+            {
+                Cef.GetGlobalCookieManager().DeleteCookies();
+            }
+
         }
         private void InitializeServer()
         {

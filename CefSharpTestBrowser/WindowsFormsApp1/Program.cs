@@ -35,6 +35,7 @@ namespace WindowsFormsApp1
             Application.Run();
             
         }
+
         private static void Resolve_missing_assembly()
         {
             AppDomain.CurrentDomain.AssemblyResolve += delegate (object sender, ResolveEventArgs e)

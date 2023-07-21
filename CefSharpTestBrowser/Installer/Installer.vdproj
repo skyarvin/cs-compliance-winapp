@@ -669,12 +669,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_FE2968E929E14D0DBFB45B05FA76A97D"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_FE6F436B4355DAB880A5D02E566F033C"
         "OwnerKey" = "8:_FED9E810F53548D49DAE1ED908E8AC96"
         "MsmSig" = "8:_UNDEFINED"
@@ -2971,26 +2965,6 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_FE2968E929E14D0DBFB45B05FA76A97D"
-            {
-            "SourcePath" = "8:..\\WindowsFormsApp1\\bin\\x86\\Release\\debug.log"
-            "TargetName" = "8:debug.log"
-            "Tag" = "8:"
-            "Folder" = "8:_0CDCD8ED2B364C83BAF51C37929BF68A"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FE6F436B4355DAB880A5D02E566F033C"
             {
             "AssemblyRegister" = "3:1"
@@ -3185,7 +3159,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSTool"
         "ProductCode" = "8:{E1A5AD94-685B-4B99-9651-D01015CAC811}"
-        "PackageCode" = "8:{1C5F9DBD-BA3A-4FF4-9CED-52E183796314}"
+        "PackageCode" = "8:{105CF237-E652-434D-A056-0E4204872F00}"
         "UpgradeCode" = "8:{E3D5D40B-6234-4CCB-832E-98F8206BE10A}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -3663,7 +3637,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FED9E810F53548D49DAE1ED908E8AC96"
             {
-            "SourcePath" = "8:..\\WindowsFormsApp1\\obj\\x86\\Release\\COMPLIANCE_TOOL.exe"
+            "SourcePath" = "8:..\\WindowsFormsApp1\\obj\\x86\\Debug\\COMPLIANCE_TOOL.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0CDCD8ED2B364C83BAF51C37929BF68A"

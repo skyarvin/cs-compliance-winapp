@@ -43,7 +43,7 @@ namespace WindowsFormsApp1
                 AssemblyName requestedName = new AssemblyName(e.Name);
                 try
                 {
-                    return Assembly.LoadFrom(Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\staffme\\{requestedName.Name}.dll");
+                    return Assembly.LoadFrom(Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\{requestedName.Name}.dll");
                 }
                 catch
                 {

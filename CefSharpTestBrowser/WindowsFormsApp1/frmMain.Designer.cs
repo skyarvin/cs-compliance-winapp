@@ -510,12 +510,6 @@
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
-            // bgWorkIRR
-            // 
-            this.bgWorkIRR.WorkerSupportsCancellation = true;
-            this.bgWorkIRR.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkIRR_DoWork);
-            this.bgWorkIRR.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkIRR_RunWorkerCompleted);
-            // 
             // bgWorkID
             // 
             this.bgWorkID.WorkerSupportsCancellation = true;

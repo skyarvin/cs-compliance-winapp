@@ -35,8 +35,6 @@ namespace WindowsFormsApp1
         public static frmMain frmMain;
         public static frmQA FrmQA;
         public static frmSetPreferences FrmSetPreferences = new frmSetPreferences();
-        public static frmSendInternalRequestReview FrmSendInternalRequestReview = new frmSendInternalRequestReview();
-        public static frmInternalRequestReview FrmInternalRequestReview;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();
@@ -60,7 +58,6 @@ namespace WindowsFormsApp1
         public static int max_room_duration = 48;
         public static int room_duration;
         public static DateTime? StartTime_LastAction;
-        public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
         public static Announcements AnnouncementsList = new Announcements();
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;

@@ -28,7 +28,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
         }
    
 
-        model.AddItem((CefMenuCommand)26512, "Send Internal Review");
         model.AddItem((CefMenuCommand)26503, "Copy URL");
 
         // Add a new item to the list using the AddItem method of the model
@@ -135,40 +134,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
             });
         }
-
-        if (commandId == (CefMenuCommand)26512)
-        {
-           if (Globals.INTERNAL_RR.id != 0)
-            {
-                if (Globals.INTERNAL_RR.url == Globals.CurrentUrl)
-                {
-                    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-                    {
-
-                        if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                            Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                        Globals.FrmInternalRequestReview.update_info();
-                        Globals.FrmInternalRequestReview.Show();
-                    });
-                    return false;
-                }
-            }
-
-            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-            {
-                if (Globals.frmMain.isBrowserInitialized) {
-                    Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
-                    Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
-                    if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)
-                    {
-                        if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                            Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                        Globals.FrmInternalRequestReview.Show();
-                    }
-                }
-            });
-        }
-
             // Return false should ignore the selected option of the user !
         return false;
     }

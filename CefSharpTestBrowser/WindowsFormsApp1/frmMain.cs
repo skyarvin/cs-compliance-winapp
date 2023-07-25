@@ -291,7 +291,7 @@ namespace WindowsFormsApp1
                 });
             }
 
-            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS && Globals.INTERNAL_RR.id == 0)
+            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS)
             {
 
                 if (Globals.IsBuddySystem())
@@ -520,19 +520,6 @@ namespace WindowsFormsApp1
 
             this.Text += String.Concat(" v.", Globals.CurrentVersion(), " | IP Address:", Globals.MyIP);
 
-            var agent_irs = InternalRequestReview.Get(new List<int>() { Globals.Profile.AgentID });
-            if (agent_irs != null && agent_irs.irs.Count() > 0)
-            {
-                Globals.INTERNAL_RR = agent_irs.irs.First();
-                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-                {
-                    if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                        Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                    StartbgWorkIRR();
-                    Globals.FrmInternalRequestReview.Show();
-                });
-            }
-
             bgWorkID.RunWorkerAsync();
 
             Globals.AnnouncementsList = Announcements.FetchAnnouncements();
@@ -699,17 +686,7 @@ namespace WindowsFormsApp1
                 };
                 if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
                     logData.idc_id = this.ID_CHECKER.id;
-                Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
-                if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
-                    logData.irs_id = Globals.INTERNAL_RR.id;
-                else if (Globals.INTERNAL_RR.id > 0)
-                {
-                    Emailer email = new Emailer();
-                    email.subject = "IRR Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR), "\n\r", "Current Url: ", urlToSave);
-                    email.Send();
-                }
-
+                
                 Globals.StartTime_LastAction = actual_end_time;
 
                 try
@@ -738,14 +715,8 @@ namespace WindowsFormsApp1
                     else
                         Globals.LastSuccessUrl = urlToSave;
 
-                    this.InvokeOnUiThreadIfRequired(() =>
-                    {
-                        if (Globals.FrmInternalRequestReview != null)
-                            Globals.FrmInternalRequestReview.Close();
-                    });
                     if (bgWorkIRR.IsBusy)
                         bgWorkIRR.CancelAsync();
-                    Globals.INTERNAL_RR = new InternalRequestReview();
                 }
                 catch (AggregateException e)
                 {
@@ -1248,61 +1219,7 @@ namespace WindowsFormsApp1
             });
 
         }
-        public void StartbgWorkIRR()
-        {
-            if (bgWorkIRR.IsBusy)
-                return;
-            bgWorkIRR.RunWorkerAsync();
-        }
-        public void CancelbgWorkIRR()
-        {
-            if (bgWorkIRR.IsBusy)
-                bgWorkIRR.CancelAsync();
-        }
-        private void bgWorkIRR_DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker helperBW = sender as BackgroundWorker;
-            this.InvokeOnUiThreadIfRequired(() =>
-            {
-                if (Globals.INTERNAL_RR.id == 0)
-                {
-                    if (helperBW.CancellationPending)
-                    {
-                        e.Cancel = true;
-                    }
-                    if (Globals.FrmInternalRequestReview != null)
-                        Globals.FrmInternalRequestReview.Close();
-                    bgWorkIRR.CancelAsync();
-                    return;
-                }
-
-                if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                    Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-
-                this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestReview.update_info());
-                if (Globals.INTERNAL_RR.status != "New" && Globals.INTERNAL_RR.status != "Processing" && Globals.INTERNAL_RR.status != "Waiting SC")
-                {
-                    bgWorkIRR.CancelAsync();
-                    Globals.FrmInternalRequestReview.Show();
-                }
-            });
-            Console.WriteLine("bg IRR");
-            Thread.Sleep(5000);
-            if (helperBW.CancellationPending)
-            {
-                e.Cancel = true;
-            }
-        }
-
-        private void bgWorkIRR_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (e.Cancelled)
-                return;
-            if (e.Error != null)
-                Globals.showMessage(e.Error.Message);
-            else
-                bgWorkIRR.RunWorkerAsync();
-        }
+ 
         public string ExtractUsername(string url_)
         {
             if (string.IsNullOrEmpty(url_))

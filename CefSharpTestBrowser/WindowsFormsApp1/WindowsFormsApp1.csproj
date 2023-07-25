@@ -202,18 +202,6 @@
     <Compile Include="frmPopup.Designer.cs">
       <DependentUpon>frmPopup.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmInternalRequestReview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmInternalRequestReview.Designer.cs">
-      <DependentUpon>frmInternalRequestReview.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSendInternalRequestReview.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSendInternalRequestReview.Designer.cs">
-      <DependentUpon>frmSendInternalRequestReview.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmSetPreferences.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -248,7 +236,6 @@
     <Compile Include="Models\Emailer.cs" />
     <Compile Include="Models\ErrorLogs.cs" />
     <Compile Include="Models\IdChecker.cs" />
-    <Compile Include="Models\InternalRequestReview.cs" />
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Models\Seed.cs" />
     <Compile Include="Models\UserAccount.cs" />
@@ -333,12 +320,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmQA.resx">
       <DependentUpon>frmQA.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmInternalRequestReview.resx">
-      <DependentUpon>frmInternalRequestReview.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSendInternalRequestReview.resx">
-      <DependentUpon>frmSendInternalRequestReview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSetPreferences.resx">
       <DependentUpon>frmSetPreferences.cs</DependentUpon>

@@ -685,9 +685,6 @@ namespace WindowsFormsApp1
                         Globals.LastSuccessUrl = ""; //Clear last success
                     else
                         Globals.LastSuccessUrl = urlToSave;
-
-                    if (bgWorkIRR.IsBusy)
-                        bgWorkIRR.CancelAsync();
                 }
                 catch (AggregateException e)
                 {

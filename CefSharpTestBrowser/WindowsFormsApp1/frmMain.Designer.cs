@@ -67,8 +67,6 @@
             this.pnlBrowser = new System.Windows.Forms.Panel();
             this.bgWorkResync = new System.ComponentModel.BackgroundWorker();
             this.updateWorkactivity = new System.Windows.Forms.Timer(this.components);
-            this.bgWorkIRR = new System.ComponentModel.BackgroundWorker();
-            this.bgWorkID = new System.ComponentModel.BackgroundWorker();
             this.lblIdStatus = new System.Windows.Forms.Label();
             this.bgWorkAnnouncement = new System.ComponentModel.BackgroundWorker();
             this.flpAnnouncementList = new System.Windows.Forms.FlowLayoutPanel();
@@ -626,8 +624,6 @@
         private System.Windows.Forms.ProgressBar pbProgress;
         private System.Windows.Forms.Panel pnlLoader;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.ComponentModel.BackgroundWorker bgWorkIRR;
-        private System.ComponentModel.BackgroundWorker bgWorkID;
         private System.Windows.Forms.Label lblIdStatus;
         private System.ComponentModel.BackgroundWorker bgWorkAnnouncement;
         private System.Windows.Forms.FlowLayoutPanel flpAnnouncementList;

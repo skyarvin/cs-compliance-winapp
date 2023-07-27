@@ -109,7 +109,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
         if (commandId == (CefMenuCommand)26505)
         {
             if (!String.IsNullOrEmpty((parameters.SelectionText))){
-                Globals.frmMain.send_id_checker = false;
                 browserControl.Load(String.Concat(Url.CB_COMPLIANCE_URL, "/show/", parameters.SelectionText));
                 return true;
             }

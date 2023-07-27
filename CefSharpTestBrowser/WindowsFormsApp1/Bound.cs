@@ -448,14 +448,6 @@ namespace CSTool
             public string Id { get; set; }
         }
 
-        public void SendToIdChecking()
-        {   
-            if (Globals.ComplianceAgent.id_checking)
-            {
-                Globals.frmMain.SendToIdChecking();
-            }
-        }
-
         public void DisplayRequestPhotoAndApproveBtn()
         {
             Globals.LogsTabButtonClicked = true;

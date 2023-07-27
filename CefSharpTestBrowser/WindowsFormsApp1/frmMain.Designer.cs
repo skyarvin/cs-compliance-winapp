@@ -509,13 +509,6 @@
             this.updateWorkactivity.Enabled = true;
             this.updateWorkactivity.Interval = 300000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
-            // 
-            // bgWorkID
-            // 
-            this.bgWorkID.WorkerSupportsCancellation = true;
-            this.bgWorkID.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkID_DoWork);
-            this.bgWorkID.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkID_RunWorkerCompleted);
-            // 
             // lblIdStatus
             // 
             this.lblIdStatus.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(192)))));

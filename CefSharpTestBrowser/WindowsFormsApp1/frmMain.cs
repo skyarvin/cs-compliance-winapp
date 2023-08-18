@@ -1580,7 +1580,7 @@ namespace WindowsFormsApp1
         {
             if (Globals.LogsTabButtonClicked && Globals.room_duration >= 10)
             {
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button, #pre_request_photo_button').forEach(function(el){ el.style.display = 'block'; });");
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
             }
         }
 

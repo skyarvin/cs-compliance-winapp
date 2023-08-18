@@ -207,11 +207,10 @@ namespace CSTool
                     //    bound.evaluateMaxRoomDuration();
                     //}
 
+                    document.getElementById('pre_request_photo_button').remove();
                     approve_btn = document.getElementById('approve_button');
-                    prp_btn = document.getElementById('pre_request_photo_button');
-                    if (approve_btn && prp_btn) {
+                    if (approve_btn) {
                         approve_btn.style.display = 'none';
-                        prp_btn.style.display = 'none';
                     }
                     
                     window.onkeydown = function(e){

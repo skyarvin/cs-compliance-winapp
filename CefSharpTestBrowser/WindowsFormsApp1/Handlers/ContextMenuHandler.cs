@@ -36,6 +36,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26502, "Open room in Chrome");
 
         model.AddSeparator();
+        model.AddItem((CefMenuCommand)26514, "Send Internal Request Face Photo");
         model.AddItem((CefMenuCommand)26504, "Translate");
 
         model.AddSeparator();
@@ -80,6 +81,18 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
             }
             return true;
+        }
+
+
+        if (commandId == (CefMenuCommand)26514)
+        {
+            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+            {
+                Globals.FrmSendInternalRequestFacePhoto = new frmSendInternalRequestFacePhoto();
+                //Globals.FrmInternalRequestFacePhoto.update_info();
+                Globals.FrmSendInternalRequestFacePhoto.Show();
+            });
+
         }
 
         if (commandId == (CefMenuCommand)26502)
@@ -154,7 +167,8 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 }
             }
 
-            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
                 if (Globals.frmMain.isBrowserInitialized) {
                     Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
@@ -168,6 +182,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 }
             });
         }
+
 
             // Return false should ignore the selected option of the user !
         return false;

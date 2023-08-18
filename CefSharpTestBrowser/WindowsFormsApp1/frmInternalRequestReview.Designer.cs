@@ -110,6 +110,7 @@
             this.label3.TabIndex = 12;
             this.label3.Text = "Status:";
             this.label3.UseCompatibleTextRendering = true;
+            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label1
             // 
@@ -140,7 +141,7 @@
             this.linkLabel1.LinkColor = System.Drawing.Color.LightCyan;
             this.linkLabel1.Location = new System.Drawing.Point(481, 3);
             this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(17, 16);
+            this.linkLabel1.Size = new System.Drawing.Size(16, 16);
             this.linkLabel1.TabIndex = 14;
             this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "X";

@@ -35,33 +35,29 @@ namespace WindowsFormsApp1
         {
             var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_IRFP.id);
             lblStatus.Text = result.status;
+            this.Height = 186;
             if (result.status == "New")
             {
                 this.BackColor = Color.Gray;
                 lblStatus.Text = "PENDING";
-                this.Height = 186;
             }
 
             if (result.status == "Approved")
             {
-                this.Height = 291;
                 this.BackColor = Color.Green;
             }
 
             if (result.status == "Denied")
             {
-                this.Height = 291;
                 this.BackColor = Color.Red;
             }
             if (result.status == "Processing")
             {
                 this.BackColor = Color.FromArgb(230, 126, 34);
-                this.Height = 186;
             }
             if (result.status == "Waiting SC")
             {
                 this.BackColor = Color.FromArgb(0, 0, 255);
-                this.Height = 186;
             }
 
             lblUrl.Text = Globals.CurrentUrl;

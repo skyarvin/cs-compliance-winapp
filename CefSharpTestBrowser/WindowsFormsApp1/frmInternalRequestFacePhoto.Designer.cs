@@ -27,6 +27,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblUrl = new System.Windows.Forms.Label();
             this.linkLabel1 = new System.Windows.Forms.LinkLabel();
+            this.reviewer_note = new System.Windows.Forms.Label();
+            this.reviewer_note_label = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblStatus
@@ -86,12 +88,37 @@
             this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
+            // reviewer_note
+            // 
+            this.reviewer_note.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.reviewer_note.ForeColor = System.Drawing.Color.White;
+            this.reviewer_note.Location = new System.Drawing.Point(68, 60);
+            this.reviewer_note.Name = "reviewer_note";
+            this.reviewer_note.Size = new System.Drawing.Size(415, 29);
+            this.reviewer_note.TabIndex = 16;
+            this.reviewer_note.UseCompatibleTextRendering = true;
+            this.reviewer_note.Visible = false;
+            // 
+            // reviewer_note_label
+            // 
+            this.reviewer_note_label.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.reviewer_note_label.ForeColor = System.Drawing.Color.White;
+            this.reviewer_note_label.Location = new System.Drawing.Point(7, 60);
+            this.reviewer_note_label.Name = "reviewer_note_label";
+            this.reviewer_note_label.Size = new System.Drawing.Size(61, 29);
+            this.reviewer_note_label.TabIndex = 15;
+            this.reviewer_note_label.Text = "Reviewer Note: ";
+            this.reviewer_note_label.UseCompatibleTextRendering = true;
+            this.reviewer_note_label.Visible = false;
+            // 
             // frmInternalRequestFacePhoto
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(501, 114);
+            this.Controls.Add(this.reviewer_note);
+            this.Controls.Add(this.reviewer_note_label);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);
@@ -121,5 +148,7 @@
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.Label lblUrl;
         private System.Windows.Forms.LinkLabel linkLabel1;
+        public System.Windows.Forms.Label reviewer_note;
+        public System.Windows.Forms.Label reviewer_note_label;
     }
 }

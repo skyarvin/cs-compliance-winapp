@@ -49,6 +49,9 @@ namespace WindowsFormsApp1
 
             if (result.status == "Denied")
             {
+                reviewer_note.Visible = true;
+                reviewer_note_label.Visible = true;
+                reviewer_note.Text = result.reviewer_notes;
                 this.BackColor = Color.Red;
             }
             if (result.status == "Processing")

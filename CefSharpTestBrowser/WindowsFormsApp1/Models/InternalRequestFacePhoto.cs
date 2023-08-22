@@ -20,6 +20,7 @@ namespace CSTool.Models
         public string url { get; set; }
         public int agent_id { get; set; }
         public string status { get; set; }
+        public string reviewer_notes { get; set; }
         public string updated_at { get; set; }
         public int duration { get; set; }
 

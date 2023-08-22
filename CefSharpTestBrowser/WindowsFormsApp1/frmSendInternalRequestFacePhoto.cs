@@ -41,7 +41,7 @@ namespace CSTool
                 Globals.INTERNAL_RFP = result;
                 Settings.Default.rfp_id = Globals.INTERNAL_RFP.id;
                 Settings.Default.Save();
-                Globals.frmMain.StartbgWorkIRR();
+                Globals.frmMain.StartbgWorkRFP();
 
                 this.DialogResult = DialogResult.OK;
             }

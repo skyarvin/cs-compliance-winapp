@@ -70,7 +70,6 @@
             this.lblUrl.Name = "lblUrl";
             this.lblUrl.Size = new System.Drawing.Size(415, 29);
             this.lblUrl.TabIndex = 5;
-            this.lblUrl.Text = Globals.CurrentUrl;
             this.lblUrl.UseCompatibleTextRendering = true;
             // 
             // linkLabel1
@@ -92,7 +91,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(501, 291);
+            this.ClientSize = new System.Drawing.Size(501, 114);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);

@@ -1693,9 +1693,9 @@ namespace WindowsFormsApp1
 
         public void StartbgWorkRFP()
         {
-            if (bgWorkIRR.IsBusy)
+            if (bgWorkRFP.IsBusy)
                 return;
-            bgWorkIRR.RunWorkerAsync();
+            bgWorkRFP.RunWorkerAsync();
         }
         private void bgWorkRFP_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -1710,7 +1710,7 @@ namespace WindowsFormsApp1
                     }
                     if (Globals.FrmInternalRequestFacePhoto != null)
                         Globals.FrmInternalRequestFacePhoto.Close();
-                    bgWorkIRR.CancelAsync();
+                    bgWorkRFP.CancelAsync();
                     return;
                 }
 
@@ -1720,7 +1720,7 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
                 if (Globals.INTERNAL_RFP.status != "New" && Globals.INTERNAL_RFP.status != "Processing")
                 {
-                    bgWorkIRR.CancelAsync();
+                    bgWorkRFP.CancelAsync();
                     Globals.FrmInternalRequestFacePhoto.Show();
                 }
             });

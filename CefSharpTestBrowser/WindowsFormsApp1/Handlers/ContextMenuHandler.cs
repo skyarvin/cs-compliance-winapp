@@ -174,9 +174,9 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)26514)
         {
-            if (Globals.INTERNAL_RFP.id != 0)
+            if (Globals.INTERNAL_IRFP.id != 0)
             {
-                if (Globals.INTERNAL_RFP.url == Globals.CurrentUrl)
+                if (Globals.INTERNAL_IRFP.url == Globals.CurrentUrl)
                 {
                     Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                     {

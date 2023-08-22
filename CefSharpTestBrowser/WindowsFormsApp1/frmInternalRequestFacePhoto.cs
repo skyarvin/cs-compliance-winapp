@@ -33,7 +33,7 @@ namespace WindowsFormsApp1
 
         public void update_info()
         {
-            var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_RFP.id);
+            var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_IRFP.id);
             lblStatus.Text = result.status;
             if (result.status == "New")
             {
@@ -65,7 +65,7 @@ namespace WindowsFormsApp1
             }
 
             lblUrl.Text = Globals.CurrentUrl;
-            Globals.INTERNAL_RFP = result;
+            Globals.INTERNAL_IRFP = result;
         }
 
 

@@ -10,9 +10,9 @@ using CSTool.Class;
 
 namespace CSTool.Models
 {
-    public class rfp_result
+    public class irfp_result
     {
-        public List<InternalRequestFacePhoto> rfp { get; set; }
+        public List<InternalRequestFacePhoto> irfp { get; set; }
     }
     public class InternalRequestFacePhoto
     {
@@ -26,10 +26,10 @@ namespace CSTool.Models
 
         public InternalRequestFacePhoto Save()
         {
-            Globals.SaveToLogFile(string.Concat("Save RFP: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
+            Globals.SaveToLogFile(string.Concat("Save IRFP: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
             using (var client = new HttpClient())
             {
-                var uri = string.Concat(Url.API_URL, "/rfp/");
+                var uri = string.Concat(Url.API_URL, "/irfp/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
@@ -46,17 +46,17 @@ namespace CSTool.Models
                 else
                 {
                     Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    throw new Exception("Api save rfp request error, Please contact dev team");
+                    throw new Exception("Api save irfp request error, Please contact dev team");
                 }
             }
         }
 
-        public static InternalRequestFacePhoto Get(int rfp_id)
+        public static InternalRequestFacePhoto Get(int irfp_id)
         {
             using (var client = new HttpClient())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/rfp/", rfp_id, "/");
+                var uri = string.Concat(Url.API_URL, "/irfp/", irfp_id, "/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {
@@ -75,12 +75,12 @@ namespace CSTool.Models
             return null;
         }
 
-        public static rfp_result Get(List<int> agent_ids)
+        public static irfp_result Get(List<int> agent_ids)
         {
             using (var client = new HttpClient())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/rfp/agent/", string.Join(",", agent_ids), "/");
+                var uri = string.Concat(Url.API_URL, "/irfp/agent/", string.Join(",", agent_ids), "/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {
@@ -90,7 +90,7 @@ namespace CSTool.Models
                         {
                             var jsonString = content.ReadAsStringAsync();
                             jsonString.Wait();
-                            return JsonConvert.DeserializeObject<rfp_result>(jsonString.Result);
+                            return JsonConvert.DeserializeObject<irfp_result>(jsonString.Result);
                         }
                     }
                 }

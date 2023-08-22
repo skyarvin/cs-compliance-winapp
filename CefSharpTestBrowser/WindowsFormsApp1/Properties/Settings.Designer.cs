@@ -146,12 +146,12 @@ namespace CSTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int rfp_id {
+        public int irfp_id {
             get {
-                return ((int)(this["rfp_id"]));
+                return ((int)(this["irfp_id"]));
             }
             set {
-                this["rfp_id"] = value;
+                this["irfp_id"] = value;
             }
         }
     }

@@ -533,15 +533,15 @@ namespace WindowsFormsApp1
                 });
             }
             
-            var agent_rfp = InternalRequestFacePhoto.Get(new List<int>() { Globals.Profile.AgentID });
-            if (agent_rfp != null && agent_rfp.rfp.Count() > 0)
+            var agent_irfp = InternalRequestFacePhoto.Get(new List<int>() { Globals.Profile.AgentID });
+            if (agent_irfp != null && agent_irfp.irfp.Count() > 0)
             {
-                Globals.INTERNAL_RFP = agent_rfp.rfp.First();
+                Globals.INTERNAL_IRFP = agent_irfp.irfp.First();
                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
                     if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
                         Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
-                    StartbgWorkRFP();
+                    StartbgWorkIRFP();
                     Globals.FrmInternalRequestFacePhoto.Show();
                 });
             }
@@ -713,7 +713,7 @@ namespace WindowsFormsApp1
                 if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
                     logData.idc_id = this.ID_CHECKER.id;
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
-                Globals.SaveToLogFile(string.Concat("RFP: ", JsonConvert.SerializeObject(Globals.INTERNAL_RFP)), (int)LogType.Action);
+                Globals.SaveToLogFile(string.Concat("IRFP: ", JsonConvert.SerializeObject(Globals.INTERNAL_IRFP)), (int)LogType.Action);
                 if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
                 else if (Globals.INTERNAL_RR.id > 0)
@@ -724,13 +724,13 @@ namespace WindowsFormsApp1
                     email.Send();
                 }
                 
-                if (ExtractUsername(Globals.INTERNAL_RFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RFP.id != 0)
-                    logData.irfp_id = Globals.INTERNAL_RFP.id;
-                else if (Globals.INTERNAL_RFP.id > 0)
+                if (ExtractUsername(Globals.INTERNAL_IRFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IRFP.id != 0)
+                    logData.irfp_id = Globals.INTERNAL_IRFP.id;
+                else if (Globals.INTERNAL_IRFP.id > 0)
                 {
                     Emailer email = new Emailer();
-                    email.subject = "RFP Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RFP), "\n\r", "Current Url: ", urlToSave);
+                    email.subject = "IRFP Error";
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
                     email.Send();
                 }
 
@@ -1691,18 +1691,18 @@ namespace WindowsFormsApp1
             });
         }
 
-        public void StartbgWorkRFP()
+        public void StartbgWorkIRFP()
         {
-            if (bgWorkRFP.IsBusy)
+            if (bgWorkIRFP.IsBusy)
                 return;
-            bgWorkRFP.RunWorkerAsync();
+            bgWorkIRFP.RunWorkerAsync();
         }
-        private void bgWorkRFP_DoWork(object sender, DoWorkEventArgs e)
+        private void bgWorkIRFP_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker helperBW = sender as BackgroundWorker;
             this.InvokeOnUiThreadIfRequired(() =>
             {
-                if (Globals.INTERNAL_RFP.id == 0)
+                if (Globals.INTERNAL_IRFP.id == 0)
                 {
                     if (helperBW.CancellationPending)
                     {
@@ -1710,7 +1710,7 @@ namespace WindowsFormsApp1
                     }
                     if (Globals.FrmInternalRequestFacePhoto != null)
                         Globals.FrmInternalRequestFacePhoto.Close();
-                    bgWorkRFP.CancelAsync();
+                    bgWorkIRFP.CancelAsync();
                     return;
                 }
 
@@ -1719,18 +1719,17 @@ namespace WindowsFormsApp1
 
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
 
-                if(Globals.INTERNAL_RFP.status == "Approved")
+                if(Globals.INTERNAL_IRFP.status == "Approved")
                 {
                     Globals.chromeBrowser.EvaluateScriptAsync("document.getElementById('pre_request_photo_button').style.display = 'block';");
                 }
 
-                if (Globals.INTERNAL_RFP.status != "New" && Globals.INTERNAL_RFP.status != "Processing")
+                if (Globals.INTERNAL_IRFP.status != "New" && Globals.INTERNAL_IRFP.status != "Processing")
                 {
-                    bgWorkRFP.CancelAsync();
+                    bgWorkIRFP.CancelAsync();
                     Globals.FrmInternalRequestFacePhoto.Show();
                 }
             });
-            Console.WriteLine("bg RFP");
             Thread.Sleep(5000);
             if (helperBW.CancellationPending)
             {
@@ -1738,14 +1737,14 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void bgWorkRFP_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void bgWorkIRFP_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
                 return;
             if (e.Error != null)
                 Globals.showMessage(e.Error.Message);
             else
-                bgWorkRFP.RunWorkerAsync();
+                bgWorkIRFP.RunWorkerAsync();
         }
     }
  }

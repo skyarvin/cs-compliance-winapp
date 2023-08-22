@@ -26,26 +26,31 @@ namespace CSTool
                 start_time = Globals.frmMain.StartTime_BrowserChanged;
             }
 
-            InternalRequestFacePhoto rfp = new InternalRequestFacePhoto()
+            InternalRequestFacePhoto irfp = new InternalRequestFacePhoto()
             {
                 url = Globals.CurrentUrl,
                 agent_id = Globals.Profile.AgentID,
                 duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds),
             };
 
-            var result = rfp.Save();
+            var result = irfp.Save();
             if (result != null)
             {
-                Globals.INTERNAL_RFP = result;
-                Settings.Default.rfp_id = Globals.INTERNAL_RFP.id;
+                Globals.INTERNAL_IRFP = result;
+                Settings.Default.irfp_id = Globals.INTERNAL_IRFP.id;
                 Settings.Default.Save();
-                Globals.frmMain.StartbgWorkRFP();
+                Globals.frmMain.StartbgWorkIRFP();
 
                 this.DialogResult = DialogResult.OK;
             }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
         }

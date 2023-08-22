@@ -25,17 +25,19 @@
             this.btnOk = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.lblUrl = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // btnSendRFP
+            // btnOk
             // 
             this.btnOk.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(204)))), ((int)(((byte)(113)))));
             this.btnOk.ForeColor = System.Drawing.Color.White;
-            this.btnOk.Location = new System.Drawing.Point(475, 234);
-            this.btnOk.Name = "btnSendRFP";
+            this.btnOk.Location = new System.Drawing.Point(475, 124);
+            this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(101, 29);
             this.btnOk.TabIndex = 1;
-            this.btnOk.Text = "Ok";
+            this.btnOk.Text = "Yes";
             this.btnOk.UseVisualStyleBackColor = false;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
@@ -49,6 +51,7 @@
             this.label1.TabIndex = 2;
             this.label1.Text = "Url:";
             this.label1.UseCompatibleTextRendering = true;
+            this.label1.Visible = false;
             // 
             // lblUrl
             // 
@@ -60,20 +63,46 @@
             this.lblUrl.TabIndex = 5;
             this.lblUrl.Text = "http://localhost:8080/cb/compliance/show/?id=1580348097#photos";
             this.lblUrl.UseCompatibleTextRendering = true;
+            this.lblUrl.Visible = false;
             // 
-            // frmInternalRequestFacePhoto
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.label2.Location = new System.Drawing.Point(40, 58);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(518, 24);
+            this.label2.TabIndex = 6;
+            this.label2.Text = "Are you sure you want to send Internal Request Face Photo?";
+            // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.Red;
+            this.button1.ForeColor = System.Drawing.Color.White;
+            this.button1.Location = new System.Drawing.Point(364, 124);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(101, 29);
+            this.button1.TabIndex = 7;
+            this.button1.Text = "No";
+            this.button1.UseVisualStyleBackColor = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
+            // frmSendInternalRequestFacePhoto
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
-            this.ClientSize = new System.Drawing.Size(592, 281);
+            this.ClientSize = new System.Drawing.Size(592, 159);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmInternalRequestFacePhoto";
+            this.Name = "frmSendInternalRequestFacePhoto";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Internal Request Face Photo";
             this.TopMost = true;
@@ -97,5 +126,7 @@
         public System.Windows.Forms.Label lblUrl;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button1;
     }
 }

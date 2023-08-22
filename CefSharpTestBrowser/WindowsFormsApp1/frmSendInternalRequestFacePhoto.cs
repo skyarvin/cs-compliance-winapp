@@ -20,8 +20,6 @@ namespace CSTool
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            
-
             var start_time = Globals.StartTime_LastAction;
             if (start_time == null)
             {
@@ -41,7 +39,7 @@ namespace CSTool
                 Globals.INTERNAL_RFP = result;
                 Settings.Default.rfp_id = Globals.INTERNAL_RFP.id;
                 Settings.Default.Save();
-                Globals.frmMain.StartbgWorkIRR();
+                Globals.frmMain.StartbgWorkRFP();
 
                 this.DialogResult = DialogResult.OK;
             }

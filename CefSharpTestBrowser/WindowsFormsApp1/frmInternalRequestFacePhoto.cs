@@ -29,7 +29,7 @@ namespace WindowsFormsApp1
                     return;
                 }
             }
-        }
+        } 
 
         public void update_info()
         {

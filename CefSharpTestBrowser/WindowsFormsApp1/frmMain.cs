@@ -725,7 +725,7 @@ namespace WindowsFormsApp1
                 }
                 
                 if (ExtractUsername(Globals.INTERNAL_RFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RFP.id != 0)
-                    logData.irs_id = Globals.INTERNAL_RFP.id;
+                    logData.irfp_id = Globals.INTERNAL_RFP.id;
                 else if (Globals.INTERNAL_RFP.id > 0)
                 {
                     Emailer email = new Emailer();
@@ -1693,9 +1693,9 @@ namespace WindowsFormsApp1
 
         public void StartbgWorkRFP()
         {
-            if (bgWorkIRR.IsBusy)
+            if (bgWorkRFP.IsBusy)
                 return;
-            bgWorkIRR.RunWorkerAsync();
+            bgWorkRFP.RunWorkerAsync();
         }
         private void bgWorkRFP_DoWork(object sender, DoWorkEventArgs e)
         {
@@ -1710,7 +1710,7 @@ namespace WindowsFormsApp1
                     }
                     if (Globals.FrmInternalRequestFacePhoto != null)
                         Globals.FrmInternalRequestFacePhoto.Close();
-                    bgWorkIRR.CancelAsync();
+                    bgWorkRFP.CancelAsync();
                     return;
                 }
 
@@ -1718,9 +1718,15 @@ namespace WindowsFormsApp1
                     Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
 
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
+
+                if(Globals.INTERNAL_RFP.status == "Approved")
+                {
+                    Globals.chromeBrowser.EvaluateScriptAsync("document.getElementById('pre_request_photo_button').style.display = 'block';");
+                }
+
                 if (Globals.INTERNAL_RFP.status != "New" && Globals.INTERNAL_RFP.status != "Processing")
                 {
-                    bgWorkIRR.CancelAsync();
+                    bgWorkRFP.CancelAsync();
                     Globals.FrmInternalRequestFacePhoto.Show();
                 }
             });

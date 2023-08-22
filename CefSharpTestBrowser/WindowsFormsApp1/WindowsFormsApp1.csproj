@@ -260,6 +260,7 @@
     <Compile Include="Models\Emailer.cs" />
     <Compile Include="Models\ErrorLogs.cs" />
     <Compile Include="Models\IdChecker.cs" />
+    <Compile Include="Models\InternalRequestFacePhoto.cs" />
     <Compile Include="Models\InternalRequestReview.cs" />
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Models\Seed.cs" />

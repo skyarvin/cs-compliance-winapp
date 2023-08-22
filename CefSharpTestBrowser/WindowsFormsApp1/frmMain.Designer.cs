@@ -74,6 +74,7 @@
             this.flpAnnouncementList = new System.Windows.Forms.FlowLayoutPanel();
             this.lblTierLvlBanner = new System.Windows.Forms.Label();
             this.bgWorkerActivityMonitor = new System.ComponentModel.BackgroundWorker();
+            this.bgWorkRFP = new System.ComponentModel.BackgroundWorker();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -572,6 +573,13 @@
             this.lblTierLvlBanner.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.lblTierLvlBanner.Visible = false;
             // 
+            // bgWorkRFP
+            // 
+            this.bgWorkRFP.WorkerSupportsCancellation = true;
+            this.bgWorkRFP.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkRFP_DoWork);
+            this.bgWorkRFP.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkRFP_RunWorkerCompleted);
+
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -652,6 +660,7 @@
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cameraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+        private System.ComponentModel.BackgroundWorker bgWorkRFP;
     }
 }
 

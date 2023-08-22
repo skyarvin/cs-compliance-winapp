@@ -532,6 +532,19 @@ namespace WindowsFormsApp1
                     Globals.FrmInternalRequestReview.Show();
                 });
             }
+            
+            var agent_rfp = InternalRequestFacePhoto.Get(new List<int>() { Globals.Profile.AgentID });
+            if (agent_rfp != null && agent_rfp.rfp.Count() > 0)
+            {
+                Globals.INTERNAL_RFP = agent_rfp.rfp.First();
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                        Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                    StartbgWorkRFP();
+                    Globals.FrmInternalRequestFacePhoto.Show();
+                });
+            }
 
             bgWorkID.RunWorkerAsync();
 
@@ -700,6 +713,7 @@ namespace WindowsFormsApp1
                 if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
                     logData.idc_id = this.ID_CHECKER.id;
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
+                Globals.SaveToLogFile(string.Concat("RFP: ", JsonConvert.SerializeObject(Globals.INTERNAL_RFP)), (int)LogType.Action);
                 if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
                 else if (Globals.INTERNAL_RR.id > 0)
@@ -707,6 +721,16 @@ namespace WindowsFormsApp1
                     Emailer email = new Emailer();
                     email.subject = "IRR Error";
                     email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR), "\n\r", "Current Url: ", urlToSave);
+                    email.Send();
+                }
+                
+                if (ExtractUsername(Globals.INTERNAL_RFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RFP.id != 0)
+                    logData.irs_id = Globals.INTERNAL_RFP.id;
+                else if (Globals.INTERNAL_RFP.id > 0)
+                {
+                    Emailer email = new Emailer();
+                    email.subject = "RFP Error";
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RFP), "\n\r", "Current Url: ", urlToSave);
                     email.Send();
                 }
 
@@ -1665,6 +1689,57 @@ namespace WindowsFormsApp1
                     retryUpload(file);
                 }
             });
+        }
+
+        public void StartbgWorkRFP()
+        {
+            if (bgWorkIRR.IsBusy)
+                return;
+            bgWorkIRR.RunWorkerAsync();
+        }
+        private void bgWorkRFP_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker helperBW = sender as BackgroundWorker;
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (Globals.INTERNAL_RFP.id == 0)
+                {
+                    if (helperBW.CancellationPending)
+                    {
+                        e.Cancel = true;
+                    }
+                    if (Globals.FrmInternalRequestFacePhoto != null)
+                        Globals.FrmInternalRequestFacePhoto.Close();
+                    bgWorkIRR.CancelAsync();
+                    return;
+                }
+
+                if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                    Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+
+                this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
+                if (Globals.INTERNAL_RFP.status != "New" && Globals.INTERNAL_RFP.status != "Processing")
+                {
+                    bgWorkIRR.CancelAsync();
+                    Globals.FrmInternalRequestFacePhoto.Show();
+                }
+            });
+            Console.WriteLine("bg RFP");
+            Thread.Sleep(5000);
+            if (helperBW.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void bgWorkRFP_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                return;
+            if (e.Error != null)
+                Globals.showMessage(e.Error.Message);
+            else
+                bgWorkRFP.RunWorkerAsync();
         }
     }
  }

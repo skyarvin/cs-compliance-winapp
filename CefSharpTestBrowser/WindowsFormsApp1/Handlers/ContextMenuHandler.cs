@@ -83,18 +83,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
             return true;
         }
 
-
-        if (commandId == (CefMenuCommand)26514)
-        {
-            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-            {
-                Globals.FrmSendInternalRequestFacePhoto = new frmSendInternalRequestFacePhoto();
-                //Globals.FrmInternalRequestFacePhoto.update_info();
-                Globals.FrmSendInternalRequestFacePhoto.Show();
-            });
-
-        }
-
         if (commandId == (CefMenuCommand)26502)
         {
             if (parameters.MediaType == CefSharp.ContextMenuMediaType.None && !String.IsNullOrEmpty(parameters.LinkUrl))
@@ -184,7 +172,42 @@ public class MyCustomMenuHandler : IContextMenuHandler
         }
 
 
-            // Return false should ignore the selected option of the user !
+        if (commandId == (CefMenuCommand)26514)
+        {
+            if (Globals.INTERNAL_RFP.id != 0)
+            {
+                if (Globals.INTERNAL_RFP.url == Globals.CurrentUrl)
+                {
+                    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                    {
+
+                        if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                            Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                        Globals.FrmInternalRequestFacePhoto.update_info();
+                        Globals.FrmInternalRequestFacePhoto.Show();
+                    });
+                    return false;
+                }
+            }
+
+            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (Globals.frmMain.isBrowserInitialized)
+                {
+                    Globals.FrmSendInternalRequestFacePhoto = new frmSendInternalRequestFacePhoto();
+                    Globals.FrmSendInternalRequestFacePhoto.ShowDialog(Globals.frmMain);
+                    if (Globals.FrmSendInternalRequestFacePhoto.DialogResult == DialogResult.OK)
+                    {
+                        if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                            Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                        Globals.FrmInternalRequestFacePhoto.Show();
+                    }
+                }
+            });
+        }
+
+
+        // Return false should ignore the selected option of the user !
         return false;
     }
 

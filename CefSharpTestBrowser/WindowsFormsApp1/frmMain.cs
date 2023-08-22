@@ -767,6 +767,13 @@ namespace WindowsFormsApp1
                         if (Globals.FrmInternalRequestReview != null)
                             Globals.FrmInternalRequestReview.Close();
                     });
+
+                    this.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        if (Globals.FrmInternalRequestFacePhoto != null)
+                            Globals.FrmInternalRequestFacePhoto.Close();
+                    });
+
                     if (bgWorkIRR.IsBusy)
                         bgWorkIRR.CancelAsync();
                     Globals.INTERNAL_RR = new InternalRequestReview();

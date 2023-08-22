@@ -34,7 +34,6 @@ namespace WindowsFormsApp1
         public void update_info()
         {
             var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_RFP.id);
-            Console.WriteLine(result);
             lblStatus.Text = result.status;
             if (result.status == "New")
             {

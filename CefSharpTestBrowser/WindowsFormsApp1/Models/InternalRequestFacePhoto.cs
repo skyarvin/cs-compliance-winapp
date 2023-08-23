@@ -56,7 +56,6 @@ namespace CSTool.Models
         {
             using (var client = new HttpClient())
             {
-                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/irfp/", irfp_id, "/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
@@ -80,7 +79,6 @@ namespace CSTool.Models
         {
             using (var client = new HttpClient())
             {
-                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/irfp/agent/", string.Join(",", agent_ids), "/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)

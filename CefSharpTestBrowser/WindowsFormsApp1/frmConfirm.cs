@@ -35,10 +35,5 @@ namespace CSTool
             btnCancel.Text = Button2Text;
             btnCancel.Visible = Button2Visible;
         }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

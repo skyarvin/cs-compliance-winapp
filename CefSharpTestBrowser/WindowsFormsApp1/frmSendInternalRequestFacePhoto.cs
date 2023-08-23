@@ -45,12 +45,7 @@ namespace CSTool
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void btnNo_Click(object sender, EventArgs e)
         {
             this.Close();
         }

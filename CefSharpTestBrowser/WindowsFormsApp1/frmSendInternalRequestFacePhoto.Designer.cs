@@ -26,7 +26,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.lblUrl = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.BtnNo = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnOk
@@ -76,17 +76,17 @@
             this.label2.TabIndex = 6;
             this.label2.Text = "Are you sure you want to send Internal Request Face Photo?";
             // 
-            // button1
+            // BtnNo
             // 
-            this.button1.BackColor = System.Drawing.Color.Red;
-            this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(364, 124);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(101, 29);
-            this.button1.TabIndex = 7;
-            this.button1.Text = "No";
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.BtnNo.BackColor = System.Drawing.Color.Red;
+            this.BtnNo.ForeColor = System.Drawing.Color.White;
+            this.BtnNo.Location = new System.Drawing.Point(364, 124);
+            this.BtnNo.Name = "BtnNo";
+            this.BtnNo.Size = new System.Drawing.Size(101, 29);
+            this.BtnNo.TabIndex = 7;
+            this.BtnNo.Text = "No";
+            this.BtnNo.UseVisualStyleBackColor = false;
+            this.BtnNo.Click += new System.EventHandler(this.btnNo_Click);
             // 
             // frmSendInternalRequestFacePhoto
             // 
@@ -94,7 +94,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
             this.ClientSize = new System.Drawing.Size(592, 159);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.BtnNo);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);
@@ -127,6 +127,6 @@
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnNo;
     }
 }

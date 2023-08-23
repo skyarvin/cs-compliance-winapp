@@ -51,6 +51,7 @@ namespace WindowsFormsApp1
             {
                 reviewer_note.Visible = true;
                 reviewer_note_label.Visible = true;
+                reviewer_note.Visible = true;
                 reviewer_note.Text = result.reviewer_notes;
                 this.BackColor = Color.Red;
             }
@@ -67,13 +68,7 @@ namespace WindowsFormsApp1
             Globals.INTERNAL_IRFP = result;
         }
 
-
-        private void lblStatus_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void closeButton_linkedClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.Close();
         }

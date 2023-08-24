@@ -1722,7 +1722,9 @@ namespace WindowsFormsApp1
                 }
 
                 if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                {
                     Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                }
 
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
 

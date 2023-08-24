@@ -71,7 +71,7 @@ namespace WindowsFormsApp1
                 this.BackColor = Color.FromArgb(0, 0, 255);
             }
 
-            lblUrl.Text = Globals.CurrentUrl;
+            lblUrl.Text = result.url;
             Globals.INTERNAL_IRFP = result;
         }
 

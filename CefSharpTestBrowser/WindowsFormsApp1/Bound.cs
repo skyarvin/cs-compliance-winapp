@@ -238,6 +238,7 @@ namespace CSTool
 
                     var followRaw = $('#room_info').children().eq(2).text();
                     bound.showTierLevelBanner(followRaw);
+                    bound.showRPB_Button();
 
                     //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
@@ -283,6 +284,11 @@ namespace CSTool
                 Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
             }
 
+        }
+
+        public void ShowRPB_Button()
+        {
+            Globals.frmMain.CheckIRFP_status();
         }
         public void StoreImages(string images)
         {

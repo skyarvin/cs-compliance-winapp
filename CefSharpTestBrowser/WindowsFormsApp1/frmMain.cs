@@ -777,6 +777,7 @@ namespace WindowsFormsApp1
                     if (bgWorkIRR.IsBusy)
                         bgWorkIRR.CancelAsync();
                     Globals.INTERNAL_RR = new InternalRequestReview();
+                    Globals.INTERNAL_IRFP = new InternalRequestFacePhoto();
                 }
                 catch (AggregateException e)
                 {
@@ -1727,11 +1728,7 @@ namespace WindowsFormsApp1
                 }
 
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
-
-                if(Globals.INTERNAL_IRFP.status == "Approved")
-                {
-                    Globals.chromeBrowser.EvaluateScriptAsync("document.getElementById('pre_request_photo_button').style.display = 'block';");
-                }
+                this.CheckIRFP_status();
 
                 if (Globals.INTERNAL_IRFP.status != "New" && Globals.INTERNAL_IRFP.status != "Processing")
                 {
@@ -1743,6 +1740,14 @@ namespace WindowsFormsApp1
             if (helperBW.CancellationPending)
             {
                 e.Cancel = true;
+            }
+        }
+
+        public void CheckIRFP_status()
+        {
+            if (Globals.INTERNAL_IRFP.status == "Approved")
+            {
+                Globals.chromeBrowser.EvaluateScriptAsync("document.getElementById('pre_request_photo_button').style.display = 'block';");
             }
         }
 

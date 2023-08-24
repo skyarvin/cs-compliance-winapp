@@ -37,8 +37,6 @@ namespace CSTool
             if (result != null)
             {
                 Globals.INTERNAL_IRFP = result;
-                Settings.Default.irfp_id = Globals.INTERNAL_IRFP.id;
-                Settings.Default.Save();
                 Globals.frmMain.StartbgWorkIRFP();
 
                 this.DialogResult = DialogResult.OK;

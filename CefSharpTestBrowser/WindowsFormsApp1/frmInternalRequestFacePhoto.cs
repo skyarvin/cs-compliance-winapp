@@ -44,6 +44,13 @@ namespace WindowsFormsApp1
 
             if (result.status == "Approved")
             {
+                if (result.reviewer_notes.Length > 0)
+                {
+                    reviewer_note.Visible = true;
+                    reviewer_note_label.Visible = true;
+                    reviewer_note.Visible = true;
+                    reviewer_note.Text = result.reviewer_notes;
+                }
                 this.BackColor = Color.Green;
             }
 

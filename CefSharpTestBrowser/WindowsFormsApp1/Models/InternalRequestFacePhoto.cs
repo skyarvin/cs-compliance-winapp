@@ -79,7 +79,6 @@ namespace CSTool.Models
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {
-                    Console.WriteLine(response);
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent content = response.Content)

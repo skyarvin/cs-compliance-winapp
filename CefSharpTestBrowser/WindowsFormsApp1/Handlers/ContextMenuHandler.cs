@@ -196,13 +196,13 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 }
             });
 
-            void CheckFrmInternalRequestFacePhoto(bool isExist)
+            void CheckFrmInternalRequestFacePhoto(bool isInstanceExist)
             {
                 if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
                 {
                     Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
                 }
-                if (isExist)
+                if (isInstanceExist)
                 {
                     Globals.FrmInternalRequestFacePhoto.update_info();
                 }

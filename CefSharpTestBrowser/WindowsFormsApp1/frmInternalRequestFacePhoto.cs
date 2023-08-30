@@ -21,14 +21,8 @@ namespace WindowsFormsApp1
 
         private void frmInternalRequestFacePhoto_SizeChanged(object sender, EventArgs e)
         {
-            foreach (var scrn in Screen.AllScreens)
-            {
-                if (scrn.Bounds.Contains(this.Location))
-                {
-                    this.Location = new Point(scrn.Bounds.Right - this.Width - 5, scrn.Bounds.Bottom - this.Height - 50);
-                    return;
-                }
-            }
+            var scrn = Screen.FromControl(Globals.frmMain);
+            this.Location = new Point(scrn.Bounds.Right - this.Width - 5, scrn.Bounds.Bottom - this.Height - 50);
         } 
 
         public void update_info()

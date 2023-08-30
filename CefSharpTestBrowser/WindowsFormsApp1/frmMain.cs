@@ -508,7 +508,6 @@ namespace WindowsFormsApp1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-
             Application.Idle += new EventHandler(Application_OnIdle);
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);

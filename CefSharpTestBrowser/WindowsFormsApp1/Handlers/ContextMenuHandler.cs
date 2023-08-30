@@ -178,12 +178,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
             {
                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
-                    if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
-                    {
-                        Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
-                    }
-                    Globals.FrmInternalRequestFacePhoto.update_info();
-                    Globals.FrmInternalRequestFacePhoto.Show();
+                    CheckFrmInternalRequestFacePhoto(true);
                 });
                 return false;
             }
@@ -196,18 +191,24 @@ public class MyCustomMenuHandler : IContextMenuHandler
                     Globals.FrmSendInternalRequestFacePhoto.ShowDialog(Globals.frmMain);
                     if (Globals.FrmSendInternalRequestFacePhoto.DialogResult == DialogResult.OK)
                     {
-                        if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
-                        {
-                            Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
-                        }
-                        Globals.FrmInternalRequestFacePhoto.Show();
+                        CheckFrmInternalRequestFacePhoto(false);
                     }
                 }
             });
+
+            void CheckFrmInternalRequestFacePhoto(bool isExist)
+            {
+                if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                {
+                    Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                }
+                if (isExist)
+                {
+                    Globals.FrmInternalRequestFacePhoto.update_info();
+                }
+                Globals.FrmInternalRequestFacePhoto.Show();
+            }
         }
-
-
-        // Return false should ignore the selected option of the user !
         return false;
     }
 

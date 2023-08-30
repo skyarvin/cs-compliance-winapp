@@ -171,11 +171,11 @@
     <Compile Include="frmInternalRequestFacePhoto.Designer.cs">
       <DependentUpon>frmInternalRequestFacePhoto.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSendInternalRequestFacePhoto.cs">
+    <Compile Include="frmConfirmSendIRFP.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSendInternalRequestFacePhoto.Designer.cs">
-      <DependentUpon>frmSendInternalRequestFacePhoto.cs</DependentUpon>
+    <Compile Include="frmConfirmSendIRFP.Designer.cs">
+      <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
     </Compile>
     <Compile Include="frmQA.cs">
       <SubType>Form</SubType>
@@ -285,8 +285,8 @@
     <EmbeddedResource Include="frmInternalRequestFacePhoto.resx">
       <DependentUpon>frmInternalRequestFacePhoto.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSendInternalRequestFacePhoto.resx">
-      <DependentUpon>frmSendInternalRequestFacePhoto.cs</DependentUpon>
+    <EmbeddedResource Include="frmConfirmSendIRFP.resx">
+      <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\usrCtrlAnnouncement.resx">
       <DependentUpon>usrCtrlAnnouncement.cs</DependentUpon>

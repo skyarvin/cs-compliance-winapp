@@ -533,10 +533,10 @@ namespace WindowsFormsApp1
                 });
             }
             
-            var agent_irfp = InternalRequestFacePhoto.Get(new List<int>() { Globals.Profile.AgentID });
-            if (agent_irfp != null && agent_irfp.irfp.Count() > 0)
+            var agent_irfp = InternalRequestFacePhoto.GetAgentRFP(Globals.Profile.AgentID);
+            if (agent_irfp != null)
             {
-                Globals.INTERNAL_IRFP = agent_irfp.irfp.First();
+                Globals.INTERNAL_IRFP = agent_irfp;
                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
                     if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)

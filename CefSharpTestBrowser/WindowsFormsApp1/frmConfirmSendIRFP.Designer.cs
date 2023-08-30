@@ -1,6 +1,6 @@
 ﻿namespace CSTool
 {
-    partial class frmSendInternalRequestFacePhoto
+    partial class frmConfirmSendIRFP
     {
         /// <summary>
         /// Required designer variable.
@@ -88,7 +88,7 @@
             this.BtnNo.UseVisualStyleBackColor = false;
             this.BtnNo.Click += new System.EventHandler(this.btnNo_Click);
             // 
-            // frmSendInternalRequestFacePhoto
+            // frmConfirmSendIRFP
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -102,9 +102,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "frmSendInternalRequestFacePhoto";
+            this.Name = "frmConfirmSendIRFP";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Internal Request Face Photo";
+            this.Text = "Confirm Internal Request Face Photo";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.frmInternalRequestFacePhoto_Load);
             this.ResumeLayout(false);

@@ -174,32 +174,32 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)26514)
         {
-            if (Globals.INTERNAL_IRFP.id != 0)
+            if (Globals.INTERNAL_IRFP.id != 0 && Globals.INTERNAL_IRFP.url == Globals.CurrentUrl)
             {
-                if (Globals.INTERNAL_IRFP.url == Globals.CurrentUrl)
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
-                    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                    if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
                     {
-
-                        if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
-                            Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
-                        Globals.FrmInternalRequestFacePhoto.update_info();
-                        Globals.FrmInternalRequestFacePhoto.Show();
-                    });
-                    return false;
-                }
+                        Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                    }
+                    Globals.FrmInternalRequestFacePhoto.update_info();
+                    Globals.FrmInternalRequestFacePhoto.Show();
+                });
+                return false;
             }
 
             Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
                 if (Globals.frmMain.isBrowserInitialized)
                 {
-                    Globals.FrmSendInternalRequestFacePhoto = new frmSendInternalRequestFacePhoto();
+                    Globals.FrmSendInternalRequestFacePhoto = new frmConfirmSendIRFP();
                     Globals.FrmSendInternalRequestFacePhoto.ShowDialog(Globals.frmMain);
                     if (Globals.FrmSendInternalRequestFacePhoto.DialogResult == DialogResult.OK)
                     {
                         if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                        {
                             Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                        }
                         Globals.FrmInternalRequestFacePhoto.Show();
                     }
                 }

@@ -6,9 +6,9 @@ using WindowsFormsApp1;
 
 namespace CSTool
 {
-    public partial class frmSendInternalRequestFacePhoto : Form
+    public partial class frmConfirmSendIRFP : Form
     {
-        public frmSendInternalRequestFacePhoto()
+        public frmConfirmSendIRFP()
         {
             InitializeComponent();
         }

@@ -37,7 +37,7 @@ namespace WindowsFormsApp1
         public static frmSetPreferences FrmSetPreferences = new frmSetPreferences();
         public static frmSendInternalRequestReview FrmSendInternalRequestReview = new frmSendInternalRequestReview();
         public static frmInternalRequestReview FrmInternalRequestReview;
-        public static frmSendInternalRequestFacePhoto FrmSendInternalRequestFacePhoto = new frmSendInternalRequestFacePhoto();
+        public static frmConfirmSendIRFP FrmSendInternalRequestFacePhoto = new frmConfirmSendIRFP();
         public static frmInternalRequestFacePhoto FrmInternalRequestFacePhoto;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();

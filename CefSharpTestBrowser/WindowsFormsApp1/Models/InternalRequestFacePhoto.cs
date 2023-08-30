@@ -10,10 +10,6 @@ using CSTool.Class;
 
 namespace CSTool.Models
 {
-    public class irfp_result
-    {
-        public List<InternalRequestFacePhoto> irfp { get; set; }
-    }
     public class InternalRequestFacePhoto
     {
         public int id { get; set; }
@@ -75,21 +71,22 @@ namespace CSTool.Models
             return null;
         }
 
-        public static irfp_result Get(List<int> agent_ids)
+        public static InternalRequestFacePhoto GetAgentRFP(int agent_id)
         {
             using (var client = new HttpClient())
             {
-                var uri = string.Concat(Url.API_URL, "/irfp/agent/", string.Join(",", agent_ids), "/");
+                var uri = string.Concat(Url.API_URL, "/irfp/agent/", agent_id, "/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {
+                    Console.WriteLine(response);
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent content = response.Content)
                         {
                             var jsonString = content.ReadAsStringAsync();
                             jsonString.Wait();
-                            return JsonConvert.DeserializeObject<irfp_result>(jsonString.Result);
+                            return JsonConvert.DeserializeObject<InternalRequestFacePhoto>(jsonString.Result);
                         }
                     }
                 }

@@ -66,10 +66,6 @@ namespace WindowsFormsApp1
             {
                 this.BackColor = Color.FromArgb(230, 126, 34);
             }
-            if (result.status == "Waiting SC")
-            {
-                this.BackColor = Color.FromArgb(0, 0, 255);
-            }
 
             lblUrl.Text = result.url;
             Globals.INTERNAL_IRFP = result;

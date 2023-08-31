@@ -178,7 +178,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
             {
                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
-                    CheckFrmInternalRequestFacePhoto(true);
+                    ShowFrmInternalRequestFacePhoto(true);
                 });
                 return false;
             }
@@ -187,16 +187,16 @@ public class MyCustomMenuHandler : IContextMenuHandler
             {
                 if (Globals.frmMain.isBrowserInitialized)
                 {
-                    Globals.FrmSendInternalRequestFacePhoto = new frmConfirmSendIRFP();
-                    Globals.FrmSendInternalRequestFacePhoto.ShowDialog(Globals.frmMain);
-                    if (Globals.FrmSendInternalRequestFacePhoto.DialogResult == DialogResult.OK)
+                    Globals.FrmConfirmSendIRFP = new frmConfirmSendIRFP();
+                    Globals.FrmConfirmSendIRFP.ShowDialog(Globals.frmMain);
+                    if (Globals.FrmConfirmSendIRFP.DialogResult == DialogResult.OK)
                     {
-                        CheckFrmInternalRequestFacePhoto(false);
+                        ShowFrmInternalRequestFacePhoto(false);
                     }
                 }
             });
 
-            void CheckFrmInternalRequestFacePhoto(bool isInstanceExist)
+            void ShowFrmInternalRequestFacePhoto(bool isInstanceExist)
             {
                 if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
                 {

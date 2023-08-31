@@ -35,7 +35,6 @@ namespace WindowsFormsApp1
                 this.BackColor = Color.Gray;
                 lblStatus.Text = "PENDING";
             }
-
             if (result.status == "Approved")
             {
                 if (result.reviewer_notes.Length > 0)
@@ -47,7 +46,6 @@ namespace WindowsFormsApp1
                 }
                 this.BackColor = Color.Green;
             }
-
             if (result.status == "Denied")
             {
                 reviewer_note.Visible = true;
@@ -60,7 +58,6 @@ namespace WindowsFormsApp1
             {
                 this.BackColor = Color.FromArgb(230, 126, 34);
             }
-
             lblUrl.Text = result.url;
             Globals.INTERNAL_IRFP = result;
         }

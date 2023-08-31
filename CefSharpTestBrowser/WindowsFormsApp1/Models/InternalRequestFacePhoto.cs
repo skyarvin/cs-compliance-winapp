@@ -67,11 +67,10 @@ namespace CSTool.Models
                     }
                 }
             }
-
             return null;
         }
 
-        public static InternalRequestFacePhoto GetAgentRFP(int agent_id)
+        public static InternalRequestFacePhoto GetAgentIRFP(int agent_id)
         {
             using (var client = new HttpClient())
             {
@@ -90,7 +89,6 @@ namespace CSTool.Models
                     }
                 }
             }
-
             return null;
         }
     }

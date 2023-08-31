@@ -38,7 +38,6 @@ namespace CSTool
             {
                 Globals.INTERNAL_IRFP = result;
                 Globals.frmMain.StartbgWorkIRFP();
-
                 this.DialogResult = DialogResult.OK;
             }
         }

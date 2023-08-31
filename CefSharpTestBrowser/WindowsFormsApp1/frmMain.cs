@@ -532,7 +532,7 @@ namespace WindowsFormsApp1
                 });
             }
             
-            var agent_irfp = InternalRequestFacePhoto.GetAgentRFP(Globals.Profile.AgentID);
+            var agent_irfp = InternalRequestFacePhoto.GetAgentIRFP(Globals.Profile.AgentID);
             if (agent_irfp != null)
             {
                 Globals.INTERNAL_IRFP = agent_irfp;
@@ -1720,15 +1720,12 @@ namespace WindowsFormsApp1
                     bgWorkIRFP.CancelAsync();
                     return;
                 }
-
                 if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
                 {
                     Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
                 }
-
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
                 this.CheckIRFP_status();
-
                 if (Globals.INTERNAL_IRFP.status != "New" && Globals.INTERNAL_IRFP.status != "Processing")
                 {
                     bgWorkIRFP.CancelAsync();

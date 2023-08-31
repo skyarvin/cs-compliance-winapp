@@ -27,7 +27,7 @@ namespace WindowsFormsApp1
 
         public void update_info()
         {
-            var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_IRFP.id);
+            var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_IRFP.id, Globals.Profile.AgentID);
             lblStatus.Text = result.status;
             Height = 180;
             switch (result.status)

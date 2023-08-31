@@ -48,11 +48,11 @@ namespace CSTool.Models
             }
         }
 
-        public static InternalRequestFacePhoto Get(int irfp_id)
+        public static InternalRequestFacePhoto Get(int irfp_id, int agent_id)
         {
             using (var client = new HttpClient())
             {
-                var uri = string.Concat(Url.API_URL, "/irfp/", irfp_id, "/");
+                var uri = string.Concat(Url.API_URL, "/irfp/", irfp_id, "/", agent_id, "/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

@@ -29,34 +29,31 @@ namespace WindowsFormsApp1
         {
             var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_IRFP.id);
             lblStatus.Text = result.status;
-            this.Height = 186;
-            if (result.status == "New")
+            Height = 180;
+            switch (result.status)
             {
-                this.BackColor = Color.Gray;
-                lblStatus.Text = "PENDING";
-            }
-            if (result.status == "Approved")
-            {
-                if (result.reviewer_notes.Length > 0)
-                {
+                case "New":
+                    BackColor = Color.Gray;
+                    lblStatus.Text = "PENDING";
+                    break;
+                case "Approved":
+                    if (result.reviewer_notes.Length > 0)
+                    {
+                        reviewer_note.Visible = true;
+                        reviewer_note_label.Visible = true;
+                        reviewer_note.Text = result.reviewer_notes;
+                    }
+                    BackColor = Color.Green;
+                    break;
+                case "Denied":
                     reviewer_note.Visible = true;
                     reviewer_note_label.Visible = true;
-                    reviewer_note.Visible = true;
                     reviewer_note.Text = result.reviewer_notes;
-                }
-                this.BackColor = Color.Green;
-            }
-            if (result.status == "Denied")
-            {
-                reviewer_note.Visible = true;
-                reviewer_note_label.Visible = true;
-                reviewer_note.Visible = true;
-                reviewer_note.Text = result.reviewer_notes;
-                this.BackColor = Color.Red;
-            }
-            if (result.status == "Processing")
-            {
-                this.BackColor = Color.FromArgb(230, 126, 34);
+                    BackColor = Color.Red;
+                    break;
+                case "Processing":
+                    BackColor = Color.FromArgb(230, 126, 34);
+                    break;
             }
             lblUrl.Text = result.url;
             Globals.INTERNAL_IRFP = result;

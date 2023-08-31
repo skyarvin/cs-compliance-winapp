@@ -508,7 +508,6 @@ namespace WindowsFormsApp1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-
             Application.Idle += new EventHandler(Application_OnIdle);
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
@@ -530,6 +529,19 @@ namespace WindowsFormsApp1
                         Globals.FrmInternalRequestReview = new frmInternalRequestReview();
                     StartbgWorkIRR();
                     Globals.FrmInternalRequestReview.Show();
+                });
+            }
+            
+            var agent_irfp = InternalRequestFacePhoto.GetAgentIRFP(Globals.Profile.AgentID);
+            if (agent_irfp != null)
+            {
+                Globals.INTERNAL_IRFP = agent_irfp;
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                        Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                    StartbgWorkIRFP();
+                    Globals.FrmInternalRequestFacePhoto.Show();
                 });
             }
 
@@ -700,6 +712,7 @@ namespace WindowsFormsApp1
                 if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
                     logData.idc_id = this.ID_CHECKER.id;
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
+                Globals.SaveToLogFile(string.Concat("IRFP: ", JsonConvert.SerializeObject(Globals.INTERNAL_IRFP)), (int)LogType.Action);
                 if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
                 else if (Globals.INTERNAL_RR.id > 0)
@@ -707,6 +720,16 @@ namespace WindowsFormsApp1
                     Emailer email = new Emailer();
                     email.subject = "IRR Error";
                     email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR), "\n\r", "Current Url: ", urlToSave);
+                    email.Send();
+                }
+                
+                if (ExtractUsername(Globals.INTERNAL_IRFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IRFP.id != 0)
+                    logData.irfp_id = Globals.INTERNAL_IRFP.id;
+                else if (Globals.INTERNAL_IRFP.id > 0)
+                {
+                    Emailer email = new Emailer();
+                    email.subject = "IRFP Error";
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
                     email.Send();
                 }
 
@@ -743,9 +766,17 @@ namespace WindowsFormsApp1
                         if (Globals.FrmInternalRequestReview != null)
                             Globals.FrmInternalRequestReview.Close();
                     });
+
+                    this.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        if (Globals.FrmInternalRequestFacePhoto != null)
+                            Globals.FrmInternalRequestFacePhoto.Close();
+                    });
+
                     if (bgWorkIRR.IsBusy)
                         bgWorkIRR.CancelAsync();
                     Globals.INTERNAL_RR = new InternalRequestReview();
+                    Globals.INTERNAL_IRFP = new InternalRequestFacePhoto();
                 }
                 catch (AggregateException e)
                 {
@@ -1580,7 +1611,7 @@ namespace WindowsFormsApp1
         {
             if (Globals.LogsTabButtonClicked && Globals.room_duration >= 10)
             {
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button, #pre_request_photo_button').forEach(function(el){ el.style.display = 'block'; });");
+                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
             }
         }
 
@@ -1665,6 +1696,65 @@ namespace WindowsFormsApp1
                     retryUpload(file);
                 }
             });
+        }
+
+        public void StartbgWorkIRFP()
+        {
+            if (bgWorkIRFP.IsBusy)
+                return;
+            bgWorkIRFP.RunWorkerAsync();
+        }
+        private void bgWorkIRFP_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker helperBW = sender as BackgroundWorker;
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (Globals.INTERNAL_IRFP.id == 0)
+                {
+                    if (helperBW.CancellationPending)
+                    {
+                        e.Cancel = true;
+                    }
+                    if (Globals.FrmInternalRequestFacePhoto != null)
+                        Globals.FrmInternalRequestFacePhoto.Close();
+                    bgWorkIRFP.CancelAsync();
+                    return;
+                }
+                if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                {
+                    Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                }
+                this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalRequestFacePhoto.update_info());
+                this.CheckIRFP_status();
+                if (Globals.INTERNAL_IRFP.status != "New" && Globals.INTERNAL_IRFP.status != "Processing")
+                {
+                    bgWorkIRFP.CancelAsync();
+                    Globals.FrmInternalRequestFacePhoto.Show();
+                }
+            });
+            Thread.Sleep(5000);
+            if (helperBW.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        public void CheckIRFP_status()
+        {
+            if (Globals.INTERNAL_IRFP.status == "Approved")
+            {
+                Globals.chromeBrowser.EvaluateScriptAsync("document.getElementById('pre_request_photo_button').style.display = 'block';");
+            }
+        }
+
+        private void bgWorkIRFP_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+                return;
+            if (e.Error != null)
+                Globals.showMessage(e.Error.Message);
+            else
+                bgWorkIRFP.RunWorkerAsync();
         }
     }
  }

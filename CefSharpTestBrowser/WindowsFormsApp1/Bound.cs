@@ -207,11 +207,10 @@ namespace CSTool
                     //    bound.evaluateMaxRoomDuration();
                     //}
 
+                    document.getElementById('pre_request_photo_button').style.display='none';
                     approve_btn = document.getElementById('approve_button');
-                    prp_btn = document.getElementById('pre_request_photo_button');
-                    if (approve_btn && prp_btn) {
+                    if (approve_btn) {
                         approve_btn.style.display = 'none';
-                        prp_btn.style.display = 'none';
                     }
                     
                     window.onkeydown = function(e){
@@ -239,6 +238,7 @@ namespace CSTool
 
                     var followRaw = $('#room_info').children().eq(2).text();
                     bound.showTierLevelBanner(followRaw);
+                    bound.showRPB_Button();
 
                     //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
@@ -284,6 +284,11 @@ namespace CSTool
                 Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
             }
 
+        }
+
+        public void ShowRPB_Button()
+        {
+            Globals.frmMain.CheckIRFP_status();
         }
         public void StoreImages(string images)
         {

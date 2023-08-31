@@ -36,6 +36,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26502, "Open room in Chrome");
 
         model.AddSeparator();
+        model.AddItem((CefMenuCommand)26514, "Send Internal Request Face Photo");
         model.AddItem((CefMenuCommand)26504, "Translate");
 
         model.AddSeparator();
@@ -154,7 +155,8 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 }
             }
 
-            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
             {
                 if (Globals.frmMain.isBrowserInitialized) {
                     Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
@@ -169,7 +171,44 @@ public class MyCustomMenuHandler : IContextMenuHandler
             });
         }
 
-            // Return false should ignore the selected option of the user !
+
+        if (commandId == (CefMenuCommand)26514)
+        {
+            if (Globals.INTERNAL_IRFP.id != 0 && Globals.INTERNAL_IRFP.url == Globals.CurrentUrl)
+            {
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    ShowFrmInternalRequestFacePhoto(true);
+                });
+                return false;
+            }
+
+            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (Globals.frmMain.isBrowserInitialized)
+                {
+                    Globals.FrmConfirmSendIRFP = new frmConfirmSendIRFP();
+                    Globals.FrmConfirmSendIRFP.ShowDialog(Globals.frmMain);
+                    if (Globals.FrmConfirmSendIRFP.DialogResult == DialogResult.OK)
+                    {
+                        ShowFrmInternalRequestFacePhoto(false);
+                    }
+                }
+            });
+
+            void ShowFrmInternalRequestFacePhoto(bool isInstanceExist)
+            {
+                if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
+                {
+                    Globals.FrmInternalRequestFacePhoto = new frmInternalRequestFacePhoto();
+                }
+                if (isInstanceExist)
+                {
+                    Globals.FrmInternalRequestFacePhoto.update_info();
+                }
+                Globals.FrmInternalRequestFacePhoto.Show();
+            }
+        }
         return false;
     }
 

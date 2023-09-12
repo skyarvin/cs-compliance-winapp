@@ -495,7 +495,7 @@ namespace WindowsFormsApp1
             Random rnd = new Random();
             foreach (int value in Enumerable.Range(1, 432))
             {
-                var end = now.AddMinutes(3);
+                var end = now.AddMinutes(1);
                 DateTime epoch = new DateTime(1970, 1, 1);
                 TimeSpan startTs = now - epoch;
                 TimeSpan endTs = end - epoch;
@@ -508,6 +508,10 @@ namespace WindowsFormsApp1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (!Globals.ComplianceAgent.webcam_capture)
+            {
+                settingsToolStripMenuItem.Visible = false;
+            }
             Application.Idle += new EventHandler(Application_OnIdle);
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
@@ -1639,10 +1643,13 @@ namespace WindowsFormsApp1
                 DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
                 if (!logDirInfo.Exists) logDirInfo.Create();
                 string nowStr = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
-                string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
                 string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
-                startCamCapture(camFileName);
                 startScreenCapture(scFileName);
+                if (Globals.ComplianceAgent.webcam_capture)
+                {
+                    string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
+                    startCamCapture(camFileName);
+                }
                 findAndUploadFailedImages();
             }
         }

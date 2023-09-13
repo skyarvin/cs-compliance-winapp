@@ -8,7 +8,6 @@ namespace CSTool
 {
     public partial class frmCamSettings : Form
     {
-
         StaffCam staffCam;
         public frmCamSettings()
         {
@@ -23,11 +22,9 @@ namespace CSTool
         private void loadCameraSources()
         {
             cmbSource.Items.Clear();
-
             try
             {
                 cmbSource.Text = "";
-                //Enumerate all video input devices
                 if (staffCam != null)
                 {
                     staffCam.stopCamera();
@@ -38,7 +35,6 @@ namespace CSTool
                 var i = 0;
                 foreach (FilterInfo device in videoDevices)
                 {
-                    ;
                     cmbSource.Items.Add(device.Name);
                     if (!String.IsNullOrEmpty(Settings.Default.cam_source) && (device.MonikerString == Settings.Default.cam_source))
                     {
@@ -46,13 +42,10 @@ namespace CSTool
                     }
                     i++;
                 }
-
-
             }
             catch (ApplicationException)
             {
             }
-
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)

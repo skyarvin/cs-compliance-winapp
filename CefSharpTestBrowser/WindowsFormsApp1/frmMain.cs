@@ -495,7 +495,7 @@ namespace WindowsFormsApp1
             Random rnd = new Random();
             foreach (int value in Enumerable.Range(1, 432))
             {
-                var end = now.AddMinutes(1);
+                var end = now.AddMinutes(3);
                 DateTime epoch = new DateTime(1970, 1, 1);
                 TimeSpan startTs = now - epoch;
                 TimeSpan endTs = end - epoch;

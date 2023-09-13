@@ -5,8 +5,6 @@ using System.Drawing;
 
 namespace CSTool.Class
 {
-
-
     public class StaffCam
     {
         FilterInfoCollection videoDevices = null;
@@ -33,7 +31,6 @@ namespace CSTool.Class
             {
                 videoDevices = null;
             }
-
         }
 
         public FilterInfoCollection getVideoDevices()
@@ -72,7 +69,6 @@ namespace CSTool.Class
                     videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
                     videoSource.Start();
                 }
-
             }
             catch
             {
@@ -103,7 +99,6 @@ namespace CSTool.Class
                 {
                     throw;
                 }
-
             }
         }
     }

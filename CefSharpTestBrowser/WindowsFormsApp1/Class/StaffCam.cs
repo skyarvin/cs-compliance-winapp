@@ -51,12 +51,11 @@ namespace CSTool.Class
 
         public void stopCamera()
         {
-            if (!(videoSource == null))
-                if (videoSource.IsRunning)
-                {
-                    videoSource.SignalToStop();
-                    videoSource = null;
-                }
+            if (videoSource != null && videoSource.IsRunning)
+            {
+                videoSource.SignalToStop();
+                videoSource = null;
+            }
         }
 
         public void startCamera(string source)
@@ -78,11 +77,10 @@ namespace CSTool.Class
 
         public bool isRunning()
         {
-            if (!(videoSource == null))
-                if (videoSource.IsRunning)
-                {
-                    return true;
-                }
+            if (videoSource != null && videoSource.IsRunning)
+            {
+                return true;
+            }
             return false;
         }
 

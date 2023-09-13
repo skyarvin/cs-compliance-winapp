@@ -85,6 +85,5 @@ namespace CSTool
         {
             staffCam.stopCamera();
         }
-
     }
 }

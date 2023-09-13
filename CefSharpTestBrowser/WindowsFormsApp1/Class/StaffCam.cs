@@ -21,6 +21,7 @@ namespace CSTool.Class
         {
             this.imgVideo = videoPlaceHolder;
         }
+
         private void loadCameraSource()
         {
             try
@@ -46,7 +47,6 @@ namespace CSTool.Class
                 imgVideo.Image = img;
             }
             bmpVideo = img;
-
         }
 
         public void stopCamera()

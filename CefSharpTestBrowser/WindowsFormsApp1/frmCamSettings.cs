@@ -22,29 +22,23 @@ namespace CSTool
         private void loadCameraSources()
         {
             cmbSource.Items.Clear();
-            try
+            cmbSource.Text = "";
+            if (staffCam != null)
             {
-                cmbSource.Text = "";
-                if (staffCam != null)
-                {
-                    staffCam.stopCamera();
-                }
-                staffCam = new StaffCam();
-                staffCam.SetVideoPlaceHolder(pbVideoHandler);
-                FilterInfoCollection videoDevices = staffCam.getVideoDevices();
-                var i = 0;
-                foreach (FilterInfo device in videoDevices)
-                {
-                    cmbSource.Items.Add(device.Name);
-                    if (!String.IsNullOrEmpty(Settings.Default.cam_source) && (device.MonikerString == Settings.Default.cam_source))
-                    {
-                        cmbSource.SelectedIndex = i;
-                    }
-                    i++;
-                }
+                staffCam.stopCamera();
             }
-            catch (ApplicationException)
+            staffCam = new StaffCam();
+            staffCam.SetVideoPlaceHolder(pbVideoHandler);
+            FilterInfoCollection videoDevices = staffCam.getVideoDevices();
+            var i = 0;
+            foreach (FilterInfo device in videoDevices)
             {
+                cmbSource.Items.Add(device.Name);
+                if (!String.IsNullOrEmpty(Settings.Default.cam_source) && (device.MonikerString == Settings.Default.cam_source))
+                {
+                    cmbSource.SelectedIndex = i;
+                }
+                i++;
             }
         }
 

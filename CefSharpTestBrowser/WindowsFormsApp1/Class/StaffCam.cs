@@ -26,35 +26,35 @@ namespace CSTool.Class
         {
             try
             {
-                videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
+                this.videoDevices = new FilterInfoCollection(FilterCategory.VideoInputDevice);
             }
             catch (ApplicationException)
             {
-                videoDevices = null;
+                this.videoDevices = null;
             }
         }
 
         public FilterInfoCollection getVideoDevices()
         {
-            return videoDevices;
+            return this.videoDevices;
         }
 
         private void video_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
             Bitmap img = (Bitmap)eventArgs.Frame.Clone();
-            if (imgVideo != null)
+            if (this.imgVideo != null)
             {
-                imgVideo.Image = img;
+                this.imgVideo.Image = img;
             }
-            bmpVideo = img;
+            this.bmpVideo = img;
         }
 
         public void stopCamera()
         {
-            if (videoSource != null && videoSource.IsRunning)
+            if (this.videoSource != null && this.videoSource.IsRunning)
             {
-                videoSource.SignalToStop();
-                videoSource = null;
+                this.videoSource.SignalToStop();
+                this.videoSource = null;
             }
         }
 
@@ -62,11 +62,11 @@ namespace CSTool.Class
         {
             try
             {
-                videoSource = new VideoCaptureDevice(source);
-                if (videoSource != null)
+                this.videoSource = new VideoCaptureDevice(source);
+                if (this.videoSource != null)
                 {
-                    videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
-                    videoSource.Start();
+                    this.videoSource.NewFrame += new NewFrameEventHandler(video_NewFrame);
+                    this.videoSource.Start();
                 }
             }
             catch
@@ -77,7 +77,7 @@ namespace CSTool.Class
 
         public bool isRunning()
         {
-            if (videoSource != null && videoSource.IsRunning)
+            if (this.videoSource != null && this.videoSource.IsRunning)
             {
                 return true;
             }
@@ -86,11 +86,11 @@ namespace CSTool.Class
 
         public void captureImage(string filename)
         {
-            if (bmpVideo != null)
+            if (this.bmpVideo != null)
             {
                 try
                 {
-                    Bitmap resized = new Bitmap(bmpVideo, new Size(bmpVideo.Width / 4, bmpVideo.Height / 4));
+                    Bitmap resized = new Bitmap(this.bmpVideo, new Size(this.bmpVideo.Width / 4, this.bmpVideo.Height / 4));
                     resized.Save(filename);
                 }
                 catch (Exception)

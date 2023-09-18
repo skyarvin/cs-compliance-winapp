@@ -39,6 +39,8 @@ namespace WindowsFormsApp1
         public static frmInternalRequestReview FrmInternalRequestReview;
         public static frmConfirmSendIRFP FrmConfirmSendIRFP = new frmConfirmSendIRFP();
         public static frmInternalRequestFacePhoto FrmInternalRequestFacePhoto;
+        public static frmSendInternalIdentificationChecker FrmSendInternalIdentificationChecker = new frmSendInternalIdentificationChecker();
+        public static frmInternalIdentificationChecker FrmInternalIdentificationChecker;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static UserAccount useraccount = new UserAccount();
@@ -64,6 +66,7 @@ namespace WindowsFormsApp1
         public static DateTime? StartTime_LastAction;
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
         public static InternalRequestFacePhoto INTERNAL_IRFP = new InternalRequestFacePhoto();
+        public static InternalIdentificationChecker INTERNAL_IIDC = new InternalIdentificationChecker();
         public static Announcements AnnouncementsList = new Announcements();
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;

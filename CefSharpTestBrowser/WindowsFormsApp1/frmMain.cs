@@ -545,6 +545,21 @@ namespace WindowsFormsApp1
                 });
             }
 
+            var agent_iidc = InternalIdentificationChecker.GetAgentIIDC(Globals.Profile.AgentID);
+            if (agent_iidc != null)
+            {
+                Globals.INTERNAL_IIDC = agent_iidc;
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                {
+                    if (Globals.FrmInternalIdentificationChecker == null || Globals.FrmInternalIdentificationChecker.IsDisposed)
+                    {
+                        Globals.FrmInternalIdentificationChecker = new frmInternalIdentificationChecker();
+                    }
+                    StartbgWorkIIDC();
+                    Globals.FrmInternalIdentificationChecker.Show();
+                });
+            }
+
             bgWorkID.RunWorkerAsync();
 
             Globals.AnnouncementsList = Announcements.FetchAnnouncements();
@@ -713,6 +728,7 @@ namespace WindowsFormsApp1
                     logData.idc_id = this.ID_CHECKER.id;
                 Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
                 Globals.SaveToLogFile(string.Concat("IRFP: ", JsonConvert.SerializeObject(Globals.INTERNAL_IRFP)), (int)LogType.Action);
+                Globals.SaveToLogFile(string.Concat("IIDC: ", JsonConvert.SerializeObject(Globals.INTERNAL_IIDC)), (int)LogType.Action);
                 if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
                     logData.irs_id = Globals.INTERNAL_RR.id;
                 else if (Globals.INTERNAL_RR.id > 0)
@@ -730,6 +746,28 @@ namespace WindowsFormsApp1
                     Emailer email = new Emailer();
                     email.subject = "IRFP Error";
                     email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
+                    email.Send();
+                }
+
+                if (ExtractUsername(Globals.INTERNAL_IRFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IRFP.id != 0)
+                    logData.irfp_id = Globals.INTERNAL_IRFP.id;
+                else if (Globals.INTERNAL_IRFP.id > 0)
+                {
+                    Emailer email = new Emailer();
+                    email.subject = "IRFP Error";
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
+                    email.Send();
+                }
+
+                if (ExtractUsername(Globals.INTERNAL_IIDC.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IIDC.id != 0)
+                {
+                    logData.iidc_id = Globals.INTERNAL_IIDC.id;
+                }
+                else if (Globals.INTERNAL_IIDC.id > 0)
+                {
+                    Emailer email = new Emailer();
+                    email.subject = "IIDC Error";
+                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IIDC), "\n\r", "Current Url: ", urlToSave);
                     email.Send();
                 }
 
@@ -777,6 +815,20 @@ namespace WindowsFormsApp1
                         bgWorkIRR.CancelAsync();
                     Globals.INTERNAL_RR = new InternalRequestReview();
                     Globals.INTERNAL_IRFP = new InternalRequestFacePhoto();
+
+                    this.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        if (Globals.FrmInternalIdentificationChecker != null)
+                        {
+                            Globals.FrmInternalIdentificationChecker.Close();
+                        }
+                    });
+
+                    if (bgWorkIIDC.IsBusy)
+                    {
+                        bgWorkIIDC.CancelAsync();
+                    }
+                    Globals.INTERNAL_IIDC = new InternalIdentificationChecker();
                 }
                 catch (AggregateException e)
                 {
@@ -1755,6 +1807,67 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkIRFP.RunWorkerAsync();
+        }
+
+        public void StartbgWorkIIDC()
+        {
+            if (bgWorkIIDC.IsBusy)
+            {
+                return;
+            }
+            bgWorkIIDC.RunWorkerAsync();
+        }
+
+        private void bgWorkIIDC_DoWork(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker helperBW = sender as BackgroundWorker;
+            this.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (Globals.INTERNAL_IIDC.id == 0)
+                {
+                    if (helperBW.CancellationPending)
+                    {
+                        e.Cancel = true;
+                    }
+                    if (Globals.FrmInternalIdentificationChecker != null)
+                    {
+                        Globals.FrmInternalIdentificationChecker.Close();
+                    }
+                    bgWorkIIDC.CancelAsync();
+                    return;
+                }
+                if (Globals.FrmInternalIdentificationChecker == null || Globals.FrmInternalIdentificationChecker.IsDisposed)
+                {
+                    Globals.FrmInternalIdentificationChecker = new frmInternalIdentificationChecker();
+                }
+                this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalIdentificationChecker.update_info());
+                if (Globals.INTERNAL_IIDC.status != "New" && Globals.INTERNAL_IIDC.status != "Processing")
+                {
+                    bgWorkIRFP.CancelAsync();
+                    Globals.FrmInternalIdentificationChecker.Show();
+                }
+            });
+            Thread.Sleep(5000);
+            if (helperBW.CancellationPending)
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void bgWorkIIDC_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Cancelled)
+            {
+                return;
+            }
+            if (e.Error != null)
+            {
+                Globals.showMessage(e.Error.Message);
+            }
+            else
+            {
+                bgWorkIIDC.RunWorkerAsync();
+            }
         }
     }
  }

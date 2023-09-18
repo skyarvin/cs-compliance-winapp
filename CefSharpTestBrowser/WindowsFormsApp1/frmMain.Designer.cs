@@ -75,6 +75,7 @@
             this.lblTierLvlBanner = new System.Windows.Forms.Label();
             this.bgWorkerActivityMonitor = new System.ComponentModel.BackgroundWorker();
             this.bgWorkIRFP = new System.ComponentModel.BackgroundWorker();
+            this.bgWorkIIDC = new System.ComponentModel.BackgroundWorker();
             this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.pnlURL.SuspendLayout();
@@ -579,6 +580,10 @@
             this.bgWorkIRFP.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkIRFP_DoWork);
             this.bgWorkIRFP.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkIRFP_RunWorkerCompleted);
             // 
+            // bgWorkIIDC
+            // 
+            this.bgWorkIIDC.WorkerSupportsCancellation = true;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -660,6 +665,7 @@
         private System.Windows.Forms.ToolStripMenuItem cameraToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.ComponentModel.BackgroundWorker bgWorkIRFP;
+        private System.ComponentModel.BackgroundWorker bgWorkIIDC;
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using CSTool;
+using CSTool.Models;
 using CSTool.Properties;
 using System;
 using System.Collections.Generic;
@@ -51,10 +52,20 @@ namespace WindowsFormsApp1
             }           
             try
             {
+                var user = new UserAccount
+                {
+                    username = txtEmail.Text,
+                    password = txtPwd.Text
+                };
+                if (!user.UserLogin())
+                {
+                    MessageBox.Show("Username or password is incorrect", "Error");
+                    return;
+                }
+
                 Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
                 if (Globals.ComplianceAgent != null)
                 {
-
                     if (Globals.ComplianceAgent.tier_level is null)
                     {
                         MessageBox.Show("Tier level is not registered! Please contact admin.", "Error");

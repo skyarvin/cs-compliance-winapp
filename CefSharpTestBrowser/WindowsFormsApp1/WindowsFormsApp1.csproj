@@ -252,8 +252,10 @@
       <DependentUpon>frmMessage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Handlers\EncryptionHandler.cs" />
     <Compile Include="Handlers\FindHandler.cs" />
     <Compile Include="Handlers\Handlers.cs" />
+    <Compile Include="Handlers\HttpHandler.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Announcements.cs" />
@@ -265,6 +267,7 @@
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Models\Seed.cs" />
     <Compile Include="Models\UserAccount.cs" />
+    <Compile Include="Models\UserToken.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\SearchControl.cs">

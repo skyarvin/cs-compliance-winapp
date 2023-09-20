@@ -4,6 +4,7 @@ using System;
 using System.Net.Http;
 using System.Windows.Forms;
 using CSTool.Properties;
+using CSTool.Handlers;
 
 namespace WindowsFormsApp1.Models
 {
@@ -61,11 +62,10 @@ namespace WindowsFormsApp1.Models
         }
         public static Agent Get(string username)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpClient(new HttpHandler()))
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/agent/?username=", username,"&version=", appversion);
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+                var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {
                     if (response.IsSuccessStatusCode)
@@ -76,12 +76,37 @@ namespace WindowsFormsApp1.Models
                             jsonString.Wait();
                             return JsonConvert.DeserializeObject<Agent>(jsonString.Result);
                         }
-                    }else if(response.StatusCode == System.Net.HttpStatusCode.Gone) {
+                    }
+                    else if (response.StatusCode == System.Net.HttpStatusCode.Gone)
+                    {
                         MessageBox.Show("Invalid app version. Please update your application.", "Error");
                         Application.Exit();
                     }
                 }
             }
+
+            //using (var client = new HttpClient(new HttpHandler()))
+            //{
+            //    var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
+            //    var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
+            //    using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+            //    {
+            //        if (response.IsSuccessStatusCode)
+            //        {
+            //            using (HttpContent content = response.Content)
+            //            {
+            //                var jsonString = content.ReadAsStringAsync();
+            //                jsonString.Wait();
+            //                return JsonConvert.DeserializeObject<Agent>(jsonString.Result);
+            //            }
+            //        }
+            //        else if (response.StatusCode == System.Net.HttpStatusCode.Gone)
+            //        {
+            //            MessageBox.Show("Invalid app version. Please update your application.", "Error");
+            //            Application.Exit();
+            //        }
+            //    }
+            //}
 
             return null;
         }

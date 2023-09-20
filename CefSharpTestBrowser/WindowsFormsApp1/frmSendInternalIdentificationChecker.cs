@@ -66,7 +66,7 @@ namespace WindowsFormsApp1
             {
                 Globals.INTERNAL_IIDC = result;
                 Settings.Default.Save();
-                Globals.frmMain.StartbgWorkIRR();
+                Globals.frmMain.StartbgWorkIIDC();
                 this.DialogResult = DialogResult.OK;
             }
         }

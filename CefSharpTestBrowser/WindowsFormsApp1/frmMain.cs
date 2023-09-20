@@ -1843,7 +1843,7 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.FrmInternalIdentificationChecker.update_info());
                 if (Globals.INTERNAL_IIDC.status != "New" && Globals.INTERNAL_IIDC.status != "Processing")
                 {
-                    bgWorkIRFP.CancelAsync();
+                    bgWorkIIDC.CancelAsync();
                     Globals.FrmInternalIdentificationChecker.Show();
                 }
             });

@@ -583,6 +583,8 @@
             // bgWorkIIDC
             // 
             this.bgWorkIIDC.WorkerSupportsCancellation = true;
+            this.bgWorkIIDC.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgWorkIIDC_DoWork);
+            this.bgWorkIIDC.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgWorkIIDC_RunWorkerCompleted);
             // 
             // frmMain
             // 

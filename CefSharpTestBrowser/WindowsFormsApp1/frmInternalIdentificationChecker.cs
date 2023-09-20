@@ -35,27 +35,16 @@ namespace WindowsFormsApp1
             this.Location = new Point(scrn.Bounds.Right - this.Width - 5, scrn.Bounds.Bottom - this.Height - 50);
         }
 
-        public void reset_controls()
-        {
-            this.BackColor = Color.Gray;
-            lblStatus.Text = "PENDING";
-            lblUrl.Text = "-";
-            txtNotes.Text = "";
-            txtReviewerNotes.Text = "";
-            this.Height = 186;
-        }
-
         public void update_info()
         {
             var result = InternalIdentificationChecker.Get(Globals.INTERNAL_IIDC.id, Globals.Profile.AgentID);
             lblStatus.Text = result.status;
-            Height = 380;
             switch (result.status)
             {
                 case "New":
                     BackColor = Color.Gray;
                     lblStatus.Text = "PENDING";
-                    //this.Height = 220;
+                    Height = 220;
                     break;
                 case "Approved":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
@@ -63,7 +52,7 @@ namespace WindowsFormsApp1
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Green;
-                    //this.Height = 380;
+                    Height = 380;
                     break;
                 case "Denied":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
@@ -71,11 +60,11 @@ namespace WindowsFormsApp1
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Red;
-                    //this.Height = 380;
+                    Height = 380;
                     break;
                 case "Processing":
                     BackColor = Color.FromArgb(230, 126, 34);
-                    //this.Height = 220;
+                    Height = 220;
                     break;
             }
 

@@ -33,7 +33,7 @@ namespace CSTool.Models
         {
             try
             {
-                using (var client = new HttpClient(new HttpHandler()))
+                using (var client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.AUTH_URL, "/auth/login");
                     client.Timeout = TimeSpan.FromSeconds(5);
@@ -44,13 +44,14 @@ namespace CSTool.Models
                         RequestUri = new Uri(uri),
                         Content = content
                     };
-                    var response = client.SendAsync(request).Result;
+                    var response = client.CPostAsync(uri, content);
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
+                            Console.WriteLine(jsonString.Result);
                             var tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
                             var userToken = new UserToken
                             {
@@ -63,8 +64,9 @@ namespace CSTool.Models
                     return false; 
                 }
             }
-            catch
+            catch(Exception e)
             {
+                Console.WriteLine(e);   
                 return false;
             }
         }

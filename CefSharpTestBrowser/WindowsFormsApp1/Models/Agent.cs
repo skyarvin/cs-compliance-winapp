@@ -62,11 +62,11 @@ namespace WindowsFormsApp1.Models
         }
         public static Agent Get(string username)
         {
-            using (var client = new HttpClient(new HttpHandler()))
+            using (var client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CGetAsync(uri))
                 {
                     if (response.IsSuccessStatusCode)
                     {

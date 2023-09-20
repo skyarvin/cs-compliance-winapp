@@ -1812,9 +1812,7 @@ namespace WindowsFormsApp1
         public void StartbgWorkIIDC()
         {
             if (bgWorkIIDC.IsBusy)
-            {
                 return;
-            }
             bgWorkIIDC.RunWorkerAsync();
         }
 
@@ -1830,9 +1828,7 @@ namespace WindowsFormsApp1
                         e.Cancel = true;
                     }
                     if (Globals.FrmInternalIdentificationChecker != null)
-                    {
                         Globals.FrmInternalIdentificationChecker.Close();
-                    }
                     bgWorkIIDC.CancelAsync();
                     return;
                 }
@@ -1857,17 +1853,11 @@ namespace WindowsFormsApp1
         private void bgWorkIIDC_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
-            {
                 return;
-            }
             if (e.Error != null)
-            {
                 Globals.showMessage(e.Error.Message);
-            }
             else
-            {
                 bgWorkIIDC.RunWorkerAsync();
-            }
         }
     }
  }

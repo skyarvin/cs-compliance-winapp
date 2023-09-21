@@ -46,8 +46,8 @@ namespace WindowsFormsApp1
         }
         private void Login()
         {
-            if (string.IsNullOrEmpty(txtEmail.Text.Trim())) {
-                MessageBox.Show("Invalid Username", "Error");
+            if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim())) {
+                MessageBox.Show("Please fill out all required fields", "Error");
                 return;
             }           
             try

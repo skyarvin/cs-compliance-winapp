@@ -164,7 +164,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Internal Identification Checker";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.frmInternalIdentificationChecker_Load);
             this.SizeChanged += new System.EventHandler(this.frmInternalIdentificationChecker_SizeChanged);
             this.ResumeLayout(false);
             this.PerformLayout();

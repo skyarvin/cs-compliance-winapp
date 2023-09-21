@@ -57,8 +57,7 @@ namespace WindowsFormsApp1
                     username = txtEmail.Text,
                     password = txtPwd.Text
                 };
-                bool test = user.UserLogin();
-                if (!test)
+                if (!user.UserLogin())
                 {
                     MessageBox.Show("Username or password is incorrect", "Error");
                     return;

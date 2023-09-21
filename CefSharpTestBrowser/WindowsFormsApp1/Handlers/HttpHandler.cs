@@ -1,20 +1,13 @@
-﻿using CefSharp;
-using CSTool.Class;
-using CSTool.Properties;
+﻿using CSTool.Class;
+using CSTool.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Remoting.Contexts;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.UI.WebControls;
-using System.Windows.Forms;
 using WindowsFormsApp1;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CSTool.Handlers
 {
@@ -22,23 +15,6 @@ namespace CSTool.Handlers
     {
         private static SemaphoreSlim sem = new SemaphoreSlim(1);
         string[] private_routes = {"/api/agent/"};
-        //public override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        //{
-        //    request.Headers.Add("Authorization", Globals.apiKey);
-        //    Uri myUri = new Uri(request.RequestUri.ToString());
-        //    if (private_routes.Contains(myUri.AbsolutePath))
-        //    {
-        //        request.Headers.Add("Staffme-Authorization", Settings.Default.access_token);
-        //    }
-        //    Console.WriteLine(request.Method + " " + request.RequestUri + "\n" + request.Headers);
-        //    var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-        //    if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-        //    {
-        //        //this.HandleUnAuthorizedResponse(request, cancellationToken);
-        //    }
-        //    return response;
-        //}
-
         public HttpResponseMessage CGetAsync(string requestUri)
         {
             try
@@ -47,8 +23,6 @@ namespace CSTool.Handlers
                 Uri uri = new Uri(requestUri);
                 this.CheckPrivateRoute(uri);
                 var response = GetAsync(uri).Result;
-                Console.WriteLine(response.StatusCode);
-
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return this.HandleUnAuthorizedResponse(requestUri, "get").Result;
@@ -69,8 +43,6 @@ namespace CSTool.Handlers
                 Uri uri = new Uri(requestUri);
                 this.CheckPrivateRoute(uri);
                 var response = PostAsync(requestUri, content).Result;
-                Console.WriteLine(response.StatusCode);
-
                 if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return this.HandleUnAuthorizedResponse(requestUri, "post", content).Result;
@@ -86,11 +58,11 @@ namespace CSTool.Handlers
         {
             if (private_routes.Contains(uri.AbsolutePath))
             {
-                DefaultRequestHeaders.Add("Staffme-Authorization", Settings.Default.access_token);
+                DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
             }
         }
 
-        private async Task<HttpResponseMessage> HandleUnAuthorizedResponse(string requestUri, string type, HttpContent content = null)
+        private async Task<HttpResponseMessage> HandleUnAuthorizedResponse(string requestUri, string requestType, HttpContent content = null)
         {
             try
             {
@@ -102,15 +74,21 @@ namespace CSTool.Handlers
                 {
                     if (!refreshResponse.IsSuccessStatusCode)
                     {
-                        return refreshResponse;
+                        using (HttpContent data = refreshResponse.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            var tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
+                            Globals.UserToken.access_token = tokens.access_token;
+                            DefaultRequestHeaders.Remove("Staffme-Authorization");
+                            DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
+                        }
                     }
-                    DefaultRequestHeaders.Remove("Staffme-Authorization");
-                    DefaultRequestHeaders.Add("Staffme-Authorization", "MyCustomValue");
                 }
                 sem.Dispose();
 
                 HttpResponseMessage response = null;
-                switch (type)
+                switch (requestType)
                 {
                     case "post":
                         response = CPostAsync(requestUri, content);

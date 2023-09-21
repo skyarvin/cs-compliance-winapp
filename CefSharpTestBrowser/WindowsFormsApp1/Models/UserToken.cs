@@ -21,6 +21,7 @@ namespace CSTool.Models
             get => Settings.Default.access_token;
             set => Settings.Default.access_token = value;
         }
+
         public string refresh_token {
             get => Settings.Default.refresh_token;
             set => Settings.Default.refresh_token = value;

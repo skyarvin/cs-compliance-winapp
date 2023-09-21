@@ -84,30 +84,6 @@ namespace WindowsFormsApp1.Models
                     }
                 }
             }
-
-            //using (var client = new HttpClient(new HttpHandler()))
-            //{
-            //    var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-            //    var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
-            //    using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
-            //    {
-            //        if (response.IsSuccessStatusCode)
-            //        {
-            //            using (HttpContent content = response.Content)
-            //            {
-            //                var jsonString = content.ReadAsStringAsync();
-            //                jsonString.Wait();
-            //                return JsonConvert.DeserializeObject<Agent>(jsonString.Result);
-            //            }
-            //        }
-            //        else if (response.StatusCode == System.Net.HttpStatusCode.Gone)
-            //        {
-            //            MessageBox.Show("Invalid app version. Please update your application.", "Error");
-            //            Application.Exit();
-            //        }
-            //    }
-            //}
-
             return null;
         }
     }

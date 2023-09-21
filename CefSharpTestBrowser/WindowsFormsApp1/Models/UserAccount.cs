@@ -51,9 +51,8 @@ namespace CSTool.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            Console.WriteLine(jsonString.Result);
                             var tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
-                            var userToken = new UserToken
+                            Globals.UserToken = new UserToken
                             {
                                 access_token = tokens.access_token,
                                 refresh_token = tokens.refresh_token,

@@ -67,6 +67,7 @@ namespace WindowsFormsApp1
         public static Announcements AnnouncementsList = new Announcements();
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
+        public static UserToken UserToken = new UserToken();
 
         public static void ShowMessage(Form parent,string Message)
         {

@@ -50,7 +50,6 @@ public class MyCustomMenuHandler : IContextMenuHandler
         if (Globals.IsClient())
         {
             model.SetEnabled((CefMenuCommand)26512, false);
-            model.SetEnabled((CefMenuCommand)26515, false);
         }
        
         //string defaultview = Settings.Default.preference;

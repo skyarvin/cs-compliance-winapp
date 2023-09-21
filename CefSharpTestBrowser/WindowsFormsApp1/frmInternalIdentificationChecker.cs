@@ -43,7 +43,7 @@ namespace WindowsFormsApp1
             {
                 case "New":
                     BackColor = Color.Gray;
-                    lblStatus.Text = "PENDING";
+                    lblStatus.Text = "Pending";
                     Height = 172;
                     break;
                 case "Approved":

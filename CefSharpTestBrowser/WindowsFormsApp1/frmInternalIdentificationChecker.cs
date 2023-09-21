@@ -44,33 +44,32 @@ namespace WindowsFormsApp1
                 case "New":
                     BackColor = Color.Gray;
                     lblStatus.Text = "PENDING";
-                    Height = 220;
+                    Height = 172;
                     break;
                 case "Approved":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
                     {
+                        label7.Visible = false;
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Green;
-                    Height = 380;
+                    Height = 310;
                     break;
                 case "Denied":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
                     {
+                        label7.Visible = false;
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Red;
-                    Height = 380;
+                    Height = 310;
                     break;
                 case "Processing":
                     BackColor = Color.FromArgb(230, 126, 34);
-                    Height = 220;
                     break;
             }
 
-            lblUrl.Text = result.url;
             txtNotes.Text = result.agent_notes;
-            lblphoto.Text = result.agent_uploaded_photo;
             txtReviewerNotes.Text = result.reviewer_notes;
             Globals.INTERNAL_IIDC = result;
         }

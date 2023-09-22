@@ -19,7 +19,7 @@ namespace CSTool.Class
         public static string CB_COMPLIANCE_SET_ID_EXP_URL = "https://chaturbate.com/compliance/update_expiration_date_form";
         public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
         public static string API_URL = "https://cscb.staffme.online/api";
-        public static string AUTH_URL = "https://cscb.staffme.online/chat_auth";
+        public static string AUTH_URL = "https://cscb.staffme.online/security";
         public static string DOMAIN = "chaturbate.com";
 
         // ## Production Volume
@@ -38,12 +38,12 @@ namespace CSTool.Class
         //public static string API_URL = "https://cscb.staffme.online/api";
 
         // ## Pure Local Testing with MockSite
-        //public static string CB_HOME = "http://127.0.0.1:8000/compliance/4/show/razer";
+        //public static string CB_HOME = "http://127.0.0.1:8000/compliance/show/razer";
         //public static string DOMAIN = "http://127.0.0.1:8000/compliance";
         //public static string CB_COMPLIANCE_URL = "http://127.0.0.1:8000/compliance";
         //public static string CB_COMPLIANCE_SET_ID_EXP_URL = "http://127.0.0.1:8000/compliance/update_expiration_date_form";
         //public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
         //public static string API_URL = "http://127.0.0.1:9000/api";
-        //public static string AUTH_URL = "http://127.0.0.1:9000/chat_auth";
+        //public static string AUTH_URL = "http://127.0.0.1:9000/security";
     }
 }

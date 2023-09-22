@@ -27,7 +27,6 @@ namespace CSTool.Models
         /// API get to fetch account from  User pool
         /// </summary>
         /// <returns></returns>
-        /// 
 
         public bool UserLogin()
         {
@@ -63,9 +62,8 @@ namespace CSTool.Models
                     return false; 
                 }
             }
-            catch(Exception e)
+            catch
             {
-                Console.WriteLine(e);   
                 return false;
             }
         }

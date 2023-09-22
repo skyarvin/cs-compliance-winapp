@@ -20,7 +20,7 @@ namespace CSTool.Handlers
     internal class HttpHandler: HttpClient
     {
         private static SemaphoreSlim sem = new SemaphoreSlim(1);
-        string[] public_routes = { "/chat_auth/auth/login" };
+        string[] public_routes = { "/security/auth/login" };
         public HttpResponseMessage CGetAsync(string requestUri)
         {
             try
@@ -54,7 +54,8 @@ namespace CSTool.Handlers
                     return this.HandleRefreshToken(requestUri, RequestType.Post, content).Result;
                 }
                 return response;
-            }catch(Exception e)
+            }
+            catch(Exception e)
             {
                 throw e;
             }
@@ -103,7 +104,8 @@ namespace CSTool.Handlers
                         break;
                 }
                 return response;
-            }catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw e;
             }

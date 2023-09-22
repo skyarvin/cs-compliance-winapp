@@ -34,7 +34,7 @@ namespace CSTool.Models
             {
                 using (var client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.AUTH_URL, "/auth/login");
+                    var uri = string.Concat(Url.AUTH_URL, "/login");
                     client.Timeout = TimeSpan.FromSeconds(5);
                     HttpContent content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                     HttpRequestMessage request = new HttpRequestMessage

@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,7 +77,7 @@ namespace CSTool.Handlers
                 await sem.WaitAsync();
                 HttpRequestMessage TokenRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(new Uri(Url.API_URL), "Token"));
                 TokenRequest.Headers.Add("Staffme-Authorization", Globals.UserToken.refresh_token);
-                using (HttpResponseMessage refreshResponse = PostAsync(new Uri(new Uri(Url.AUTH_URL), "auth/refresh"), new StringContent("", Encoding.UTF8, "application/json")).Result)
+                using (HttpResponseMessage refreshResponse = PostAsync(new Uri(new Uri(Url.AUTH_URL), "refresh"), new StringContent("", Encoding.UTF8, "application/json")).Result)
                 {
                     if (!refreshResponse.IsSuccessStatusCode)
                     {

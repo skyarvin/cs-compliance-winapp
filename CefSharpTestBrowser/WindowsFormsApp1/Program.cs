@@ -1,6 +1,7 @@
 ﻿using CSTool.Models;
 using CSTool.Properties;
 using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -24,6 +25,7 @@ namespace WindowsFormsApp1
                 //app is already running! Exiting the application  
                 return;
             }
+            Resolve_missing_assembly();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -32,6 +34,22 @@ namespace WindowsFormsApp1
             Login.Show();
             Application.Run();
             
+        }
+
+        private static void Resolve_missing_assembly()
+        {
+            AppDomain.CurrentDomain.AssemblyResolve += delegate (object sender, ResolveEventArgs e)
+            {
+                AssemblyName requestedName = new AssemblyName(e.Name);
+                try
+                {
+                    return Assembly.LoadFrom(Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\{requestedName.Name}.dll");
+                }
+                catch
+                {
+                    return null;
+                }
+            };
         }
 
         private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

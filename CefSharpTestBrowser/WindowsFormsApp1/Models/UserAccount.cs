@@ -20,15 +20,15 @@ namespace CSTool.Models
     public class UserAccount
     {
         //public int id { get; set; }
-        public string username { get; set; }
-        public string password { get; set; }
+        //public string username { get; set; }
+        //public string password { get; set; }
 
         /// <summary>
         /// API get to fetch account from  User pool
         /// </summary>
         /// <returns></returns>
 
-        public bool UserLogin()
+        public bool UserLogin(string username, string password)
         {
             try
             {
@@ -36,7 +36,10 @@ namespace CSTool.Models
                 {
                     var uri = string.Concat(Url.AUTH_URL, "/login");
                     client.Timeout = TimeSpan.FromSeconds(5);
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    HttpContent content = new StringContent(JsonConvert.SerializeObject(new { 
+                        username, 
+                        password
+                    }), Encoding.UTF8, "application/json");
                     HttpRequestMessage request = new HttpRequestMessage
                     {
                         Method = HttpMethod.Post,

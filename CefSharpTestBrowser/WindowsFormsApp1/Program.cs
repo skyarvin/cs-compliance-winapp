@@ -40,10 +40,10 @@ namespace WindowsFormsApp1
         {
             AppDomain.CurrentDomain.AssemblyResolve += delegate (object sender, ResolveEventArgs e)
             {
-                AssemblyName requestedName = new AssemblyName(e.Name);
+                AssemblyName assembly = new AssemblyName(e.Name);
                 try
                 {
-                    return Assembly.LoadFrom(Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\{requestedName.Name}.dll");
+                    return Assembly.LoadFrom(Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\{assembly.Name}.dll");
                 }
                 catch
                 {

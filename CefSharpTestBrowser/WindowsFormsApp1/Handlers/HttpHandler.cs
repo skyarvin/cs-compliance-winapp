@@ -21,7 +21,7 @@ namespace CSTool.Handlers
     internal class HttpHandler: HttpClient
     {
         private static SemaphoreSlim sem = new SemaphoreSlim(1);
-        string[] public_routes = { "/security/auth/login" };
+        string[] public_routes = { "/security/login" };
         public HttpResponseMessage CGetAsync(string requestUri)
         {
             try
@@ -81,15 +81,16 @@ namespace CSTool.Handlers
                 {
                     if (!refreshResponse.IsSuccessStatusCode)
                     {
-                        using (HttpContent data = refreshResponse.Content)
-                        {
-                            var jsonString = data.ReadAsStringAsync();
-                            jsonString.Wait();
-                            UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
-                            Globals.UserToken.access_token = tokens.access_token;
-                            DefaultRequestHeaders.Remove("Staffme-Authorization");
-                            DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
-                        }
+                        throw new Exception("Failed to refresh token.");
+                    }
+                    using (HttpContent data = refreshResponse.Content)
+                    {
+                        var jsonString = data.ReadAsStringAsync();
+                        jsonString.Wait();
+                        UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
+                        Globals.UserToken.access_token = tokens.access_token;
+                        DefaultRequestHeaders.Remove("Staffme-Authorization");
+                        DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
                     }
                 }
                 sem.Dispose();

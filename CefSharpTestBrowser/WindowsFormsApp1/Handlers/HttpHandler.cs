@@ -8,6 +8,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using WindowsFormsApp1;
 
 namespace CSTool.Handlers
@@ -26,9 +27,8 @@ namespace CSTool.Handlers
         {
             try
             {
-                DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 Uri uri = new Uri(requestUri);
-                this.CheckPublicRoute(uri);
+                this.SetRequestHeaders(uri);
                 HttpResponseMessage response = GetAsync(uri).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -42,17 +42,17 @@ namespace CSTool.Handlers
             }
         }
 
-        public HttpResponseMessage CPostAsync(string requestUri, HttpContent content)
+        public HttpResponseMessage CPostAsync(string requestUri, string body)
         {
             try
             {
-                DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 Uri uri = new Uri(requestUri);
-                this.CheckPublicRoute(uri);
+                this.SetRequestHeaders(uri);
+                HttpContent content = new StringContent((body), Encoding.UTF8, "application/json");
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return this.HandleRefreshToken(requestUri, RequestType.Post, content).Result;
+                    return this.HandleRefreshToken(requestUri, RequestType.Post, body).Result;
                 }
                 return response;
             }
@@ -62,47 +62,52 @@ namespace CSTool.Handlers
             }
         }
 
-        private void CheckPublicRoute(Uri uri)
+        private void SetRequestHeaders(Uri uri)
         {
+            DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
             if (!public_routes.Contains(uri.AbsolutePath))
             {
                 DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
             }
         }
 
-        private async Task<HttpResponseMessage> HandleRefreshToken(string requestUri, RequestType requestType, HttpContent content = null)
+        public async Task<HttpResponseMessage> HandleRefreshToken(string requestUri, RequestType requestType, string body = null)
         {
             try
             {
                 await sem.WaitAsync();
-                HttpRequestMessage TokenRequest = new HttpRequestMessage(HttpMethod.Post, new Uri(new Uri(Url.API_URL), "Token"));
-                TokenRequest.Headers.Add("Staffme-Authorization", Globals.UserToken.refresh_token);
-                using (HttpResponseMessage refreshResponse = PostAsync(new Uri(new Uri(Url.AUTH_URL), "refresh"), new StringContent("", Encoding.UTF8, "application/json")).Result)
+                using (var client = new HttpClient())
                 {
-                    if (!refreshResponse.IsSuccessStatusCode)
+                    client.DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.refresh_token);
+                    using (HttpResponseMessage refreshResponse = client.PostAsync(Url.AUTH_URL + "/refresh", null).Result)
                     {
-                        throw new Exception("Failed to refresh token.");
-                    }
-                    using (HttpContent data = refreshResponse.Content)
-                    {
-                        var jsonString = data.ReadAsStringAsync();
-                        jsonString.Wait();
-                        UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
-                        Globals.UserToken.access_token = tokens.access_token;
-                        DefaultRequestHeaders.Remove("Staffme-Authorization");
-                        DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
+                        if (!refreshResponse.IsSuccessStatusCode)
+                        {
+                            throw new Exception("Failed to refresh token.");
+                        }
+                        using (HttpContent data = refreshResponse.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
+                            Globals.UserToken.access_token = tokens.access_token;
+                            Globals.UserToken.refresh_token = tokens.refresh_token;
+                            DefaultRequestHeaders.Remove("Staffme-Authorization");
+                            DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
+                        }
                     }
                 }
                 sem.Dispose();
 
                 HttpResponseMessage response = null;
+                HttpContent content = new StringContent((body), Encoding.UTF8, "application/json");
                 switch (requestType)
                 {
                     case RequestType.Post:
-                        response = CPostAsync(requestUri, content);
+                        response = PostAsync(requestUri, content).Result;
                         break;
                     case RequestType.Get:
-                        response = CGetAsync(requestUri);
+                        response = GetAsync(requestUri).Result;
                         break;
                 }
                 return response;

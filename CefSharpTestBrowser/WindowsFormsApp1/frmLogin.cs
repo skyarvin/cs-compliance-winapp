@@ -1,12 +1,17 @@
 ﻿using CSTool;
+using CSTool.Class;
+using CSTool.Handlers;
 using CSTool.Models;
 using CSTool.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
@@ -46,10 +51,11 @@ namespace WindowsFormsApp1
         }
         private void Login()
         {
-            if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim())) {
+            if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))
+            {
                 MessageBox.Show("Please fill out all required fields", "Error");
                 return;
-            }           
+            }
             try
             {
                 var user = new UserAccount();

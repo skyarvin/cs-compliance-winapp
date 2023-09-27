@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSTool.Handlers;
 
 namespace WindowsFormsApp1.Models
 {
@@ -39,15 +40,13 @@ namespace WindowsFormsApp1.Models
             try
             {
                 Globals.SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-                using (var client = new HttpClient())
+                using (var client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.API_URL, "/logs/");
 
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     client.Timeout = TimeSpan.FromSeconds(5);
 
-                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.PostAsync(uri, content).Result;
+                    var response = client.CPostAsync(uri, JsonConvert.SerializeObject(this));
 
                     if (response.IsSuccessStatusCode)
                     {

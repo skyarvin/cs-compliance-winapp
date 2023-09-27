@@ -36,17 +36,11 @@ namespace CSTool.Models
                 {
                     var uri = string.Concat(Url.AUTH_URL, "/login");
                     client.Timeout = TimeSpan.FromSeconds(5);
-                    HttpContent content = new StringContent(JsonConvert.SerializeObject(new { 
-                        username, 
-                        password
-                    }), Encoding.UTF8, "application/json");
-                    HttpRequestMessage request = new HttpRequestMessage
+                    var response = client.CPostAsync(uri, JsonConvert.SerializeObject(new
                     {
-                        Method = HttpMethod.Post,
-                        RequestUri = new Uri(uri),
-                        Content = content
-                    };
-                    var response = client.CPostAsync(uri, content);
+                        username,
+                        password
+                    }));
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)

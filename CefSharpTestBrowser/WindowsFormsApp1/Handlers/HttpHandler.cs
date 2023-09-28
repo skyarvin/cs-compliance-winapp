@@ -21,28 +21,36 @@ namespace CSTool.Handlers
     }
     internal class HttpHandler: HttpClient
     {
-        private static SemaphoreSlim sem = new SemaphoreSlim(1);
+        private readonly object _lock;
         string[] public_routes = { "/security/login" };
-        public HttpResponseMessage CGetAsync(string requestUri)
+
+        public HttpHandler()
+        {
+            this._lock = new object();
+        }
+
+        public async Task<HttpResponseMessage> CGetAsync(string requestUri)
         {
             try
             {
                 Uri uri = new Uri(requestUri);
                 this.SetRequestHeaders(uri);
                 HttpResponseMessage response = GetAsync(uri).Result;
+                Console.WriteLine(requestUri + " " + response);
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return this.HandleRefreshToken(requestUri, RequestType.Get).Result;
+                    return await Task.FromResult(await HandleRefreshToken(requestUri, RequestType.Get));
                 }
-                return response;
+                return await Task.FromResult(response);
             }
             catch(Exception e)
             {
+                Console.WriteLine("TESTTEST: " + e);
                 throw e;
             }
         }
 
-        public HttpResponseMessage CPostAsync(string requestUri, string body)
+        public async Task<HttpResponseMessage> CPostAsync(string requestUri, string body)
         {
             try
             {
@@ -52,9 +60,9 @@ namespace CSTool.Handlers
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return this.HandleRefreshToken(requestUri, RequestType.Post, body).Result;
+                    return await Task.FromResult(await HandleRefreshToken(requestUri, RequestType.Post, body));
                 }
-                return response;
+                return await Task.FromResult(response);
             }
             catch(Exception e)
             {
@@ -71,46 +79,50 @@ namespace CSTool.Handlers
             }
         }
 
-        public async Task<HttpResponseMessage> HandleRefreshToken(string requestUri, RequestType requestType, string body = null)
+        public Task<HttpResponseMessage> HandleRefreshToken(string requestUri, RequestType requestType, string body = null)
         {
             try
             {
-                await sem.WaitAsync();
-                using (var client = new HttpClient())
+                lock (_lock)
                 {
-                    client.DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.refresh_token);
-                    using (HttpResponseMessage refreshResponse = client.PostAsync(Url.AUTH_URL + "/refresh", null).Result)
+                    using (var client = new HttpClient())
                     {
-                        if (!refreshResponse.IsSuccessStatusCode)
+                        client.DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.refresh_token);
+                        using (HttpResponseMessage refreshResponse = client.PostAsync(Url.AUTH_URL + "/refresh", null).Result)
                         {
-                            throw new Exception("Failed to refresh token.");
-                        }
-                        using (HttpContent data = refreshResponse.Content)
-                        {
-                            var jsonString = data.ReadAsStringAsync();
-                            jsonString.Wait();
-                            UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
-                            Globals.UserToken.access_token = tokens.access_token;
-                            Globals.UserToken.refresh_token = tokens.refresh_token;
-                            DefaultRequestHeaders.Remove("Staffme-Authorization");
-                            DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
+                            Console.WriteLine("Refresh " + requestUri + " " + refreshResponse);
+                            if (!refreshResponse.IsSuccessStatusCode)
+                            {
+                                throw new Exception("Failed to refresh token.");
+                            }
+                            using (HttpContent data = refreshResponse.Content)
+                            {
+                                var jsonString = data.ReadAsStringAsync();
+                                jsonString.Wait();
+                                UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
+                                Globals.UserToken.access_token = tokens.access_token;
+                                Globals.UserToken.refresh_token = tokens.refresh_token;
+                                DefaultRequestHeaders.Remove("Staffme-Authorization");
+                                DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
+                            }
                         }
                     }
                 }
-                sem.Dispose();
 
                 HttpResponseMessage response = null;
-                HttpContent content = new StringContent((body), Encoding.UTF8, "application/json");
                 switch (requestType)
                 {
                     case RequestType.Post:
+                        HttpContent content = new StringContent((body), Encoding.UTF8, "application/json");
+                        Console.WriteLine("HEADERS: POST " + DefaultRequestHeaders);
                         response = PostAsync(requestUri, content).Result;
                         break;
                     case RequestType.Get:
+                        Console.WriteLine("HEADERS: GET " + DefaultRequestHeaders);
                         response = GetAsync(requestUri).Result;
                         break;
                 }
-                return response;
+                return Task.FromResult(response);
             }
             catch (Exception e)
             {

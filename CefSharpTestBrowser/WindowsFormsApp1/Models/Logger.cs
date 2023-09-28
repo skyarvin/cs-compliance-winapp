@@ -46,7 +46,7 @@ namespace WindowsFormsApp1.Models
 
                     client.Timeout = TimeSpan.FromSeconds(5);
 
-                    var response = client.CPostAsync(uri, JsonConvert.SerializeObject(this));
+                    var response = client.CPostAsync(uri, JsonConvert.SerializeObject(this)).Result;
 
                     if (response.IsSuccessStatusCode)
                     {

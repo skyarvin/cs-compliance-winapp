@@ -40,7 +40,7 @@ namespace CSTool.Models
                     {
                         username,
                         password
-                    }));
+                    })).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)

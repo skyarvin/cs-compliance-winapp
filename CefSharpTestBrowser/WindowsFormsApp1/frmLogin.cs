@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 
@@ -49,6 +50,19 @@ namespace WindowsFormsApp1
                 Login();
             }
         }
+
+        private async void createMultipleRequest()
+        {
+            var client = new HttpHandler();
+            var request = new int[]{1,2,3};
+            var requests = request.Select
+            (
+                req => client.HandleRefreshToken("", RequestType.Post, req.ToString())
+            ).ToList();
+
+            await Task.WhenAll(requests);
+        }
+
         private void Login()
         {
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))

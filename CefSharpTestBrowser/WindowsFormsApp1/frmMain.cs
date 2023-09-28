@@ -25,6 +25,8 @@ using CSTool.Properties;
 using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace WindowsFormsApp1
 {
@@ -227,6 +229,36 @@ namespace WindowsFormsApp1
             }
 
             Globals.max_room_duration = ServerAsync.DurationThreshold();
+        }
+
+        private async void createMultipleRequestAsync(string username)
+        {
+            var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
+            var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
+
+            var request = new int[] { 1, 2, 3 };
+            var taskList = new List<Task<HttpResponseMessage>>();
+
+            foreach (var myRequest in request)
+            {
+                var client = new HttpHandler();
+                taskList.Add(client.CGetAsync(uri));
+            }
+
+            try
+            {
+                var res = await Task.WhenAll(taskList.ToArray());
+
+                foreach (var r in res)
+                {
+                    var s = r.Content.ReadAsStringAsync();
+                    Console.WriteLine("RESS: " + s.Result);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("ERROR: " + ex);
+            }
         }
 
         public frmMain()
@@ -590,6 +622,8 @@ namespace WindowsFormsApp1
 
         private void BtnRefresh_Click(object sender, EventArgs e)
         {
+            this.createMultipleRequestAsync(Globals.ComplianceAgent.name);
+            return;
             this.CheckAgentSession();
             this.RefreshBrowser();
         }

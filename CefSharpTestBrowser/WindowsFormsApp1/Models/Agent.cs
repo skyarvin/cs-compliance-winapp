@@ -18,6 +18,7 @@ namespace WindowsFormsApp1.Models
         //public string last_workshift { get; set; }
         public string role { get; set; }
         public bool id_checking { get; set; }
+        public bool webcam_capture { get; set; }
         public string profile
         {
             get

@@ -36,7 +36,6 @@ namespace CSTool.Handlers
                 Uri uri = new Uri(requestUri);
                 this.SetRequestHeaders(uri);
                 HttpResponseMessage response = GetAsync(uri).Result;
-                Console.WriteLine(requestUri + " " + response);
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return await Task.FromResult(await HandleRefreshToken(requestUri, RequestType.Get));
@@ -45,7 +44,6 @@ namespace CSTool.Handlers
             }
             catch(Exception e)
             {
-                Console.WriteLine("TESTTEST: " + e);
                 throw e;
             }
         }
@@ -90,7 +88,6 @@ namespace CSTool.Handlers
                         client.DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.refresh_token);
                         using (HttpResponseMessage refreshResponse = client.PostAsync(Url.AUTH_URL + "/refresh", null).Result)
                         {
-                            Console.WriteLine("Refresh " + requestUri + " " + refreshResponse);
                             if (!refreshResponse.IsSuccessStatusCode)
                             {
                                 throw new Exception("Failed to refresh token.");
@@ -114,11 +111,9 @@ namespace CSTool.Handlers
                 {
                     case RequestType.Post:
                         HttpContent content = new StringContent((body), Encoding.UTF8, "application/json");
-                        Console.WriteLine("HEADERS: POST " + DefaultRequestHeaders);
                         response = PostAsync(requestUri, content).Result;
                         break;
                     case RequestType.Get:
-                        Console.WriteLine("HEADERS: GET " + DefaultRequestHeaders);
                         response = GetAsync(requestUri).Result;
                         break;
                 }

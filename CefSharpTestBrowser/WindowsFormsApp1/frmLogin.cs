@@ -51,18 +51,6 @@ namespace WindowsFormsApp1
             }
         }
 
-        private async void createMultipleRequest()
-        {
-            var client = new HttpHandler();
-            var request = new int[]{1,2,3};
-            var requests = request.Select
-            (
-                req => client.HandleRefreshToken("", RequestType.Post, req.ToString())
-            ).ToList();
-
-            await Task.WhenAll(requests);
-        }
-
         private void Login()
         {
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))

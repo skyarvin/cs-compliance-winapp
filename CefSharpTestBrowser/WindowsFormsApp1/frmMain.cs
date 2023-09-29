@@ -510,6 +510,10 @@ namespace WindowsFormsApp1
         }
         private void Form1_Load(object sender, EventArgs e)
         {
+            if (!Globals.ComplianceAgent.webcam_capture)
+            {
+                settingsToolStripMenuItem.Visible = false;
+            }
             Application.Idle += new EventHandler(Application_OnIdle);
             _timer = new Timer();
             _timer.Tick += new EventHandler(Timer_Expired);
@@ -1643,6 +1647,11 @@ namespace WindowsFormsApp1
                 string nowStr = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
                 string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
                 startScreenCapture(scFileName);
+                if (Globals.ComplianceAgent.webcam_capture)
+                {
+                    string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
+                    startCamCapture(camFileName);
+                }
                 findAndUploadFailedImages();
             }
         }
@@ -1757,6 +1766,36 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkIRFP.RunWorkerAsync();
+        }
+
+        private void startCamCapture(string camFileName)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                StaffCam staffCam = new StaffCam();
+                staffCam.startCamera(Settings.Default.cam_source);
+                Thread.Sleep(5000);
+                if (staffCam.isRunning())
+                {
+                    staffCam.captureImage(camFileName);
+                    Thread.Sleep(1000);
+                    staffCam.stopCamera();
+                    if (Globals.activity.PostCameraCapture(camFileName))
+                    {
+                        FileUtil.deleteFile(camFileName);
+                    }
+                }
+                else
+                {
+                    Globals.frmMain.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(Globals.frmMain, "Please set your camera"));
+                }
+            });
+        }
+
+        private void cameraToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmCamSettings frmCamSettings = new frmCamSettings();
+            frmCamSettings.ShowDialog(this);
         }
     }
  }

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
+using CSTool.Handlers;
 
 namespace CSTool.Models
 {
@@ -20,13 +21,12 @@ namespace CSTool.Models
         public IdChecker Save()
         {
             Globals.SaveToLogFile(string.Concat("Send Id checker: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/idc/?agent_id=", this.agent_id, "&url=", this.url);
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
+                var response = client.CPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -45,14 +45,13 @@ namespace CSTool.Models
         }
         public static IdChecker Get(int id)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/idc/", id, "/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 try
                 {
-                    using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                    using (HttpResponseMessage response = client.CGetAsync(uri).Result)
                     {
                         if (response.IsSuccessStatusCode)
                         {

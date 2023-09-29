@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Class;
+using CSTool.Handlers;
 
 namespace CSTool.Models
 {
@@ -24,13 +25,12 @@ namespace CSTool.Models
         public InternalRequestFacePhoto Save()
         {
             Globals.SaveToLogFile(string.Concat("Save IRFP: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irfp/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
+                var response = client.CPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -50,11 +50,10 @@ namespace CSTool.Models
 
         public static InternalRequestFacePhoto Get(int irfp_id, int agent_id)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irfp/", irfp_id, "/", agent_id, "/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -72,11 +71,10 @@ namespace CSTool.Models
 
         public static InternalRequestFacePhoto GetAgentIRFP(int agent_id)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irfp/agent/", agent_id, "/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {

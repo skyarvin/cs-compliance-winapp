@@ -48,13 +48,13 @@ namespace CSTool.Handlers
             }
         }
 
-        public async Task<HttpResponseMessage> CPostAsync(string requestUri, string body)
+        public async Task<HttpResponseMessage> CPostAsync(string requestUri, HttpContent content)
         {
             try
             {
                 Uri uri = new Uri(requestUri);
                 this.SetRequestHeaders(uri);
-                HttpContent content = new StringContent((body), Encoding.UTF8, "application/json");
+                var body = content.ReadAsStringAsync().Result;
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -63,6 +63,26 @@ namespace CSTool.Handlers
                 return await Task.FromResult(response);
             }
             catch(Exception e)
+            {
+                throw e;
+            }
+        }
+
+        public async Task<HttpResponseMessage> CPutAsync(string requestUri, HttpContent content)
+        {
+            try
+            {
+                Uri uri = new Uri(requestUri);
+                this.SetRequestHeaders(uri);
+                var body = content.ReadAsStringAsync().Result;
+                HttpResponseMessage response = PutAsync(requestUri, content).Result;
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                {
+                    return await Task.FromResult(await HandleRefreshToken(requestUri, RequestType.Post, body));
+                }
+                return await Task.FromResult(response);
+            }
+            catch (Exception e)
             {
                 throw e;
             }
@@ -110,8 +130,12 @@ namespace CSTool.Handlers
                 switch (requestType)
                 {
                     case RequestType.Post:
-                        HttpContent content = new StringContent((body), Encoding.UTF8, "application/json");
-                        response = PostAsync(requestUri, content).Result;
+                        var postContent = new StringContent(body, Encoding.UTF8, "application/json");
+                        response = PostAsync(requestUri, postContent).Result;
+                        break;
+                    case RequestType.Put:
+                        var putContent = new StringContent(body, Encoding.UTF8, "application/json");
+                        response = PutAsync(requestUri, putContent).Result;
                         break;
                     case RequestType.Get:
                         response = GetAsync(requestUri).Result;

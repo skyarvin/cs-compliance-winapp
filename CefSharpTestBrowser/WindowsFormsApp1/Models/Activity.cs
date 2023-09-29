@@ -8,6 +8,7 @@ using WindowsFormsApp1;
 using System.IO;
 using System.Net.Http.Headers;
 using System.Net.Mime;
+using CSTool.Handlers;
 
 namespace CSTool.Models
 {
@@ -22,12 +23,11 @@ namespace CSTool.Models
         public void Save()
         {
             Globals.SaveToLogFile(string.Concat("Save Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/activity/"); ;
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
+                var response = client.CPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -49,12 +49,11 @@ namespace CSTool.Models
         public void Update()
         {
             Globals.SaveToLogFile(string.Concat("Update Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/activity/", this.id); ;
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.PutAsync(uri, content).Result;
+                var response = client.CPutAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -85,10 +84,9 @@ namespace CSTool.Models
         {
             try
             {
-                HttpClient client = new HttpClient();
+                HttpHandler client = new HttpHandler();
                 MultipartFormDataContent form = new MultipartFormDataContent();
                 HttpContent content = new StringContent("fileToUpload");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 form.Add(new StringContent(agent_id.ToString(), Encoding.UTF8, MediaTypeNames.Text.Plain), "agent");
                 form.Add(content, "fileToUpload");
                 var stream = new FileStream(fileAddress, FileMode.Open);
@@ -100,8 +98,8 @@ namespace CSTool.Models
                 };
                 form.Add(content);
                 HttpResponseMessage response = null;
-                var _url = new Uri(string.Concat(Url.API_URL, url));
-                response = (client.PostAsync(_url, form)).Result;
+                var _url = string.Concat(Url.API_URL, url);
+                response = (client.CPostAsync(_url, form)).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return true;

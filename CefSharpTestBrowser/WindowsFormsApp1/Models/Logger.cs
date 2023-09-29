@@ -45,8 +45,8 @@ namespace WindowsFormsApp1.Models
                     var uri = string.Concat(Url.API_URL, "/logs/");
 
                     client.Timeout = TimeSpan.FromSeconds(5);
-
-                    var response = client.CPostAsync(uri, JsonConvert.SerializeObject(this)).Result;
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    var response = client.CPostAsync(uri, content).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -65,8 +65,9 @@ namespace WindowsFormsApp1.Models
                     }
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
                 Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
                 throw new Exception("Action can't be processed right now, encountered error while saving.");
@@ -78,12 +79,11 @@ namespace WindowsFormsApp1.Models
             try
             {
                 Globals.SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-                using (var client = new HttpClient())
+                using (var client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.API_URL, "/logs/", this.id);
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.PutAsync(uri, content).Result;
+                    var response = client.CPutAsync(uri, content).Result;
                     if (!response.IsSuccessStatusCode)
                     {
                         Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
@@ -102,11 +102,10 @@ namespace WindowsFormsApp1.Models
 
         public static Logger FetchLastAgentLog(int agent_id)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {

@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
+using CSTool.Handlers;
 
 namespace CSTool.Models
 {
@@ -18,14 +19,13 @@ namespace CSTool.Models
 
         public void Send()
         {
-            using (var httpClient = new HttpClient())
+            using (var httpClient = new HttpHandler())
             {
                 string url = String.Concat(Url.API_URL, "/emailer/");
-                httpClient.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 try
                 {
-                    var response = httpClient.PostAsync(url, content).Result;
+                    var response = httpClient.CPostAsync(url, content).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)

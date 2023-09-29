@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using WindowsFormsApp1;
 using System.Collections.Generic;
+using CSTool.Handlers;
 
 namespace CSTool.Models
 {
@@ -14,12 +15,11 @@ namespace CSTool.Models
 
         public static Announcements FetchAnnouncements()
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var agent_id = Globals.ComplianceAgent.id;
                 var uri = $"{Url.API_URL}/agent/{agent_id}/announcements/";
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                var response = client.GetAsync(uri).Result;
+                var response = client.CGetAsync(uri).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent content = response.Content)
@@ -59,13 +59,12 @@ namespace CSTool.Models
 
         public void AcknowledgeAnnouncement()
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 this.agent_id = Globals.ComplianceAgent.id;
                 var uri = $"{Url.API_URL}/announcement/{this.id}/acknowledge/";
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                var response = client.PostAsync(uri, content).Result;
+                var response = client.CPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)

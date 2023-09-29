@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
+using CSTool.Handlers;
 
 namespace CSTool.Models
 {
@@ -71,13 +72,12 @@ namespace CSTool.Models
         public InternalRequestReview Save()
         {
             Globals.SaveToLogFile(string.Concat("Save IRS: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irs/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
+                var response = client.CPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -97,14 +97,13 @@ namespace CSTool.Models
 
         public static InternalRequestReview Get(int rr_id)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/irs/", rr_id, "/");
                 if (Globals.ComplianceAgent.is_trainee)
                     uri = string.Concat(uri, "?is_trainee=True");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -123,14 +122,13 @@ namespace CSTool.Models
 
         public static irs_result Get(List<int> agent_ids)
         {
-            using (var client = new HttpClient())
+            using (var client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/irs/agent/", string.Join(",", agent_ids), "/");
                 if (Globals.ComplianceAgent.is_trainee)
                     uri = string.Concat(uri, "?is_trainee=True");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {

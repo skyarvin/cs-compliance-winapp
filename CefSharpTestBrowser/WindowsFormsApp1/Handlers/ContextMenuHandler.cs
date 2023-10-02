@@ -215,10 +215,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             if (Globals.INTERNAL_IIDC.id != 0 && Globals.INTERNAL_IIDC.url == Globals.CurrentUrl)
             {
-                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-                {
-                    ShowFrmInternalIdentificationChecker(true);
-                });
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() => ShowFrmInternalIdentificationChecker(true));
                 return false;
             }
 

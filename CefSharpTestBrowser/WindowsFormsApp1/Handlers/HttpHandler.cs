@@ -1,4 +1,5 @@
 ﻿using CSTool.Class;
+using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using Newtonsoft.Json;
 using System;
@@ -19,16 +20,8 @@ namespace CSTool.Handlers
         Get,
         Put,
     }
-    internal class HttpHandler: HttpClient
+    internal class HttpHandler: HttpClient, IHttpHandler
     {
-        private readonly object _lock;
-        string[] public_routes = { "/security/login" };
-
-        public HttpHandler()
-        {
-            this._lock = new object();
-        }
-
         public async Task<HttpResponseMessage> CGetAsync(string requestUri)
         {
             try
@@ -90,6 +83,7 @@ namespace CSTool.Handlers
 
         private void SetRequestHeaders(Uri uri)
         {
+            string[] public_routes = { "/security/login" };
             DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
             if (!public_routes.Contains(uri.AbsolutePath))
             {
@@ -101,6 +95,7 @@ namespace CSTool.Handlers
         {
             try
             {
+                object _lock = new object();
                 lock (_lock)
                 {
                     using (var client = new HttpClient())

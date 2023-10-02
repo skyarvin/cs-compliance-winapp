@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -72,7 +73,7 @@ namespace CSTool.Models
         public InternalRequestReview Save()
         {
             Globals.SaveToLogFile(string.Concat("Save IRS: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irs/");
                 client.Timeout = TimeSpan.FromSeconds(5);
@@ -97,7 +98,7 @@ namespace CSTool.Models
 
         public static InternalRequestReview Get(int rr_id)
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/irs/", rr_id, "/");
@@ -122,7 +123,7 @@ namespace CSTool.Models
 
         public static irs_result Get(List<int> agent_ids)
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/irs/agent/", string.Join(",", agent_ids), "/");

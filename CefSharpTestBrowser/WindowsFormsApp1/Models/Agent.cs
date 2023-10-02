@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Windows.Forms;
 using CSTool.Properties;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace WindowsFormsApp1.Models
 {
@@ -63,7 +64,7 @@ namespace WindowsFormsApp1.Models
         }
         public static Agent Get(string username)
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);

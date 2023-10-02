@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace WindowsFormsApp1.Models
 {
@@ -40,7 +41,7 @@ namespace WindowsFormsApp1.Models
             try
             {
                 Globals.SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-                using (var client = new HttpHandler())
+                using (IHttpHandler client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.API_URL, "/logs/");
 
@@ -79,7 +80,7 @@ namespace WindowsFormsApp1.Models
             try
             {
                 Globals.SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-                using (var client = new HttpHandler())
+                using (IHttpHandler client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.API_URL, "/logs/", this.id);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
@@ -102,7 +103,7 @@ namespace WindowsFormsApp1.Models
 
         public static Logger FetchLastAgentLog(int agent_id)
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
                 using (HttpResponseMessage response = client.CGetAsync(uri).Result)
@@ -125,12 +126,11 @@ namespace WindowsFormsApp1.Models
         #region Static Methods
         public static UrlInformation GetUrlInformation(string url)
         {
-            using (var client = new HttpClient())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/logs/url_info");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent("{\"compliance_url\":\"" + url + "\"}", Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
+                var response = client.CPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -153,16 +153,15 @@ namespace WindowsFormsApp1.Models
         }
         private static bool Process_Json_String(bool is_post, string json_string)
         {
-            using (var client = new HttpClient())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/logs/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 var content = new StringContent(json_string, Encoding.UTF8, "application/json");
                 HttpResponseMessage response;
                 if (is_post)
-                    response = client.PostAsync(uri, content).Result;
+                    response = client.CPostAsync(uri, content).Result;
                 else
-                    response = client.PutAsync(string.Concat(uri, JsonConvert.DeserializeObject<Logger>(json_string).id), content).Result;
+                    response = client.CPutAsync(string.Concat(uri, JsonConvert.DeserializeObject<Logger>(json_string).id), content).Result;
                 if (response.IsSuccessStatusCode)
                     return true;
             }

@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using System.IO;
 using System.Security.Principal;
 using CSTool.Properties;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -32,7 +33,7 @@ namespace CSTool.Models
         {
             try
             {
-                using (var client = new HttpHandler())
+                using (IHttpHandler client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.AUTH_URL, "/login");
                     client.Timeout = TimeSpan.FromSeconds(5);

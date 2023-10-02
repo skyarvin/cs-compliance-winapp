@@ -9,6 +9,7 @@ using System.IO;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -23,7 +24,7 @@ namespace CSTool.Models
         public void Save()
         {
             Globals.SaveToLogFile(string.Concat("Save Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/activity/"); ;
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
@@ -49,7 +50,7 @@ namespace CSTool.Models
         public void Update()
         {
             Globals.SaveToLogFile(string.Concat("Update Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/activity/", this.id); ;
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
@@ -84,7 +85,7 @@ namespace CSTool.Models
         {
             try
             {
-                HttpHandler client = new HttpHandler();
+                IHttpHandler client = new HttpHandler();
                 MultipartFormDataContent form = new MultipartFormDataContent();
                 HttpContent content = new StringContent("fileToUpload");
                 form.Add(new StringContent(agent_id.ToString(), Encoding.UTF8, MediaTypeNames.Text.Plain), "agent");

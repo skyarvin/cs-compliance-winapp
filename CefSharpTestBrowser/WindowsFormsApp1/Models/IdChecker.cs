@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -21,7 +22,7 @@ namespace CSTool.Models
         public IdChecker Save()
         {
             Globals.SaveToLogFile(string.Concat("Send Id checker: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/idc/?agent_id=", this.agent_id, "&url=", this.url);
                 client.Timeout = TimeSpan.FromSeconds(5);
@@ -45,7 +46,7 @@ namespace CSTool.Models
         }
         public static IdChecker Get(int id)
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/idc/", id, "/");

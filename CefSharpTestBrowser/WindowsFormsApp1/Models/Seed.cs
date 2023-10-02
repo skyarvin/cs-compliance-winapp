@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -20,7 +21,7 @@ namespace CSTool.Models
         public void Save()
         {
             Globals.SaveToLogFile(string.Concat("Save Missed Seed: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/missed-seeds/"); ;
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");

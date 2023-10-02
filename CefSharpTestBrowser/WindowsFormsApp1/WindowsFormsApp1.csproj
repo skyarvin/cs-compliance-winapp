@@ -281,6 +281,7 @@
     <Compile Include="Handlers\FindHandler.cs" />
     <Compile Include="Handlers\Handlers.cs" />
     <Compile Include="Handlers\HttpHandler.cs" />
+    <Compile Include="Handlers\Interfaces\IHttpHandler.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Announcements.cs" />

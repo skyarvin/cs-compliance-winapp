@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Class;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -25,7 +26,7 @@ namespace CSTool.Models
         public InternalRequestFacePhoto Save()
         {
             Globals.SaveToLogFile(string.Concat("Save IRFP: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irfp/");
                 client.Timeout = TimeSpan.FromSeconds(5);
@@ -50,7 +51,7 @@ namespace CSTool.Models
 
         public static InternalRequestFacePhoto Get(int irfp_id, int agent_id)
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irfp/", irfp_id, "/", agent_id, "/");
                 using (HttpResponseMessage response = client.CGetAsync(uri).Result)
@@ -71,7 +72,7 @@ namespace CSTool.Models
 
         public static InternalRequestFacePhoto GetAgentIRFP(int agent_id)
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/irfp/agent/", agent_id, "/");
                 using (HttpResponseMessage response = client.CGetAsync(uri).Result)

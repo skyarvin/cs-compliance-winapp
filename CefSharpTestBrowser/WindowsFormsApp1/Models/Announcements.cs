@@ -6,6 +6,7 @@ using System.Text;
 using WindowsFormsApp1;
 using System.Collections.Generic;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -15,7 +16,7 @@ namespace CSTool.Models
 
         public static Announcements FetchAnnouncements()
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var agent_id = Globals.ComplianceAgent.id;
                 var uri = $"{Url.API_URL}/agent/{agent_id}/announcements/";
@@ -59,7 +60,7 @@ namespace CSTool.Models
 
         public void AcknowledgeAnnouncement()
         {
-            using (var client = new HttpHandler())
+            using (IHttpHandler client = new HttpHandler())
             {
                 this.agent_id = Globals.ComplianceAgent.id;
                 var uri = $"{Url.API_URL}/announcement/{this.id}/acknowledge/";

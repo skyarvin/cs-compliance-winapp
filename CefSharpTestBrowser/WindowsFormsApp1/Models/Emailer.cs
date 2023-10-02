@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
@@ -19,7 +20,7 @@ namespace CSTool.Models
 
         public void Send()
         {
-            using (var httpClient = new HttpHandler())
+            using (IHttpHandler httpClient = new HttpHandler())
             {
                 string url = String.Concat(Url.API_URL, "/emailer/");
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");

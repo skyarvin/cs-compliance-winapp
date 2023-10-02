@@ -1,19 +1,13 @@
 ﻿using CSTool;
-using CSTool.Class;
-using CSTool.Handlers;
 using CSTool.Models;
 using CSTool.Properties;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 

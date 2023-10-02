@@ -68,7 +68,6 @@ namespace WindowsFormsApp1.Models
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
                 Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
                 Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
                 throw new Exception("Action can't be processed right now, encountered error while saving.");

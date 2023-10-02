@@ -42,7 +42,7 @@ namespace CSTool.Models
                         username,
                         password
                     }), Encoding.UTF8, "application/json");
-                    var response = client.CPostAsync(uri, content).Result;
+                    var response = client.CustomPostAsync(uri, content).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)

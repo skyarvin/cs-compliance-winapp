@@ -68,7 +68,7 @@ namespace WindowsFormsApp1.Models
             {
                 var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
                 var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
-                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
+                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {

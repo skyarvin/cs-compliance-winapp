@@ -25,8 +25,6 @@ using CSTool.Properties;
 using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
-using Newtonsoft.Json.Linq;
-using System.Net.Http;
 
 namespace WindowsFormsApp1
 {

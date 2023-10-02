@@ -78,7 +78,7 @@ namespace CSTool.Models
                 var uri = string.Concat(Url.API_URL, "/irs/");
                 client.Timeout = TimeSpan.FromSeconds(5);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CPostAsync(uri, content).Result;
+                var response = client.CustomPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -104,7 +104,7 @@ namespace CSTool.Models
                 var uri = string.Concat(Url.API_URL, "/irs/", rr_id, "/");
                 if (Globals.ComplianceAgent.is_trainee)
                     uri = string.Concat(uri, "?is_trainee=True");
-                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
+                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -129,7 +129,7 @@ namespace CSTool.Models
                 var uri = string.Concat(Url.API_URL, "/irs/agent/", string.Join(",", agent_ids), "/");
                 if (Globals.ComplianceAgent.is_trainee)
                     uri = string.Concat(uri, "?is_trainee=True");
-                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
+                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {

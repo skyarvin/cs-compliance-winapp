@@ -22,7 +22,7 @@ namespace CSTool.Handlers
     }
     internal class HttpHandler: HttpClient, IHttpHandler
     {
-        public async Task<HttpResponseMessage> CGetAsync(string requestUri)
+        public async Task<HttpResponseMessage> CustomGetAsync(string requestUri)
         {
             try
             {
@@ -41,7 +41,7 @@ namespace CSTool.Handlers
             }
         }
 
-        public async Task<HttpResponseMessage> CPostAsync(string requestUri, HttpContent content)
+        public async Task<HttpResponseMessage> CustomPostAsync(string requestUri, HttpContent content)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace CSTool.Handlers
                 this.SetRequestHeaders(uri);
                 var body = content.ReadAsStringAsync().Result;
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
-                if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return await Task.FromResult(await HandleRefreshToken(requestUri, RequestType.Post, body));
                 }
@@ -61,7 +61,7 @@ namespace CSTool.Handlers
             }
         }
 
-        public async Task<HttpResponseMessage> CPutAsync(string requestUri, HttpContent content)
+        public async Task<HttpResponseMessage> CustomPutAsync(string requestUri, HttpContent content)
         {
             try
             {
@@ -91,7 +91,7 @@ namespace CSTool.Handlers
             }
         }
 
-        public Task<HttpResponseMessage> HandleRefreshToken(string requestUri, RequestType requestType, string body = null)
+        private Task<HttpResponseMessage> HandleRefreshToken(string requestUri, RequestType requestType, string body = null)
         {
             try
             {

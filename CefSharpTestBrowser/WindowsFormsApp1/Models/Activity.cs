@@ -28,7 +28,7 @@ namespace CSTool.Models
             {
                 var uri = string.Concat(Url.API_URL, "/activity/"); ;
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CPostAsync(uri, content).Result;
+                var response = client.CustomPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -54,7 +54,7 @@ namespace CSTool.Models
             {
                 var uri = string.Concat(Url.API_URL, "/activity/", this.id); ;
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CPutAsync(uri, content).Result;
+                var response = client.CustomPutAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)
@@ -100,7 +100,7 @@ namespace CSTool.Models
                 form.Add(content);
                 HttpResponseMessage response = null;
                 var _url = string.Concat(Url.API_URL, url);
-                response = (client.CPostAsync(_url, form)).Result;
+                response = (client.CustomPostAsync(_url, form)).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     return true;

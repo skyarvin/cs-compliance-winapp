@@ -26,7 +26,7 @@ namespace CSTool.Models
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 try
                 {
-                    var response = httpClient.CPostAsync(url, content).Result;
+                    var response = httpClient.CustomPostAsync(url, content).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)

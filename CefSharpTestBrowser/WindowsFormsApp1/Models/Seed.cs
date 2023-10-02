@@ -25,7 +25,7 @@ namespace CSTool.Models
             {
                 var uri = string.Concat(Url.API_URL, "/missed-seeds/"); ;
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CPostAsync(uri, content).Result;
+                var response = client.CustomPostAsync(uri, content).Result;
                 if (!response.IsSuccessStatusCode)
                 {               
                     Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);

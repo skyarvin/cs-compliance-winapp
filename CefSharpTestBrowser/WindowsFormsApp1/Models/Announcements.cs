@@ -20,7 +20,7 @@ namespace CSTool.Models
             {
                 var agent_id = Globals.ComplianceAgent.id;
                 var uri = $"{Url.API_URL}/agent/{agent_id}/announcements/";
-                var response = client.CGetAsync(uri).Result;
+                var response = client.CustomGetAsync(uri).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent content = response.Content)
@@ -65,7 +65,7 @@ namespace CSTool.Models
                 this.agent_id = Globals.ComplianceAgent.id;
                 var uri = $"{Url.API_URL}/announcement/{this.id}/acknowledge/";
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CPostAsync(uri, content).Result;
+                var response = client.CustomPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     using (HttpContent data = response.Content)

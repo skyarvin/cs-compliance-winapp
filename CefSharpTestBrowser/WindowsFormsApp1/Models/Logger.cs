@@ -47,7 +47,7 @@ namespace WindowsFormsApp1.Models
 
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.CPostAsync(uri, content).Result;
+                    var response = client.CustomPostAsync(uri, content).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -84,7 +84,7 @@ namespace WindowsFormsApp1.Models
                 {
                     var uri = string.Concat(Url.API_URL, "/logs/", this.id);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.CPutAsync(uri, content).Result;
+                    var response = client.CustomPutAsync(uri, content).Result;
                     if (!response.IsSuccessStatusCode)
                     {
                         Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
@@ -106,7 +106,7 @@ namespace WindowsFormsApp1.Models
             using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
-                using (HttpResponseMessage response = client.CGetAsync(uri).Result)
+                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -130,7 +130,7 @@ namespace WindowsFormsApp1.Models
             {
                 var uri = string.Concat(Url.API_URL, "/logs/url_info");
                 var content = new StringContent("{\"compliance_url\":\"" + url + "\"}", Encoding.UTF8, "application/json");
-                var response = client.CPostAsync(uri, content).Result;
+                var response = client.CustomPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.OK)
@@ -159,9 +159,9 @@ namespace WindowsFormsApp1.Models
                 var content = new StringContent(json_string, Encoding.UTF8, "application/json");
                 HttpResponseMessage response;
                 if (is_post)
-                    response = client.CPostAsync(uri, content).Result;
+                    response = client.CustomPostAsync(uri, content).Result;
                 else
-                    response = client.CPutAsync(string.Concat(uri, JsonConvert.DeserializeObject<Logger>(json_string).id), content).Result;
+                    response = client.CustomPutAsync(string.Concat(uri, JsonConvert.DeserializeObject<Logger>(json_string).id), content).Result;
                 if (response.IsSuccessStatusCode)
                     return true;
             }

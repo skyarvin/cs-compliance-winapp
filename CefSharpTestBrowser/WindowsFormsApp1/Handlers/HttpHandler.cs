@@ -78,7 +78,7 @@ namespace CSTool.Handlers
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return await Task.FromResult(await HandleRefreshToken(requestUri, RequestType.Post, body));
+                    return await Task.FromResult(await HandleRefreshToken(requestUri, RequestType.Put, body));
                 }
                 return await Task.FromResult(response);
             }

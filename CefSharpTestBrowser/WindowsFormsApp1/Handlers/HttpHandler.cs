@@ -81,10 +81,10 @@ namespace CSTool.Handlers
         private void SetRequestHeaders(Uri uri)
         {
             string[] public_routes = { "/security/login" };
-            DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
+            DefaultRequestHeaders.Add("Staffme-Authorization", Globals.apiKey);
             if (!public_routes.Contains(uri.AbsolutePath))
             {
-                DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
+                DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
         }
 
@@ -97,7 +97,7 @@ namespace CSTool.Handlers
                 {
                     using (var client = new HttpClient())
                     {
-                        client.DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.refresh_token);
+                        client.DefaultRequestHeaders.Add("Authorization", Globals.UserToken.refresh_token);
                         using (HttpResponseMessage refreshResponse = client.PostAsync(Url.AUTH_URL + "/refresh", null).Result)
                         {
                             if (!refreshResponse.IsSuccessStatusCode)
@@ -111,8 +111,8 @@ namespace CSTool.Handlers
                                 UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
                                 Globals.UserToken.access_token = tokens.access_token;
                                 Globals.UserToken.refresh_token = tokens.refresh_token;
-                                DefaultRequestHeaders.Remove("Staffme-Authorization");
-                                DefaultRequestHeaders.Add("Staffme-Authorization", Globals.UserToken.access_token);
+                                DefaultRequestHeaders.Remove("Authorization");
+                                DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
                             }
                         }
                     }

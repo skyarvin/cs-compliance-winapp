@@ -30,7 +30,7 @@ namespace CSTool.Handlers
                 HttpResponseMessage response = GetAsync(uri).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return await Task.FromResult(await new TokenHandler(this).RetryActionHandler(requestUri, RequestType.Get));
+                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Get));
                 }
                 return await Task.FromResult(response);
             }
@@ -50,7 +50,7 @@ namespace CSTool.Handlers
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return await Task.FromResult(await new TokenHandler(this).RetryActionHandler(requestUri, RequestType.Post, body));
+                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Post, body));
                 }
                 return await Task.FromResult(response);
             }
@@ -74,7 +74,7 @@ namespace CSTool.Handlers
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return await Task.FromResult(await new TokenHandler(this).RetryActionHandler(requestUri, RequestType.Put, body));
+                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Put, body));
                 }
                 return await Task.FromResult(response);
             }

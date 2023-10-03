@@ -16,10 +16,10 @@ using WindowsFormsApp1;
 
 namespace CSTool.Handlers
 {
-    internal class TokenHandler
+    internal class RefreshTokenHandler
     {
         HttpClient request;
-        public TokenHandler(HttpClient client)
+        public RefreshTokenHandler(HttpClient client)
         {
             this.request = client;
         }
@@ -28,7 +28,7 @@ namespace CSTool.Handlers
         {
             try
             {
-                bool is_success = RefreshTokenHandler();
+                bool is_success = RefreshToken();
                 if(!is_success)
                 {
                     throw new UnauthorizeException();
@@ -56,7 +56,7 @@ namespace CSTool.Handlers
             }
         }
 
-        private bool RefreshTokenHandler()
+        private bool RefreshToken()
         {
             try
             {

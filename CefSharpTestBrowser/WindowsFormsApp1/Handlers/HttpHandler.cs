@@ -25,16 +25,19 @@ namespace CSTool.Handlers
         {
             try
             {
-                Uri uri = new Uri(requestUri);
-                this.SetRequestHeaders(uri);
-                HttpResponseMessage response = GetAsync(uri).Result;
+                this.SetRequestHeaders(requestUri);
+                HttpResponseMessage response = GetAsync(requestUri).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
                     return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Get));
                 }
                 return await Task.FromResult(response);
             }
-            catch(Exception e)
+            catch (UnauthorizeException e)
+            {
+                throw e;
+            }
+            catch (Exception e)
             {
                 throw e;
             }
@@ -44,8 +47,7 @@ namespace CSTool.Handlers
         {
             try
             {
-                Uri uri = new Uri(requestUri);
-                this.SetRequestHeaders(uri);
+                this.SetRequestHeaders(requestUri);
                 var body = content.ReadAsStringAsync().Result;
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -68,8 +70,7 @@ namespace CSTool.Handlers
         {
             try
             {
-                Uri uri = new Uri(requestUri);
-                this.SetRequestHeaders(uri);
+                this.SetRequestHeaders(requestUri);
                 var body = content.ReadAsStringAsync().Result;
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
@@ -78,14 +79,19 @@ namespace CSTool.Handlers
                 }
                 return await Task.FromResult(response);
             }
+            catch (UnauthorizeException e)
+            {
+                throw e;
+            }
             catch (Exception e)
             {
                 throw e;
             }
         }
 
-        private void SetRequestHeaders(Uri uri)
+        private void SetRequestHeaders(string requestUri)
         {
+            Uri uri = new Uri(requestUri);
             string[] public_routes = { "/security/login" };
             DefaultRequestHeaders.Add("Staffme-Authorization", Globals.apiKey);
             if (!public_routes.Contains(uri.AbsolutePath))

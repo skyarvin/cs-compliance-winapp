@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Handlers;
 using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
@@ -20,29 +21,38 @@ namespace CSTool.Models
 
         public void Send()
         {
-            using (IHttpHandler httpClient = new HttpHandler())
+            try
             {
-                string url = String.Concat(Url.API_URL, "/emailer/");
-                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                try
+                using (IHttpHandler httpClient = new HttpHandler())
                 {
-                    var response = httpClient.CustomPostAsync(url, content).Result;
-                    if (response.IsSuccessStatusCode)
+                    string url = String.Concat(Url.API_URL, "/emailer/");
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    try
                     {
-                        using (HttpContent data = response.Content)
+                        var response = httpClient.CustomPostAsync(url, content).Result;
+                        if (response.IsSuccessStatusCode)
                         {
-                            var jsonString = data.ReadAsStringAsync();
-                            jsonString.Wait();
+                            using (HttpContent data = response.Content)
+                            {
+                                var jsonString = data.ReadAsStringAsync();
+                                jsonString.Wait();
+                            }
+                        }
+                        else
+                        {
+                            Globals.SaveToLogFile("EMAILER FAILED: " + JsonConvert.SerializeObject(this), (int)LogType.Error);
                         }
                     }
-                    else
+                    catch (AggregateException)
                     {
-                        Globals.SaveToLogFile("EMAILER FAILED: " + JsonConvert.SerializeObject(this), (int)LogType.Error);
+                        Globals.SaveToLogFile("NETWORK ERROR: " + JsonConvert.SerializeObject(this), (int)LogType.Error);
                     }
-                } catch (AggregateException)
-                {
-                    Globals.SaveToLogFile("NETWORK ERROR: " + JsonConvert.SerializeObject(this), (int)LogType.Error);
                 }
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.redirect_to_login(e);
+                throw e;
             }
         }
         

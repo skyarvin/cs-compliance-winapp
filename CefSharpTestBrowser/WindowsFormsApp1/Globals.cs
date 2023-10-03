@@ -16,6 +16,7 @@ using CefSharp.WinForms.Internals;
 using System.Text;
 using System.Net;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace WindowsFormsApp1
 {
@@ -334,6 +335,15 @@ namespace WindowsFormsApp1
             }
         }
 
+        public static void redirect_to_login(Exception e)
+        {
+            DialogResult result = MessageBox.Show("Session Expired.", "Error", MessageBoxButtons.OK);
+            if (result == DialogResult.OK)
+            {
+                Process.Start(Application.StartupPath + "\\COMPLIANCE_TOOL.exe");
+                Process.GetCurrentProcess().Kill();
+            }
+        }
     }
 
   

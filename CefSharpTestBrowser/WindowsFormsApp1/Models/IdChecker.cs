@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using WindowsFormsApp1;
 using CSTool.Handlers;
 using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
@@ -21,58 +22,74 @@ namespace CSTool.Models
         public string reviewer_notes { get; set; }
         public IdChecker Save()
         {
-            Globals.SaveToLogFile(string.Concat("Send Id checker: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (IHttpHandler client = new HttpHandler())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/idc/?agent_id=", this.agent_id, "&url=", this.url);
-                client.Timeout = TimeSpan.FromSeconds(5);
-                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CustomPostAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                Globals.SaveToLogFile(string.Concat("Send Id checker: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    using (HttpContent data = response.Content)
+                    var uri = string.Concat(Url.API_URL, "/idc/?agent_id=", this.agent_id, "&url=", this.url);
+                    client.Timeout = TimeSpan.FromSeconds(5);
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        var jsonString = data.ReadAsStringAsync();
-                        jsonString.Wait();
-                        return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
+                        }
+                    }
+                    else
+                    {
+                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                        throw new Exception("Api send idchecker request error, Please contact dev team");
                     }
                 }
-                else
-                {
-                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    throw new Exception("Api send idchecker request error, Please contact dev team");
-                }
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.redirect_to_login(e);
+                throw e;
             }
         }
         public static IdChecker Get(int id)
         {
-            using (IHttpHandler client = new HttpHandler())
+            try
             {
-                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/idc/", id, "/");
-                try
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
+                    var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
+                    var uri = string.Concat(Url.API_URL, "/idc/", id, "/");
+                    try
                     {
-                        if (response.IsSuccessStatusCode)
+                        using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                         {
-                            using (HttpContent content = response.Content)
+                            if (response.IsSuccessStatusCode)
                             {
-                                var jsonString = content.ReadAsStringAsync();
-                                jsonString.Wait();
-                                return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
+                                using (HttpContent content = response.Content)
+                                {
+                                    var jsonString = content.ReadAsStringAsync();
+                                    jsonString.Wait();
+                                    return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
+                                }
+                            }
+                            else
+                            {
+                                Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error);
                             }
                         }
-                        else
-                        {
-                            Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error);
-                        }
                     }
+                    catch { Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error); }
                 }
-                catch { Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error); }
-            }
 
-            return null;
+                return null;
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.redirect_to_login(e);
+                throw e;
+            }
         }
     }
 }

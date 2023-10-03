@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using CSTool.Properties;
 using CSTool.Handlers;
 using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace WindowsFormsApp1.Models
 {
@@ -64,29 +65,37 @@ namespace WindowsFormsApp1.Models
         }
         public static Agent Get(string username)
         {
-            using (IHttpHandler client = new HttpHandler())
+            try
             {
-                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
-                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    if (response.IsSuccessStatusCode)
+                    var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
+                    var uri = string.Concat(Url.API_URL, "/agent/?username=", username, "&version=", appversion);
+                    using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                     {
-                        using (HttpContent content = response.Content)
+                        if (response.IsSuccessStatusCode)
                         {
-                            var jsonString = content.ReadAsStringAsync();
-                            jsonString.Wait();
-                            return JsonConvert.DeserializeObject<Agent>(jsonString.Result);
+                            using (HttpContent content = response.Content)
+                            {
+                                var jsonString = content.ReadAsStringAsync();
+                                jsonString.Wait();
+                                return JsonConvert.DeserializeObject<Agent>(jsonString.Result);
+                            }
+                        }
+                        else if (response.StatusCode == System.Net.HttpStatusCode.Gone)
+                        {
+                            MessageBox.Show("Invalid app version. Please update your application.", "Error");
+                            Application.Exit();
                         }
                     }
-                    else if (response.StatusCode == System.Net.HttpStatusCode.Gone)
-                    {
-                        MessageBox.Show("Invalid app version. Please update your application.", "Error");
-                        Application.Exit();
-                    }
                 }
+                return null;
             }
-            return null;
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.redirect_to_login(e);
+                throw e;
+            }
         }
     }
 }

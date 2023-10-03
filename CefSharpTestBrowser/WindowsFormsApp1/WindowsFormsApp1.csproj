@@ -278,10 +278,12 @@
       <DependentUpon>frmMessage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Handlers\ErrorsHandler\UnauthorizeException.cs" />
     <Compile Include="Handlers\FindHandler.cs" />
     <Compile Include="Handlers\Handlers.cs" />
     <Compile Include="Handlers\HttpHandler.cs" />
     <Compile Include="Handlers\Interfaces\IHttpHandler.cs" />
+    <Compile Include="Handlers\TokenHandler.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Announcements.cs" />

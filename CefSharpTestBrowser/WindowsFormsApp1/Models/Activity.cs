@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using CSTool.Handlers;
 using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
@@ -23,54 +24,68 @@ namespace CSTool.Models
 
         public void Save()
         {
-            Globals.SaveToLogFile(string.Concat("Save Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            using (IHttpHandler client = new HttpHandler())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/activity/"); ;
-                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CustomPostAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                Globals.SaveToLogFile(string.Concat("Save Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    using (HttpContent data = response.Content)
+                    var uri = string.Concat(Url.API_URL, "/activity/"); ;
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        var jsonString = data.ReadAsStringAsync();
-                        jsonString.Wait();
-                        this.id = JsonConvert.DeserializeObject<Activity>(jsonString.Result).id;
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            this.id = JsonConvert.DeserializeObject<Activity>(jsonString.Result).id;
+                        }
+                    }
+                    else
+                    {
+                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                        throw new Exception("Api Activity save request error, Please contact dev team");
                     }
                 }
-                else
-                {
-                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    throw new Exception("Api Activity save request error, Please contact dev team");
-                }
             }
-
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.redirect_to_login(e);
+                throw e;
+            }
         }
 
         public void Update()
         {
-            Globals.SaveToLogFile(string.Concat("Update Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
-            using (IHttpHandler client = new HttpHandler())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/activity/", this.id); ;
-                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                var response = client.CustomPutAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                Globals.SaveToLogFile(string.Concat("Update Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    using (HttpContent data = response.Content)
+                    var uri = string.Concat(Url.API_URL, "/activity/", this.id); ;
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    var response = client.CustomPutAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        var jsonString = data.ReadAsStringAsync();
-                        jsonString.Wait();
-                        this.id = JsonConvert.DeserializeObject<Activity>(jsonString.Result).id;
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            this.id = JsonConvert.DeserializeObject<Activity>(jsonString.Result).id;
+                        }
+                    }
+                    else
+                    {
+                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                        throw new Exception("Api Activity update request error, Please contact dev team");
                     }
                 }
-                else
-                {
-                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    throw new Exception("Api Activity update request error, Please contact dev team");
-                }
             }
-
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.redirect_to_login(e);
+                throw e;
+            }
         }
 
         public bool PostScreenshot(string filename)
@@ -105,6 +120,11 @@ namespace CSTool.Models
                 {
                     return true;
                 }
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.redirect_to_login(e);
+                throw e;
             }
             catch
             {

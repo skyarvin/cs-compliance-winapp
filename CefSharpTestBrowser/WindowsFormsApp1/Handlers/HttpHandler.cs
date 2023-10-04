@@ -33,10 +33,6 @@ namespace CSTool.Handlers
                 }
                 return await Task.FromResult(response);
             }
-            catch (UnauthorizeException e)
-            {
-                throw e;
-            }
             catch (Exception e)
             {
                 throw e;
@@ -56,10 +52,6 @@ namespace CSTool.Handlers
                 }
                 return await Task.FromResult(response);
             }
-            catch (UnauthorizeException e)
-            {
-                throw e;
-            }
             catch (Exception e)
             {
                 throw e;
@@ -78,10 +70,6 @@ namespace CSTool.Handlers
                     return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Put, body));
                 }
                 return await Task.FromResult(response);
-            }
-            catch (UnauthorizeException e)
-            {
-                throw e;
             }
             catch (Exception e)
             {

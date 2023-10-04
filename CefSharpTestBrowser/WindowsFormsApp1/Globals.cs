@@ -338,7 +338,7 @@ namespace WindowsFormsApp1
             DialogResult result = MessageBox.Show("Session Expired.", "Error", MessageBoxButtons.OK);
             if (result == DialogResult.OK)
             {
-                Process.Start(Application.StartupPath + "\\COMPLIANCE_TOOL.exe");
+                Process.Start(Application.StartupPath + "\\" + typeof(Program).Assembly.GetName().Name + ".exe");
                 Process.GetCurrentProcess().Kill();
             }
         }

@@ -15,6 +15,7 @@ using System.IO;
 using System.Security.Principal;
 using CSTool.Properties;
 using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
@@ -83,6 +84,11 @@ namespace CSTool.Models
                     }
                     return false;
                 }
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.RedirectToLogin(e);
+                return false;
             }
             catch
             {

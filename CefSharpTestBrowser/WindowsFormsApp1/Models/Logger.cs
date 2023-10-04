@@ -72,7 +72,7 @@ namespace WindowsFormsApp1.Models
                 Globals.RedirectToLogin(e);
                 throw e;
             }
-            catch(Exception e)
+            catch
             {
                 this.SaveLogAction("Save");
                 throw new Exception("Action can't be processed right now, encountered error while saving.");
@@ -117,23 +117,31 @@ namespace WindowsFormsApp1.Models
 
         public static Logger FetchLastAgentLog(int agent_id)
         {
-            using (IHttpHandler client = new HttpHandler())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
-                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    if (response.IsSuccessStatusCode)
+                    var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
+                    using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                     {
-                        using (HttpContent content = response.Content)
+                        if (response.IsSuccessStatusCode)
                         {
-                            var jsonString = content.ReadAsStringAsync();
-                            jsonString.Wait();
-                            return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                            using (HttpContent content = response.Content)
+                            {
+                                var jsonString = content.ReadAsStringAsync();
+                                jsonString.Wait();
+                                return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                            }
                         }
                     }
                 }
+                return null;
             }
-            return null;
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.RedirectToLogin(e);
+                throw e;
+            }
         }
 
         //Static Methods

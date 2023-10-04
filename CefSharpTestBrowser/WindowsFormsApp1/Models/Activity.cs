@@ -123,8 +123,9 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
+                Globals.SaveToLogFile(string.Concat("Failed to upload: ", fileAddress), (int)LogType.Error);
                 Globals.RedirectToLogin(e);
-                throw e;
+                return false;
             }
             catch
             {

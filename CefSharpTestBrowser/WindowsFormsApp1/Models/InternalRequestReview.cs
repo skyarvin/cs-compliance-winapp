@@ -100,7 +100,7 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.redirect_to_login(e);
+                Globals.RedirectToLogin(e);
                 throw e;
             }
         }
@@ -133,7 +133,7 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.redirect_to_login(e);
+                Globals.RedirectToLogin(e);
                 throw e;
             }
         }
@@ -166,7 +166,7 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.redirect_to_login(e);
+                Globals.RedirectToLogin(e);
                 throw e;
             }
         }

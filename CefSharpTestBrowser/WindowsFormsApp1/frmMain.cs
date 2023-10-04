@@ -588,6 +588,8 @@ namespace WindowsFormsApp1
             Globals.UpdateActivity();
             Globals.EnableTimer = false;
 
+            UserAccount user = new UserAccount();
+            user.UserLogout();
             Environment.Exit(Environment.ExitCode);
             //Application.Exit();
         }

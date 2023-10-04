@@ -66,5 +66,28 @@ namespace CSTool.Models
                 return false;
             }
         }
+
+        public bool UserLogout()
+        {
+            try
+            {
+                using (IHttpHandler client = new HttpHandler())
+                {
+                    var uri = string.Concat(Url.AUTH_URL, "/logout");
+                    client.Timeout = TimeSpan.FromSeconds(5);
+                    var content = new StringContent("", Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }

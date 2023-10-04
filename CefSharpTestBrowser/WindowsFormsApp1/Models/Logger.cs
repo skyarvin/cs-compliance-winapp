@@ -61,20 +61,20 @@ namespace WindowsFormsApp1.Models
                     }
                     else
                     {
-                        save_log_action("Save");
+                        this.SaveLogAction("Save");
                         throw new Exception("Api save request error, Please contact dev team");
                     }
                 }
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                save_log_action("Save");
-                Globals.redirect_to_login(e);
+                this.SaveLogAction("Save");
+                Globals.RedirectToLogin(e);
                 throw e;
             }
             catch(Exception e)
             {
-                save_log_action("Save");
+                this.SaveLogAction("Save");
                 throw new Exception("Action can't be processed right now, encountered error while saving.");
             }
         }
@@ -91,25 +91,25 @@ namespace WindowsFormsApp1.Models
                     var response = client.CustomPutAsync(uri, content).Result;
                     if (!response.IsSuccessStatusCode)
                     {
-                        save_log_action("Update");
+                        this.SaveLogAction("Update");
                         throw new Exception("Api Update request error, Please contact dev team");
                     }
                 }
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                save_log_action("Update");
-                Globals.redirect_to_login(e);
+                this.SaveLogAction("Update");
+                Globals.RedirectToLogin(e);
                 throw e;
             }
             catch
             {
-                save_log_action("Update");
+                this.SaveLogAction("Update");
                 throw new Exception("Action can't be processed right now, encountered error during update.");
             }
         }
 
-        private void save_log_action(string type)
+        private void SaveLogAction(string type)
         {
             Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
             Resync.SavetoDB(JsonConvert.SerializeObject(this), type);
@@ -169,7 +169,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.redirect_to_login(e);
+                Globals.RedirectToLogin(e);
                 throw e;
             }
         }
@@ -193,7 +193,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.redirect_to_login(e);
+                Globals.RedirectToLogin(e);
                 throw e;
             }
         }

@@ -42,10 +42,8 @@ namespace WindowsFormsApp1
         public static frmInternalRequestFacePhoto FrmInternalRequestFacePhoto;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
-        public static UserAccount useraccount = new UserAccount();
         public static ChromiumWebBrowser chromeBrowser;
         public static ChromiumWebBrowser chromePopup;
-        public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;
         public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds 600
         public static int SIXTY_MINUTES_IDLE_TIME = 60;//60 minutes 
@@ -335,7 +333,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        public static void redirect_to_login(Exception e)
+        public static void RedirectToLogin(Exception e)
         {
             DialogResult result = MessageBox.Show("Session Expired.", "Error", MessageBoxButtons.OK);
             if (result == DialogResult.OK)

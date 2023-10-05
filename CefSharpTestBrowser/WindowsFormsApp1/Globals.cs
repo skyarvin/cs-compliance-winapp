@@ -333,7 +333,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        public static void RedirectToLogin(Exception e)
+        public static void SessionExpired()
         {
             DialogResult result = MessageBox.Show("Session Expired.", "Error", MessageBoxButtons.OK);
             if (result == DialogResult.OK)

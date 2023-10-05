@@ -69,7 +69,7 @@ namespace WindowsFormsApp1.Models
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
                 this.SaveLogAction("Save");
-                Globals.RedirectToLogin(e);
+                Globals.SessionExpired();
                 throw e;
             }
             catch
@@ -99,7 +99,7 @@ namespace WindowsFormsApp1.Models
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
                 this.SaveLogAction("Update");
-                Globals.RedirectToLogin(e);
+                Globals.SessionExpired();
                 throw e;
             }
             catch
@@ -139,7 +139,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.RedirectToLogin(e);
+                Globals.SessionExpired();
                 throw e;
             }
         }
@@ -177,7 +177,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.RedirectToLogin(e);
+                Globals.SessionExpired();
                 throw e;
             }
         }
@@ -201,7 +201,7 @@ namespace WindowsFormsApp1.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.RedirectToLogin(e);
+                Globals.SessionExpired();
                 throw e;
             }
         }

@@ -20,6 +20,7 @@ namespace CSTool.Models
         public string url { get; set; }
         public string status { get; set; }
         public string reviewer_notes { get; set; }
+
         public IdChecker Save()
         {
             try
@@ -49,10 +50,11 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.RedirectToLogin(e);
+                Globals.SessionExpired();
                 throw e;
             }
         }
+
         public static IdChecker Get(int id)
         {
             try
@@ -87,7 +89,7 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.RedirectToLogin(e);
+                Globals.SessionExpired();
                 throw e;
             }
         }

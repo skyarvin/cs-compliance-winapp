@@ -9,6 +9,6 @@ namespace CSTool.Handlers.ErrorsHandler
     internal class UnauthorizeException: Exception
     {
         public UnauthorizeException(): base("Invalid token") { }
-        public UnauthorizeException(string message) : base(message) { }
+        public UnauthorizeException(string message): base(message) { }
     }
 }

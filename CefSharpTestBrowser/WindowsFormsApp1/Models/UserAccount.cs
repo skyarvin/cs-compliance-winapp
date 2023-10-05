@@ -87,11 +87,7 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.RedirectToLogin(e);
-                return false;
-            }
-            catch
-            {
+                Globals.SessionExpired();
                 return false;
             }
         }

@@ -588,8 +588,7 @@ namespace WindowsFormsApp1
             Globals.UpdateActivity();
             Globals.EnableTimer = false;
 
-            UserAccount user = new UserAccount();
-            user.UserLogout();
+            UserAccount.UserLogout();
             Environment.Exit(Environment.ExitCode);
             //Application.Exit();
         }
@@ -1656,7 +1655,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        public void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }

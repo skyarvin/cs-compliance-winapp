@@ -67,6 +67,7 @@ namespace WindowsFormsApp1
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
         public static UserToken UserToken = new UserToken();
+        public static object refreshLock = new object();
 
         public static void ShowMessage(Form parent,string Message)
         {

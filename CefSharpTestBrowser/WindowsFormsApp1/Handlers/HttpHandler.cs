@@ -39,12 +39,12 @@ namespace CSTool.Handlers
             }
         }
 
-        public async Task<HttpResponseMessage> CustomPostAsync(string requestUri, HttpContent content)
+        public async Task<HttpResponseMessage> CustomPostAsync(string requestUri, HttpContent content=null)
         {
             try
             {
                 this.SetRequestHeaders(requestUri);
-                var body = content.ReadAsStringAsync().Result;
+                var body = content?.ReadAsStringAsync().Result;
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
@@ -58,12 +58,12 @@ namespace CSTool.Handlers
             }
         }
 
-        public async Task<HttpResponseMessage> CustomPutAsync(string requestUri, HttpContent content)
+        public async Task<HttpResponseMessage> CustomPutAsync(string requestUri, HttpContent content=null)
         {
             try
             {
                 this.SetRequestHeaders(requestUri);
-                var body = content.ReadAsStringAsync().Result;
+                var body = content?.ReadAsStringAsync().Result;
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {

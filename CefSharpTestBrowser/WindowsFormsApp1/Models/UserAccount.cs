@@ -19,7 +19,7 @@ using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
-    public class UserAccount
+    public static class UserAccount
     {
         //public int id { get; set; }
         //public string username { get; set; }
@@ -30,7 +30,7 @@ namespace CSTool.Models
         /// </summary>
         /// <returns></returns>
 
-        public bool UserLogin(string username, string password)
+        public static bool UserLogin(string username, string password)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace CSTool.Models
             }
         }
 
-        public bool UserLogout()
+        public static bool UserLogout()
         {
             try
             {
@@ -76,13 +76,8 @@ namespace CSTool.Models
                 {
                     var uri = string.Concat(Url.AUTH_URL, "/logout");
                     client.Timeout = TimeSpan.FromSeconds(5);
-                    var content = new StringContent("", Encoding.UTF8, "application/json");
-                    var response = client.CustomPostAsync(uri, content).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        return true;
-                    }
-                    return false;
+                    var response = client.CustomPostAsync(uri).Result;
+                    return response.IsSuccessStatusCode;
                 }
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)

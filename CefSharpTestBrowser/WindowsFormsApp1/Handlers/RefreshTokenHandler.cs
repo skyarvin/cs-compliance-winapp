@@ -18,7 +18,8 @@ namespace CSTool.Handlers
 {
     internal class RefreshTokenHandler
     {
-        HttpClient request;
+        readonly HttpClient request;
+
         public RefreshTokenHandler(HttpClient client)
         {
             this.request = client;

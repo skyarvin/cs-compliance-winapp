@@ -61,9 +61,8 @@ namespace CSTool.Handlers
         {
             try
             {
-                object _lock = new object();
                 const int MaxRetries = 3;
-                lock (_lock)
+                lock (Globals.refreshLock)
                 {
                     using (var client = new HttpClient())
                     {

@@ -1655,7 +1655,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        public void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }

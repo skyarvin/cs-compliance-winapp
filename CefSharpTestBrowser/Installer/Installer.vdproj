@@ -3319,8 +3319,8 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSTool"
-        "ProductCode" = "8:{6528B5E3-AB5C-412D-B787-6A781316710E}"
-        "PackageCode" = "8:{CFC805E4-A72F-4AC9-829D-2F8C66495EEE}"
+        "ProductCode" = "8:{86403138-2F5C-41D2-A28D-3C0FDFDF6A0E}"
+        "PackageCode" = "8:{EA77479E-0B82-4C22-A2A2-35620BF8E96F}"
         "UpgradeCode" = "8:{E3D5D40B-6234-4CCB-832E-98F8206BE10A}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"

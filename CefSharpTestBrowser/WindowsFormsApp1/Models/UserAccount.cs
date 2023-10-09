@@ -21,15 +21,6 @@ namespace CSTool.Models
 {
     public static class UserAccount
     {
-        //public int id { get; set; }
-        //public string username { get; set; }
-        //public string password { get; set; }
-
-        /// <summary>
-        /// API get to fetch account from  User pool
-        /// </summary>
-        /// <returns></returns>
-
         public static bool UserLogin(string username, string password)
         {
             try
@@ -50,12 +41,12 @@ namespace CSTool.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            var tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
-                            Globals.UserToken = new UserToken
-                            {
-                                access_token = tokens.access_token,
-                                refresh_token = tokens.refresh_token,
-                            };
+                            var tokens = JsonConvert.DeserializeObject<Mfa>(jsonString.Result);
+                            //Globals.UserToken = new UserToken
+                            //{
+                            //    access_token = tokens.access_token,
+                            //    refresh_token = tokens.refresh_token,
+                            //};
                             return true;
                         }
                     }

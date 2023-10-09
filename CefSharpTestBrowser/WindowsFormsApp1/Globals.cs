@@ -336,7 +336,7 @@ namespace WindowsFormsApp1
 
         public static void SessionExpired()
         {
-            DialogResult result = MessageBox.Show("Session Expired.", "Error", MessageBoxButtons.OK);
+            DialogResult result = MessageBox.Show("Session Expired, Please log in again.", "Error", MessageBoxButtons.OK);
             if (result == DialogResult.OK)
             {
                 Process.Start(Application.StartupPath + "\\" + typeof(Program).Assembly.GetName().Name + ".exe");

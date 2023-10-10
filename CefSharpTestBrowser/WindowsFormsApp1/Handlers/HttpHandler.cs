@@ -26,10 +26,14 @@ namespace CSTool.Handlers
             try
             {
                 this.SetRequestHeaders(requestUri);
+                if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.IsTokenAboutToExpire())
+                {
+                    new RefreshTokenHandler(this).RefreshToken();
+                }
                 HttpResponseMessage response = GetAsync(requestUri).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Get));
+                    throw new UnauthorizeException();
                 }
                 return await Task.FromResult(response);
             }
@@ -44,11 +48,14 @@ namespace CSTool.Handlers
             try
             {
                 this.SetRequestHeaders(requestUri);
-                var body = content?.ReadAsStringAsync().Result;
+                if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.IsTokenAboutToExpire())
+                {
+                    new RefreshTokenHandler(this).RefreshToken();
+                }
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Post, body));
+                    throw new UnauthorizeException();
                 }
                 return await Task.FromResult(response);
             }
@@ -63,11 +70,14 @@ namespace CSTool.Handlers
             try
             {
                 this.SetRequestHeaders(requestUri);
-                var body = content?.ReadAsStringAsync().Result;
+                if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.IsTokenAboutToExpire())
+                {
+                    new RefreshTokenHandler(this).RefreshToken();
+                }
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
                 if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Put, body));
+                    throw new UnauthorizeException();
                 }
                 return await Task.FromResult(response);
             }

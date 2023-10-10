@@ -37,6 +37,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26514, "Send Internal Request Face Photo");
+        model.AddItem((CefMenuCommand)26515, "Send Internal Identification Checker");
         model.AddItem((CefMenuCommand)26504, "Translate");
 
         model.AddSeparator();
@@ -207,6 +208,41 @@ public class MyCustomMenuHandler : IContextMenuHandler
                     Globals.FrmInternalRequestFacePhoto.update_info();
                 }
                 Globals.FrmInternalRequestFacePhoto.Show();
+            }
+        }
+
+        if (commandId == (CefMenuCommand)26515)
+        {
+            if (Globals.INTERNAL_IIDC.id != 0 && Globals.INTERNAL_IIDC.url == Globals.CurrentUrl)
+            {
+                Globals.frmMain.InvokeOnUiThreadIfRequired(() => ShowFrmInternalIdentificationChecker(true));
+                return false;
+            }
+
+            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+            {
+                if (Globals.frmMain.isBrowserInitialized)
+                {
+                    Globals.FrmSendInternalIdentificationChecker = new frmSendInternalIdentificationChecker();
+                    Globals.FrmSendInternalIdentificationChecker.ShowDialog(Globals.frmMain);
+                    if (Globals.FrmSendInternalIdentificationChecker.DialogResult == DialogResult.OK)
+                    {
+                        ShowFrmInternalIdentificationChecker(false);
+                    }
+                }
+            });
+
+            void ShowFrmInternalIdentificationChecker(bool isInstanceExist)
+            {
+                if (Globals.FrmInternalIdentificationChecker == null || Globals.FrmInternalIdentificationChecker.IsDisposed)
+                {
+                    Globals.FrmInternalIdentificationChecker = new frmInternalIdentificationChecker();
+                }
+                if (isInstanceExist)
+                {
+                    Globals.FrmInternalIdentificationChecker.update_info();
+                }
+                Globals.FrmInternalIdentificationChecker.Show();
             }
         }
         return false;

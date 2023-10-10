@@ -64,8 +64,7 @@ namespace WindowsFormsApp1.Models
         {
             using (var client = new HttpClient())
             {
-                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                var uri = string.Concat(Url.API_URL, "/agent/?username=", username,"&version=", appversion);
+                var uri = string.Concat(Url.API_URL, "/agent/?username=", username,"&version=", Globals.CurrentVersion());
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                 using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
                 {

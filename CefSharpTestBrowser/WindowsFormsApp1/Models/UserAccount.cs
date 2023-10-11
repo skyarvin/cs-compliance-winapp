@@ -16,12 +16,15 @@ using System.Security.Principal;
 using CSTool.Properties;
 using CSTool.Handlers.Interfaces;
 using CSTool.Handlers.ErrorsHandler;
+using Newtonsoft.Json.Linq;
 
 namespace CSTool.Models
 {
-    public static class UserAccount
+    public class UserAccount
     {
-        public static bool UserLogin(string username, string password)
+        public string username;
+        public string role;
+        public static IMFAToken UserLogin(string username, string password)
         {
             try
             {
@@ -41,21 +44,24 @@ namespace CSTool.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            var tokens = JsonConvert.DeserializeObject<Mfa>(jsonString.Result);
-                            //Globals.UserToken = new UserToken
-                            //{
-                            //    access_token = tokens.access_token,
-                            //    refresh_token = tokens.refresh_token,
-                            //};
-                            return true;
+                            IMFAToken result = JsonConvert.DeserializeObject<IMFAToken>(jsonString.Result);
+                            if(result?.nonce == null)
+                            {
+                                Globals.UserToken = new UserToken
+                                {
+                                    access_token = result.access_token,
+                                    refresh_token = result.refresh_token,
+                                };
+                            }
+                            return result;
                         }
                     }
-                    return false; 
+                    return null; 
                 }
             }
             catch
             {
-                return false;
+                return null; 
             }
         }
 

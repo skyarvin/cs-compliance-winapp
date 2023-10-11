@@ -1,4 +1,5 @@
 ﻿using CSTool;
+using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using CSTool.Properties;
 using System;
@@ -54,9 +55,21 @@ namespace WindowsFormsApp1
             }
             try
             {
-                if (!UserAccount.UserLogin(txtEmail.Text, txtPwd.Text))
+                IMFAToken mfatoken = UserAccount.UserLogin(txtEmail.Text, txtPwd.Text);
+                if (mfatoken == null)
                 {
                     MessageBox.Show("Username or password is incorrect", "Error");
+                    return;
+                }
+
+                Globals.user_account.username = txtEmail.Text;
+                Globals.user_account.role = cmbUtype.Text;
+                if(mfatoken?.nonce != null)
+                {
+                    frmMfa frmMfa = new frmMfa();
+                    frmMfa.mfa = mfatoken;
+                    frmMfa.Show();
+                    this.Hide(); // dont forget to remove the event for closing the this form...
                     return;
                 }
 
@@ -70,16 +83,7 @@ namespace WindowsFormsApp1
                     }
 
                     bExitApp = false;
-                    if (txtEmail.Text != Settings.Default.email || (Settings.Default.role != Globals.ComplianceAgent.role)) {
-                        Settings.Default.irr_id = 0;
-                    }
-                    Settings.Default.role = Globals.ComplianceAgent.role;
-                    Settings.Default.user_type = cmbUtype.Text;
-                    Settings.Default.preference = null;
-                    Settings.Default.email = txtEmail.Text;
-                    Settings.Default.tier_level = Convert.ToInt32(Globals.ComplianceAgent.tier_level);
-                    Settings.Default.Save();
-
+                    Globals.SaveToDevice();
                     if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
                         Settings.Default.user_type.ToUpper().Contains("TRAINEE") && Settings.Default.role == "TRAINEE")
                     {

@@ -80,7 +80,7 @@ namespace CSTool.Handlers
         private void SetRequestHeaders(string requestUri)
         {
             string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
-            string[] public_routes = { "/security/login" };
+            string[] public_routes = { "/security/login", "/security/confirm_login" };
             DefaultRequestHeaders.Add("Staffme-Authorization", apiKey);
             if (!public_routes.Contains(new Uri(requestUri).AbsolutePath))
             {

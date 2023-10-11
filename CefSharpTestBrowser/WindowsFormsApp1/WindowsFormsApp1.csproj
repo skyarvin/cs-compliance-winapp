@@ -234,6 +234,12 @@
     <Compile Include="frmCamSettings.Designer.cs">
       <DependentUpon>frmCamSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmInternalIdentificationChecker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmInternalIdentificationChecker.Designer.cs">
+      <DependentUpon>frmInternalIdentificationChecker.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmInternalRequestFacePhoto.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -289,6 +295,12 @@
     <Compile Include="frmInternalRequestReview.Designer.cs">
       <DependentUpon>frmInternalRequestReview.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmSendInternalIdentificationChecker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSendInternalIdentificationChecker.Designer.cs">
+      <DependentUpon>frmSendInternalIdentificationChecker.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmSendInternalRequestReview.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -334,6 +346,7 @@
     <Compile Include="Models\Emailer.cs" />
     <Compile Include="Models\ErrorLogs.cs" />
     <Compile Include="Models\IdChecker.cs" />
+    <Compile Include="Models\InternalIdentificationChecker.cs" />
     <Compile Include="Models\InternalRequestFacePhoto.cs" />
     <Compile Include="Models\InternalRequestReview.cs" />
     <Compile Include="Models\Logger.cs" />
@@ -357,11 +370,17 @@
     <Content Include="cscb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="frmInternalIdentificationChecker.resx">
+      <DependentUpon>frmInternalIdentificationChecker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmInternalRequestFacePhoto.resx">
       <DependentUpon>frmInternalRequestFacePhoto.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmConfirmSendIRFP.resx">
       <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSendInternalIdentificationChecker.resx">
+      <DependentUpon>frmSendInternalIdentificationChecker.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\usrCtrlAnnouncement.resx">
       <DependentUpon>usrCtrlAnnouncement.cs</DependentUpon>

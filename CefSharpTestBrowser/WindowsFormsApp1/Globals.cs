@@ -40,6 +40,8 @@ namespace WindowsFormsApp1
         public static frmInternalRequestReview FrmInternalRequestReview;
         public static frmConfirmSendIRFP FrmConfirmSendIRFP = new frmConfirmSendIRFP();
         public static frmInternalRequestFacePhoto FrmInternalRequestFacePhoto;
+        public static frmSendInternalIdentificationChecker FrmSendInternalIdentificationChecker = new frmSendInternalIdentificationChecker();
+        public static frmInternalIdentificationChecker FrmInternalIdentificationChecker;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
         public static ChromiumWebBrowser chromeBrowser;
@@ -63,6 +65,7 @@ namespace WindowsFormsApp1
         public static DateTime? StartTime_LastAction;
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
         public static InternalRequestFacePhoto INTERNAL_IRFP = new InternalRequestFacePhoto();
+        public static InternalIdentificationChecker INTERNAL_IIDC = new InternalIdentificationChecker();
         public static Announcements AnnouncementsList = new Announcements();
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
@@ -178,7 +181,7 @@ namespace WindowsFormsApp1
                 return "999999";
             }
 
-            return "3.0.0.0.37";
+            return "3.1.0.0.0";
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>

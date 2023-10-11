@@ -30,7 +30,7 @@ namespace CSTool.Handlers
             try
             {
                 const int MaxRetries = 3;
-                lock (Globals.refreshLock)
+                lock (Globals.sharedRefreshLock)
                 {
                     using (var client = new HttpClient())
                     {

@@ -13,19 +13,20 @@ namespace CSTool.Handlers
 {
     internal static class TokenHandler
     {
-        public static bool IsTokenAboutToExpire()
+        public static bool shouldRefresh()
         {
-            var handler = new JwtSecurityTokenHandler();
-            var token = handler.ReadToken(Globals.UserToken.access_token) as JwtSecurityToken;
+            int TimeLimitInMinute = 60;
+            var jwthandler = new JwtSecurityTokenHandler();
+            var token = jwthandler.ReadToken(Globals.UserToken.access_token) as JwtSecurityToken;
             long issuedAt = Int64.Parse(token.Payload[TokenClaim.iat.ToString()].ToString());
-            if (GetTokenExpirationTimeRemaining(issuedAt) >= 60)
+            if (GetTokenAgeMinutes(issuedAt) >= TimeLimitInMinute)
             {
                 return true;
             }
             return false;
         }
 
-        private static double GetTokenExpirationTimeRemaining(long issuedAt)
+        private static double GetTokenAgeMinutes(long issuedAt)
         {
             DateTime dateTimeNow = DateTime.Now;
             DateTime dateTimeOffset = UnixTimeStampToDateTime(issuedAt);

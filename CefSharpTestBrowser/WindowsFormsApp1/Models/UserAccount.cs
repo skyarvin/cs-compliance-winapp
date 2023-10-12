@@ -24,7 +24,7 @@ namespace CSTool.Models
     {
         public string username;
         public string role;
-        public static IMFAToken UserLogin(string username, string password)
+        public static ITFAToken UserLogin(string username, string password)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace CSTool.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            IMFAToken result = JsonConvert.DeserializeObject<IMFAToken>(jsonString.Result);
+                            ITFAToken result = JsonConvert.DeserializeObject<ITFAToken>(jsonString.Result);
                             if(result?.nonce == null)
                             {
                                 Globals.UserToken = new UserToken

@@ -17,13 +17,13 @@ using CSTool.Class;
 
 namespace CSTool.Models
 {
-    public class Mfa: UserToken
+    public class TFA: UserToken
     {
         public string user_id { get; set; }
         public string nonce { get; set; }
         public List<Dictionary<string, string>> devices { get; set; }
 
-        public static bool SubmitMfa(string mfa_code, string nonce, string user_id, string device_name)
+        public static bool SubmitTfa(string tfa_code, string nonce, string user_id, string device_name)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace CSTool.Models
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(new
                     {
-                        mfa_code,
+                        tfa_code,
                         nonce,
                         user_id,
                         device_name,

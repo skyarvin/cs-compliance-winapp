@@ -16,31 +16,31 @@ using CSTool.Handlers.Interfaces;
 
 namespace CSTool
 {
-    public partial class frmMfa : Form
+    public partial class frmTfa : Form
     {
-        public IMFAToken mfa;
+        public ITFAToken tfa;
         private bool bExitApp = true;
         private string device_name;
 
-        public frmMfa()
+        public frmTfa()
         {
             InitializeComponent();
         }
 
-        private void frmMfa_Load(object sender, EventArgs e)
+        private void frmTfa_Load(object sender, EventArgs e)
         {
-            if (mfa.devices.Count == 1)
+            if (tfa.devices.Count == 1)
             {
-                device_label.Text = "Authenticate your device on " + mfa.devices[0]["device_name"] + "'s Device";
-                this.device_name = mfa.devices[0]["device_name"];
+                device_label.Text = "Authenticate your device on " + tfa.devices[0]["device_name"] + "'s Device";
+                this.device_name = tfa.devices[0]["device_name"];
             }
         }
 
-        private void submit_mfa_Click(object sender, EventArgs e)
+        private void submit_tfa_Click(object sender, EventArgs e)
         {
             try
             {
-                if (!Mfa.SubmitMfa(mfa_code.Text, mfa.nonce, mfa.user_id, this.device_name))
+                if (!TFA.SubmitTfa(tfa_code.Text, tfa.nonce, tfa.user_id, this.device_name))
                 {
                     MessageBox.Show("Invalid Two Factor Authenticator Code! \nPlease Try Again.", "Error");
                     return;
@@ -96,12 +96,13 @@ namespace CSTool
             }
         }
 
-        private void frmMfa_FormClosing(object sender, FormClosingEventArgs e)
+        private void frmTfa_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (bExitApp)
             {
                 Application.Exit();
             }
         }
+
     }
 }

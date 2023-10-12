@@ -203,11 +203,11 @@
     <Compile Include="frmConfirmSendIRFP.Designer.cs">
       <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmMfa.cs">
+    <Compile Include="frmTfa.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmMfa.Designer.cs">
-      <DependentUpon>frmMfa.cs</DependentUpon>
+    <Compile Include="frmTfa.Designer.cs">
+      <DependentUpon>frmTfa.cs</DependentUpon>
     </Compile>
     <Compile Include="frmQA.cs">
       <SubType>Form</SubType>
@@ -289,7 +289,7 @@
     <Compile Include="Handlers\Handlers.cs" />
     <Compile Include="Handlers\HttpHandler.cs" />
     <Compile Include="Handlers\Interfaces\IHttpHandler.cs" />
-    <Compile Include="Handlers\Interfaces\IMFAToken.cs" />
+    <Compile Include="Handlers\Interfaces\ITFAToken.cs" />
     <Compile Include="Handlers\RefreshTokenHandler.cs" />
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
@@ -300,7 +300,7 @@
     <Compile Include="Models\InternalRequestFacePhoto.cs" />
     <Compile Include="Models\InternalRequestReview.cs" />
     <Compile Include="Models\Logger.cs" />
-    <Compile Include="Models\Mfa.cs" />
+    <Compile Include="Models\TFA.cs" />
     <Compile Include="Models\Seed.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Models\UserToken.cs" />
@@ -327,8 +327,8 @@
     <EmbeddedResource Include="frmConfirmSendIRFP.resx">
       <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmMfa.resx">
-      <DependentUpon>frmMfa.cs</DependentUpon>
+    <EmbeddedResource Include="frmTfa.resx">
+      <DependentUpon>frmTfa.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserControls\usrCtrlAnnouncement.resx">
       <DependentUpon>usrCtrlAnnouncement.cs</DependentUpon>

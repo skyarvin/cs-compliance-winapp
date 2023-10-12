@@ -1,6 +1,6 @@
 ﻿namespace CSTool
 {
-    partial class frmMfa
+    partial class frmTfa
     {
         /// <summary>
         /// Required designer variable.
@@ -29,20 +29,20 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.mfa_code = new System.Windows.Forms.TextBox();
+            this.tfa_code = new System.Windows.Forms.TextBox();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.device_label = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.submit_mfa = new System.Windows.Forms.Button();
+            this.submit_tfa = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // mfa_code
+            // tfa_code
             // 
-            this.mfa_code.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mfa_code.Location = new System.Drawing.Point(23, 185);
-            this.mfa_code.Name = "mfa_code";
-            this.mfa_code.Size = new System.Drawing.Size(331, 26);
-            this.mfa_code.TabIndex = 0;
+            this.tfa_code.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tfa_code.Location = new System.Drawing.Point(23, 185);
+            this.tfa_code.Name = "tfa_code";
+            this.tfa_code.Size = new System.Drawing.Size(331, 26);
+            this.tfa_code.TabIndex = 0;
             // 
             // contextMenuStrip1
             // 
@@ -69,32 +69,32 @@
             this.label2.TabIndex = 3;
             this.label2.Text = "Enter 6-digit code from your Two Factor Authenticator Device";
             // 
-            // submit_mfa
+            // submit_tfa
             // 
-            this.submit_mfa.BackColor = System.Drawing.SystemColors.Highlight;
-            this.submit_mfa.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.submit_mfa.Location = new System.Drawing.Point(23, 226);
-            this.submit_mfa.Name = "submit_mfa";
-            this.submit_mfa.Size = new System.Drawing.Size(331, 36);
-            this.submit_mfa.TabIndex = 4;
-            this.submit_mfa.Text = "Submit";
-            this.submit_mfa.UseVisualStyleBackColor = false;
-            this.submit_mfa.Click += new System.EventHandler(this.submit_mfa_Click);
+            this.submit_tfa.BackColor = System.Drawing.SystemColors.Highlight;
+            this.submit_tfa.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.submit_tfa.Location = new System.Drawing.Point(23, 226);
+            this.submit_tfa.Name = "submit_tfa";
+            this.submit_tfa.Size = new System.Drawing.Size(331, 36);
+            this.submit_tfa.TabIndex = 4;
+            this.submit_tfa.Text = "Submit";
+            this.submit_tfa.UseVisualStyleBackColor = false;
+            this.submit_tfa.Click += new System.EventHandler(this.submit_tfa_Click);
             // 
-            // frmMfa
+            // frmTfa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(370, 388);
-            this.Controls.Add(this.submit_mfa);
+            this.Controls.Add(this.submit_tfa);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.device_label);
-            this.Controls.Add(this.mfa_code);
-            this.Name = "frmMfa";
+            this.Controls.Add(this.tfa_code);
+            this.Name = "frmTfa";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "frmMfa";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMfa_FormClosing);
-            this.Load += new System.EventHandler(this.frmMfa_Load);
+            this.Text = "Two Factor Auth";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmTfa_FormClosing);
+            this.Load += new System.EventHandler(this.frmTfa_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -102,10 +102,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox mfa_code;
+        private System.Windows.Forms.TextBox tfa_code;
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Label device_label;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button submit_mfa;
+        private System.Windows.Forms.Button submit_tfa;
     }
 }

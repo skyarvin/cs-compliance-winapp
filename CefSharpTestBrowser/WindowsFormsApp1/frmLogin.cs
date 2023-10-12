@@ -55,8 +55,8 @@ namespace WindowsFormsApp1
             }
             try
             {
-                IMFAToken mfatoken = UserAccount.UserLogin(txtEmail.Text, txtPwd.Text);
-                if (mfatoken == null)
+                ITFAToken tfatoken = UserAccount.UserLogin(txtEmail.Text, txtPwd.Text);
+                if (tfatoken == null)
                 {
                     MessageBox.Show("Username or password is incorrect", "Error");
                     return;
@@ -64,11 +64,11 @@ namespace WindowsFormsApp1
 
                 Globals.user_account.username = txtEmail.Text;
                 Globals.user_account.role = cmbUtype.Text;
-                if(mfatoken?.nonce != null)
+                if(tfatoken?.nonce != null)
                 {
-                    frmMfa frmMfa = new frmMfa();
-                    frmMfa.mfa = mfatoken;
-                    frmMfa.Show();
+                    frmTfa frmTfa = new frmTfa();
+                    frmTfa.tfa = tfatoken;
+                    frmTfa.Show();
                     this.Hide(); // dont forget to remove the event for closing the this form...
                     return;
                 }

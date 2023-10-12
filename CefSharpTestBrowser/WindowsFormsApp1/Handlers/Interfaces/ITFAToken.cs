@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CSTool.Handlers.Interfaces
 {
-    public class IMFAToken
+    public class ITFAToken
     {
         public string nonce { get; set; }
         public string user_id { get; set; }

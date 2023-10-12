@@ -57,41 +57,37 @@ namespace CSTool.Models
 
         public static IdChecker Get(int id)
         {
-            try
+            using (IHttpHandler client = new HttpHandler())
             {
-                using (IHttpHandler client = new HttpHandler())
+                var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
+                var uri = string.Concat(Url.API_URL, "/idc/", id, "/");
+                try
                 {
-                    var appversion = Globals.CurrentVersion().ToString().Replace(".", "");
-                    var uri = string.Concat(Url.API_URL, "/idc/", id, "/");
-                    try
+                    using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                     {
-                        using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
+                        if (response.IsSuccessStatusCode)
                         {
-                            if (response.IsSuccessStatusCode)
+                            using (HttpContent content = response.Content)
                             {
-                                using (HttpContent content = response.Content)
-                                {
-                                    var jsonString = content.ReadAsStringAsync();
-                                    jsonString.Wait();
-                                    return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
-                                }
-                            }
-                            else
-                            {
-                                Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error);
+                                var jsonString = content.ReadAsStringAsync();
+                                jsonString.Wait();
+                                return JsonConvert.DeserializeObject<IdChecker>(jsonString.Result);
                             }
                         }
+                        else
+                        {
+                            Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error);
+                        }
                     }
-                    catch { Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error); }
                 }
-
-                return null;
+                catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+                {
+                    Globals.SessionExpired();
+                    throw e;
+                }
+                catch { Globals.SaveToLogFile(string.Concat("idchecker id: ", id), (int)LogType.Error); }
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
-            {
-                Globals.SessionExpired();
-                throw e;
-            }
+            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CSTool.Class;
+﻿using CefSharp;
+using CSTool.Class;
 using CSTool.Handlers.ErrorsHandler;
 using CSTool.Handlers.Interfaces;
 using CSTool.Models;
@@ -34,10 +35,7 @@ namespace CSTool.Handlers
                     }
                 }
                 HttpResponseMessage response = GetAsync(requestUri).Result;
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    throw new UnauthorizeException();
-                }
+                this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
@@ -59,10 +57,7 @@ namespace CSTool.Handlers
                     }
                 }
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    throw new UnauthorizeException();
-                }
+                this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
@@ -84,15 +79,20 @@ namespace CSTool.Handlers
                     }
                 }
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    throw new UnauthorizeException();
-                }
+                this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        private void CheckRequestStatusCode(System.Net.HttpStatusCode statusCode)
+        {
+            if (statusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizeException();
             }
         }
 

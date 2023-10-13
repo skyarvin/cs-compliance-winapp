@@ -179,7 +179,7 @@ namespace WindowsFormsApp1
                 return "999999";
             }
 
-            return "3.1.0.0.0";
+            return Application.ProductVersion;
         }
 
         public static Dictionary<String, String> workshifts = new Dictionary<String, String>

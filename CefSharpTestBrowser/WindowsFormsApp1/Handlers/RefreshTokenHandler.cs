@@ -25,44 +25,12 @@ namespace CSTool.Handlers
             this.request = client;
         }
 
-        public Task<HttpResponseMessage> RetryActionHandler(string requestUri, RequestType requestType, string body = null)
-        {
-            try
-            {
-                bool is_success = RefreshToken();
-                if(!is_success)
-                {
-                    throw new UnauthorizeException();
-                }
-                HttpResponseMessage response = null;
-                switch (requestType)
-                {
-                    case RequestType.Post:
-                        var postContent = new StringContent(body, Encoding.UTF8, "application/json");
-                        response = this.request.PostAsync(requestUri, postContent).Result;
-                        break;
-                    case RequestType.Put:
-                        var putContent = new StringContent(body, Encoding.UTF8, "application/json");
-                        response = this.request.PutAsync(requestUri, putContent).Result;
-                        break;
-                    case RequestType.Get:
-                        response = this.request.GetAsync(requestUri).Result;
-                        break;
-                }
-                return Task.FromResult(response);
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-        }
-
-        private bool RefreshToken()
+        public bool RefreshToken()
         {
             try
             {
                 const int MaxRetries = 3;
-                lock (Globals.refreshLock)
+                lock (Globals.sharedRefreshLock)
                 {
                     using (var client = new HttpClient())
                     {

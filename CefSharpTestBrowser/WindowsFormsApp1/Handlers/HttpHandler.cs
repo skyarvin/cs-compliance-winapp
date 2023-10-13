@@ -1,4 +1,5 @@
-﻿using CSTool.Class;
+﻿using CefSharp;
+using CSTool.Class;
 using CSTool.Handlers.ErrorsHandler;
 using CSTool.Handlers.Interfaces;
 using CSTool.Models;
@@ -26,11 +27,15 @@ namespace CSTool.Handlers
             try
             {
                 this.SetRequestHeaders(requestUri);
-                HttpResponseMessage response = GetAsync(requestUri).Result;
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                lock (Globals.sharedRequestLock)
                 {
-                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Get));
+                    if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.shouldRefresh())
+                    {
+                        new RefreshTokenHandler(this).RefreshToken();
+                    }
                 }
+                HttpResponseMessage response = GetAsync(requestUri).Result;
+                this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
@@ -44,12 +49,15 @@ namespace CSTool.Handlers
             try
             {
                 this.SetRequestHeaders(requestUri);
-                var body = content?.ReadAsStringAsync().Result;
-                HttpResponseMessage response = PostAsync(requestUri, content).Result;
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+                lock (Globals.sharedRequestLock)
                 {
-                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Post, body));
+                    if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.shouldRefresh())
+                    {
+                        new RefreshTokenHandler(this).RefreshToken();
+                    }
                 }
+                HttpResponseMessage response = PostAsync(requestUri, content).Result;
+                this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
@@ -63,17 +71,28 @@ namespace CSTool.Handlers
             try
             {
                 this.SetRequestHeaders(requestUri);
-                var body = content?.ReadAsStringAsync().Result;
-                HttpResponseMessage response = PutAsync(requestUri, content).Result;
-                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-                {
-                    return await Task.FromResult(await new RefreshTokenHandler(this).RetryActionHandler(requestUri, RequestType.Put, body));
+                lock (Globals.sharedRequestLock)
+                { 
+                    if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.shouldRefresh())
+                    {
+                        new RefreshTokenHandler(this).RefreshToken();
+                    }
                 }
+                HttpResponseMessage response = PutAsync(requestUri, content).Result;
+                this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
             {
                 throw e;
+            }
+        }
+
+        private void CheckRequestStatusCode(System.Net.HttpStatusCode statusCode)
+        {
+            if (statusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                throw new UnauthorizeException();
             }
         }
 

@@ -34,6 +34,7 @@ namespace WindowsFormsApp1.Models
         public List<Profile> members { get; set; }
         public int? irs_id { get; set; }
         public int? irfp_id { get; set; }
+        public int? iidc_id { get; set; }
         public int? idc_id { get; set; }
         public bool is_trainee { get; set; }
 

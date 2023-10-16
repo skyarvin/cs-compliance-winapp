@@ -69,7 +69,7 @@ namespace WindowsFormsApp1
                     frmTfa frmTfa = new frmTfa();
                     frmTfa.tfa = tfatoken;
                     frmTfa.Show();
-                    this.Hide(); // dont forget to remove the event for closing the this form...
+                    this.Hide();
                     return;
                 }
 

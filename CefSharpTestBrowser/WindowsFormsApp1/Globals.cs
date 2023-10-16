@@ -72,7 +72,6 @@ namespace WindowsFormsApp1
         public static UserToken UserToken = new UserToken();
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
-        public static object refreshLock = new object();
         public static UserAccount user_account = new UserAccount();
 
         public static void ShowMessage(Form parent,string Message)

@@ -31,7 +31,7 @@ namespace CSTool
         {
             if (tfa.devices.Count == 1)
             {
-                device_label.Text = "Authenticate your device on " + tfa.devices[0]["device_name"] + "'s Device";
+                device_label.Text = "Authenticate your account on " + tfa.devices[0]["device_name"] + "'s Device";
                 this.device_name = tfa.devices[0]["device_name"];
             }
         }
@@ -46,7 +46,7 @@ namespace CSTool
                     return;
                 }
 
-                Globals.ComplianceAgent = Agent.Get(Globals.user_account.username); // next to pre goodjob
+                Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
                 if (Globals.ComplianceAgent != null)
                 {
                     if (Globals.ComplianceAgent.tier_level is null)
@@ -67,14 +67,12 @@ namespace CSTool
                     }
                     else if (Settings.Default.user_type.ToUpper().Contains("QA") && Settings.Default.role == "CSQA")
                     {
-                        //new form
                         Globals.FrmQA = new frmQA();
                         Globals.FrmQA.Show();
                         this.Close();
                     }
                     else
                     {
-                        //MessageBox.Show("Please check your User Type.", "Error");
                         Thread.Sleep(60000);
                     }
                 }

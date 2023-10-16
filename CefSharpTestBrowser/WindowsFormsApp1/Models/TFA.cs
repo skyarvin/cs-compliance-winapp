@@ -1,16 +1,9 @@
-﻿using CSTool.Handlers.ErrorsHandler;
-using CSTool.Handlers;
+﻿using CSTool.Handlers;
 using Newtonsoft.Json;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using System.Windows.Forms;
-using WindowsFormsApp1.Models;
 using WindowsFormsApp1;
 using CSTool.Handlers.Interfaces;
 using CSTool.Class;
@@ -39,14 +32,12 @@ namespace CSTool.Models
                         device_name,
                     }), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
-                    Console.Write(response);
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            Console.WriteLine(jsonString.Result);
                             UserToken token = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
                             Globals.UserToken = new UserToken
                             {

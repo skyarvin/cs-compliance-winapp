@@ -36,7 +36,20 @@ namespace CSTool
             }
         }
 
+        private void Tfa_code_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                SubmitTFA();
+            }
+        }
+
         private void submit_tfa_Click(object sender, EventArgs e)
+        {
+            SubmitTFA();
+        }
+
+        private void SubmitTFA()
         {
             try
             {
@@ -101,6 +114,5 @@ namespace CSTool
                 Application.Exit();
             }
         }
-
     }
 }

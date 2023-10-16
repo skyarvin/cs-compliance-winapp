@@ -46,6 +46,14 @@ namespace WindowsFormsApp1
             }
         }
 
+        private void TxtPwd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Login();
+            }
+        }
+
         private void Login()
         {
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))
@@ -66,10 +74,11 @@ namespace WindowsFormsApp1
                 Globals.user_account.role = cmbUtype.Text;
                 if(tfatoken?.nonce != null)
                 {
+                    bExitApp = false;
                     frmTfa frmTfa = new frmTfa();
                     frmTfa.tfa = tfatoken;
                     frmTfa.Show();
-                    this.Hide();
+                    this.Close();
                     return;
                 }
 

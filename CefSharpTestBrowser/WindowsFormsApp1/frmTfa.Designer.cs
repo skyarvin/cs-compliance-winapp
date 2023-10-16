@@ -43,6 +43,7 @@
             this.tfa_code.Name = "tfa_code";
             this.tfa_code.Size = new System.Drawing.Size(331, 26);
             this.tfa_code.TabIndex = 0;
+            this.tfa_code.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Tfa_code_KeyDown);
             // 
             // contextMenuStrip1
             // 

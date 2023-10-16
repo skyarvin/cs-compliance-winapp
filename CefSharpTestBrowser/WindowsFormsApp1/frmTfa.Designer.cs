@@ -34,12 +34,13 @@
             this.device_label = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.submit_tfa = new System.Windows.Forms.Button();
+            this.device_list = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // tfa_code
             // 
             this.tfa_code.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tfa_code.Location = new System.Drawing.Point(23, 185);
+            this.tfa_code.Location = new System.Drawing.Point(23, 227);
             this.tfa_code.Name = "tfa_code";
             this.tfa_code.Size = new System.Drawing.Size(331, 26);
             this.tfa_code.TabIndex = 0;
@@ -55,7 +56,7 @@
             this.device_label.AutoSize = true;
             this.device_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.device_label.ForeColor = System.Drawing.Color.Black;
-            this.device_label.Location = new System.Drawing.Point(26, 127);
+            this.device_label.Location = new System.Drawing.Point(26, 121);
             this.device_label.Name = "device_label";
             this.device_label.Size = new System.Drawing.Size(0, 20);
             this.device_label.TabIndex = 2;
@@ -64,7 +65,7 @@
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(20, 156);
+            this.label2.Location = new System.Drawing.Point(20, 150);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(334, 15);
             this.label2.TabIndex = 3;
@@ -74,7 +75,7 @@
             // 
             this.submit_tfa.BackColor = System.Drawing.SystemColors.Highlight;
             this.submit_tfa.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.submit_tfa.Location = new System.Drawing.Point(23, 226);
+            this.submit_tfa.Location = new System.Drawing.Point(23, 268);
             this.submit_tfa.Name = "submit_tfa";
             this.submit_tfa.Size = new System.Drawing.Size(331, 36);
             this.submit_tfa.TabIndex = 4;
@@ -82,11 +83,23 @@
             this.submit_tfa.UseVisualStyleBackColor = false;
             this.submit_tfa.Click += new System.EventHandler(this.submit_tfa_Click);
             // 
+            // device_list
+            // 
+            this.device_list.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.device_list.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.device_list.FormattingEnabled = true;
+            this.device_list.Location = new System.Drawing.Point(23, 185);
+            this.device_list.Name = "device_list";
+            this.device_list.Size = new System.Drawing.Size(331, 28);
+            this.device_list.TabIndex = 5;
+            this.device_list.SelectedIndexChanged += new System.EventHandler(this.device_list_SelectedIndexChanged);
+            // 
             // frmTfa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(370, 388);
+            this.Controls.Add(this.device_list);
             this.Controls.Add(this.submit_tfa);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.device_label);
@@ -108,5 +121,6 @@
         private System.Windows.Forms.Label device_label;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button submit_tfa;
+        private System.Windows.Forms.ComboBox device_list;
     }
 }

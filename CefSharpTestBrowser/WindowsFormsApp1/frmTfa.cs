@@ -29,11 +29,11 @@ namespace CSTool
 
         private void frmTfa_Load(object sender, EventArgs e)
         {
-            if (tfa.devices.Count == 1)
+            foreach (var device in tfa.devices)
             {
-                device_label.Text = "Authenticate your account on " + tfa.devices[0]["device_name"] + "'s Device";
-                this.device_name = tfa.devices[0]["device_name"];
+                device_list.Items.Add(device["device_name"]);
             }
+            device_list.SelectedIndex = 0;
         }
 
         private void Tfa_code_KeyDown(object sender, KeyEventArgs e)
@@ -112,6 +112,12 @@ namespace CSTool
             {
                 Application.Exit();
             }
+        }
+
+        private void device_list_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            device_label.Text = "Authenticate your account on " + device_list.GetItemText(device_list.SelectedItem) + "'s Device";
+            this.device_name = device_list.GetItemText(device_list.SelectedItem);
         }
     }
 }

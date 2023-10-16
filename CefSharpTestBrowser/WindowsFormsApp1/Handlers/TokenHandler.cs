@@ -43,8 +43,7 @@ namespace CSTool.Handlers
 
     enum TokenClaim
     {
-        Type,
-        user_i,
+        user_id,
         username,
         tier_level,
         role,

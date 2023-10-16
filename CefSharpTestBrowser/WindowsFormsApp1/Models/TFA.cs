@@ -12,10 +12,6 @@ namespace CSTool.Models
 {
     public class TFA: UserToken
     {
-        public string user_id { get; set; }
-        public string nonce { get; set; }
-        public List<Dictionary<string, string>> devices { get; set; }
-
         public static bool SubmitTfa(string tfa_code, string nonce, string user_id, string device_name)
         {
             try

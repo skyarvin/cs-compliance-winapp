@@ -24,7 +24,7 @@ namespace CSTool.Models
     {
         public string username;
         public string role;
-        public static ITFAToken UserLogin(string username, string password)
+        public ITFAToken UserLogin(string username, string password)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace CSTool.Models
             }
         }
 
-        public static bool UserLogout()
+        public bool UserLogout()
         {
             try
             {

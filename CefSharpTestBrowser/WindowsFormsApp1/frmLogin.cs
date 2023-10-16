@@ -63,7 +63,7 @@ namespace WindowsFormsApp1
             }
             try
             {
-                ITFAToken tfatoken = UserAccount.UserLogin(txtEmail.Text, txtPwd.Text);
+                ITFAToken tfatoken = Globals.user_account.UserLogin(txtEmail.Text, txtPwd.Text);
                 if (tfatoken == null)
                 {
                     MessageBox.Show("Username or password is incorrect", "Error");

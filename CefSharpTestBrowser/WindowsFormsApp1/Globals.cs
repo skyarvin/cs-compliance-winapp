@@ -349,7 +349,7 @@ namespace WindowsFormsApp1
             }
         }
 
-        public static void SaveToDevice()
+        public static void SaveUserSettings()
         {
             if (Globals.user_account.username != Settings.Default.email || (Settings.Default.role != Globals.ComplianceAgent.role))
             {

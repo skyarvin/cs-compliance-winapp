@@ -69,7 +69,7 @@ namespace CSTool
                     }
 
                     bExitApp = false;
-                    Globals.SaveToDevice();
+                    Globals.SaveUserSettings();
                     if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
                         Settings.Default.user_type.ToUpper().Contains("TRAINEE") && Settings.Default.role == "TRAINEE")
                     {

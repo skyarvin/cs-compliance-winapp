@@ -58,10 +58,5 @@ namespace WindowsFormsApp1
             lblUrl.Text = result.url;
             Globals.INTERNAL_IRFP = result;
         }
-
-        private void closeButton_linkedClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Close();
-        }
     }
 }

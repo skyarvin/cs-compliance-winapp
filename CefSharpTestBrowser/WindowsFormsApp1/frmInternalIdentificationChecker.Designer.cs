@@ -34,7 +34,6 @@
             this.txtReviewerNotes = new System.Windows.Forms.TextBox();
             this.lblStatus = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.linkLabel1 = new System.Windows.Forms.LinkLabel();
             this.label7 = new System.Windows.Forms.Label();
             this.lblReviewerPhotoGcsUrl = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
@@ -108,20 +107,6 @@
             this.label3.Text = "Status:";
             this.label3.UseCompatibleTextRendering = true;
             // 
-            // linkLabel1
-            // 
-            this.linkLabel1.AutoSize = true;
-            this.linkLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabel1.LinkColor = System.Drawing.Color.LightCyan;
-            this.linkLabel1.Location = new System.Drawing.Point(481, 3);
-            this.linkLabel1.Name = "linkLabel1";
-            this.linkLabel1.Size = new System.Drawing.Size(16, 16);
-            this.linkLabel1.TabIndex = 14;
-            this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "X";
-            this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -151,7 +136,6 @@
             this.ClientSize = new System.Drawing.Size(501, 315);
             this.Controls.Add(this.lblReviewerPhotoGcsUrl);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.txtReviewerNotes);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtNotes);
@@ -159,7 +143,9 @@
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label3);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmInternalIdentificationChecker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Internal Identification Checker";
@@ -177,7 +163,6 @@
         private System.Windows.Forms.TextBox txtReviewerNotes;
         public System.Windows.Forms.Label lblStatus;
         public System.Windows.Forms.Label label3;
-        private System.Windows.Forms.LinkLabel linkLabel1;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.LinkLabel lblReviewerPhotoGcsUrl;
     }

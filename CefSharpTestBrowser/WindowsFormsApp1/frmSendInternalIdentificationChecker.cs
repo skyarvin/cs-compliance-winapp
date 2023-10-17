@@ -43,7 +43,7 @@ namespace WindowsFormsApp1
             string b64string = "";
             if (!string.IsNullOrEmpty(filePath))
             {
-                b64string = Convert.ToBase64String(File.ReadAllBytes(filePath));
+                b64string = ResizeImage(File.ReadAllBytes(filePath));
             }
 
             var start_time = Globals.StartTime_LastAction;
@@ -68,6 +68,25 @@ namespace WindowsFormsApp1
                 Settings.Default.Save();
                 Globals.frmMain.StartbgWorkIIDC();
                 this.DialogResult = DialogResult.OK;
+            }
+        }
+
+        string ResizeImage(byte[] data)
+        {
+            using (var ms = new MemoryStream(data))
+            {
+                try
+                {
+                    Bitmap bmp = new Bitmap(ms);
+                    Bitmap resized = new Bitmap(bmp, new Size(bmp.Width / 5, bmp.Height / 5));
+                    ImageConverter converter = new ImageConverter();
+                    data = (byte[])converter.ConvertTo(resized, typeof(byte[]));
+                    return Convert.ToBase64String(data);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
         }
 

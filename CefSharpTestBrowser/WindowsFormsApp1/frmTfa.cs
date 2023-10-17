@@ -18,7 +18,7 @@ namespace CSTool
 {
     public partial class frmTfa : Form
     {
-        public ITFAToken tfa;
+        public TFA tfa;
         private bool bExitApp = true;
         private string device_name;
 

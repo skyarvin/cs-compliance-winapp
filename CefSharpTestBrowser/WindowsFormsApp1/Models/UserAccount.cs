@@ -24,7 +24,7 @@ namespace CSTool.Models
     {
         public string username;
         public string role;
-        public ITFAToken UserLogin(string username, string password)
+        public (UserToken, TFA) UserLogin(string username, string password)
         {
             try
             {
@@ -38,30 +38,38 @@ namespace CSTool.Models
                         password
                     }), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
-                    if (response.IsSuccessStatusCode)
+                    if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
                     {
                         using (HttpContent data = response.Content)
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            ITFAToken result = JsonConvert.DeserializeObject<ITFAToken>(jsonString.Result);
-                            if(result?.nonce == null)
-                            {
-                                Globals.UserToken = new UserToken
-                                {
-                                    access_token = result.access_token,
-                                    refresh_token = result.refresh_token,
-                                };
-                            }
-                            return result;
+                            TFA result = JsonConvert.DeserializeObject<TFA>(jsonString.Result);
+                            return (null, result);
                         }
                     }
-                    return null; 
+
+                    if(response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            UserToken result = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
+                            Globals.UserToken = new UserToken
+                            {
+                                access_token = result.access_token,
+                                refresh_token = result.refresh_token,
+                            };
+                            return (result, null);
+                        }
+                    }
+                    return (null, null); 
                 }
             }
             catch
             {
-                return null; 
+                return (null, null);
             }
         }
 

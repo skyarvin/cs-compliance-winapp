@@ -344,7 +344,6 @@
     <Compile Include="Handlers\Handlers.cs" />
     <Compile Include="Handlers\HttpHandler.cs" />
     <Compile Include="Handlers\Interfaces\IHttpHandler.cs" />
-    <Compile Include="Handlers\Interfaces\ITFAToken.cs" />
     <Compile Include="Handlers\RefreshTokenHandler.cs" />
     <Compile Include="Handlers\TokenHandler.cs" />
     <Compile Include="Models\Activity.cs" />

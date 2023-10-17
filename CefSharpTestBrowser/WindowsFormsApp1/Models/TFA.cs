@@ -10,15 +10,19 @@ using CSTool.Class;
 
 namespace CSTool.Models
 {
-    public class TFA: UserToken
+    public class TFA
     {
+        public string nonce { get; set; }
+        public string user_id { get; set; }
+        public List<Dictionary<string, string>> devices { get; set; }
+
         public static bool SubmitTfa(string tfa_code, string nonce, string user_id, string device_name)
         {
             try
             {
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.AUTH_URL, "/confirm_login");
+                    var uri = string.Concat(Url.AUTH_URL, "/tfa_code");
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(new
                     {

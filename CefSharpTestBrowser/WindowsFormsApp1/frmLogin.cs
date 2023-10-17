@@ -63,8 +63,8 @@ namespace WindowsFormsApp1
             }
             try
             {
-                ITFAToken tfatoken = Globals.user_account.UserLogin(txtEmail.Text, txtPwd.Text);
-                if (tfatoken == null)
+                (UserToken, TFA) result = Globals.user_account.UserLogin(txtEmail.Text, txtPwd.Text);
+                if (result.Item1 == null && result.Item2 == null)
                 {
                     MessageBox.Show("Username or password is incorrect", "Error");
                     return;
@@ -72,11 +72,11 @@ namespace WindowsFormsApp1
 
                 Globals.user_account.username = txtEmail.Text;
                 Globals.user_account.role = cmbUtype.Text;
-                if(tfatoken?.nonce != null)
+                if(result.Item2 != null)
                 {
                     bExitApp = false;
                     frmTfa frmTfa = new frmTfa();
-                    frmTfa.tfa = tfatoken;
+                    frmTfa.tfa = result.Item2;
                     frmTfa.Show();
                     this.Close();
                     return;

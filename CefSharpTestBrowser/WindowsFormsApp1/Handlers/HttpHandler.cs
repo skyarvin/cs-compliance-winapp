@@ -35,8 +35,7 @@ namespace CSTool.Handlers
                     }
                 }
                 HttpResponseMessage response = GetAsync(requestUri).Result;
-                this.CheckRequestStatusCode(response.StatusCode);
-                return await Task.FromResult(response);
+                return await this.CheckRequestResponse(response);
             }
             catch (Exception e)
             {
@@ -57,8 +56,7 @@ namespace CSTool.Handlers
                     }
                 }
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
-                this.CheckRequestStatusCode(response.StatusCode);
-                return await Task.FromResult(response);
+                return await this.CheckRequestResponse(response);
             }
             catch (Exception e)
             {
@@ -79,8 +77,7 @@ namespace CSTool.Handlers
                     }
                 }
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
-                this.CheckRequestStatusCode(response.StatusCode);
-                return await Task.FromResult(response);
+                return await this.CheckRequestResponse(response);
             }
             catch (Exception e)
             {
@@ -88,18 +85,19 @@ namespace CSTool.Handlers
             }
         }
 
-        private void CheckRequestStatusCode(System.Net.HttpStatusCode statusCode)
+        private async Task<HttpResponseMessage> CheckRequestResponse(HttpResponseMessage response)
         {
-            if (statusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 throw new UnauthorizeException();
             }
+            return await Task.FromResult(response);
         }
 
         private void SetRequestHeaders(string requestUri)
         {
             string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
-            string[] public_routes = { "/security/login", "/security/confirm_login" };
+            string[] public_routes = { "/security/login", "/security/tfa_code" };
             DefaultRequestHeaders.Add("Staffme-Authorization", apiKey);
             if (!public_routes.Contains(new Uri(requestUri).AbsolutePath))
             {

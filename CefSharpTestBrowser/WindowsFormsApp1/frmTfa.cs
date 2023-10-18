@@ -18,7 +18,7 @@ namespace CSTool
 {
     public partial class frmTfa : Form
     {
-        public TFA tfa;
+        public UserTFA tfa;
         private bool bExitApp = true;
         private string device_name;
 
@@ -53,7 +53,14 @@ namespace CSTool
         {
             try
             {
-                if (!TFA.SubmitTfa(tfa_code.Text, tfa.nonce, tfa.user_id, this.device_name))
+                TFA tfa = new TFA
+                {
+                    device_name = this.device_name,
+                    nonce = this.tfa.nonce,
+                    tfa_code = tfa_code.Text,
+                    user_id = this.tfa.user_id,
+                };
+                if (!tfa.SubmitTfa())
                 {
                     MessageBox.Show("Invalid Two Factor Authenticator Code! \nPlease Try Again.", "Error");
                     return;

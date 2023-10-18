@@ -359,6 +359,7 @@
     <Compile Include="Models\TFA.cs" />
     <Compile Include="Models\Seed.cs" />
     <Compile Include="Models\UserAccount.cs" />
+    <Compile Include="Models\UserTFA.cs" />
     <Compile Include="Models\UserToken.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

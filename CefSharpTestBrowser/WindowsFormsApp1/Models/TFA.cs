@@ -12,11 +12,12 @@ namespace CSTool.Models
 {
     public class TFA
     {
+        public string tfa_code { get; set; }
         public string nonce { get; set; }
         public string user_id { get; set; }
-        public List<Dictionary<string, string>> devices { get; set; }
+        public string device_name { get; set; }
 
-        public static bool SubmitTfa(string tfa_code, string nonce, string user_id, string device_name)
+        public bool SubmitTfa()
         {
             try
             {
@@ -26,10 +27,10 @@ namespace CSTool.Models
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(new
                     {
-                        tfa_code,
-                        nonce,
-                        user_id,
-                        device_name,
+                        this.tfa_code,
+                        this.nonce,
+                        this.user_id,
+                        this.device_name,
                     }), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
                     if (response.IsSuccessStatusCode)

@@ -24,7 +24,7 @@ namespace CSTool.Models
     {
         public string username;
         public string role;
-        public (UserToken, TFA) UserLogin(string password)
+        public (UserToken, UserTFA) UserLogin(string password)
         {
             try
             {
@@ -44,11 +44,10 @@ namespace CSTool.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            TFA result = JsonConvert.DeserializeObject<TFA>(jsonString.Result);
+                            UserTFA result = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
                             return (null, result);
                         }
                     }
-
                     if(response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         using (HttpContent data = response.Content)

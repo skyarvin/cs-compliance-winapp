@@ -26,10 +26,9 @@ namespace CSTool.Class
         public void captureScreenshot(string filename)
         {
             try {
-                var image = CaptureDesktop();
+                Bitmap image = new Bitmap(this.CaptureDesktop(), new Size(this.CaptureDesktop().Width / 2, this.CaptureDesktop().Height / 2));
                 image.Save(filename, ImageFormat.Jpeg);
             }
-
             catch {
                 return;
             }

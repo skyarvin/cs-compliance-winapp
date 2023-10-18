@@ -29,7 +29,7 @@ namespace WindowsFormsApp1
                 case "New":
                     BackColor = Color.Gray;
                     lblStatus.Text = "Pending";
-                    Height = 200;
+                    Height = 210;
                     break;
                 case "Approved":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
@@ -38,7 +38,7 @@ namespace WindowsFormsApp1
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Green;
-                    Height = 310;
+                    Height = 348;
                     break;
                 case "Denied":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
@@ -47,7 +47,7 @@ namespace WindowsFormsApp1
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Red;
-                    Height = 310;
+                    Height = 348;
                     break;
                 case "Processing":
                     BackColor = Color.FromArgb(230, 126, 34);

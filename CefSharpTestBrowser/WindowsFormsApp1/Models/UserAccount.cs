@@ -24,7 +24,7 @@ namespace CSTool.Models
     {
         public string username;
         public string role;
-        public (UserToken, TFA) UserLogin(string username, string password)
+        public (UserToken, TFA) UserLogin(string password)
         {
             try
             {

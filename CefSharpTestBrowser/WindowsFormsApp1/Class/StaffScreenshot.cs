@@ -2,6 +2,7 @@
 using System.Drawing.Imaging;
 using System.Linq;
 using System.Windows.Forms;
+using System.IO;
 
 namespace CSTool.Class
 {
@@ -26,14 +27,19 @@ namespace CSTool.Class
         public void captureScreenshot(string filename)
         {
             try {
-                Bitmap image = new Bitmap(this.CaptureDesktop(), new Size(this.CaptureDesktop().Width / 2, this.CaptureDesktop().Height / 2));
+                var image = CaptureDesktop();
                 image.Save(filename, ImageFormat.Jpeg);
+                int oneMegaByte = 1024;
+                int fileLength = (int)(new System.IO.FileInfo(filename).Length / oneMegaByte);
+                if (fileLength > oneMegaByte)
+                {
+                    image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
+                    image.Save(filename, ImageFormat.Jpeg);
+                }
             }
             catch {
                 return;
             }
-            
         }
-
     }
 }

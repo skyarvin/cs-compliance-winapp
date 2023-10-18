@@ -73,6 +73,7 @@ namespace WindowsFormsApp1
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
         public static UserAccount user_account = new UserAccount();
+        public static UserTFA userTfa;
 
         public static void ShowMessage(Form parent,string Message)
         {

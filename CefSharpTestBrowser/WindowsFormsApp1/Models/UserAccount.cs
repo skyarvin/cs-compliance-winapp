@@ -24,7 +24,7 @@ namespace CSTool.Models
     {
         public string username;
         public string role;
-        public (UserToken, UserTFA) UserLogin(string password)
+        public UserToken UserLogin(string password)
         {
             try
             {
@@ -45,8 +45,14 @@ namespace CSTool.Models
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
                             UserTFA result = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
-                            return (null, result);
+                            Globals.userTfa = new UserTFA
+                            {
+                                user_id = result.user_id,
+                                devices = result.devices,
+                                nonce = result.nonce,
+                            };
                         }
+                        throw new TFARequiredException();
                     }
                     if(response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
@@ -60,15 +66,15 @@ namespace CSTool.Models
                                 access_token = result.access_token,
                                 refresh_token = result.refresh_token,
                             };
-                            return (result, null);
+                            return result;
                         }
                     }
-                    return (null, null); 
+                    return null; 
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return (null, null);
+                throw ex;
             }
         }
 

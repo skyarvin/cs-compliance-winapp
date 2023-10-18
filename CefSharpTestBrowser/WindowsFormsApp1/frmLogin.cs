@@ -1,4 +1,6 @@
 ﻿using CSTool;
+using CSTool.Class;
+using CSTool.Handlers.ErrorsHandler;
 using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using CSTool.Properties;
@@ -65,20 +67,10 @@ namespace WindowsFormsApp1
             {
                 Globals.user_account.username = txtEmail.Text;
                 Globals.user_account.role = cmbUtype.Text;
-                (UserToken, UserTFA) result = Globals.user_account.UserLogin(txtPwd.Text);
-                if (result.Item1 == null && result.Item2 == null)
+                UserToken result = Globals.user_account.UserLogin(txtPwd.Text);
+                if (result == null)
                 {
                     MessageBox.Show("Username or password is incorrect", "Error");
-                    return;
-                }
-
-                if(result.Item2 != null)
-                {
-                    bExitApp = false;
-                    frmTfa frmTfa = new frmTfa();
-                    frmTfa.tfa = result.Item2;
-                    frmTfa.Show();
-                    this.Close();
                     return;
                 }
 
@@ -117,6 +109,13 @@ namespace WindowsFormsApp1
                 {
                     MessageBox.Show("We cannot find an account with that username.", "Error");
                 }
+            }
+            catch (TFARequiredException)
+            {
+                bExitApp = false;
+                frmTfa frmTfa = new frmTfa();
+                frmTfa.Show();
+                this.Close();
             }
             catch (AggregateException e)
             {

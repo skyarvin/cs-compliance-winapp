@@ -18,7 +18,6 @@ namespace CSTool
 {
     public partial class frmTfa : Form
     {
-        public UserTFA tfa;
         private bool bExitApp = true;
         private string device_name;
 
@@ -29,7 +28,7 @@ namespace CSTool
 
         private void frmTfa_Load(object sender, EventArgs e)
         {
-            foreach (var device in tfa.devices)
+            foreach (var device in Globals.userTfa.devices)
             {
                 device_list.Items.Add(device["device_name"]);
             }
@@ -56,9 +55,9 @@ namespace CSTool
                 TFA tfa = new TFA
                 {
                     device_name = this.device_name,
-                    nonce = this.tfa.nonce,
+                    nonce = Globals.userTfa.nonce,
                     tfa_code = tfa_code.Text,
-                    user_id = this.tfa.user_id,
+                    user_id = Globals.userTfa.user_id,
                 };
                 if (!tfa.SubmitTfa())
                 {

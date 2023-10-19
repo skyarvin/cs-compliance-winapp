@@ -45,13 +45,15 @@
             // 
             // device_label
             // 
-            this.device_label.AutoSize = true;
+            this.device_label.Dock = System.Windows.Forms.DockStyle.Top;
             this.device_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.device_label.ForeColor = System.Drawing.Color.Black;
-            this.device_label.Location = new System.Drawing.Point(26, 121);
+            this.device_label.Location = new System.Drawing.Point(0, 0);
             this.device_label.Name = "device_label";
-            this.device_label.Size = new System.Drawing.Size(0, 20);
+            this.device_label.Size = new System.Drawing.Size(370, 150);
             this.device_label.TabIndex = 2;
+            this.device_label.Text = "Header1";
+            this.device_label.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // label2
             // 
@@ -129,7 +131,7 @@
             this.MaximizeBox = false;
             this.Name = "frmTfa";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Two Factor Auth";
+            this.Text = "Authenticator";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmTfa_FormClosing);
             this.Load += new System.EventHandler(this.frmTfa_Load);
             this.ResumeLayout(false);

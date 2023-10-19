@@ -15,13 +15,14 @@ using CSTool.Models;
 using CSTool.Handlers.Interfaces;
 using CSTool.Handlers.ErrorsHandler;
 using System.Collections;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace CSTool
 {
     public partial class frmTfa : Form
     {
         private bool bExitApp = true;
-        private string device_name;
+        private string device_id;
         private readonly FormType frmType;
         private readonly UserTFA userTfa;
 
@@ -41,8 +42,9 @@ namespace CSTool
 
             foreach (var device in this.userTfa.devices)
             {
-                device_list.Items.Add(device["device_name"]);
+                device_list.Items.Add(new { Key=device["device_id"], Value=device["device_name"], Type=device["type"] });
             }
+            device_list.DisplayMember = "Value";
             device_list.SelectedIndex = 0;
         }
 
@@ -65,7 +67,7 @@ namespace CSTool
             {
                 TFA tfa = new TFA
                 {
-                    device_name = this.device_name,
+                    device_id = this.device_id,
                     nonce = this.userTfa.nonce,
                     tfa_code = tfa_code.Text,
                     user_id = this.userTfa.user_id,
@@ -139,8 +141,10 @@ namespace CSTool
 
         private void device_list_SelectedIndexChanged(object sender, EventArgs e)
         {
-            device_label.Text = "Authenticate your account on " + device_list.GetItemText(device_list.SelectedItem) + "'s Device";
-            this.device_name = device_list.GetItemText(device_list.SelectedItem);
+            string device_name = device_list.SelectedItem.GetType().GetProperty("Value").GetValue(device_list.SelectedItem, null).ToString();
+            string device_id = device_list.SelectedItem.GetType().GetProperty("Key").GetValue(device_list.SelectedItem, null).ToString();
+            device_label.Text = "Authenticate your account on " + device_name + "'s Device";
+            this.device_id = device_id;
         }
 
         private void back_btn_Click(object sender, EventArgs e)

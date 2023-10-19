@@ -30,7 +30,7 @@ namespace CSTool.Models
             {
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.AUTH_URL, "/login");
+                    var uri = string.Concat(Url.AUTH_URL, "/login/");
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(new
                     {
@@ -84,7 +84,7 @@ namespace CSTool.Models
             {
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.AUTH_URL, "/logout");
+                    var uri = string.Concat(Url.AUTH_URL, "/logout/");
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var response = client.CustomPostAsync(uri).Result;
                     return response.IsSuccessStatusCode;

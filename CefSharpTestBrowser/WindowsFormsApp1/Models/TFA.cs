@@ -15,7 +15,7 @@ namespace CSTool.Models
         public string tfa_code { get; set; }
         public string nonce { get; set; }
         public string user_id { get; set; }
-        public string device_name { get; set; }
+        public string device_id { get; set; }
 
         public bool SubmitTfa()
         {
@@ -23,14 +23,14 @@ namespace CSTool.Models
             {
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.AUTH_URL, "/tfa_code");
+                    var uri = string.Concat(Url.AUTH_URL, "/tfa_code/");
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(new
                     {
                         this.tfa_code,
                         this.nonce,
                         this.user_id,
-                        this.device_name,
+                        this.device_id,
                     }), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
                     if (response.IsSuccessStatusCode)

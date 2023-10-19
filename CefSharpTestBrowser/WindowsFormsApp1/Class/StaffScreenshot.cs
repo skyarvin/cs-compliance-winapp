@@ -29,16 +29,21 @@ namespace CSTool.Class
             try {
                 var image = CaptureDesktop();
                 image.Save(filename, ImageFormat.Jpeg);
-                int oneMegaByte = 1024;
-                int fileLength = (int)(new System.IO.FileInfo(filename).Length / oneMegaByte);
-                if (fileLength > oneMegaByte)
-                {
-                    image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
-                    image.Save(filename, ImageFormat.Jpeg);
-                }
+                this.resizeImage(filename, image);
             }
             catch {
                 return;
+            }
+        }
+
+        private void resizeImage(string filename, Bitmap image)
+        {
+            int oneMegaByte = 1024;
+            int fileLength = (int)(new System.IO.FileInfo(filename).Length / oneMegaByte);
+            if (fileLength > oneMegaByte)
+            {
+                image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
+                image.Save(filename, ImageFormat.Jpeg);
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Text;
 using WindowsFormsApp1;
 using CSTool.Handlers.Interfaces;
 using CSTool.Class;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
@@ -16,6 +17,7 @@ namespace CSTool.Models
         public string nonce { get; set; }
         public string user_id { get; set; }
         public string device_id { get; set; }
+        public string prev_device_id { get; set; }
 
         public bool SubmitTfa()
         {
@@ -54,9 +56,51 @@ namespace CSTool.Models
                     }
                 }
             }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                throw e;
+            }
             catch
             {
                 return false;
+            }
+        }
+
+        public string changeAuthenticatorDevice()
+        {
+            try
+            {
+                using (IHttpHandler client = new HttpHandler())
+                {
+                    var uri = string.Concat(Url.AUTH_URL, "/tfa/device/change/");
+                    client.Timeout = TimeSpan.FromSeconds(5);
+                    var content = new StringContent(JsonConvert.SerializeObject(new
+                    {
+                        this.nonce,
+                        this.user_id,
+                        this.device_id,
+                        this.prev_device_id,
+                    }), Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            UserTFA nonce = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
+                            return nonce.nonce;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch
+            {
+                return null;
             }
         }
     }

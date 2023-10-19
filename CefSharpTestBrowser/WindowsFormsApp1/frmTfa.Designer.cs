@@ -75,6 +75,7 @@
             this.device_list.Size = new System.Drawing.Size(331, 28);
             this.device_list.TabIndex = 4;
             this.device_list.SelectedIndexChanged += new System.EventHandler(this.device_list_SelectedIndexChanged);
+            this.device_list.SelectionChangeCommitted += new System.EventHandler(this.device_list_SelectionChangeCommitted);
             // 
             // submit_tfa
             // 

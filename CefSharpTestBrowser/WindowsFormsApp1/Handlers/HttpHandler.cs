@@ -89,7 +89,7 @@ namespace CSTool.Handlers
         {
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                throw new UnauthorizeException();
+                throw new UnauthorizeException(response);
             }
             return await Task.FromResult(response);
         }
@@ -97,7 +97,7 @@ namespace CSTool.Handlers
         private void SetRequestHeaders(string requestUri)
         {
             string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
-            string[] public_routes = { "/security/login/", "/security/tfa_code/" };
+            string[] public_routes = { "/security/login/", "/security/tfa_code/", "/security/tfa/device/change/" };
             DefaultRequestHeaders.Add("Staffme-Authorization", apiKey);
             if (!public_routes.Contains(new Uri(requestUri).AbsolutePath))
             {

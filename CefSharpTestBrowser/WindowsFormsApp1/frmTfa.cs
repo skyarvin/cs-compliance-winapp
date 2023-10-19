@@ -16,6 +16,9 @@ using CSTool.Handlers.Interfaces;
 using CSTool.Handlers.ErrorsHandler;
 using System.Collections;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using CefSharp;
+using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace CSTool
 {
@@ -72,12 +75,7 @@ namespace CSTool
                     tfa_code = tfa_code.Text,
                     user_id = this.userTfa.user_id,
                 };
-                if (!tfa.SubmitTfa())
-                {
-                    MessageBox.Show("Invalid Two Factor Authenticator Code! \nPlease Try Again.", "Error");
-                    return;
-                }
-
+                tfa.SubmitTfa();
                 Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
                 if (Globals.ComplianceAgent != null)
                 {
@@ -118,6 +116,18 @@ namespace CSTool
                     MessageBox.Show("We cannot find an account with that username.", "Error");
                 }
             }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException unauthorize)
+            {
+                using (HttpContent data = unauthorize.response.Content)
+                {
+                    var jsonString = data.ReadAsStringAsync();
+                    jsonString.Wait();
+                    UserTFA result = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
+                    this.userTfa.nonce = result.nonce;
+                    MessageBox.Show("Invalid Two Factor Authenticator Code! \nPlease Try Again.", "Error");
+                    return;
+                }
+            }
             catch (AggregateException ex)
             {
                 Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
@@ -153,6 +163,20 @@ namespace CSTool
             frmLogin frmLogin = new frmLogin();
             frmLogin.Show();
             this.Close();
+        }
+
+        private void device_list_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            string device_id = device_list.SelectedItem.GetType().GetProperty("Key").GetValue(device_list.SelectedItem, null).ToString();
+            TFA tfa = new TFA
+            {
+                device_id = device_id,
+                prev_device_id = this.device_id,
+                nonce = this.userTfa.nonce,
+                tfa_code = tfa_code.Text,
+                user_id = this.userTfa.user_id,
+            };
+            this.userTfa.nonce = tfa.changeAuthenticatorDevice();
         }
     }
 }

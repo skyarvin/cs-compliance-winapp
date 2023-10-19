@@ -13,6 +13,8 @@ using WindowsFormsApp1;
 using CSTool.Properties;
 using CSTool.Models;
 using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
+using System.Collections;
 
 namespace CSTool
 {
@@ -21,11 +23,13 @@ namespace CSTool
         private bool bExitApp = true;
         private string device_name;
         private readonly FormType frmType;
+        private readonly UserTFA userTfa;
 
-        public frmTfa(FormType frmType)
+        public frmTfa(FormType frmType, UserTFA userTfa)
         {
             InitializeComponent();
             this.frmType = frmType;
+            this.userTfa = userTfa;
         }
 
         private void frmTfa_Load(object sender, EventArgs e)
@@ -35,7 +39,7 @@ namespace CSTool
                 back_btn.Hide();
             }
 
-            foreach (var device in Globals.userTfa.devices)
+            foreach (var device in this.userTfa.devices)
             {
                 device_list.Items.Add(device["device_name"]);
             }
@@ -62,9 +66,9 @@ namespace CSTool
                 TFA tfa = new TFA
                 {
                     device_name = this.device_name,
-                    nonce = Globals.userTfa.nonce,
+                    nonce = this.userTfa.nonce,
                     tfa_code = tfa_code.Text,
-                    user_id = Globals.userTfa.user_id,
+                    user_id = this.userTfa.user_id,
                 };
                 if (!tfa.SubmitTfa())
                 {

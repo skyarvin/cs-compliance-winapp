@@ -45,14 +45,14 @@ namespace CSTool.Models
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
                             UserTFA result = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
-                            Globals.userTfa = new UserTFA
+                            UserTFA userTfa = new UserTFA
                             {
                                 user_id = result.user_id,
                                 devices = result.devices,
                                 nonce = result.nonce,
                             };
+                            throw new TFARequiredException(userTfa);
                         }
-                        throw new TFARequiredException();
                     }
                     if(response.StatusCode == System.Net.HttpStatusCode.OK)
                     {

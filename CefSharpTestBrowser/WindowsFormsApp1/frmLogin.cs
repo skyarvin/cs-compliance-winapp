@@ -110,10 +110,10 @@ namespace WindowsFormsApp1
                     MessageBox.Show("We cannot find an account with that username.", "Error");
                 }
             }
-            catch (TFARequiredException)
+            catch (TFARequiredException tfa)
             {
                 bExitApp = false;
-                frmTfa frmTfa = new frmTfa(FormType.LoginForm);
+                frmTfa frmTfa = new frmTfa(FormType.LoginForm, tfa.userTfa);
                 frmTfa.Show();
                 this.Close();
             }

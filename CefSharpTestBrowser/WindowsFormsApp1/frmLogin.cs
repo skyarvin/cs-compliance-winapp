@@ -113,9 +113,14 @@ namespace WindowsFormsApp1
             catch (TFARequiredException)
             {
                 bExitApp = false;
-                frmTfa frmTfa = new frmTfa();
+                frmTfa frmTfa = new frmTfa(FormType.LoginForm);
                 frmTfa.Show();
                 this.Close();
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                MessageBox.Show("Username or password is incorrect", "Error");
+                return;
             }
             catch (AggregateException e)
             {

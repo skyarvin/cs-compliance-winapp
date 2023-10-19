@@ -20,14 +20,21 @@ namespace CSTool
     {
         private bool bExitApp = true;
         private string device_name;
+        private readonly FormType frmType;
 
-        public frmTfa()
+        public frmTfa(FormType frmType)
         {
             InitializeComponent();
+            this.frmType = frmType;
         }
 
         private void frmTfa_Load(object sender, EventArgs e)
         {
+            if (this.frmType != FormType.LoginForm)
+            {
+                back_btn.Hide();
+            }
+
             foreach (var device in Globals.userTfa.devices)
             {
                 device_list.Items.Add(device["device_name"]);
@@ -79,14 +86,20 @@ namespace CSTool
                     if (Settings.Default.user_type.ToUpper().Contains("AGENT") && Settings.Default.role == "CSA" ||
                         Settings.Default.user_type.ToUpper().Contains("TRAINEE") && Settings.Default.role == "TRAINEE")
                     {
-                        Globals.frmMain = new frmMain();
-                        Globals.frmMain.Show();
+                        if(this.frmType == FormType.LoginForm)
+                        {
+                            Globals.frmMain = new frmMain();
+                            Globals.frmMain.Show();
+                        }
                         this.Close();
                     }
                     else if (Settings.Default.user_type.ToUpper().Contains("QA") && Settings.Default.role == "CSQA")
                     {
-                        Globals.FrmQA = new frmQA();
-                        Globals.FrmQA.Show();
+                        if (this.frmType == FormType.LoginForm)
+                        { 
+                            Globals.FrmQA = new frmQA();
+                            Globals.FrmQA.Show();
+                        }
                         this.Close();
                     }
                     else
@@ -124,6 +137,14 @@ namespace CSTool
         {
             device_label.Text = "Authenticate your account on " + device_list.GetItemText(device_list.SelectedItem) + "'s Device";
             this.device_name = device_list.GetItemText(device_list.SelectedItem);
+        }
+
+        private void back_btn_Click(object sender, EventArgs e)
+        {
+            bExitApp = false;
+            frmLogin frmLogin = new frmLogin();
+            frmLogin.Show();
+            this.Close();
         }
     }
 }

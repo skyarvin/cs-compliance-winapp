@@ -376,4 +376,10 @@ namespace WindowsFormsApp1
         UserClick = 5,
         Request_Handler = 6,
     }
+
+    public enum FormType
+    {
+        LoginForm,
+        MainForm
+    }
 }

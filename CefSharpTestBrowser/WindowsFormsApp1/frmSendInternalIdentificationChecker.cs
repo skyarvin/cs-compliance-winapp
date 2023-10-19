@@ -75,18 +75,21 @@ namespace WindowsFormsApp1
         {
             using (var ms = new MemoryStream(data))
             {
-                try
-                {
-                    Bitmap bmp = new Bitmap(ms);
-                    Bitmap resized = new Bitmap(bmp, new Size(bmp.Width / 2, bmp.Height / 2));
-                    ImageConverter converter = new ImageConverter();
-                    data = (byte[])converter.ConvertTo(resized, typeof(byte[]));
-                    return Convert.ToBase64String(data);
-                }
-                catch (Exception)
-                {
-                    throw;
-                }
+                int oneMegaByte = 1024;
+                int fileLength = data.Length / oneMegaByte;
+                if (fileLength > oneMegaByte)
+                    try
+                    {
+                        Bitmap bmp = new Bitmap(ms);
+                        Bitmap resized = new Bitmap(bmp, new Size(bmp.Width / 4, bmp.Height / 4));
+                        ImageConverter converter = new ImageConverter();
+                        data = (byte[])converter.ConvertTo(resized, typeof(byte[]));
+                    }
+                    catch (Exception)
+                    {
+                        throw;
+                    }
+                return Convert.ToBase64String(data);
             }
         }
 

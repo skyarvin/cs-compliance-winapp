@@ -43,7 +43,14 @@ namespace WindowsFormsApp1
             string b64string = "";
             if (!string.IsNullOrEmpty(this.filePath))
             {
-                b64string = this.ResizeImage(File.ReadAllBytes(this.filePath));
+                int oneMegaByte = 1024;
+                int fileLength = File.ReadAllBytes(filePath).Length / oneMegaByte;
+                if (fileLength > oneMegaByte)
+                {
+                    MessageBox.Show("File is too big! File size exceeds 1MB.");
+                    return;
+                }
+                b64string = Convert.ToBase64String(File.ReadAllBytes(this.filePath));
             }
 
             var start_time = Globals.StartTime_LastAction;
@@ -68,28 +75,6 @@ namespace WindowsFormsApp1
                 Settings.Default.Save();
                 Globals.frmMain.StartbgWorkIIDC();
                 this.DialogResult = DialogResult.OK;
-            }
-        }
-
-        private string ResizeImage(byte[] data)
-        {
-            using (var ms = new MemoryStream(data))
-            {
-                int oneMegaByte = 1024;
-                int fileLength = data.Length / oneMegaByte;
-                if (fileLength > oneMegaByte)
-                    try
-                    {
-                        Bitmap bmp = new Bitmap(ms);
-                        Bitmap resized = new Bitmap(bmp, new Size(bmp.Width / 4, bmp.Height / 4));
-                        ImageConverter converter = new ImageConverter();
-                        data = (byte[])converter.ConvertTo(resized, typeof(byte[]));
-                    }
-                    catch (Exception)
-                    {
-                        throw;
-                    }
-                return Convert.ToBase64String(data);
             }
         }
 

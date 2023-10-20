@@ -15,7 +15,6 @@ using CSTool.Models;
 using CSTool.Handlers.Interfaces;
 using CSTool.Handlers.ErrorsHandler;
 using System.Collections;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using CefSharp;
 using Newtonsoft.Json;
 using System.Net.Http;
@@ -108,7 +107,9 @@ namespace CSTool
                     }
                     else
                     {
-                        Thread.Sleep(60000);
+                        MessageBox.Show("Please check your User Type.", "Error");
+                        bExitApp = false;
+                        this.Close();
                     }
                 }
                 else

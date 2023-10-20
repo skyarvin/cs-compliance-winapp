@@ -101,8 +101,7 @@ namespace WindowsFormsApp1
                     }
                     else
                     {
-                        //MessageBox.Show("Please check your User Type.", "Error");
-                        Thread.Sleep(60000);
+                        MessageBox.Show("Please check your User Type.", "Error");
                     }
                 }
                 else
@@ -114,8 +113,9 @@ namespace WindowsFormsApp1
             {
                 bExitApp = false;
                 frmTfa frmTfa = new frmTfa(FormType.LoginForm, tfa.userTfa);
+                frmTfa.FormClosed += new FormClosedEventHandler(TFA_Closed);
                 frmTfa.Show();
-                this.Close();
+                this.Hide();
             }
             catch (UnauthorizeException unauthorize)
             {
@@ -132,6 +132,14 @@ namespace WindowsFormsApp1
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+            }
+        }
+
+        private void TFA_Closed(object sender, FormClosedEventArgs e)
+        {
+            if(Globals.frmMain == null && Globals.FrmQA == null)
+            {
+                this.Show();
             }
         }
 

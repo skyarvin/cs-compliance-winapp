@@ -116,9 +116,9 @@ namespace CSTool
                     MessageBox.Show("We cannot find an account with that username.", "Error");
                 }
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException unauthorize)
+            catch (UnauthorizeException unauthorize)
             {
-                using (HttpContent data = unauthorize.response.Content)
+                using (HttpContent data = unauthorize.responseContent)
                 {
                     var jsonString = data.ReadAsStringAsync();
                     jsonString.Wait();
@@ -167,16 +167,25 @@ namespace CSTool
 
         private void device_list_SelectionChangeCommitted(object sender, EventArgs e)
         {
-            string device_id = device_list.SelectedItem.GetType().GetProperty("Key").GetValue(device_list.SelectedItem, null).ToString();
-            TFA tfa = new TFA
+            try
             {
-                device_id = device_id,
-                prev_device_id = this.device_id,
-                nonce = this.userTfa.nonce,
-                tfa_code = tfa_code.Text,
-                user_id = this.userTfa.user_id,
-            };
-            this.userTfa.nonce = tfa.changeAuthenticatorDevice();
+                string device_id = device_list.SelectedItem.GetType().GetProperty("Key").GetValue(device_list.SelectedItem, null).ToString();
+                TFA tfa = new TFA
+                {
+                    device_id = device_id,
+                    prev_device_id = this.device_id,
+                    nonce = this.userTfa.nonce,
+                    tfa_code = tfa_code.Text,
+                    user_id = this.userTfa.user_id,
+                };
+                this.userTfa.nonce = tfa.ChangeAuthenticatorDevice();
+            }
+            catch (Exception ex)
+            {
+                Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+            }
         }
     }
 }

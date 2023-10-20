@@ -89,7 +89,7 @@ namespace CSTool.Handlers
         {
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                throw new UnauthorizeException(response);
+                throw new UnauthorizeException(response.Content);
             }
             return await Task.FromResult(response);
         }

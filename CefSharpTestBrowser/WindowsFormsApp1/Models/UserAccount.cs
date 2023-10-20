@@ -72,6 +72,10 @@ namespace CSTool.Models
                     return null; 
                 }
             }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException unauthorize)
+            {
+                throw unauthorize;
+            }
             catch (Exception ex)
             {
                 throw ex;

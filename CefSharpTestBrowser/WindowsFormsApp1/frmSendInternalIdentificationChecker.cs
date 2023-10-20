@@ -43,11 +43,11 @@ namespace WindowsFormsApp1
             string b64string = "";
             if (!string.IsNullOrEmpty(this.filePath))
             {
-                int oneMegaByte = 1024;
-                int fileLength = File.ReadAllBytes(filePath).Length / oneMegaByte;
-                if (fileLength > oneMegaByte)
+                int twoMegaByte = 2048;
+                int fileSizeInKb = File.ReadAllBytes(filePath).Length / 1024;
+                if (fileSizeInKb > twoMegaByte)
                 {
-                    MessageBox.Show("File is too big! File size exceeds 1MB.");
+                    MessageBox.Show("File is too big! File size exceeds 2MB.");
                     return;
                 }
                 b64string = Convert.ToBase64String(File.ReadAllBytes(this.filePath));

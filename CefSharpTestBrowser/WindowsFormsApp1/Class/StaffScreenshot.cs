@@ -38,9 +38,9 @@ namespace CSTool.Class
 
         private void resizeImage(string filename, Bitmap image)
         {
-            int oneMegaByte = 1024;
-            int fileLength = (int)(new System.IO.FileInfo(filename).Length / oneMegaByte);
-            if (fileLength > oneMegaByte)
+            int twoMegaByte = 2048;
+            int fileSizeInKb = (int)(new System.IO.FileInfo(filename).Length / 1024);
+            if (fileSizeInKb > twoMegaByte)
             {
                 image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
                 image.Save(filename, ImageFormat.Jpeg);

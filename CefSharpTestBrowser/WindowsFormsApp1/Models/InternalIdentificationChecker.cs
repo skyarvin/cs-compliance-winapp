@@ -28,7 +28,7 @@ namespace CSTool.Models
             {
                 var uri = string.Concat(Url.API_URL, "/iidc/");
                 client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                client.Timeout = TimeSpan.FromSeconds(5);
+                client.Timeout = TimeSpan.FromSeconds(60);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 var response = client.PostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)

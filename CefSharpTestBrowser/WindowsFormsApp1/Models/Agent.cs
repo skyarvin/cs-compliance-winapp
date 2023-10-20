@@ -90,10 +90,10 @@ namespace WindowsFormsApp1.Models
                 }
                 return null;
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException unauthorize)
             {
                 Globals.SessionExpired();
-                throw e;
+                throw unauthorize;
             }
         }
     }

@@ -9,11 +9,11 @@ namespace CSTool.Handlers.ErrorsHandler
 {
     internal class UnauthorizeException: Exception
     {
-        public HttpResponseMessage response;
-        public UnauthorizeException(): base("Invalid token") { }
-        public UnauthorizeException(string message): base(message) { }
-        public UnauthorizeException(HttpResponseMessage response): base() { 
-            this.response = response;
+        public HttpContent responseContent;
+        public UnauthorizeException() : base("Invalid token") { }
+        public UnauthorizeException(string message) : base(message) { }
+        public UnauthorizeException(HttpContent responseContent) : base() { 
+            this.responseContent = responseContent;
         }
     }
 }

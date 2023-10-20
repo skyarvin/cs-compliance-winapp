@@ -56,17 +56,17 @@ namespace CSTool.Models
                     }
                 }
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException unauthorize)
+            {
+                throw unauthorize;
+            }
+            catch (Exception e)
             {
                 throw e;
             }
-            catch
-            {
-                return false;
-            }
         }
 
-        public string changeAuthenticatorDevice()
+        public string ChangeAuthenticatorDevice()
         {
             try
             {
@@ -88,8 +88,8 @@ namespace CSTool.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            UserTFA nonce = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
-                            return nonce.nonce;
+                            UserTFA tfa = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
+                            return tfa.nonce;
                         }
                     }
                     else
@@ -98,9 +98,9 @@ namespace CSTool.Models
                     }
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                return null;
+                throw ex;
             }
         }
     }

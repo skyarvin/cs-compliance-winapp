@@ -117,10 +117,10 @@ namespace WindowsFormsApp1
                 frmTfa.Show();
                 this.Close();
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            catch (UnauthorizeException unauthorize)
             {
+                Globals.SaveToLogFile(unauthorize.ToString(), (int)LogType.Error);
                 MessageBox.Show("Username or password is incorrect", "Error");
-                return;
             }
             catch (AggregateException e)
             {
@@ -132,7 +132,7 @@ namespace WindowsFormsApp1
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 MessageBox.Show(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
-            }            
+            }
         }
 
 

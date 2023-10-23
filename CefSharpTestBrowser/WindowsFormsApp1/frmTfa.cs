@@ -161,8 +161,6 @@ namespace CSTool
         private void back_btn_Click(object sender, EventArgs e)
         {
             bExitApp = false;
-            frmLogin frmLogin = new frmLogin();
-            frmLogin.Show();
             this.Close();
         }
 

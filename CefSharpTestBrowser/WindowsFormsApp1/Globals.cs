@@ -74,14 +74,9 @@ namespace WindowsFormsApp1
         public static bool ShouldResizeImage(int fileLength)
         {
             int one_mega_byte = 1024;
-            int two_mega_byte = one_mega_byte * 2;
+            int two_mega_bytes = one_mega_byte * 2;
             int fileSizeInKb = fileLength / one_mega_byte;
-
-            if (fileSizeInKb > two_mega_byte)
-            {
-                return true;
-            }
-            return false;
+            return fileSizeInKb > two_mega_bytes;
         }
 
         public static void ShowMessage(Form parent,string Message)

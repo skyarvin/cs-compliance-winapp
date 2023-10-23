@@ -43,9 +43,7 @@ namespace WindowsFormsApp1
             string b64string = "";
             if (!string.IsNullOrEmpty(this.filePath))
             {
-                int twoMegaByte = 2048;
-                int fileSizeInKb = File.ReadAllBytes(filePath).Length / 1024;
-                if (fileSizeInKb > twoMegaByte)
+                if (Globals.ShouldResizeImage((int)File.ReadAllBytes(this.filePath).Length))
                 {
                     MessageBox.Show("File is too big! File size exceeds 2MB.");
                     return;

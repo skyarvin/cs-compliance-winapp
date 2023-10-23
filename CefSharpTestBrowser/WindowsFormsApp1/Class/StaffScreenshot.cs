@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using System.IO;
 
-namespace CSTool.Class
+namespace WindowsFormsApp1
 {
     public class StaffScreenshot
     {
@@ -27,20 +27,18 @@ namespace CSTool.Class
         public void captureScreenshot(string filename)
         {
             try {
-                var image = CaptureDesktop();
+                var image = this.CaptureDesktop();
                 image.Save(filename, ImageFormat.Jpeg);
-                this.resizeImage(filename, image);
+                this.checkImageSize(filename, image);
             }
             catch {
                 return;
             }
         }
 
-        private void resizeImage(string filename, Bitmap image)
+        private void checkImageSize(string filename, Bitmap image)
         {
-            int twoMegaByte = 2048;
-            int fileSizeInKb = (int)(new System.IO.FileInfo(filename).Length / 1024);
-            if (fileSizeInKb > twoMegaByte)
+            if (Globals.ShouldResizeImage((int)new System.IO.FileInfo(filename).Length))
             {
                 image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
                 image.Save(filename, ImageFormat.Jpeg);

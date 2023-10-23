@@ -71,11 +71,11 @@ namespace WindowsFormsApp1
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
 
-        public static bool ShouldResizeImage(int fileLength)
+        public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;
             int two_mega_bytes = one_mega_byte * 2;
-            int fileSizeInKb = fileLength / one_mega_byte;
+            long fileSizeInKb = fileLength / one_mega_byte;
             return fileSizeInKb > two_mega_bytes;
         }
 

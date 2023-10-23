@@ -38,7 +38,7 @@ namespace WindowsFormsApp1
 
         private void checkImageSize(string filename, Bitmap image)
         {
-            if (Globals.ShouldResizeImage((int)new System.IO.FileInfo(filename).Length))
+            if (Globals.ShouldResizeImage(new System.IO.FileInfo(filename).Length))
             {
                 image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
                 image.Save(filename, ImageFormat.Jpeg);

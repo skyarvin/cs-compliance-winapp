@@ -69,7 +69,7 @@ namespace WindowsFormsApp1
         public static Announcements AnnouncementsList = new Announcements();
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
-        public static UserToken UserToken = new UserToken();
+        public static UserToken UserToken;
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
 

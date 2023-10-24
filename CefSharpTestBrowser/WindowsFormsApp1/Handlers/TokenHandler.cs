@@ -15,7 +15,7 @@ namespace CSTool.Handlers
     {
         public static bool shouldRefresh()
         {
-            if (Globals.UserToken.access_token == null)
+            if (Globals.UserToken == null)
             {
                 return false;
             }

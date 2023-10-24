@@ -26,20 +26,15 @@ namespace CSTool.Handlers
         {
             try
             {
+                this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
-                lock (Globals.sharedRequestLock)
-                {
-                    if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.shouldRefresh())
-                    {
-                        new RefreshTokenHandler(this).RefreshToken();
-                    }
-                }
                 HttpResponseMessage response = GetAsync(requestUri).Result;
                 this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
             {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 throw e;
             }
         }
@@ -48,20 +43,15 @@ namespace CSTool.Handlers
         {
             try
             {
+                this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
-                lock (Globals.sharedRequestLock)
-                {
-                    if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.shouldRefresh())
-                    {
-                        new RefreshTokenHandler(this).RefreshToken();
-                    }
-                }
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
                 this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
             {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 throw e;
             }
         }
@@ -70,20 +60,15 @@ namespace CSTool.Handlers
         {
             try
             {
+                this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
-                lock (Globals.sharedRequestLock)
-                { 
-                    if (DefaultRequestHeaders.Contains("Authorization") && TokenHandler.shouldRefresh())
-                    {
-                        new RefreshTokenHandler(this).RefreshToken();
-                    }
-                }
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
                 this.CheckRequestStatusCode(response.StatusCode);
                 return await Task.FromResult(response);
             }
             catch (Exception e)
             {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 throw e;
             }
         }
@@ -93,6 +78,17 @@ namespace CSTool.Handlers
             if (statusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 throw new UnauthorizeException();
+            }
+        }
+
+        private void CheckTokenValidity()
+        {
+            lock (Globals.sharedRequestLock)
+            {
+                if (TokenHandler.shouldRefresh())
+                {
+                    new RefreshTokenHandler().RefreshToken();
+                }
             }
         }
 

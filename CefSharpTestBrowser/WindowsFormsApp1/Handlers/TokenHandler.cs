@@ -15,6 +15,10 @@ namespace CSTool.Handlers
     {
         public static bool shouldRefresh()
         {
+            if (Globals.UserToken.access_token == null)
+            {
+                return false;
+            }
             int TimeLimitInMinute = 60;
             var jwthandler = new JwtSecurityTokenHandler();
             var token = jwthandler.ReadToken(Globals.UserToken.access_token) as JwtSecurityToken;

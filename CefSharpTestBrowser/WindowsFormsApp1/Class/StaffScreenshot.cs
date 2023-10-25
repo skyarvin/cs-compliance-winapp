@@ -26,22 +26,27 @@ namespace WindowsFormsApp1
 
         public void captureScreenshot(string filename)
         {
-            try {
-                var image = this.CaptureDesktop();
-                image.Save(filename, ImageFormat.Jpeg);
-                this.checkImageSize(filename, image);
-            }
-            catch {
-                return;
-            }
-        }
-
-        private void checkImageSize(string filename, Bitmap image)
-        {
-            if (Globals.ShouldResizeImage(new System.IO.FileInfo(filename).Length))
+            using (MemoryStream stream = new MemoryStream())
             {
-                image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
-                image.Save(filename, ImageFormat.Jpeg);
+                try
+                {
+                    var image = this.CaptureDesktop();
+                    image.Save(stream, ImageFormat.Jpeg);
+                    var fileSize = stream.Length;
+                    while (Globals.ShouldResizeImage(fileSize))
+                    {
+                        image = new Bitmap(image, new Size(image.Width / 2, image.Height / 2));
+                        stream.SetLength(0);
+                        stream.Seek(0, SeekOrigin.Begin);
+                        image.Save(stream, ImageFormat.Jpeg);
+                        fileSize = stream.Length;
+                    }
+                    image.Save(filename, ImageFormat.Jpeg);
+                }
+                catch
+                {
+                    return;
+                }
             }
         }
     }

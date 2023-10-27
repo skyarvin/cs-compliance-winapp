@@ -18,13 +18,6 @@ namespace CSTool.Handlers
 {
     internal class RefreshTokenHandler
     {
-        readonly HttpClient request;
-
-        public RefreshTokenHandler(HttpClient client)
-        {
-            this.request = client;
-        }
-
         public bool RefreshToken()
         {
             try
@@ -48,8 +41,6 @@ namespace CSTool.Handlers
                                         UserToken tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
                                         Globals.UserToken.access_token = tokens.access_token;
                                         Globals.UserToken.refresh_token = tokens.refresh_token;
-                                        this.request.DefaultRequestHeaders.Remove("Authorization");
-                                        this.request.DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
                                     }
                                     return true;
                                 }
@@ -61,6 +52,7 @@ namespace CSTool.Handlers
             }
             catch (Exception e)
             {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 throw e;
             }
         }

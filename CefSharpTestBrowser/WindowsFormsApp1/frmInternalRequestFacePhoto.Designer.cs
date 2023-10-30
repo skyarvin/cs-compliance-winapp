@@ -26,7 +26,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.lblUrl = new System.Windows.Forms.Label();
-            this.closeButton = new System.Windows.Forms.LinkLabel();
             this.reviewer_note_label = new System.Windows.Forms.Label();
             this.reviewer_note = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
@@ -74,20 +73,6 @@
             this.lblUrl.TabIndex = 5;
             this.lblUrl.UseCompatibleTextRendering = true;
             // 
-            // closeButton
-            // 
-            this.closeButton.AutoSize = true;
-            this.closeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.closeButton.LinkColor = System.Drawing.Color.LightCyan;
-            this.closeButton.Location = new System.Drawing.Point(481, 3);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(16, 16);
-            this.closeButton.TabIndex = 14;
-            this.closeButton.TabStop = true;
-            this.closeButton.Text = "X";
-            this.closeButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.closeButton.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.closeButton_linkedClicked);
-            // 
             // reviewer_note_label
             // 
             this.reviewer_note_label.Font = new System.Drawing.Font("Segoe UI", 8.25F);
@@ -121,13 +106,14 @@
             this.ClientSize = new System.Drawing.Size(501, 184);
             this.Controls.Add(this.reviewer_note);
             this.Controls.Add(this.reviewer_note_label);
-            this.Controls.Add(this.closeButton);
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label3);
             this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmInternalRequestFacePhoto";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Internal Request Face Photo";
@@ -149,7 +135,6 @@
         public System.Windows.Forms.Label label3;
         public System.Windows.Forms.Label label1;
         public System.Windows.Forms.Label lblUrl;
-        private System.Windows.Forms.LinkLabel closeButton;
         public System.Windows.Forms.Label reviewer_note_label;
         private System.Windows.Forms.TextBox reviewer_note;
     }

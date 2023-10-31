@@ -34,6 +34,7 @@ namespace WindowsFormsApp1.Models
         public int? iidc_id { get; set; }
         public int? idc_id { get; set; }
         public bool is_trainee { get; set; }
+        public string element_id { get; set; }
 
         public Logger Save()
         {
@@ -56,6 +57,7 @@ namespace WindowsFormsApp1.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
+                            Globals.SuccessUrls.Add(this.url);
                             return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
                         }
                     }

@@ -658,6 +658,129 @@ namespace WindowsFormsApp1
 
         private void ProcessActionButtons(string element_id)
         { 
+            this.send_id_checker = true;
+            var urlToSave = Globals.CurrentUrl;
+            Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
+            string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
+            string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
+            string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+            string remarks = String.Concat(violation, notes);
+            if (!string.IsNullOrEmpty(reply))
+            {
+                reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
+            }
+            if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes)) return;
+            if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
+            if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
+            {
+                Globals.chromeBrowser.EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
+                Globals.chromeBrowser.EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
+            }
+            if (element_id == Action.ChatReply.Value) notes = reply;
+            if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
+            if (element_id == Action.Approve.Value) remarks = "";
+
+            string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[2].textContent").Result.Result);
+            followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
+            int followers = 0;
+            if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
+                Int32.TryParse(followRaw, out followers);
+            string last_chatlog = "";
+            string last_photo = "";
+            if (element_id == Action.Approve.Value)
+            {
+                last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+                last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
+            }
+
+            var actual_start_time = Globals.StartTime_LastAction;
+            if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
+            {
+                actual_start_time = StartTime_BrowserChanged;
+            }
+
+            var actual_end_time = DateTime.Now;
+            var logData = new Logger
+            {
+                url = urlToSave,
+                agent_id = Globals.Profile.AgentID.ToString(),
+                action = Actions[element_id],
+                remarks = remarks,
+                followers = followers,
+                sc = followers >= Globals.SC_THRESHOLD ? true : false,
+                rr = string.IsNullOrEmpty(reply.Trim()) ? false : true,
+                review_date = DateTime.Now.Date.ToString("yyyy-MM-dd"), //Globals.ComplianceAgent.review_date,
+                workshift = "DS",
+                last_chatlog = last_chatlog != "" ? last_chatlog : null,
+                last_photo = last_photo != "" ? last_photo : null,
+                actual_start_time = actual_start_time.Value.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
+                actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
+                hash = HashMembers(),
+                members = Globals.Profiles,
+                is_trainee = Globals.ComplianceAgent.is_trainee
+            };
+            if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
+                logData.idc_id = this.ID_CHECKER.id;
+            Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
+            Globals.SaveToLogFile(string.Concat("IRFP: ", JsonConvert.SerializeObject(Globals.INTERNAL_IRFP)), (int)LogType.Action);
+            Globals.SaveToLogFile(string.Concat("IIDC: ", JsonConvert.SerializeObject(Globals.INTERNAL_IIDC)), (int)LogType.Action);
+            if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
+                logData.irs_id = Globals.INTERNAL_RR.id;
+            else if (Globals.INTERNAL_RR.id > 0)
+            {
+                Emailer email = new Emailer();
+                email.subject = "IRR Error";
+                email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR), "\n\r", "Current Url: ", urlToSave);
+                email.Send();
+            }
+                
+            if (ExtractUsername(Globals.INTERNAL_IRFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IRFP.id != 0)
+                logData.irfp_id = Globals.INTERNAL_IRFP.id;
+            else if (Globals.INTERNAL_IRFP.id > 0)
+            {
+                Emailer email = new Emailer();
+                email.subject = "IRFP Error";
+                email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
+                email.Send();
+            }
+
+            if (ExtractUsername(Globals.INTERNAL_IRFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IRFP.id != 0)
+                logData.irfp_id = Globals.INTERNAL_IRFP.id;
+            else if (Globals.INTERNAL_IRFP.id > 0)
+            {
+                Emailer email = new Emailer();
+                email.subject = "IRFP Error";
+                email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
+                email.Send();
+            }
+
+            if (ExtractUsername(Globals.INTERNAL_IIDC.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IIDC.id != 0)
+            {
+                logData.iidc_id = Globals.INTERNAL_IIDC.id;
+            }
+            else if (Globals.INTERNAL_IIDC.id > 0)
+            {
+                Emailer email = new Emailer();
+                email.subject = "IIDC Error";
+                email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IIDC), "\n\r", "Current Url: ", urlToSave);
+                email.Send();
+            }
+
+            Globals.StartTime_LastAction = actual_end_time;
+            logData.element_id = element_id;
+
+            if (Globals.logData.ContainsKey(logData.url))
+            {
+                Globals.logData[logData.url] = logData;
+            }
+            else
+            {
+                Globals.logData.Add(logData.url, logData);
+            }
+        }
+
+        public void SubmitCompliance(string url, bool is_success)
+        {
             Task.Factory.StartNew(() =>
             {
                 bool createdNew;
@@ -667,118 +790,14 @@ namespace WindowsFormsApp1
                     return;
                 }
 
-                this.send_id_checker = true;
-                var urlToSave = Globals.CurrentUrl;
-                Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
-                string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
-                string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
-                string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
-                string remarks = String.Concat(violation, notes);
-                if (!string.IsNullOrEmpty(reply))
-                {
-                    reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
-                }
-                if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes)) return;
-                if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
-                if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
-                {
-                    Globals.chromeBrowser.EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
-                    Globals.chromeBrowser.EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
-                }
-                if (element_id == Action.ChatReply.Value) notes = reply;
-                if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
-                if (element_id == Action.Approve.Value) remarks = "";
-
-                string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[2].textContent").Result.Result);
-                followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
-                int followers = 0;
-                if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
-                    Int32.TryParse(followRaw, out followers);
-                string last_chatlog = "";
-                string last_photo = "";
-                if (element_id == Action.Approve.Value)
-                {
-                    last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
-                    last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
-                }
-
-                var actual_start_time = Globals.StartTime_LastAction;
-                if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
-                {
-                    actual_start_time = StartTime_BrowserChanged;
-                }
-
-                var actual_end_time = DateTime.Now;
-                var logData = new Logger
-                {
-                    url = urlToSave,
-                    agent_id = Globals.Profile.AgentID.ToString(),
-                    action = Actions[element_id],
-                    remarks = remarks,
-                    followers = followers,
-                    sc = followers >= Globals.SC_THRESHOLD ? true : false,
-                    rr = string.IsNullOrEmpty(reply.Trim()) ? false : true,
-                    review_date = DateTime.Now.Date.ToString("yyyy-MM-dd"), //Globals.ComplianceAgent.review_date,
-                    workshift = "DS",
-                    last_chatlog = last_chatlog != "" ? last_chatlog : null,
-                    last_photo = last_photo != "" ? last_photo : null,
-                    actual_start_time = actual_start_time.Value.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
-                    actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
-                    hash = HashMembers(),
-                    members = Globals.Profiles,
-                    is_trainee = Globals.ComplianceAgent.is_trainee
-                };
-                if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
-                    logData.idc_id = this.ID_CHECKER.id;
-                Globals.SaveToLogFile(string.Concat("IR: ", JsonConvert.SerializeObject(Globals.INTERNAL_RR)), (int)LogType.Action);
-                Globals.SaveToLogFile(string.Concat("IRFP: ", JsonConvert.SerializeObject(Globals.INTERNAL_IRFP)), (int)LogType.Action);
-                Globals.SaveToLogFile(string.Concat("IIDC: ", JsonConvert.SerializeObject(Globals.INTERNAL_IIDC)), (int)LogType.Action);
-                if (ExtractUsername(Globals.INTERNAL_RR.url) == ExtractUsername(logData.url) && Globals.INTERNAL_RR.id != 0)
-                    logData.irs_id = Globals.INTERNAL_RR.id;
-                else if (Globals.INTERNAL_RR.id > 0)
-                {
-                    Emailer email = new Emailer();
-                    email.subject = "IRR Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_RR), "\n\r", "Current Url: ", urlToSave);
-                    email.Send();
-                }
-                
-                if (ExtractUsername(Globals.INTERNAL_IRFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IRFP.id != 0)
-                    logData.irfp_id = Globals.INTERNAL_IRFP.id;
-                else if (Globals.INTERNAL_IRFP.id > 0)
-                {
-                    Emailer email = new Emailer();
-                    email.subject = "IRFP Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
-                    email.Send();
-                }
-
-                if (ExtractUsername(Globals.INTERNAL_IRFP.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IRFP.id != 0)
-                    logData.irfp_id = Globals.INTERNAL_IRFP.id;
-                else if (Globals.INTERNAL_IRFP.id > 0)
-                {
-                    Emailer email = new Emailer();
-                    email.subject = "IRFP Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IRFP), "\n\r", "Current Url: ", urlToSave);
-                    email.Send();
-                }
-
-                if (ExtractUsername(Globals.INTERNAL_IIDC.url) == ExtractUsername(logData.url) && Globals.INTERNAL_IIDC.id != 0)
-                {
-                    logData.iidc_id = Globals.INTERNAL_IIDC.id;
-                }
-                else if (Globals.INTERNAL_IIDC.id > 0)
-                {
-                    Emailer email = new Emailer();
-                    email.subject = "IIDC Error";
-                    email.message = string.Concat(JsonConvert.SerializeObject(Globals.INTERNAL_IIDC), "\n\r", "Current Url: ", urlToSave);
-                    email.Send();
-                }
-
-                Globals.StartTime_LastAction = actual_end_time;
-
                 try
                 {
+                    var logData = Globals.logData[url];
+                    if (!is_success)
+                    {
+                        logData.action = "BN";
+                    }
+
                     if (Globals.CurrentUrl == Globals.LastSuccessUrl)
                     {
                         logData.id = Globals.LAST_SUCCESS_ID;
@@ -798,10 +817,10 @@ namespace WindowsFormsApp1
                         Globals.LAST_SUCCESS_ID = result.id;
                     }
 
-                    if (element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)
+                    if (logData.element_id == Action.SetExpiration.Value || logData.element_id == Action.ChangeGender.Value)
                         Globals.LastSuccessUrl = ""; //Clear last success
                     else
-                        Globals.LastSuccessUrl = urlToSave;
+                        Globals.LastSuccessUrl = logData.url;
 
                     this.InvokeOnUiThreadIfRequired(() =>
                     {

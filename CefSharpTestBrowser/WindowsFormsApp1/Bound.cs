@@ -241,6 +241,10 @@ namespace CSTool
                     bound.showRPB_Button();
 
                     //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
+
+                    setInterval(function () {
+                        bound.checkLastSuccessUrl();
+                    }, 3000);
                 });
             ");
 
@@ -284,6 +288,20 @@ namespace CSTool
                 Globals.frmMain.DisplayRoomApprovalRate(Globals.ApprovedAgents.Count, Globals.Profiles.Count, Globals.CurrentUrl);
             }
 
+        }
+
+        public void CheckLastSuccessUrl()
+        {
+            for (var i = 0; i < Globals.SuccessUrls.Count; i++)
+            {
+                if (Globals.SuccessUrls[i] == Globals.LastSuccessUrl)
+                {
+                    Globals.chromeBrowser.EvaluateScriptAsync($@"
+                        if (document.getElementsByTagName('body')[0].innerText.indexOf('locked to another bouncer') >= 0) bound.saveAsBounce();
+                    ");
+                    Globals.SuccessUrls.RemoveAt(i);
+                }
+            }
         }
 
         public void ShowRPB_Button()

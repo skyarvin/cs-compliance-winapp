@@ -32,13 +32,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-<<<<<<< HEAD
 [assembly: AssemblyVersion("4.0.0.0")]
 [assembly: AssemblyFileVersion("4.0.0.0")]
-=======
-[assembly: AssemblyVersion("3.1.0.2")]
-[assembly: AssemblyFileVersion("3.1.0.2")]
->>>>>>> e57db880570422fa31a296cc93591084095d8983
 
 //History Publish Version
 //1.0.0.0   Initial working installer with auto update

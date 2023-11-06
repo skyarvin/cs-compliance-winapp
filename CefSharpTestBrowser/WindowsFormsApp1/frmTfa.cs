@@ -27,6 +27,8 @@ namespace CSTool
         private string device_id;
         private readonly FormType frmType;
         private readonly UserTFA userTfa;
+        private string prev_device_id;
+        private TFA tfa = new TFA();
 
         public frmTfa(FormType frmType, UserTFA userTfa)
         {
@@ -67,13 +69,10 @@ namespace CSTool
         {
             try
             {
-                TFA tfa = new TFA
-                {
-                    device_id = this.device_id,
-                    nonce = this.userTfa.nonce,
-                    tfa_code = tfa_code.Text,
-                    user_id = this.userTfa.user_id,
-                };
+                this.tfa.device_id = this.device_id;
+                this.tfa.nonce = this.userTfa.nonce;
+                this.tfa.tfa_code = tfa_code.Text;
+                this.tfa.user_id = this.userTfa.user_id;
                 tfa.SubmitTfa();
                 Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
                 if (Globals.ComplianceAgent != null)
@@ -156,35 +155,31 @@ namespace CSTool
             string device_id = device_list.SelectedItem.GetType().GetProperty("Key").GetValue(device_list.SelectedItem, null).ToString();
             device_label.Text = "Authenticate your account on " + device_name + "'s Device";
             this.device_id = device_id;
+
+            if (this.prev_device_id != null && this.prev_device_id != this.device_id)
+            {
+                try
+                {
+                    this.tfa.device_id = device_id;
+                    this.tfa.prev_device_id = this.prev_device_id;
+                    this.tfa.nonce = this.userTfa.nonce;
+                    this.tfa.user_id = this.userTfa.user_id;
+                    this.userTfa.nonce = this.tfa.ChangeAuthenticatorDevice();
+                }
+                catch (Exception ex)
+                {
+                    Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
+                    MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+                }
+            }
+            this.prev_device_id = this.device_id;
         }
 
         private void back_btn_Click(object sender, EventArgs e)
         {
             bExitApp = false;
             this.Close();
-        }
-
-        private void device_list_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            try
-            {
-                string device_id = device_list.SelectedItem.GetType().GetProperty("Key").GetValue(device_list.SelectedItem, null).ToString();
-                TFA tfa = new TFA
-                {
-                    device_id = device_id,
-                    prev_device_id = this.device_id,
-                    nonce = this.userTfa.nonce,
-                    tfa_code = tfa_code.Text,
-                    user_id = this.userTfa.user_id,
-                };
-                this.userTfa.nonce = tfa.ChangeAuthenticatorDevice();
-            }
-            catch (Exception ex)
-            {
-                Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
-                System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
-            }
         }
     }
 }

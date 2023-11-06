@@ -69,6 +69,22 @@ namespace CSTool.Models
                             return result;
                         }
                     }
+
+                    if(response.StatusCode == System.Net.HttpStatusCode.SeeOther)
+                    {
+                        var headers = response.Headers;
+                        string redirectUrl;
+                        IEnumerable<string> values;
+                        
+                        if (headers.TryGetValues("Redirect", out values)) {
+                            redirectUrl = values.First();
+                        } else
+                        {
+                            return null;
+                        }
+
+                        throw new TfaRegistrationRequiredException(redirectUrl);
+                    }
                     return null; 
                 }
             }

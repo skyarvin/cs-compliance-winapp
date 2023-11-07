@@ -153,5 +153,13 @@ namespace WindowsFormsApp1
         {
             e.SuppressKeyPress = true;
         }
+
+        private void txtPwd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Login();
+            }
+        }
     }
 }

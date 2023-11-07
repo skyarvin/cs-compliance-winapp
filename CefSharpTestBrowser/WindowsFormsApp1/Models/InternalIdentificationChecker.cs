@@ -6,7 +6,6 @@ using System.Net.Http;
 using WindowsFormsApp1;
 using System.IO;
 using System.Net.Http.Headers;
-using System.Net.Mime;
 
 namespace CSTool.Models
 {

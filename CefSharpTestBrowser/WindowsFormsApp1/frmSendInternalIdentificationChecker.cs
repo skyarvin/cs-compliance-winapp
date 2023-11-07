@@ -40,7 +40,7 @@ namespace WindowsFormsApp1
                 return;
             }
 
-            string b64string = "";
+            string imagePath = "";
             if (!string.IsNullOrEmpty(this.filePath))
             {
                 if (Globals.ShouldResizeImage(File.ReadAllBytes(this.filePath).Length))
@@ -48,7 +48,7 @@ namespace WindowsFormsApp1
                     MessageBox.Show("File is too big! File size exceeds 2MB.");
                     return;
                 }
-                b64string = Convert.ToBase64String(File.ReadAllBytes(this.filePath));
+                imagePath = this.filePath;
             }
 
             var start_time = Globals.StartTime_LastAction;
@@ -62,7 +62,7 @@ namespace WindowsFormsApp1
                 url = Globals.CurrentUrl,
                 agent_id = Globals.Profile.AgentID,
                 agent_notes = txtNotes.Text,
-                agent_uploaded_photo_base64 = b64string,
+                agent_uploaded_photo = imagePath,
                 duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds)
             };
 

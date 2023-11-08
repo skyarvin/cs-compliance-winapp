@@ -16,7 +16,6 @@ namespace CSTool.Models
         public int agent_id { get; set; }
         public string agent_notes { get; set; }
         public string agent_uploaded_photo { get; set; }
-        public string agent_uploaded_photo_base64 { get; set; }
         public string status { get; set; }
         public string reviewer_notes { get; set; }
         public string reviewer_uploaded_photo { get; set; }

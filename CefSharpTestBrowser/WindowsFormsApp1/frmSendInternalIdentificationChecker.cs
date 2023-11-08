@@ -43,12 +43,23 @@ namespace WindowsFormsApp1
             string imagePath = "";
             if (!string.IsNullOrEmpty(this.filePath))
             {
-                if (Globals.ShouldResizeImage(File.ReadAllBytes(this.filePath).Length))
+                try
                 {
-                    MessageBox.Show("File is too big! File size exceeds 2MB.");
+                    using (var bmp = new Bitmap(this.filePath))
+                    {
+                        if (Globals.ShouldResizeImage(File.ReadAllBytes(this.filePath).Length))
+                        {
+                            MessageBox.Show("File is too big! File size exceeds 2MB.");
+                            return;
+                        }
+                        imagePath = this.filePath;
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Couldn't complete your request due to invalid or corrupt image file.");
                     return;
                 }
-                imagePath = this.filePath;
             }
 
             var start_time = Globals.StartTime_LastAction;

@@ -29,7 +29,7 @@ namespace WindowsFormsApp1
         {
             var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_IRFP.id, Globals.Profile.AgentID);
             lblStatus.Text = result.status;
-            Height = 180;
+            Height = 210;
             switch (result.status)
             {
                 case "New":

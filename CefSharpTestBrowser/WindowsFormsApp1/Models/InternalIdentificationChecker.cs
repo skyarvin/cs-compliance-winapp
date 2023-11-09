@@ -31,7 +31,7 @@ namespace CSTool.Models
                 {
                     client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     client.Timeout = TimeSpan.FromSeconds(60);
-                    form.Add(new StringContent(this.agent_id.ToString()), "agent_id");
+                    form.Add(new StringContent(this.agent_id.ToString()), "agent");
                     form.Add(new StringContent(this.agent_notes), "agent_notes");
                     form.Add(new StringContent(this.url), "url");
                     form.Add(new StringContent(this.duration.ToString()), "duration");

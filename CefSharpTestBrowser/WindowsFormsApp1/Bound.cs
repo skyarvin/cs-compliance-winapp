@@ -66,19 +66,20 @@ namespace CSTool
                             var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button'];
 
                             if (element_ids.includes(e.target.id)) {
-                                 var submit = false;
-                                 var formId = document.getElementById(e.target.id).parentNode.id;
-                                 $(`#${formId}`).submit(function(ev) {
-                                    bound.onClicked(e.target.id);
-                                    setTimeout(function(){
-                                        submit = true;
-                                        $(`#${formId}`).submit();   
-                                    }, 1000);
-                                    if(!submit){
+                                 var formContainer = document.getElementById(e.target.id).parentNode;
+                                 if(formContainer.tagName === 'FORM'){
+                                     $(`#${formContainer.id}`).submit(function(ev) {
+                                        var form = this;
                                         ev.preventDefault();
-                                    }
+                                        bound.onClicked(e.target.id);
+                                        setTimeout(function(){
+                                            form.submit();
+                                        }, 1000);
+                                     });
                                     return;
-                                 });
+                                 }
+                                 bound.onClicked(e.target.id);
+                                 return;
                             }
 
                             var element_values = {

@@ -71,7 +71,7 @@ namespace WindowsFormsApp1
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
         public static List<string> SuccessUrls = new List<string>();
-        public static Dictionary<string, Logger> logData = new Dictionary<string, Logger>();
+        public static Dictionary<string, Logger> logHistoryData = new Dictionary<string, Logger>();
 
         public static bool ShouldResizeImage(long fileLength)
         {

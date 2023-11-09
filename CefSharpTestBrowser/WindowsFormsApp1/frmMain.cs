@@ -769,13 +769,13 @@ namespace WindowsFormsApp1
             Globals.StartTime_LastAction = actual_end_time;
             logData.element_id = element_id;
 
-            if (Globals.logData.ContainsKey(logData.url))
+            if (Globals.logHistoryData.ContainsKey(logData.url))
             {
-                Globals.logData[logData.url] = logData;
+                Globals.logHistoryData[logData.url] = logData;
             }
             else
             {
-                Globals.logData.Add(logData.url, logData);
+                Globals.logHistoryData.Add(logData.url, logData);
             }
         }
 
@@ -792,7 +792,7 @@ namespace WindowsFormsApp1
 
                 try
                 {
-                    var logData = Globals.logData[url];
+                    var logData = Globals.logHistoryData[url];
                     if (!is_success)
                     {
                         logData.action = "BN";

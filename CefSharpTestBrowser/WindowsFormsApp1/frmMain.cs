@@ -726,7 +726,11 @@ namespace WindowsFormsApp1
                     actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     hash = HashMembers(),
                     members = Globals.Profiles,
-                    is_trainee = Globals.ComplianceAgent.is_trainee
+                    is_trainee = Globals.ComplianceAgent.is_trainee,
+                    room_photos_start_time = Globals.room_photos_start_time,
+                    room_photos_end_time = Globals.room_photos_end_time,
+                    room_chatlog_start_time = Globals.room_chatlog_start_time,
+                    room_chatlog_end_time = Globals.room_chatlog_end_time,
                 };
                 if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
                     logData.idc_id = this.ID_CHECKER.id;

@@ -2,10 +2,13 @@
 using CSTool.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
@@ -110,10 +113,20 @@ namespace WindowsFormsApp1
             }            
         }
 
+        private void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
+        {
+            MessageBox.Show("The download is completed!");
+        }
+
+        private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
+        {
+            progressBar1.Value = e.ProgressPercentage;
+        }
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-        
+
+
             //workshift_list.DataSource = new BindingSource(Globals.workshifts, null);
             //workshift_list.DisplayMember = "Value";
             //workshift_list.ValueMember = "Key";
@@ -134,6 +147,36 @@ namespace WindowsFormsApp1
             string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");
             if (Directory.Exists(cache_path))
                 Directory.Delete(cache_path, true);
+
+            WebClient webClient = new WebClient();
+            var newVersion = new Version(webClient.DownloadString("https://cscb-dev1.staffme.online/static/update.txt"));
+            var currentVersion = new Version(Application.ProductVersion);
+
+            if (newVersion.CompareTo(currentVersion) >= 1)
+            {
+                if (MessageBox.Show("A new update is available! Do you want to download it?", "CSTool", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    try
+                    {
+                        using (WebClient client = new WebClient())
+                        {
+                            if (File.Exists($@".\CS_TOOL_V{newVersion}_472.msi")) { File.Delete($@".\CS_TOOL_V{newVersion}_472.msi"); }
+                            if (File.Exists($@".\CS_TOOL_V{currentVersion}_472.msi")) { File.Delete($@".\CS_TOOL_V{currentVersion}_472.msi"); }
+                            client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
+                            client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
+                            client.DownloadFileAsync(new Uri($"https://cscb-dev1.staffme.online/static/CS_TOOL_V{"3.1.0.2"}_472.msi"), $@".\CS_TOOL_V{newVersion}_472.msi");
+
+                            //Process process = new Process();
+                            //process.StartInfo.FileName = $"CS_TOOL_V{newVersion}_472.msi";
+                            //this.Close();
+                            //process.Start();
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
         }
 
         private void Workshift_list_KeyDown(object sender, KeyEventArgs e)

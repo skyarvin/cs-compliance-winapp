@@ -37,8 +37,13 @@
             this.pbLogo = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbUtype = new System.Windows.Forms.ComboBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.pnlFooter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -155,12 +160,50 @@
             this.cmbUtype.Text = "Agent";
             this.cmbUtype.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbUtype_KeyDown);
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(19, 177);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(337, 53);
+            this.progressBar1.TabIndex = 11;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.label4);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.progressBar1);
+            this.panel1.Location = new System.Drawing.Point(12, 11);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(372, 361);
+            this.panel1.TabIndex = 12;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(62, 115);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(256, 20);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Downloading New Tool Version";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(71, 146);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(230, 20);
+            this.label4.TabIndex = 13;
+            this.label4.Text = "From: 1.0.0.0 => To: 1.0.0.1";
+            // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(396, 422);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbUtype);
             this.Controls.Add(this.pnlFooter);
@@ -180,6 +223,8 @@
             this.pnlFooter.ResumeLayout(false);
             this.pnlFooter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -196,5 +241,9 @@
         private System.Windows.Forms.Panel pnlFooter;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cmbUtype;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label4;
     }
 }

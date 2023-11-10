@@ -45,9 +45,8 @@ namespace CSTool.Models
                         };
                         form.Add(content);
                     }
-                    HttpResponseMessage response = null;
                     var uri = new Uri(string.Concat(Url.API_URL, "/iidc/"));
-                    response = client.PostAsync(uri, form).Result;
+                    HttpResponseMessage response = client.PostAsync(uri, form).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)

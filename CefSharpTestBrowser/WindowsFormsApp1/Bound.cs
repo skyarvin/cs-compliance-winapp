@@ -531,18 +531,16 @@ namespace CSTool
         {
             if (startDateTimeChatlog != null && endDateTimeChatlog != null)
             {
-                Console.WriteLine("TEST1: " + startDateTimeChatlog.Split('-')[0] + " " + endDateTimeChatlog.Split('-')[0]);
-                Globals.room_chatlog_start_time = DateTime.Parse(startDateTimeChatlog.Split('-')[0]);
-                Globals.room_chatlog_end_time = DateTime.Parse(endDateTimeChatlog.Split('-')[0]);
+                Globals.room_chatlog_start_time = startDateTimeChatlog.Split('-')[0];
+                Globals.room_chatlog_end_time = endDateTimeChatlog.Split('-')[0];
             }
         }
         public void SetDateTimeForTabPhotos(String startDateTimeTabPhotos=null, String endDateTimeTabPhotos=null)
         {
             if(startDateTimeTabPhotos != null && endDateTimeTabPhotos != null)
             {
-                Console.WriteLine("TEST2: " + startDateTimeTabPhotos.Split('-')[0] + " " + endDateTimeTabPhotos.Split('-')[0]);
-                Globals.room_photos_start_time = DateTime.Parse(startDateTimeTabPhotos.Split('-')[0]);
-                Globals.room_photos_end_time = DateTime.Parse(endDateTimeTabPhotos.Split('-')[0]);
+                Globals.room_photos_start_time = startDateTimeTabPhotos.Split('-')[0];
+                Globals.room_photos_end_time = endDateTimeTabPhotos.Split('-')[0];
             }
         }
     }

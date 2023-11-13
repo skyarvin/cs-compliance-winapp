@@ -222,8 +222,6 @@ namespace CSTool
                         let chatlog = $('#data .chatlog tbody').children()
                         if (chatlog.length > 0){
                             bound.setDateTimeChatLog(chatlog[chatlog.length-1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
-                        }else{
-                            bound.setDateTimeChatLog();
                         }
                     });
                     
@@ -242,8 +240,6 @@ namespace CSTool
                         let photos = $('#data div.image_container div.image center').children()
                         if (photos.length > 0){
                             bound.setDateTimeTabPhotos(photos[photos.length-1].parentElement.innerText, photos[0].parentElement.innerText);
-                        }else{
-                            bound.setDateTimeTabPhotos();
                         }
                     }
 
@@ -524,17 +520,18 @@ namespace CSTool
             Globals.frmMain.ShowRequestPhotoAndApproveButton();
         }
 
-        public void SetDateTimeChatLog(String startDateTimeChatlog=null, String endDateTimeChatlog=null)
+        public void SetDateTimeChatLog(String startDateTimeChatlog, String endDateTimeChatlog)
         {
-            if (startDateTimeChatlog != null && endDateTimeChatlog != null)
+            if (!string.IsNullOrWhiteSpace(startDateTimeChatlog) && !string.IsNullOrWhiteSpace(endDateTimeChatlog))
             {
                 Globals.room_chatlog_start_time = startDateTimeChatlog.Split('-')[0];
                 Globals.room_chatlog_end_time = endDateTimeChatlog.Split('-')[0];
             }
         }
-        public void SetDateTimeTabPhotos(String startDateTimeTabPhotos=null, String endDateTimeTabPhotos=null)
+
+        public void SetDateTimeTabPhotos(String startDateTimeTabPhotos, String endDateTimeTabPhotos)
         {
-            if(startDateTimeTabPhotos != null && endDateTimeTabPhotos != null)
+            if(!string.IsNullOrWhiteSpace(startDateTimeTabPhotos) && !string.IsNullOrWhiteSpace(endDateTimeTabPhotos))
             {
                 Globals.room_photos_start_time = startDateTimeTabPhotos.Split('-')[0];
                 Globals.room_photos_end_time = endDateTimeTabPhotos.Split('-')[0];

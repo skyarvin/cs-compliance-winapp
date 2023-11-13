@@ -807,6 +807,11 @@ namespace WindowsFormsApp1
                     else
                         Globals.LastSuccessUrl = urlToSave;
 
+                    Globals.room_chatlog_start_time = "";
+                    Globals.room_chatlog_end_time = "";
+                    Globals.room_photos_start_time = "";
+                    Globals.room_photos_end_time = "";
+
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
                         if (Globals.FrmInternalRequestReview != null)

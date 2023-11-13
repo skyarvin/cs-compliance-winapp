@@ -201,7 +201,7 @@ namespace CSTool
                     $('#tab_chatlog_user').on('click', function(event) {
                         let chatlog = $('#data .chatlog tbody').children()
                         if (chatlog.length > 0){
-                            bound.setDateTimeForChatLog(chatlog[chatlog.length - 1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
+                            bound.setDateTimeForChatLog(chatlog[chatlog.length-1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
                         }else{
                             bound.setDateTimeForChatLog();
                         }

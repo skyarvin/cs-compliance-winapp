@@ -198,24 +198,6 @@ namespace CSTool
                         }
                     });
 
-                    $('#tab_chatlog_user').on('click', function(event) {
-                        let chatlog = $('#data .chatlog tbody').children()
-                        if (chatlog.length > 0){
-                            bound.setDateTimeForChatLog(chatlog[chatlog.length-1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
-                        }else{
-                            bound.setDateTimeForChatLog();
-                        }
-                    });
-                    
-                    $('#tab_photos').on('click', function(event) {
-                        let photos = $('#data div.image_container div.image center').children()
-                        if (photos.length > 0){
-                            bound.setDateTimeForTabPhotos(photos[photos.length-1].parentElement.innerText, photos[0].parentElement.innerText);
-                        }else{
-                            bound.setDateTimeForTabPhotos();
-                        }
-                    });
-
                     function waitForElm(selector) {
                         return new Promise(resolve => {
                             if (document.querySelector(selector)) {
@@ -235,20 +217,35 @@ namespace CSTool
                             });
                         });
                     }
+
+                    $('#tab_chatlog_user').on('click', function(event) {
+                        let chatlog = $('#data .chatlog tbody').children()
+                        if (chatlog.length > 0){
+                            bound.setDateTimeChatLog(chatlog[chatlog.length-1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
+                        }else{
+                            bound.setDateTimeChatLog();
+                        }
+                    });
+                    
+                    $('#tab_photos').on('click', function(event) {
+                        checkDateTimeTabPhotos();
+                    });
+
                     waitForElm('#data .image').then((elm) => {
                         let tab_photos = $('#tab_photos').hasClass('active')
                         if (tab_photos !== false) {
-                            let photos = $('#data div.image_container div.image center').children()
-                            if (photos.length > 0){
-                                bound.setDateTimeForTabPhotos(photos[photos.length-1].parentElement.innerText, photos[0].parentElement.innerText);
-                            }else{
-                                bound.setDateTimeForTabPhotos();
-                            }
+                            checkDateTimeTabPhotos();
                         }
                     });
 
-                   
-
+                    function checkDateTimeTabPhotos(){
+                        let photos = $('#data div.image_container div.image center').children()
+                        if (photos.length > 0){
+                            bound.setDateTimeTabPhotos(photos[photos.length-1].parentElement.innerText, photos[0].parentElement.innerText);
+                        }else{
+                            bound.setDateTimeTabPhotos();
+                        }
+                    }
 
                     //var urlParams = new URLSearchParams(window.location.search);
                     //if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
@@ -527,7 +524,7 @@ namespace CSTool
             Globals.frmMain.ShowRequestPhotoAndApproveButton();
         }
 
-        public void SetDateTimeForChatLog(String startDateTimeChatlog=null, String endDateTimeChatlog=null)
+        public void SetDateTimeChatLog(String startDateTimeChatlog=null, String endDateTimeChatlog=null)
         {
             if (startDateTimeChatlog != null && endDateTimeChatlog != null)
             {
@@ -535,7 +532,7 @@ namespace CSTool
                 Globals.room_chatlog_end_time = endDateTimeChatlog.Split('-')[0];
             }
         }
-        public void SetDateTimeForTabPhotos(String startDateTimeTabPhotos=null, String endDateTimeTabPhotos=null)
+        public void SetDateTimeTabPhotos(String startDateTimeTabPhotos=null, String endDateTimeTabPhotos=null)
         {
             if(startDateTimeTabPhotos != null && endDateTimeTabPhotos != null)
             {

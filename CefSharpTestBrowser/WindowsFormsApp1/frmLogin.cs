@@ -116,6 +116,15 @@ namespace WindowsFormsApp1
         private void DownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             MessageBox.Show("The download is completed!");
+            version_update_panel.Hide();
+            WebClient webClient = new WebClient();
+            var newVersion = new Version(webClient.DownloadString("https://cscb-dev1.staffme.online/static/update.txt"));
+
+            Process process = new Process();
+            process.StartInfo.FileName = "msiexec.exe";
+            process.StartInfo.Arguments = string.Format($"/i CS_TOOL_V{newVersion}_472.msi");
+            this.Close();
+            process.Start();
         }
 
         private void ProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -152,10 +161,13 @@ namespace WindowsFormsApp1
             var newVersion = new Version(webClient.DownloadString("https://cscb-dev1.staffme.online/static/update.txt"));
             var currentVersion = new Version(Application.ProductVersion);
 
+            Console.WriteLine(newVersion.CompareTo(currentVersion));
             if (newVersion.CompareTo(currentVersion) >= 1)
             {
                 if (MessageBox.Show("A new update is available! Do you want to download it?", "CSTool", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
+                    version_update_panel.Show();
+                    version_label.Text = $"From: {currentVersion} => To: {newVersion}";
                     try
                     {
                         using (WebClient client = new WebClient())
@@ -164,16 +176,12 @@ namespace WindowsFormsApp1
                             if (File.Exists($@".\CS_TOOL_V{currentVersion}_472.msi")) { File.Delete($@".\CS_TOOL_V{currentVersion}_472.msi"); }
                             client.DownloadFileCompleted += new AsyncCompletedEventHandler(DownloadCompleted);
                             client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(ProgressChanged);
-                            client.DownloadFileAsync(new Uri($"https://cscb-dev1.staffme.online/static/CS_TOOL_V{"3.1.0.2"}_472.msi"), $@".\CS_TOOL_V{newVersion}_472.msi");
-
-                            //Process process = new Process();
-                            //process.StartInfo.FileName = $"CS_TOOL_V{newVersion}_472.msi";
-                            //this.Close();
-                            //process.Start();
+                            client.DownloadFileAsync(new Uri($"https://cscb-dev1.staffme.online/static/CS_TOOL_V{newVersion}_472.msi"), $@".\CS_TOOL_V{newVersion}_472.msi");
                         }
                     }
-                    catch
+                    catch (Exception)
                     {
+                        Console.WriteLine(e);
                     }
                 }
             }

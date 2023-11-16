@@ -38,12 +38,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.cmbUtype = new System.Windows.Forms.ComboBox();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.version_update_panel = new System.Windows.Forms.Panel();
+            this.version_label = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.pnlFooter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
-            this.panel1.SuspendLayout();
+            this.version_update_panel.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -167,15 +167,26 @@
             this.progressBar1.Size = new System.Drawing.Size(337, 53);
             this.progressBar1.TabIndex = 11;
             // 
-            // panel1
+            // version_update_panel
             // 
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.progressBar1);
-            this.panel1.Location = new System.Drawing.Point(12, 11);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(372, 361);
-            this.panel1.TabIndex = 12;
+            this.version_update_panel.Controls.Add(this.version_label);
+            this.version_update_panel.Controls.Add(this.label2);
+            this.version_update_panel.Controls.Add(this.progressBar1);
+            this.version_update_panel.Location = new System.Drawing.Point(12, 11);
+            this.version_update_panel.Name = "version_update_panel";
+            this.version_update_panel.Size = new System.Drawing.Size(372, 361);
+            this.version_update_panel.TabIndex = 12;
+            this.version_update_panel.Visible = false;
+            // 
+            // version_label
+            // 
+            this.version_label.AutoSize = true;
+            this.version_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.version_label.Location = new System.Drawing.Point(71, 146);
+            this.version_label.Name = "version_label";
+            this.version_label.Size = new System.Drawing.Size(230, 20);
+            this.version_label.TabIndex = 13;
+            this.version_label.Text = "From: 1.0.0.0 => To: 1.0.0.1";
             // 
             // label2
             // 
@@ -187,23 +198,13 @@
             this.label2.TabIndex = 12;
             this.label2.Text = "Downloading New Tool Version";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(71, 146);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(230, 20);
-            this.label4.TabIndex = 13;
-            this.label4.Text = "From: 1.0.0.0 => To: 1.0.0.1";
-            // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(396, 422);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.version_update_panel);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.cmbUtype);
             this.Controls.Add(this.pnlFooter);
@@ -223,8 +224,8 @@
             this.pnlFooter.ResumeLayout(false);
             this.pnlFooter.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
+            this.version_update_panel.ResumeLayout(false);
+            this.version_update_panel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -242,8 +243,8 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox cmbUtype;
         private System.Windows.Forms.ProgressBar progressBar1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel version_update_panel;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label version_label;
     }
 }

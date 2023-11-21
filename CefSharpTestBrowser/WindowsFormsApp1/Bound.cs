@@ -81,6 +81,11 @@ namespace CSTool
                                     bound.onClicked(element_values[e.target.value][0]);
                             }
                         }
+
+                        if(e.target.id === 'tab_abuselog'){
+                            bound.highlights();
+                        }
+
                     }
                 ");
 
@@ -536,6 +541,25 @@ namespace CSTool
                 Globals.room_photos_start_time = startDateTimeTabPhotos.Split('-')[0];
                 Globals.room_photos_end_time = endDateTimeTabPhotos.Split('-')[0];
             }
+        }
+
+        public void Highlights()
+        {
+            var keywords = "['a','5']";
+            var script = @"
+        let patternList = {{keywords}};
+        console.log(patternList);
+            let texts = document.querySelectorAll('.abuse_date');
+            for(let x = 0; x < texts.length; x++){
+                texts[x].innerHTML = highlightText(patternList, texts[x].innerHTML);
+            }
+            function highlightText(list, text){
+                const pattern = new RegExp(`(${list.join('|')})`, 'ig'); 
+                return text.replace(pattern, match => `<mark>${match}</mark>`);
+            }
+        ";
+            script = script.Replace("{{keywords}}", keywords);
+            browser.ExecuteScriptAsync(script);
         }
     }
 }

@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Text;
 using WindowsFormsApp1;
 using System.Collections.Generic;
+using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
@@ -14,23 +17,30 @@ namespace CSTool.Models
 
         public static Announcements FetchAnnouncements()
         {
-            using (var client = new HttpClient())
+            try
             {
-                var agent_id = Globals.ComplianceAgent.id;
-                var uri = $"{Url.API_URL}/agent/{agent_id}/announcements/";
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                var response = client.GetAsync(uri).Result;
-                if (response.IsSuccessStatusCode)
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    using (HttpContent content = response.Content)
+                    var agent_id = Globals.ComplianceAgent.id;
+                    var uri = $"{Url.API_URL}/agent/{agent_id}/announcements/";
+                    var response = client.CustomGetAsync(uri).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        var rawJsonString = content.ReadAsStringAsync();
-                        rawJsonString.Wait();
-                        return JsonConvert.DeserializeObject<Announcements>(rawJsonString.Result);
+                        using (HttpContent content = response.Content)
+                        {
+                            var rawJsonString = content.ReadAsStringAsync();
+                            rawJsonString.Wait();
+                            return JsonConvert.DeserializeObject<Announcements>(rawJsonString.Result);
+                        }
                     }
                 }
+                return null;
             }
-            return null;
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.SessionExpired();
+                throw e;
+            }
         }
     }
 
@@ -59,27 +69,34 @@ namespace CSTool.Models
 
         public void AcknowledgeAnnouncement()
         {
-            using (var client = new HttpClient())
+            try
             {
-                this.agent_id = Globals.ComplianceAgent.id;
-                var uri = $"{Url.API_URL}/announcement/{this.id}/acknowledge/";
-                var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                var response = client.PostAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    using (HttpContent data = response.Content)
+                    this.agent_id = Globals.ComplianceAgent.id;
+                    var uri = $"{Url.API_URL}/announcement/{this.id}/acknowledge/";
+                    var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        var jsonString = data.ReadAsStringAsync();
-                        jsonString.Wait();
-                        this.read_status = JsonConvert.DeserializeObject<Announcement>(jsonString.Result).read_status;
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            this.read_status = JsonConvert.DeserializeObject<Announcement>(jsonString.Result).read_status;
+                        }
+                    }
+                    else
+                    {
+                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                        throw new Exception("Api acknowledge of announcement request error, Please contact dev team");
                     }
                 }
-                else
-                {
-                    Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                    throw new Exception("Api acknowledge of announcement request error, Please contact dev team");
-                }
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.SessionExpired();
+                throw e;
             }
         }
 

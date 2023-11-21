@@ -7,6 +7,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace WindowsFormsApp1.Models
 {
@@ -44,15 +47,13 @@ namespace WindowsFormsApp1.Models
             try
             {
                 Globals.SaveToLogFile(string.Concat("Save: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-                using (var client = new HttpClient())
+                using (IHttpHandler client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.API_URL, "/logs/");
 
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     client.Timeout = TimeSpan.FromSeconds(5);
-
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.PostAsync(uri, content).Result;
+                    var response = client.CustomPostAsync(uri, content).Result;
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -65,16 +66,20 @@ namespace WindowsFormsApp1.Models
                     }
                     else
                     {
-                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                        Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
+                        this.SaveLogAction("Save");
                         throw new Exception("Api save request error, Please contact dev team");
                     }
                 }
             }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                this.SaveLogAction("Save");
+                Globals.SessionExpired();
+                throw e;
+            }
             catch
             {
-                Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                Resync.SavetoDB(JsonConvert.SerializeObject(this), "Save");
+                this.SaveLogAction("Save");
                 throw new Exception("Action can't be processed right now, encountered error while saving.");
             }
         }
@@ -84,96 +89,126 @@ namespace WindowsFormsApp1.Models
             try
             {
                 Globals.SaveToLogFile(string.Concat("Update: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-                using (var client = new HttpClient())
+                using (IHttpHandler client = new HttpHandler())
                 {
                     var uri = string.Concat(Url.API_URL, "/logs/", this.id);
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
-                    var response = client.PutAsync(uri, content).Result;
+                    var response = client.CustomPutAsync(uri, content).Result;
                     if (!response.IsSuccessStatusCode)
                     {
-                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                        Resync.SavetoDB(JsonConvert.SerializeObject(this), "Update");
+                        this.SaveLogAction("Update");
                         throw new Exception("Api Update request error, Please contact dev team");
                     }
                 }
             }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                this.SaveLogAction("Update");
+                Globals.SessionExpired();
+                throw e;
+            }
             catch
             {
-                Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                Resync.SavetoDB(JsonConvert.SerializeObject(this), "Update");
+                this.SaveLogAction("Update");
                 throw new Exception("Action can't be processed right now, encountered error during update.");
             }
         }
 
+        private void SaveLogAction(string type)
+        {
+            Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+            Resync.SavetoDB(JsonConvert.SerializeObject(this), type);
+        }
+
         public static Logger FetchLastAgentLog(int agent_id)
         {
-            using (var client = new HttpClient())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    if (response.IsSuccessStatusCode)
+                    var uri = string.Concat(Url.API_URL, "/log/agent/?agent_id=", agent_id);
+                    using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                     {
-                        using (HttpContent content = response.Content)
+                        if (response.IsSuccessStatusCode)
                         {
-                            var jsonString = content.ReadAsStringAsync();
-                            jsonString.Wait();
-                            return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                            using (HttpContent content = response.Content)
+                            {
+                                var jsonString = content.ReadAsStringAsync();
+                                jsonString.Wait();
+                                return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
+                            }
                         }
                     }
                 }
+                return null;
             }
-            return null;
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.SessionExpired();
+                throw e;
+            }
         }
 
         //Static Methods
         #region Static Methods
         public static UrlInformation GetUrlInformation(string url)
         {
-            using (var client = new HttpClient())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/logs/url_info");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                var content = new StringContent("{\"compliance_url\":\"" + url + "\"}", Encoding.UTF8, "application/json");
-                var response = client.PostAsync(uri, content).Result;
-                if (response.IsSuccessStatusCode)
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    var uri = string.Concat(Url.API_URL, "/logs/url_info");
+                    var content = new StringContent("{\"compliance_url\":\"" + url + "\"}", Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        using (HttpContent data = response.Content)
+                        if (response.StatusCode == System.Net.HttpStatusCode.OK)
                         {
-                            var jsonString = data.ReadAsStringAsync();
-                            jsonString.Wait();
-                            return JsonConvert.DeserializeObject<UrlInformation>(jsonString.Result);
+                            using (HttpContent data = response.Content)
+                            {
+                                var jsonString = data.ReadAsStringAsync();
+                                jsonString.Wait();
+                                return JsonConvert.DeserializeObject<UrlInformation>(jsonString.Result);
+                            }
                         }
-                    }
 
-                    return new UrlInformation();
+                        return new UrlInformation();
                     }
-                else
-                {
-                    throw new Exception("Api save request error, Please contact dev team");
+                    else
+                    {
+                        throw new Exception("Api save request error, Please contact dev team");
+                    }
                 }
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.SessionExpired();
+                throw e;
             }
         }
         private static bool Process_Json_String(bool is_post, string json_string)
         {
-            using (var client = new HttpClient())
+            try
             {
-                var uri = string.Concat(Url.API_URL, "/logs/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                var content = new StringContent(json_string, Encoding.UTF8, "application/json");
-                HttpResponseMessage response;
-                if (is_post)
-                    response = client.PostAsync(uri, content).Result;
-                else
-                    response = client.PutAsync(string.Concat(uri, JsonConvert.DeserializeObject<Logger>(json_string).id), content).Result;
-                if (response.IsSuccessStatusCode)
-                    return true;
+                using (IHttpHandler client = new HttpHandler())
+                {
+                    var uri = string.Concat(Url.API_URL, "/logs/");
+                    var content = new StringContent(json_string, Encoding.UTF8, "application/json");
+                    HttpResponseMessage response;
+                    if (is_post)
+                        response = client.CustomPostAsync(uri, content).Result;
+                    else
+                        response = client.CustomPutAsync(string.Concat(uri, JsonConvert.DeserializeObject<Logger>(json_string).id), content).Result;
+                    if (response.IsSuccessStatusCode)
+                        return true;
+                }
+                return false;
             }
-            return false;
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.SessionExpired();
+                throw e;
+            }
         }
 
         public static bool Save_Json_String(string json_string)

@@ -82,7 +82,7 @@ namespace CSTool
                             }
                         }
 
-                        if(e.target.id === 'tab_abuselog'){
+                        if(e.target.id === 'tab_chatlog_user'){
                             bound.highlights();
                         }
 
@@ -547,15 +547,14 @@ namespace CSTool
         {
             var keywords = "['a','5']";
             var script = @"
-        let patternList = {{keywords}};
-        console.log(patternList);
-            let texts = document.querySelectorAll('.abuse_date');
+            let patternList = {{keywords}};
+            let texts = document.querySelectorAll('#chatlog_user .chatlog_message');
             for(let x = 0; x < texts.length; x++){
-                texts[x].innerHTML = highlightText(patternList, texts[x].innerHTML);
+                texts[x].innerHTML = highlightText(texts[x].innerText);
             }
-            function highlightText(list, text){
-                const pattern = new RegExp(`(${list.join('|')})`, 'ig'); 
-                return text.replace(pattern, match => `<mark>${match}</mark>`);
+            function highlightText(text){
+                const pattern = new RegExp(`(${patternList.join('|')})`, 'ig'); 
+                return text.replace(pattern, match => `<span style='background-color:red; color:white'>${match}</span>`);
             }
         ";
             script = script.Replace("{{keywords}}", keywords);

@@ -15,4 +15,9 @@ namespace CSTool.Handlers.ErrorsHandler
             this.userTfa = userTfa;
         }
     }
+
+    public class TfaRegistrationRequiredException : Exception
+    {
+        public TfaRegistrationRequiredException(string url) : base(url) { }
+    }
 }

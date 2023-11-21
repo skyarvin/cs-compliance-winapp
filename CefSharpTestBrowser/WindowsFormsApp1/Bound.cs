@@ -190,6 +190,59 @@ namespace CSTool
 
             browser.EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
+                    $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
+                        $(this).attr('buttonClicked', true);
+
+                        if ($('#tab_chatlog_user').attr('buttonClicked') && $('#tab_abuselog').attr('buttonClicked')) {
+                            bound.displayRequestPhotoAndApproveBtn();
+                        }
+                    });
+
+                    function waitForElm(selector) {
+                        return new Promise(resolve => {
+                            if (document.querySelector(selector)) {
+                                return resolve(document.querySelector(selector));
+                            }
+
+                            const observer = new MutationObserver(mutations => {
+                                if (document.querySelector(selector)) {
+                                    observer.disconnect();
+                                    resolve(document.querySelector(selector));
+                                }
+                            });
+
+                            observer.observe(document.body, {
+                                childList: true,
+                                subtree: true
+                            });
+                        });
+                    }
+
+                    $('#tab_chatlog_user').on('click', function(event) {
+                        let chatlog = $('#data .chatlog tbody').children()
+                        if (chatlog.length > 0){
+                            bound.setDateTimeChatLog(chatlog[chatlog.length-1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
+                        }
+                    });
+                    
+                    $('#tab_photos').on('click', function(event) {
+                        checkDateTimeTabPhotos();
+                    });
+
+                    waitForElm('#data .image').then((elm) => {
+                        let tab_photos = $('#tab_photos').hasClass('active')
+                        if (tab_photos !== false) {
+                            checkDateTimeTabPhotos();
+                        }
+                    });
+
+                    function checkDateTimeTabPhotos(){
+                        let photos = $('#data div.image_container div.image center').children()
+                        if (photos.length > 0){
+                            bound.setDateTimeTabPhotos(photos[photos.length-1].parentElement.innerText, photos[0].parentElement.innerText);
+                        }
+                    }
+
                     //var urlParams = new URLSearchParams(window.location.search);
                     //if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
                     //    function qa_chatlog_highlight(){
@@ -465,6 +518,24 @@ namespace CSTool
         {
             Globals.LogsTabButtonClicked = true;
             Globals.frmMain.ShowRequestPhotoAndApproveButton();
+        }
+
+        public void SetDateTimeChatLog(String startDateTimeChatlog, String endDateTimeChatlog)
+        {
+            if (!string.IsNullOrWhiteSpace(startDateTimeChatlog) && !string.IsNullOrWhiteSpace(endDateTimeChatlog))
+            {
+                Globals.room_chatlog_start_time = startDateTimeChatlog.Split('-')[0];
+                Globals.room_chatlog_end_time = endDateTimeChatlog.Split('-')[0];
+            }
+        }
+
+        public void SetDateTimeTabPhotos(String startDateTimeTabPhotos, String endDateTimeTabPhotos)
+        {
+            if(!string.IsNullOrWhiteSpace(startDateTimeTabPhotos) && !string.IsNullOrWhiteSpace(endDateTimeTabPhotos))
+            {
+                Globals.room_photos_start_time = startDateTimeTabPhotos.Split('-')[0];
+                Globals.room_photos_end_time = endDateTimeTabPhotos.Split('-')[0];
+            }
         }
     }
 }

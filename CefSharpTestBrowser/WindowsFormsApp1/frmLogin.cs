@@ -48,14 +48,6 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void TxtPwd_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                Login();
-            }
-        }
-
         private void Login()
         {
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))
@@ -177,6 +169,14 @@ namespace WindowsFormsApp1
         private void cmbUtype_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
+        }
+
+        private void txtPwd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Login();
+            }
         }
     }
 }

@@ -29,7 +29,8 @@ namespace CSTool.Handlers
                 this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
                 HttpResponseMessage response = GetAsync(requestUri).Result;
-                return await this.CheckRequestResponse(response);
+                this.CheckRequestStatusCode(response.StatusCode);
+                return await Task.FromResult(response);
             }
             catch (Exception e)
             {
@@ -45,7 +46,8 @@ namespace CSTool.Handlers
                 this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
-                return await this.CheckRequestResponse(response);
+                this.CheckRequestStatusCode(response.StatusCode);
+                return await Task.FromResult(response);
             }
             catch (Exception e)
             {
@@ -61,7 +63,8 @@ namespace CSTool.Handlers
                 this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
-                return await this.CheckRequestResponse(response);
+                this.CheckRequestStatusCode(response.StatusCode);
+                return await Task.FromResult(response);
             }
             catch (Exception e)
             {
@@ -70,13 +73,12 @@ namespace CSTool.Handlers
             }
         }
 
-        private async Task<HttpResponseMessage> CheckRequestResponse(HttpResponseMessage response)
+        private void CheckRequestStatusCode(System.Net.HttpStatusCode statusCode)
         {
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (statusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                throw new UnauthorizeException(response.Content);
+                throw new UnauthorizeException();
             }
-            return await Task.FromResult(response);
         }
 
         private void CheckTokenValidity()
@@ -92,9 +94,8 @@ namespace CSTool.Handlers
 
         private void SetRequestHeaders(string requestUri)
         {
-            string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
             string[] public_routes = { "/security/login/", "/security/tfa_code/", "/security/tfa/device/change/" };
-            DefaultRequestHeaders.Add("Staffme-Authorization", apiKey);
+            DefaultRequestHeaders.Add("Staffme-Authorization", Globals.apiKey);
             if (!public_routes.Contains(new Uri(requestUri).AbsolutePath))
             {
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);

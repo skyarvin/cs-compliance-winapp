@@ -46,6 +46,7 @@ namespace WindowsFormsApp1
         public static Activity activity = new Activity();
         public static ChromiumWebBrowser chromeBrowser;
         public static ChromiumWebBrowser chromePopup;
+        public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
         public static int LAST_SUCCESS_ID;
         public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds 600
         public static int SIXTY_MINUTES_IDLE_TIME = 60;//60 minutes 
@@ -69,10 +70,22 @@ namespace WindowsFormsApp1
         public static Announcements AnnouncementsList = new Announcements();
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
+        public static string room_photos_start_time;
+        public static string room_photos_end_time;
+        public static string room_chatlog_start_time;
+        public static string room_chatlog_end_time;
         public static UserToken UserToken;
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
         public static UserAccount user_account = new UserAccount();
+
+        public static bool ShouldResizeImage(long fileLength)
+        {
+            int one_mega_byte = 1024;
+            int two_mega_bytes = one_mega_byte * 2;
+            long fileSizeInKb = fileLength / one_mega_byte;
+            return fileSizeInKb > two_mega_bytes;
+        }
 
         public static void ShowMessage(Form parent,string Message)
         {

@@ -29,7 +29,7 @@ namespace WindowsFormsApp1
                 case "New":
                     BackColor = Color.Gray;
                     lblStatus.Text = "Pending";
-                    Height = 172;
+                    Height = 210;
                     break;
                 case "Approved":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
@@ -38,7 +38,7 @@ namespace WindowsFormsApp1
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Green;
-                    Height = 310;
+                    Height = 348;
                     break;
                 case "Denied":
                     if (String.IsNullOrEmpty(result.reviewer_uploaded_photo))
@@ -47,7 +47,7 @@ namespace WindowsFormsApp1
                         lblReviewerPhotoGcsUrl.Visible = false;
                     }
                     BackColor = Color.Red;
-                    Height = 310;
+                    Height = 348;
                     break;
                 case "Processing":
                     BackColor = Color.FromArgb(230, 126, 34);
@@ -59,10 +59,6 @@ namespace WindowsFormsApp1
             Globals.INTERNAL_IIDC = result;
         }
 
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Close();
-        }
 
         private void lblReviewerPhotoUrl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

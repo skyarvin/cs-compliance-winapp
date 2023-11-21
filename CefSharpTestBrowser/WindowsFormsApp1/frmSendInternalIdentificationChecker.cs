@@ -41,9 +41,14 @@ namespace WindowsFormsApp1
             }
 
             string b64string = "";
-            if (!string.IsNullOrEmpty(filePath))
+            if (!string.IsNullOrEmpty(this.filePath))
             {
-                b64string = Convert.ToBase64String(File.ReadAllBytes(filePath));
+                if (Globals.ShouldResizeImage(File.ReadAllBytes(this.filePath).Length))
+                {
+                    MessageBox.Show("File is too big! File size exceeds 2MB.");
+                    return;
+                }
+                b64string = Convert.ToBase64String(File.ReadAllBytes(this.filePath));
             }
 
             var start_time = Globals.StartTime_LastAction;

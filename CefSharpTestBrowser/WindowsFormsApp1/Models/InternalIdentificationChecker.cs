@@ -29,7 +29,7 @@ namespace CSTool.Models
             using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/iidc/");
-                client.Timeout = TimeSpan.FromSeconds(5);
+                client.Timeout = TimeSpan.FromSeconds(60);
                 var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                 var response = client.CustomPostAsync(uri, content).Result;
                 if (response.IsSuccessStatusCode)

@@ -5,20 +5,13 @@ using CSTool.Handlers;
 using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using CSTool.Properties;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Runtime.Remoting.Contexts;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.UI.WebControls;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using IHttpHandler = CSTool.Handlers.Interfaces.IHttpHandler;
 
 namespace CSTool
 {
@@ -93,7 +86,7 @@ namespace CSTool
                             }
                         }
 
-                        if(e.target.id === 'tab_chatlog_user'){
+                        if(e.target.id === 'tab_abuselog'){
                             bound.executeHighlights();
                         }
 
@@ -557,7 +550,7 @@ namespace CSTool
         public void ExecuteHighlights()
         {
             var script = @"
-                texts =  document.querySelectorAll('#chatlog_user .chatlog_message');
+                texts =  document.querySelectorAll('.abuse_category');
                 if(patternList.length){
                     console.log(true);
                     for(let x = 0; x < texts.length; x++){

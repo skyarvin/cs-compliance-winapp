@@ -57,7 +57,6 @@ namespace CSTool
             }
 
             browser.ExecuteScriptAsync(@"
-                   
                    window.onload = function(e) {
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                             $(this).attr('buttonClicked', true);
@@ -69,7 +68,6 @@ namespace CSTool
                    }
                     
                    bound.fetchList();
-
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
@@ -95,7 +93,7 @@ namespace CSTool
                             }
                         }
 
-                        if(e.target.id === 'tab_abuselog'){
+                        if(e.target.id === 'tab_chatlog_user'){
                             bound.executeHighlights();
                         }
 
@@ -559,7 +557,7 @@ namespace CSTool
         public void ExecuteHighlights()
         {
             var script = @"
-                texts =  document.querySelectorAll('.abuse_category');
+                texts =  document.querySelectorAll('#chatlog_user .chatlog_message');
                 if(patternList.length){
                     console.log(true);
                     for(let x = 0; x < texts.length; x++){
@@ -593,7 +591,6 @@ namespace CSTool
                         let patternList = {{keywords}};
                         let texts = '';
                     ";
-
                     script = script.Replace("{{keywords}}", keywords.Result);
                     browser.ExecuteScriptAsync(script);
                 }

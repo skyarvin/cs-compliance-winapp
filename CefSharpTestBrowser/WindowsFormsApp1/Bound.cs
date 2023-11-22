@@ -57,6 +57,7 @@ namespace CSTool
             }
 
             browser.ExecuteScriptAsync(@"
+                   
                    window.onload = function(e) {
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                             $(this).attr('buttonClicked', true);
@@ -66,6 +67,8 @@ namespace CSTool
                             }
                         });
                    }
+                    
+                   bound.fetchList();
 
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
@@ -93,7 +96,7 @@ namespace CSTool
                         }
 
                         if(e.target.id === 'tab_abuselog'){
-                            bound.highlights();
+                            bound.executeHighlights();
                         }
 
                     }
@@ -553,34 +556,48 @@ namespace CSTool
             }
         }
 
-        public void Highlights()
+        public void ExecuteHighlights()
         {
-            IHttpHandler client = new HttpHandler();
-            var uri = string.Concat(Url.API_URL, "/fetch_violation_list");
-            var response = client.CustomGetAsync(uri).Result;
-            if (response.IsSuccessStatusCode)
-            {
-                HttpContent data = response.Content;
-
-                var keywords = data.ReadAsStringAsync();
-                keywords.Wait();
-
-                var script = @"
-                    let patternList = {{keywords}};
-                    let texts = document.querySelectorAll('.abuse_category');
+            var script = @"
+                texts =  document.querySelectorAll('.abuse_category');
+                if(patternList.length){
+                    console.log(true);
                     for(let x = 0; x < texts.length; x++){
                         texts[x].innerHTML = highlightText(texts[x].innerText);
                     }
                     function highlightText(text){
                         const pattern = new RegExp(`(${patternList.join('|')})`, 'ig'); 
                         return text.replace(pattern, match => `<span style='background-color:red; color:white'>${match}</span>`);
-                    }
-                ";
-                script = script.Replace("{{keywords}}", keywords.Result.ToString());
-                browser.ExecuteScriptAsync(script);
-            }
+                    }   
+                }else{
+                    console.log(false);
+                }
+            ";
+            browser.ExecuteScriptAsync(script);
+        }
 
-            
+        public void FetchList()
+        {
+            using (IHttpHandler client = new HttpHandler())
+            {
+                var uri = string.Concat(Url.API_URL, "/fetch_violation_list");
+                var response = client.CustomGetAsync(uri).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    HttpContent data = response.Content;
+
+                    var keywords = data.ReadAsStringAsync();
+                    keywords.Wait();
+
+                    var script = @"
+                        let patternList = {{keywords}};
+                        let texts = '';
+                    ";
+
+                    script = script.Replace("{{keywords}}", keywords.Result);
+                    browser.ExecuteScriptAsync(script);
+                }
+            }
         }
     }
 }

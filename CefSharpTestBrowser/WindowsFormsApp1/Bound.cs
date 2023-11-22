@@ -1,14 +1,24 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using CSTool.Class;
+using CSTool.Handlers;
+using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using CSTool.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Runtime.Remoting.Contexts;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using System.Web.UI.WebControls;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using IHttpHandler = CSTool.Handlers.Interfaces.IHttpHandler;
 
 namespace CSTool
 {
@@ -82,7 +92,7 @@ namespace CSTool
                             }
                         }
 
-                        if(e.target.id === 'tab_chatlog_user'){
+                        if(e.target.id === 'tab_abuselog'){
                             bound.highlights();
                         }
 
@@ -545,20 +555,32 @@ namespace CSTool
 
         public void Highlights()
         {
-            var keywords = "['a','5']";
-            var script = @"
-            let patternList = {{keywords}};
-            let texts = document.querySelectorAll('#chatlog_user .chatlog_message');
-            for(let x = 0; x < texts.length; x++){
-                texts[x].innerHTML = highlightText(texts[x].innerText);
+            IHttpHandler client = new HttpHandler();
+            var uri = string.Concat(Url.API_URL, "/fetch_violation_list");
+            var response = client.CustomGetAsync(uri).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                HttpContent data = response.Content;
+
+                var keywords = data.ReadAsStringAsync();
+                keywords.Wait();
+
+                var script = @"
+                    let patternList = {{keywords}};
+                    let texts = document.querySelectorAll('.abuse_category');
+                    for(let x = 0; x < texts.length; x++){
+                        texts[x].innerHTML = highlightText(texts[x].innerText);
+                    }
+                    function highlightText(text){
+                        const pattern = new RegExp(`(${patternList.join('|')})`, 'ig'); 
+                        return text.replace(pattern, match => `<span style='background-color:red; color:white'>${match}</span>`);
+                    }
+                ";
+                script = script.Replace("{{keywords}}", keywords.Result.ToString());
+                browser.ExecuteScriptAsync(script);
             }
-            function highlightText(text){
-                const pattern = new RegExp(`(${patternList.join('|')})`, 'ig'); 
-                return text.replace(pattern, match => `<span style='background-color:red; color:white'>${match}</span>`);
-            }
-        ";
-            script = script.Replace("{{keywords}}", keywords);
-            browser.ExecuteScriptAsync(script);
+
+            
         }
     }
 }

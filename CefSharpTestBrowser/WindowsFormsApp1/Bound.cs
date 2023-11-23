@@ -550,18 +550,11 @@ namespace CSTool
         public void ExecuteHighlights()
         {
             var script = @"
-                texts =  document.querySelectorAll('.abuse_category');
                 if(patternList.length){
-                    console.log(true);
+                    texts =  $('.abuse_category');
                     for(let x = 0; x < texts.length; x++){
                         texts[x].innerHTML = highlightText(texts[x].innerText);
-                    }
-                    function highlightText(text){
-                        const pattern = new RegExp(`(${patternList.join('|')})`, 'ig'); 
-                        return text.replace(pattern, match => `<span style='background-color:red; color:white'>${match}</span>`);
-                    }   
-                }else{
-                    console.log(false);
+                    }  
                 }
             ";
             browser.ExecuteScriptAsync(script);
@@ -583,6 +576,11 @@ namespace CSTool
                     var script = @"
                         let patternList = {{keywords}};
                         let texts = '';
+                        
+                        function highlightText(text){
+                            const pattern = new RegExp(`(${patternList.join('|')})`, 'ig'); 
+                            return text.replace(pattern, match => `<span style='background-color:red; color:white'>${match}</span>`);
+                        } 
                     ";
                     script = script.Replace("{{keywords}}", keywords.Result);
                     browser.ExecuteScriptAsync(script);

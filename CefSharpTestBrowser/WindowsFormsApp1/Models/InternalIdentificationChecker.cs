@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using CSTool.Class;
 using System.Net.Http;
 using WindowsFormsApp1;
+using CSTool.Handlers.Interfaces;
+using CSTool.Handlers;
 using System.IO;
 using System.Net.Http.Headers;
 
@@ -25,7 +27,7 @@ namespace CSTool.Models
         public InternalIdentificationChecker Save()
         {
             Globals.SaveToLogFile(string.Concat("Save IIDC: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (var client = new HttpClient())
+            using (IHttpHandler client = new HttpHandler())
             {
                 using (var form = new MultipartFormDataContent())
                 {
@@ -68,11 +70,10 @@ namespace CSTool.Models
         public static InternalIdentificationChecker Get(int iidc_id, int agent_id)
         {
 
-            using (var client = new HttpClient())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/iidc/", iidc_id, "/", agent_id, "/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {
@@ -90,11 +91,10 @@ namespace CSTool.Models
 
         public static InternalIdentificationChecker GetAgentIIDC(int agent_id)
         {
-            using (var client = new HttpClient())
+            using (IHttpHandler client = new HttpHandler())
             {
                 var uri = string.Concat(Url.API_URL, "/iidc/agent/", agent_id, "/");
-                client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
-                using (HttpResponseMessage response = client.SendAsync(new HttpRequestMessage(HttpMethod.Get, uri)).Result)
+                using (HttpResponseMessage response = client.CustomGetAsync(uri).Result)
                 {
                     if (response.IsSuccessStatusCode)
                     {

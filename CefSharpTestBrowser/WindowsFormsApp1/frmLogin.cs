@@ -1,4 +1,5 @@
 ﻿using CSTool;
+using CSTool.Models;
 using CSTool.Properties;
 using System;
 using System.Collections.Generic;
@@ -43,18 +44,25 @@ namespace WindowsFormsApp1
                 Login();
             }
         }
+
         private void Login()
         {
-            if (string.IsNullOrEmpty(txtEmail.Text.Trim())) {
-                MessageBox.Show("Invalid Username", "Error");
+            if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))
+            {
+                MessageBox.Show("Please fill out all required fields", "Error");
                 return;
-            }           
+            }
             try
             {
+                if (!UserAccount.UserLogin(txtEmail.Text, txtPwd.Text))
+                {
+                    MessageBox.Show("Username or password is incorrect", "Error");
+                    return;
+                }
+
                 Globals.ComplianceAgent = Agent.Get(txtEmail.Text);
                 if (Globals.ComplianceAgent != null)
                 {
-
                     if (Globals.ComplianceAgent.tier_level is null)
                     {
                         MessageBox.Show("Tier level is not registered! Please contact admin.", "Error");
@@ -144,6 +152,14 @@ namespace WindowsFormsApp1
         private void cmbUtype_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
+        }
+
+        private void txtPwd_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                Login();
+            }
         }
     }
 }

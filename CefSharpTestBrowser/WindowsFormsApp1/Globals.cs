@@ -16,6 +16,7 @@ using CefSharp.WinForms.Internals;
 using System.Text;
 using System.Net;
 using System.Security.Cryptography;
+using System.Diagnostics;
 
 namespace WindowsFormsApp1
 {
@@ -43,7 +44,6 @@ namespace WindowsFormsApp1
         public static frmInternalIdentificationChecker FrmInternalIdentificationChecker;
         public static Agent ComplianceAgent = new Agent();
         public static Activity activity = new Activity();
-        public static UserAccount useraccount = new UserAccount();
         public static ChromiumWebBrowser chromeBrowser;
         public static ChromiumWebBrowser chromePopup;
         public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
@@ -70,6 +70,13 @@ namespace WindowsFormsApp1
         public static Announcements AnnouncementsList = new Announcements();
         public static bool LogsTabButtonClicked = false;
         public static DateTime LastActionLog;
+        public static string room_photos_start_time;
+        public static string room_photos_end_time;
+        public static string room_chatlog_start_time;
+        public static string room_chatlog_end_time;
+        public static UserToken UserToken;
+        public static object sharedRefreshLock = new object();
+        public static object sharedRequestLock = new object();
 
         public static bool ShouldResizeImage(long fileLength)
         {
@@ -344,6 +351,15 @@ namespace WindowsFormsApp1
             }
         }
 
+        public static void SessionExpired()
+        {
+            DialogResult result = MessageBox.Show("Session Expired, Please log in again.", "Error", MessageBoxButtons.OK);
+            if (result == DialogResult.OK)
+            {
+                Process.Start(Application.StartupPath + "\\" + typeof(Program).Assembly.GetName().Name + ".exe");
+                Process.GetCurrentProcess().Kill();
+            }
+        }
     }
 
   

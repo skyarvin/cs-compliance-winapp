@@ -18,7 +18,9 @@ namespace CSTool.Class
         public static string CB_COMPLIANCE_URL = "https://chaturbate.com/compliance";
         public static string CB_COMPLIANCE_SET_ID_EXP_URL = "https://chaturbate.com/compliance/update_expiration_date_form";
         public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
-        public static string API_URL = "https://cscb.staffme.online/api";
+        public static string BASE_URL = "https://cscb.staffme.online";
+        public static string API_URL = BASE_URL + "/api";
+        public static string AUTH_URL = BASE_URL + "/security";
         public static string DOMAIN = "chaturbate.com";
 
         // ## Production Volume
@@ -42,6 +44,8 @@ namespace CSTool.Class
         //public static string CB_COMPLIANCE_URL = "http://127.0.0.1:8000/compliance";
         //public static string CB_COMPLIANCE_SET_ID_EXP_URL = "http://127.0.0.1:8000/compliance/update_expiration_date_form";
         //public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
-        //public static string API_URL = "http://127.0.0.1:9000/api";
+        //public static string BASE_URL = "http://127.0.0.1:9000";
+        //public static string API_URL = BASE_URL + "/api";
+        //public static string AUTH_URL = BASE_URL + "/security";
     }
 }

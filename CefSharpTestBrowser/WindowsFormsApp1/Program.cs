@@ -30,7 +30,7 @@ namespace WindowsFormsApp1
             Application.SetCompatibleTextRenderingDefault(false);
 
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            var Login = new frmLogin();            
+            var Login = new frmLogin();
             Login.Show();
             Application.Run();
             

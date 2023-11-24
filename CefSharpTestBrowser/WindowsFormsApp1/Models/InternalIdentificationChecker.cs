@@ -31,7 +31,6 @@ namespace CSTool.Models
             {
                 using (var form = new MultipartFormDataContent())
                 {
-                    client.DefaultRequestHeaders.Add("Authorization", Globals.apiKey);
                     client.Timeout = TimeSpan.FromSeconds(60);
                     form.Add(new StringContent(this.agent_id.ToString()), "agent");
                     form.Add(new StringContent(this.agent_notes), "agent_notes");
@@ -47,8 +46,8 @@ namespace CSTool.Models
                         };
                         form.Add(content);
                     }
-                    var uri = new Uri(string.Concat(Url.API_URL, "/iidc/"));
-                    HttpResponseMessage response = client.PostAsync(uri, form).Result;
+                    var uri = string.Concat(Url.API_URL, "/iidc/");
+                    HttpResponseMessage response = client.CustomPostAsync(uri, form).Result;
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)

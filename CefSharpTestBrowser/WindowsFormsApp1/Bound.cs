@@ -88,7 +88,7 @@ namespace CSTool
                         }
 
                         if(e.target.id === 'tab_abuselog'){
-                            bound.executeHighlights();
+                            highlight_text();
                         }
 
                     }
@@ -548,11 +548,6 @@ namespace CSTool
             }
         }
 
-        public void ExecuteHighlights()
-        {
-            var script = @"highlight_text()";
-            browser.ExecuteScriptAsync(script);
-        }
 
         public void FetchList()
         {
@@ -566,7 +561,6 @@ namespace CSTool
                     {
                         var keywords = data.ReadAsStringAsync();
                         keywords.Wait();
-                        Console.WriteLine(keywords);
                         var script = @"
                             const violation_list = REPLACE_WITH_LIST;
                             const regex_pattern = new RegExp(`${violation_list.data.join('|')}`,'ig');

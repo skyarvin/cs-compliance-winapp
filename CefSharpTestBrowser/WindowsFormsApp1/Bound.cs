@@ -5,6 +5,7 @@ using CSTool.Handlers;
 using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using CSTool.Properties;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -549,14 +550,7 @@ namespace CSTool
 
         public void ExecuteHighlights()
         {
-            var script = @"
-                if(patternList.length){
-                    texts =  $('.abuse_category');
-                    for(let x = 0; x < texts.length; x++){
-                        texts[x].innerHTML = highlightText(texts[x].innerText);
-                    }  
-                }
-            ";
+            var script = @"highlight_text()";
             browser.ExecuteScriptAsync(script);
         }
 
@@ -568,22 +562,29 @@ namespace CSTool
                 var response = client.CustomGetAsync(uri).Result;
                 if (response.IsSuccessStatusCode)
                 {
-                    HttpContent data = response.Content;
+                    using (HttpContent data = response.Content)
+                    {
+                        var keywords = data.ReadAsStringAsync();
+                        keywords.Wait();
+                        Console.WriteLine(keywords);
+                        var script = @"
+                            const violation_list = REPLACE_WITH_LIST;
+                            const regex_pattern = new RegExp(`${violation_list.data.join('|')}`,'ig');
+                            let text = '';
 
-                    var keywords = data.ReadAsStringAsync();
-                    keywords.Wait();
-
-                    var script = @"
-                        let patternList = {{keywords}};
-                        let texts = '';
-                        
-                        function highlightText(text){
-                            const pattern = new RegExp(`(${patternList.join('|')})`, 'ig'); 
-                            return text.replace(pattern, match => `<span style='background-color:red; color:white'>${match}</span>`);
-                        } 
-                    ";
-                    script = script.Replace("{{keywords}}", keywords.Result);
-                    browser.ExecuteScriptAsync(script);
+                            function highlight_text(){
+                                if(violation_list.data.length){
+                                    text = $('.abuse_category');
+                                    for(let x = 0; x < text.length; x++){
+                                        
+                                        text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
+                                    }  
+                                }
+                            }
+                        ";
+                        script = script.Replace("REPLACE_WITH_LIST", keywords.Result);
+                        browser.ExecuteScriptAsync(script);
+                    }
                 }
             }
         }

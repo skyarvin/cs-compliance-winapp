@@ -7,6 +7,7 @@ using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace WindowsFormsApp1
     public partial class frmLogin : Form
     {
         private bool bExitApp = true;
+        private bool seePass = false;
         public frmLogin()
         {
             InitializeComponent();
@@ -144,7 +146,9 @@ namespace WindowsFormsApp1
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
-        
+            txtPwd.Controls.Add(eyeViewPictureBox);
+            eyeViewPictureBox.Location = new Point(300, 4);
+
             //workshift_list.DataSource = new BindingSource(Globals.workshifts, null);
             //workshift_list.DisplayMember = "Value";
             //workshift_list.ValueMember = "Key";
@@ -183,6 +187,20 @@ namespace WindowsFormsApp1
             {
                 Login();
             }
+        }
+
+        private void eyeViewPictureBox_Click(object sender, EventArgs e)
+        {
+            if (seePass)
+            {
+                eyeViewPictureBox.Image = CSTool.Properties.Resources.eye_hidden;
+                seePass = false;
+                txtPwd.UseSystemPasswordChar = true;
+                return;
+            }
+            eyeViewPictureBox.Image = CSTool.Properties.Resources.eye_view;
+            seePass = true;
+            txtPwd.UseSystemPasswordChar = false;
         }
     }
 }

@@ -34,12 +34,14 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.lblVersion = new System.Windows.Forms.Label();
             this.pnlFooter = new System.Windows.Forms.Panel();
-            this.pbLogo = new System.Windows.Forms.PictureBox();
             this.label3 = new System.Windows.Forms.Label();
             this.cmbUtype = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.txtPwd = new System.Windows.Forms.TextBox();
+            this.eyeViewPictureBox = new System.Windows.Forms.PictureBox();
+            this.pbLogo = new System.Windows.Forms.PictureBox();
             this.pnlFooter.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eyeViewPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).BeginInit();
             this.SuspendLayout();
             // 
@@ -114,16 +116,6 @@
             this.pnlFooter.Size = new System.Drawing.Size(396, 22);
             this.pnlFooter.TabIndex = 6;
             // 
-            // pbLogo
-            // 
-            this.pbLogo.Image = global::CSTool.Properties.Resources.refresh;
-            this.pbLogo.Location = new System.Drawing.Point(95, 11);
-            this.pbLogo.Name = "pbLogo";
-            this.pbLogo.Size = new System.Drawing.Size(212, 135);
-            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbLogo.TabIndex = 5;
-            this.pbLogo.TabStop = false;
-            // 
             // label3
             // 
             this.label3.AutoSize = true;
@@ -174,10 +166,32 @@
             this.txtPwd.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPwd.Location = new System.Drawing.Point(30, 249);
             this.txtPwd.Name = "txtPwd";
-            this.txtPwd.PasswordChar = '*';
             this.txtPwd.Size = new System.Drawing.Size(337, 29);
             this.txtPwd.TabIndex = 2;
+            this.txtPwd.UseSystemPasswordChar = true;
             this.txtPwd.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPwd_KeyDown);
+            // 
+            // eyeViewPictureBox
+            // 
+            this.eyeViewPictureBox.BackColor = System.Drawing.Color.Transparent;
+            this.eyeViewPictureBox.Image = global::CSTool.Properties.Resources.eye_hidden;
+            this.eyeViewPictureBox.Location = new System.Drawing.Point(336, 252);
+            this.eyeViewPictureBox.Name = "eyeViewPictureBox";
+            this.eyeViewPictureBox.Size = new System.Drawing.Size(29, 22);
+            this.eyeViewPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.eyeViewPictureBox.TabIndex = 12;
+            this.eyeViewPictureBox.TabStop = false;
+            this.eyeViewPictureBox.Click += new System.EventHandler(this.eyeViewPictureBox_Click);
+            // 
+            // pbLogo
+            // 
+            this.pbLogo.Image = global::CSTool.Properties.Resources.refresh;
+            this.pbLogo.Location = new System.Drawing.Point(95, 11);
+            this.pbLogo.Name = "pbLogo";
+            this.pbLogo.Size = new System.Drawing.Size(212, 135);
+            this.pbLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbLogo.TabIndex = 5;
+            this.pbLogo.TabStop = false;
             // 
             // frmLogin
             // 
@@ -185,6 +199,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(396, 526);
+            this.Controls.Add(this.eyeViewPictureBox);
             this.Controls.Add(this.txtPwd);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
@@ -205,6 +220,7 @@
             this.Load += new System.EventHandler(this.FrmLogin_Load);
             this.pnlFooter.ResumeLayout(false);
             this.pnlFooter.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.eyeViewPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -224,5 +240,6 @@
         private System.Windows.Forms.ComboBox cmbUtype;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtPwd;
+        private System.Windows.Forms.PictureBox eyeViewPictureBox;
     }
 }

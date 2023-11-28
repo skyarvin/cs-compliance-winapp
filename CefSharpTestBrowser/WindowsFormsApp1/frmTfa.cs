@@ -60,7 +60,7 @@ namespace CSTool
             }
         }
 
-        private void submit_tfa_Click(object sender, EventArgs e)
+        private void Submit_tfa_Click(object sender, EventArgs e)
         {
             SubmitTFA();
         }

@@ -89,7 +89,7 @@
             this.submit_tfa.TabIndex = 1;
             this.submit_tfa.Text = "Submit";
             this.submit_tfa.UseVisualStyleBackColor = false;
-            this.submit_tfa.Click += new System.EventHandler(this.submit_tfa_Click);
+            this.submit_tfa.Click += new System.EventHandler(this.Submit_tfa_Click);
             // 
             // back_btn
             // 

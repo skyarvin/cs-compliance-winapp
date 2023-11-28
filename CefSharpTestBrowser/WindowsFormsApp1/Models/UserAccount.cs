@@ -54,6 +54,7 @@ namespace CSTool.Models
                             throw new TFARequiredException(userTfa);
                         }
                     }
+
                     if(response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         using (HttpContent data = response.Content)
@@ -76,9 +77,11 @@ namespace CSTool.Models
                         string redirectUrl;
                         IEnumerable<string> values;
                         
-                        if (headers.TryGetValues("Redirect", out values)) {
+                        if (headers.TryGetValues("Redirect", out values)) 
+                        {
                             redirectUrl = values.First();
-                        } else
+                        } 
+                        else
                         {
                             return null;
                         }

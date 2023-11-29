@@ -87,7 +87,7 @@ namespace CSTool
                             }
                         }
 
-                        if(e.target.id === 'tab_abuselog'){
+                        if(e.target.id === 'tab_chatlog_user'){
                             highlight_text();
                         }
 

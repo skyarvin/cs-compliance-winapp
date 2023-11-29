@@ -568,7 +568,7 @@ namespace CSTool
 
                             function highlight_text(){
                                 if(violation_list.data.length){
-                                    text = $('.abuse_category');
+                                    text = $('#chatlog_user .chatlog_message');
                                     for(let x = 0; x < text.length; x++){
                                         
                                         text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)

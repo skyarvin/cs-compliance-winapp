@@ -32,7 +32,7 @@ namespace CSTool.Handlers
 
         private static double GetTokenAgeMinutes(long issuedAt)
         {
-            DateTime dateTimeNow = DateTime.Now;
+            DateTime dateTimeNow = DateTime.UtcNow;
             DateTime dateTimeOffset = UnixTimeStampToDateTime(issuedAt);
             return (dateTimeNow - dateTimeOffset).TotalMinutes;
         }
@@ -40,7 +40,7 @@ namespace CSTool.Handlers
         private static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
         {
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            dateTime = dateTime.AddSeconds(unixTimeStamp).ToUniversalTime();
             return dateTime;
         }
     }

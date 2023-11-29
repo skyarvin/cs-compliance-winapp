@@ -61,7 +61,7 @@ namespace CSTool
                         });
                    }
                     
-                   bound.fetchList();
+                   bound.fetchViolationList();
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
@@ -549,7 +549,7 @@ namespace CSTool
         }
 
 
-        public void FetchList()
+        public void FetchViolationList()
         {
             using (IHttpHandler client = new HttpHandler())
             {
@@ -570,7 +570,6 @@ namespace CSTool
                                 if(violation_list.data.length){
                                     text = $('#chatlog_user .chatlog_message');
                                     for(let x = 0; x < text.length; x++){
-                                        
                                         text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
                                     }  
                                 }

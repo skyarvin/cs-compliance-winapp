@@ -1,15 +1,12 @@
 ﻿using CefSharp;
 using CefSharp.WinForms;
 using CSTool.Class;
-using CSTool.Handlers;
-using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using CSTool.Properties;
-using Newtonsoft.Json;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;
@@ -551,21 +548,20 @@ namespace CSTool
 
         public void InjectViolationScript()
         {
-            (bool fetch_success, string violation_list) = ViolationKeywordsFinder.FetchViolationKeywords();
-            if (fetch_success)
+            string violation_list = ViolationKeywordsFinder.FetchViolationKeywords();
+            if (!violation_list.IsNullOrEmpty())
             {
                 var script = @"
                     const violation_list = REPLACE_WITH_LIST;
-                    const regex_pattern = new RegExp(`${violation_list.data.join('|')}`,'ig');
+                    const regex_pattern = new RegExp(`${violation_list.join('|')}`,'ig');
                     let text = '';
                     function highlight_text(){
-                        if(violation_list.data.length){
-                            text = $('#chatlog_user .chatlog_message');
-                            for(let x = 0; x < text.length; x++){
-                                text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
-                            }  
-                        }
+                        text = $('#chatlog_user .chatlog_message');
+                        for(let x = 0; x < text.length; x++){
+                            text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
+                        }  
                     }
+                    
                 ";
                 script = script.Replace("REPLACE_WITH_LIST", violation_list);
                 browser.ExecuteScriptAsync(script);

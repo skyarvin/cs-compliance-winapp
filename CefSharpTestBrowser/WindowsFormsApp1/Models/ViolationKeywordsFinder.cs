@@ -1,13 +1,12 @@
 ﻿using CSTool.Handlers;
 using CSTool.Handlers.Interfaces;
-using System;
 using System.Net.Http;
 
 namespace CSTool.Models
 {
     internal class ViolationKeywordsFinder
     {
-        public static Tuple<bool, string> FetchViolationKeywords()
+        public static string FetchViolationKeywords()
         {
             using (IHttpHandler client = new HttpHandler())
             {
@@ -18,7 +17,7 @@ namespace CSTool.Models
                 var jsonString = data.ReadAsStringAsync();
                 jsonString.Wait();
 
-                return Tuple.Create(response.IsSuccessStatusCode, jsonString.Result);
+                return jsonString.Result;
             }
         }
     }

@@ -8,6 +8,8 @@ using CSTool.Handlers.Interfaces;
 using CSTool.Handlers;
 using System.IO;
 using System.Net.Http.Headers;
+using System.Net.Mime;
+using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
@@ -27,42 +29,50 @@ namespace CSTool.Models
         public InternalIdentificationChecker Save()
         {
             Globals.SaveToLogFile(string.Concat("Save IIDC: ", JsonConvert.SerializeObject(this)), (int)LogType.Action);
-            using (IHttpHandler client = new HttpHandler())
+            try
             {
-                using (var form = new MultipartFormDataContent())
+                using (IHttpHandler client = new HttpHandler())
                 {
-                    client.Timeout = TimeSpan.FromSeconds(60);
-                    form.Add(new StringContent(this.agent_id.ToString()), "agent");
-                    form.Add(new StringContent(this.agent_notes), "agent_notes");
-                    form.Add(new StringContent(this.url), "url");
-                    form.Add(new StringContent(this.duration.ToString()), "duration");
-                    if (!String.IsNullOrEmpty(this.agent_uploaded_photo))
+                    using (var form = new MultipartFormDataContent())
                     {
-                        HttpContent content = new StreamContent(new FileStream(this.agent_uploaded_photo, FileMode.Open));
-                        content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                        client.Timeout = TimeSpan.FromSeconds(60);
+                        form.Add(new StringContent(this.agent_id.ToString()), "agent");
+                        form.Add(new StringContent(this.agent_notes), "agent_notes");
+                        form.Add(new StringContent(this.url), "url");
+                        form.Add(new StringContent(this.duration.ToString()), "duration");
+                        if (!String.IsNullOrEmpty(this.agent_uploaded_photo))
                         {
-                            Name = "agent_uploaded_photo",
-                            FileName = Path.GetFileName(this.agent_uploaded_photo),
-                        };
-                        form.Add(content);
-                    }
-                    var uri = string.Concat(Url.API_URL, "/iidc/");
-                    HttpResponseMessage response = client.CustomPostAsync(uri, form).Result;
-                    if (response.IsSuccessStatusCode)
-                    {
-                        using (HttpContent data = response.Content)
+                            HttpContent content = new StreamContent(new FileStream(this.agent_uploaded_photo, FileMode.Open));
+                            content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                            {
+                                Name = "agent_uploaded_photo",
+                                FileName = Path.GetFileName(this.agent_uploaded_photo),
+                            };
+                            form.Add(content);
+                        }
+                        var uri = string.Concat(Url.API_URL, "/iidc/");
+                        HttpResponseMessage response = client.CustomPostAsync(uri, form).Result;
+                        if (response.IsSuccessStatusCode)
                         {
-                            var jsonString = data.ReadAsStringAsync();
-                            jsonString.Wait();
-                            return JsonConvert.DeserializeObject<InternalIdentificationChecker>(jsonString.Result);
+                            using (HttpContent data = response.Content)
+                            {
+                                var jsonString = data.ReadAsStringAsync();
+                                jsonString.Wait();
+                                return JsonConvert.DeserializeObject<InternalIdentificationChecker>(jsonString.Result);
+                            }
+                        }
+                        else
+                        {
+                            Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
+                            throw new Exception("Api save iidc request error, Please contact dev team");
                         }
                     }
-                    else
-                    {
-                        Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
-                        throw new Exception("Api save iidc request error, Please contact dev team");
-                    }
                 }
+            }
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            {
+                Globals.SessionExpired();
+                throw e;
             }
         }
 

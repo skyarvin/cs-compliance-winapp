@@ -551,10 +551,23 @@ namespace CSTool
 
         public void InjectViolationScript()
         {
-            if (ViolationRequest.IsFetchSuccess())
+            (bool status_success, string result) = ViolationKeywordsFinder.FetchViolationKeywords();
+            if (status_success)
             {
-                var violation_list = ViolationRequest.GetViolationList().ToString();
-                var script = ViolationRequest.GetHighlightScript();
+                var violation_list = result;
+                var script = @"
+                    const violation_list = REPLACE_WITH_LIST;
+                    const regex_pattern = new RegExp(`${violation_list.data.join('|')}`,'ig');
+                    let text = '';
+                    function highlight_text(){
+                        if(violation_list.data.length){
+                            text = $('#chatlog_user .chatlog_message');
+                            for(let x = 0; x < text.length; x++){
+                                text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
+                            }  
+                        }
+                    }
+                ";
                 script = script.Replace("REPLACE_WITH_LIST", violation_list);
                 browser.ExecuteScriptAsync(script);
             }

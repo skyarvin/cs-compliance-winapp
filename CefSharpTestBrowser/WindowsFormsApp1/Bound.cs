@@ -551,10 +551,9 @@ namespace CSTool
 
         public void InjectViolationScript()
         {
-            (bool status_success, string result) = ViolationKeywordsFinder.FetchViolationKeywords();
-            if (status_success)
+            (bool fetch_success, string violation_list) = ViolationKeywordsFinder.FetchViolationKeywords();
+            if (fetch_success)
             {
-                var violation_list = result;
                 var script = @"
                     const violation_list = REPLACE_WITH_LIST;
                     const regex_pattern = new RegExp(`${violation_list.data.join('|')}`,'ig');

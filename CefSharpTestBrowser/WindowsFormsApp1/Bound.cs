@@ -61,7 +61,7 @@ namespace CSTool
                         });
                    }
                     
-                   bound.fetchViolationList();
+                   bound.injectViolationScript();
                    window.onclick = function(e) { 
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
@@ -549,36 +549,14 @@ namespace CSTool
         }
 
 
-        public void FetchViolationList()
+        public void InjectViolationScript()
         {
-            using (IHttpHandler client = new HttpHandler())
+            if (ViolationRequest.IsFetchSuccess())
             {
-                var uri = string.Concat(Url.API_URL, "/fetch_violation_list");
-                var response = client.CustomGetAsync(uri).Result;
-                if (response.IsSuccessStatusCode)
-                {
-                    using (HttpContent data = response.Content)
-                    {
-                        var keywords = data.ReadAsStringAsync();
-                        keywords.Wait();
-                        var script = @"
-                            const violation_list = REPLACE_WITH_LIST;
-                            const regex_pattern = new RegExp(`${violation_list.data.join('|')}`,'ig');
-                            let text = '';
-
-                            function highlight_text(){
-                                if(violation_list.data.length){
-                                    text = $('#chatlog_user .chatlog_message');
-                                    for(let x = 0; x < text.length; x++){
-                                        text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
-                                    }  
-                                }
-                            }
-                        ";
-                        script = script.Replace("REPLACE_WITH_LIST", keywords.Result);
-                        browser.ExecuteScriptAsync(script);
-                    }
-                }
+                var violation_list = ViolationRequest.GetViolationList().ToString();
+                var script = ViolationRequest.GetHighlightScript();
+                script = script.Replace("REPLACE_WITH_LIST", violation_list);
+                browser.ExecuteScriptAsync(script);
             }
         }
     }

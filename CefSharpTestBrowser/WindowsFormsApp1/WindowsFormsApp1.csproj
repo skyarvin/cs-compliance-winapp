@@ -353,6 +353,7 @@
     <Compile Include="Models\Seed.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Models\UserToken.cs" />
+    <Compile Include="Models\ViolationRequest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserControls\SearchControl.cs">

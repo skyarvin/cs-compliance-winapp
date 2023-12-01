@@ -19,7 +19,7 @@ namespace CSTool.Models
         public string device_id { get; set; }
         public string prev_device_id { get; set; }
 
-        public bool SubmitTfa()
+        public void ValidateTfa()
         {
             try
             {
@@ -47,12 +47,7 @@ namespace CSTool.Models
                                 access_token = token.access_token,
                                 refresh_token = token.refresh_token,
                             };
-                            return true;
                         }
-                    }
-                    else
-                    {
-                        return false;
                     }
                 }
             }

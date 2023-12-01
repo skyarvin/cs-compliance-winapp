@@ -29,8 +29,7 @@ namespace CSTool.Handlers
                 this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
                 HttpResponseMessage response = GetAsync(requestUri).Result;
-                this.CheckRequestStatusCode(response.StatusCode);
-                return await Task.FromResult(response);
+                return await this.CheckRequestResponse(response);
             }
             catch (Exception e)
             {
@@ -46,8 +45,7 @@ namespace CSTool.Handlers
                 this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
                 HttpResponseMessage response = PostAsync(requestUri, content).Result;
-                this.CheckRequestStatusCode(response.StatusCode);
-                return await Task.FromResult(response);
+                return await this.CheckRequestResponse(response);
             }
             catch (Exception e)
             {
@@ -63,8 +61,7 @@ namespace CSTool.Handlers
                 this.CheckTokenValidity();
                 this.SetRequestHeaders(requestUri);
                 HttpResponseMessage response = PutAsync(requestUri, content).Result;
-                this.CheckRequestStatusCode(response.StatusCode);
-                return await Task.FromResult(response);
+                return await this.CheckRequestResponse(response);
             }
             catch (Exception e)
             {
@@ -73,12 +70,13 @@ namespace CSTool.Handlers
             }
         }
 
-        private void CheckRequestStatusCode(System.Net.HttpStatusCode statusCode)
+        private async Task<HttpResponseMessage> CheckRequestResponse(HttpResponseMessage response)
         {
-            if (statusCode == System.Net.HttpStatusCode.Unauthorized)
+            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                throw new UnauthorizeException();
+                throw new UnauthorizeException(response.Content);
             }
+            return await Task.FromResult(response);
         }
 
         private void CheckTokenValidity()

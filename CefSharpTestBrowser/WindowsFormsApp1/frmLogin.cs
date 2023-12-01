@@ -24,7 +24,7 @@ namespace WindowsFormsApp1
         public frmLogin()
         {
             InitializeComponent();
-            lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());    
+            lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());
         }
         private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -139,6 +139,7 @@ namespace WindowsFormsApp1
         {
             if(Globals.frmMain == null && Globals.FrmQA == null)
             {
+                bExitApp = true;
                 this.Show();
             }
         }

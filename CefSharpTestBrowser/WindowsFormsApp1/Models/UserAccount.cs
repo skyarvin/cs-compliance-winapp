@@ -55,7 +55,7 @@ namespace CSTool.Models
                         }
                     }
 
-                    if(response.StatusCode == System.Net.HttpStatusCode.OK)
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
                     {
                         using (HttpContent data = response.Content)
                         {
@@ -71,7 +71,7 @@ namespace CSTool.Models
                         }
                     }
 
-                    if(response.StatusCode == System.Net.HttpStatusCode.SeeOther)
+                    if (response.StatusCode == System.Net.HttpStatusCode.SeeOther)
                     {
                         var headers = response.Headers;
                         string redirectUrl;

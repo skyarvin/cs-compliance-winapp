@@ -73,7 +73,7 @@ namespace CSTool
                 this.tfa.nonce = this.userTfa.nonce;
                 this.tfa.tfa_code = tfa_code.Text;
                 this.tfa.user_id = this.userTfa.user_id;
-                tfa.SubmitTfa();
+                this.tfa.ValidateTfa();
                 Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
                 if (Globals.ComplianceAgent != null)
                 {

@@ -1,4 +1,5 @@
 ﻿using CefSharp;
+using CefSharp.Internals;
 using CefSharp.WinForms;
 using CSTool.Class;
 using CSTool.Models;
@@ -548,12 +549,11 @@ namespace CSTool
 
         public void InjectViolationScript()
         {
-            string violation_list = ViolationKeywordsFinder.FetchViolationKeywords();
-            if (!violation_list.IsNullOrEmpty())
+            if (!Globals.violation_list.IsNullOrEmpty())
             {
-                var script = @"
-                    const violation_list = REPLACE_WITH_LIST;
-                    const regex_pattern = new RegExp(`${violation_list.join('|')}`,'ig');
+                browser.ExecuteScriptAsync($@"
+                    const violation_list = {Globals.violation_list};"+
+                    @"const regex_pattern = new RegExp(`${violation_list.join('|')}`,'ig');
                     let text = '';
                     function highlight_text(){
                         text = $('#chatlog_user .chatlog_message');
@@ -562,9 +562,7 @@ namespace CSTool
                         }  
                     }
                     
-                ";
-                script = script.Replace("REPLACE_WITH_LIST", violation_list);
-                browser.ExecuteScriptAsync(script);
+                ");
             }
         }
     }

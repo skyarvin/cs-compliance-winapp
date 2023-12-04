@@ -553,7 +553,7 @@ namespace CSTool
             {
                 browser.ExecuteScriptAsync($@"
                     const violation_list = {Globals.violation_list};"+
-                    @"const regex_pattern = new RegExp(`${violation_list.join('|')}`,'ig');
+                    @"const regex_pattern = new RegExp(violation_list.join('|'),'ig');
                     let text = '';
                     function highlight_text(){
                         text = $('#chatlog_user .chatlog_message');

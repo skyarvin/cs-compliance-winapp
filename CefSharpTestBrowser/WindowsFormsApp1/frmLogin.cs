@@ -114,8 +114,7 @@ namespace WindowsFormsApp1
             catch (TfaRegistrationRequiredException url)
             {
                 MessageBox.Show("You need to register a TFA device", "Error");
-                var urlToRedirect = url.Message.Replace("127.0.0.1", "localhost");
-                System.Diagnostics.Process.Start(urlToRedirect);
+                System.Diagnostics.Process.Start(url.Message);
             }
             catch (UnauthorizeException unauthorize)
             {

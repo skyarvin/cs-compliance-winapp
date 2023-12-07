@@ -50,7 +50,7 @@ namespace CSTool.Models
                             };
                             form.Add(content);
                         }
-                        var uri = string.Concat(Url.API_URL, "/v2/iidc/");
+                        var uri = string.Concat(Url.API_URL, "/internal_idc/");
                         HttpResponseMessage response = client.CustomPostAsync(uri, form).Result;
                         if (response.IsSuccessStatusCode)
                         {

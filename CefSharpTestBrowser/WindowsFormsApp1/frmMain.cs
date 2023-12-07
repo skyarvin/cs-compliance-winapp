@@ -241,7 +241,7 @@ namespace WindowsFormsApp1
                 IsActive = true
             };
             Globals.Profiles.Add(Globals.Profile);
-            Globals.violation_list = ViolationKeywordsFinder.FetchViolationKeywords();
+            Globals.violation_list = ViolationKeywords.FetchViolationKeywords();
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);

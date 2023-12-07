@@ -1,10 +1,10 @@
 ﻿using CSTool.Handlers;
-using CSTool.Handlers.Interfaces;
 using System.Net.Http;
+using CSTool.Handlers.Interfaces;
 
 namespace CSTool.Models
 {
-    internal class ViolationKeywordsFinder
+    internal class ViolationKeywords
     {
         public static string FetchViolationKeywords()
         {

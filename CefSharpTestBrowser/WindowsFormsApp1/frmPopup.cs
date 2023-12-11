@@ -15,6 +15,7 @@ namespace CSTool
         public frmPopup(string url)
         {
             CefSettings settings = new CefSettings();
+            settings.BrowserSubprocessPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\CefSharp.BrowserSubprocess.exe";
             CefSharpSettings.WcfEnabled = true;
             if (!Cef.IsInitialized)
             {

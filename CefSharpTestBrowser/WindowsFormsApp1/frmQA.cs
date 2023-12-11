@@ -34,7 +34,9 @@ namespace WindowsFormsApp1
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
-            CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+            settings.BrowserSubprocessPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\CefSharp.BrowserSubprocess.exe";
+            //CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+            CefSharpSettings.WcfEnabled = true;
             settings.CachePath = @path + "/cache/cache/";
             settings.PersistSessionCookies = true;
             if (!Cef.IsInitialized)
@@ -42,7 +44,7 @@ namespace WindowsFormsApp1
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.ComplianceAgent.profile + "_qa/", true);
+            //Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.ComplianceAgent.profile + "_qa/", true);
 
             var requestContextSettings = new RequestContextSettings();
             requestContextSettings.CachePath = @path + "/cache/cache/";
@@ -53,12 +55,14 @@ namespace WindowsFormsApp1
             chromeBrowserQA.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(chromeBrowserQA);
             chromeBrowserQA.Dock = DockStyle.Fill;
+            chromeBrowserQA.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;   
 
 
             var obj = new BoundObjectQA(chromeBrowserQA,this);
 
 
-            chromeBrowserQA.RegisterJsObject("bound", obj);
+            //chromeBrowserQA.RegisterJsObject("bound", obj);
+            chromeBrowserQA.JavascriptObjectRepository.Register("bound", obj, isAsync: false, options: BindingOptions.DefaultBinder);
             chromeBrowserQA.FrameLoadStart += obj.OnFrameLoadStart;
             chromeBrowserQA.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowserQA.MenuHandler = new MyCustomMenuHandler();

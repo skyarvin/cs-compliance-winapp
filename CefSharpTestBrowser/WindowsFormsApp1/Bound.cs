@@ -224,7 +224,7 @@ namespace CSTool
                             bound.setDateTimeChatLog(chatlog[chatlog.length-1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
                         }
                     });
-
+                    
                     $('#tab_photos').on('click', function(event) {
                         checkDateTimeTabPhotos();
                     });
@@ -263,9 +263,9 @@ namespace CSTool
                     document.getElementById('pre_request_photo_button').style.display='none';
                     approve_btn = document.getElementById('approve_button');
                     if (approve_btn) {
-                        approve_btn.style.display = 'block';
+                        approve_btn.style.display = 'none';
                     }
-
+                    
                     window.onkeydown = function(e){
                         if (e.which == 112)
                         {
@@ -287,7 +287,7 @@ namespace CSTool
                     {
                         bound.displayTierBtn();
                     }
-
+                    
 
                     var followRaw = $('#room_info').children().eq(2).text();
                     bound.showTierLevelBanner(followRaw);

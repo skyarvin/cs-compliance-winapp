@@ -61,6 +61,11 @@ namespace CSTool
                     
                    bound.injectViolationScript();
                    window.onclick = function(e) { 
+                        
+                        if(e.target.id === 'tab_chatlog_user'){
+                            highlight_text();
+                        }
+
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
                         }
@@ -83,10 +88,6 @@ namespace CSTool
                             if (element_values.hasOwnProperty(e.target.value)) {
                                     bound.onClicked(element_values[e.target.value][0]);
                             }
-                        }
-
-                        if(e.target.id === 'tab_chatlog_user'){
-                            highlight_text();
                         }
 
                     }
@@ -556,7 +557,7 @@ namespace CSTool
                     @"const regex_pattern = new RegExp(violation_list.join('|'),'ig');
                     let text = '';
                     function highlight_text(){
-                        text = $('#chatlog_user .chatlog_message');
+                        text = $('#data .chatlog_message');
                         for(let x = 0; x < text.length; x++){
                             text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
                         }  

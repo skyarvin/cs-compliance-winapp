@@ -186,9 +186,9 @@ namespace CSTool
                     }
                 ";
 
-            browser.EvaluateScriptAsync(submit_script);
+            browser.GetMainFrame().EvaluateScriptAsync(submit_script);
 
-            browser.EvaluateScriptAsync(@"
+            browser.GetMainFrame().EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                         $(this).attr('buttonClicked', true);
@@ -224,7 +224,7 @@ namespace CSTool
                             bound.setDateTimeChatLog(chatlog[chatlog.length-1].firstElementChild.innerText, chatlog[1].firstElementChild.innerText);
                         }
                     });
-                    
+
                     $('#tab_photos').on('click', function(event) {
                         checkDateTimeTabPhotos();
                     });
@@ -263,9 +263,9 @@ namespace CSTool
                     document.getElementById('pre_request_photo_button').style.display='none';
                     approve_btn = document.getElementById('approve_button');
                     if (approve_btn) {
-                        approve_btn.style.display = 'none';
+                        approve_btn.style.display = 'block';
                     }
-                    
+
                     window.onkeydown = function(e){
                         if (e.which == 112)
                         {
@@ -287,7 +287,7 @@ namespace CSTool
                     {
                         bound.displayTierBtn();
                     }
-                    
+
 
                     var followRaw = $('#room_info').children().eq(2).text();
                     bound.showTierLevelBanner(followRaw);
@@ -299,7 +299,7 @@ namespace CSTool
 
             if (e.Url.Contains("/compliance/seed_failure") && !string.IsNullOrEmpty(Globals.LastSuccessUrl) && e.Url.Contains(Globals.frmMain.ExtractUsername(Globals.LastSuccessUrl)))
             {
-                browser.EvaluateScriptAsync(@"
+                browser.GetMainFrame().EvaluateScriptAsync(@"
                     document.addEventListener('DOMContentLoaded', function(){
                         waitUntil(`#id_photos`,5000).then((el) => compareImages(), (err) => console.log(`img for comparing not found`));
                     });
@@ -307,7 +307,7 @@ namespace CSTool
             }
             else
             {
-                browser.EvaluateScriptAsync(@"
+                browser.GetMainFrame().EvaluateScriptAsync(@"
                     document.addEventListener('DOMContentLoaded', function(){
                         waitUntil(`#id_photos`,5000).then((el) => storeImages(), (err) => console.log(`img for storing not found`));
                     });

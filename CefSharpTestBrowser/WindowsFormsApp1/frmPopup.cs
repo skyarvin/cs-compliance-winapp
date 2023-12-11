@@ -79,7 +79,7 @@ namespace CSTool
 
             if (e.Frame.IsMain)
             {
-                chromePopUp.EvaluateScriptAsync(@"
+                chromePopUp.GetMainFrame().EvaluateScriptAsync(@"
                    var zoomLevel = 1;
                     window.addEventListener('wheel', function(e) {
                         if (e.deltaY < 0) {

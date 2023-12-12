@@ -270,6 +270,12 @@
     <Compile Include="frmConfirmSendIRFP.Designer.cs">
       <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmRegisterDevice.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRegisterDevice.Designer.cs">
+      <DependentUpon>frmRegisterDevice.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmTfa.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -357,6 +363,7 @@
       <DependentUpon>frmMessage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Handlers\ErrorsHandler\RegisterDeviceException.cs" />
     <Compile Include="Handlers\ErrorsHandler\ForbiddenException.cs" />
     <Compile Include="Handlers\ErrorsHandler\TFARequiredException.cs" />
     <Compile Include="Handlers\ErrorsHandler\UnauthorizeException.cs" />
@@ -369,6 +376,7 @@
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Announcements.cs" />
+    <Compile Include="Models\DeviceRegistration.cs" />
     <Compile Include="Models\Emailer.cs" />
     <Compile Include="Models\ErrorLogs.cs" />
     <Compile Include="Models\IdChecker.cs" />
@@ -409,6 +417,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmConfirmSendIRFP.resx">
       <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmRegisterDevice.resx">
+      <DependentUpon>frmRegisterDevice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTfa.resx">
       <DependentUpon>frmTfa.cs</DependentUpon>

@@ -61,7 +61,6 @@ namespace CSTool
                     
                    bound.injectViolationScript();
                    window.onclick = function(e) { 
-                        
                         if(e.target.id === 'tab_chatlog_user'){
                             highlight_text();
                         }
@@ -547,7 +546,6 @@ namespace CSTool
             }
         }
 
-
         public void InjectViolationScript()
         {
             if (!Globals.violation_keywords.IsNullOrEmpty())
@@ -557,12 +555,11 @@ namespace CSTool
                     @"const regex_pattern = new RegExp(violation_keywords.join('|'),'ig');
                     let text = '';
                     function highlight_text(){
-                        text = $('#data .chatlog_message');
+                        text = $('.chatlog_message');
                         for(let x = 0; x < text.length; x++){
                             text[x].innerHTML = text[x].innerText.replace(regex_pattern, match => `<span style='background-color:red; color:white'>${match}</span>`)
                         }  
                     }
-                    
                 ");
             }
         }

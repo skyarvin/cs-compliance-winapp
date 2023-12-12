@@ -550,11 +550,11 @@ namespace CSTool
 
         public void InjectViolationScript()
         {
-            if (!Globals.violation_list.IsNullOrEmpty())
+            if (!Globals.violation_keywords.IsNullOrEmpty())
             {
                 browser.ExecuteScriptAsync($@"
-                    const violation_list = {Globals.violation_list};"+
-                    @"const regex_pattern = new RegExp(violation_list.join('|'),'ig');
+                    const violation_keywords = {Globals.violation_keywords};"+
+                    @"const regex_pattern = new RegExp(violation_keywords.join('|'),'ig');
                     let text = '';
                     function highlight_text(){
                         text = $('#data .chatlog_message');

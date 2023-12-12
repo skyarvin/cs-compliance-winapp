@@ -77,7 +77,7 @@ namespace WindowsFormsApp1
         public static UserToken UserToken;
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
-        public static string violation_list;
+        public static string violation_keywords;
 
         public static bool ShouldResizeImage(long fileLength)
         {

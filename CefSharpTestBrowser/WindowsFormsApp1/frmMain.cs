@@ -70,7 +70,6 @@ namespace WindowsFormsApp1
             lblProfile.Text = String.Concat("Profile: ", Globals.Profile.Name);
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
-            //CefSharpSettings.LegacyJavascriptBindingEnabled = true;
             CefSharpSettings.WcfEnabled = true;
             settings.BrowserSubprocessPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\CefSharp.BrowserSubprocess.exe";
             settings.CachePath = @path + "/cache/cache/";
@@ -80,7 +79,6 @@ namespace WindowsFormsApp1
                 Cef.Initialize(settings);
             }
 
-            //Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.Profile.Name + "/", true);
             this.CheckAgentSession();
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             var requestContextSettings = new RequestContextSettings();
@@ -98,7 +96,6 @@ namespace WindowsFormsApp1
             var obj = new BoundObject(Globals.chromeBrowser);
             obj.HtmlItemClicked += Obj_HtmlItemClicked;
 
-            //Globals.chromeBrowser.RegisterJsObject("bound", obj);
             Globals.chromeBrowser.JavascriptObjectRepository.Register("bound", obj, isAsync: false, options: BindingOptions.DefaultBinder);
             Globals.chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
             Globals.chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;

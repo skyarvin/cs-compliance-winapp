@@ -28,7 +28,6 @@ namespace CSTool
             chromePopUp.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
             InitializeComponent();
             var obj = new BoundObjectPopUp(this);
-            //chromePopUp.RegisterJsObject("bound", obj);
             chromePopUp.JavascriptObjectRepository.Register("bound", obj, isAsync: false, options: BindingOptions.DefaultBinder);
             chromePopUp.FindHandler = new FindHandler(this);
             chromePopUp.FrameLoadEnd += new EventHandler<FrameLoadEndEventArgs>(OnFrameLoadEnd);

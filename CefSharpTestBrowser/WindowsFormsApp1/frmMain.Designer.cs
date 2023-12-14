@@ -264,6 +264,7 @@
             this.btnConnect.TabIndex = 1;
             this.btnConnect.Text = "CONNECT";
             this.btnConnect.UseVisualStyleBackColor = false;
+            this.btnConnect.Visible = false;
             this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
             // 
             // pnlSplitter2

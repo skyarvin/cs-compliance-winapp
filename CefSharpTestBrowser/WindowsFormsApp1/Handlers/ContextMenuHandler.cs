@@ -45,7 +45,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26507, "Log Viewer");
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26506, "Devtools");
-        model.AddItem((CefMenuCommand)26513, "Set Preference");
+        //model.AddItem((CefMenuCommand)26513, "Set Preference");
 
         if (Globals.IsClient())
         {
@@ -130,13 +130,13 @@ public class MyCustomMenuHandler : IContextMenuHandler
         }
 
 
-        if (commandId == (CefMenuCommand)26513)
-        {
-            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-            {
-                Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
-            });
-        }
+        //if (commandId == (CefMenuCommand)26513)
+        //{
+        //    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+        //    {
+        //        Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+        //    });
+        //}
 
         //if (commandId == (CefMenuCommand)26512)
         //{

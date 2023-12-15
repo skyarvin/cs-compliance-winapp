@@ -960,8 +960,7 @@ namespace WindowsFormsApp1
 
             if (e.KeyChar == (char)13)
             {
-                this.send_id_checker = false;
-                LoadUrl(cmbURL.Text.ToString());
+                e.Handled = false;
             }
             else
             {

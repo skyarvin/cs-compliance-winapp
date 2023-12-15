@@ -241,6 +241,7 @@ namespace WindowsFormsApp1
                 IsActive = true
             };
             Globals.Profiles.Add(Globals.Profile);
+            setActionCounter_forRoomSeedRelease(); 
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
@@ -360,24 +361,64 @@ namespace WindowsFormsApp1
             Console.WriteLine("BrowserChanged");
             this.InvokeOnUiThreadIfRequired(() =>
             {
-                string sCurrAddress = e.Address;
-                if (IsValidUrl(sCurrAddress))
+                if(Globals.action_count_before_seed_release != 0)
                 {
-                    if (!IsComplianceUrl(sCurrAddress))
+                    string sCurrAddress = e.Address;
+                    if (IsValidUrl(sCurrAddress))
                     {
-                        _timer.Stop();
-                        Globals.room_duration = 0;
-                    }
-                    else
-                    {
-                        _timer.Start();
-                    }
+                        if (!IsComplianceUrl(sCurrAddress))
+                        {
+                            _timer.Stop();
+                            Globals.room_duration = 0;
+                        }
+                        else
+                        {
+                            _timer.Start();
+                        }
 
-                    //showIMAP();
-                    var splitAddress = sCurrAddress.Split('#');
-                    if (Globals.CurrentUrl == splitAddress[0])
-                    {
-                        if (!sCurrAddress.Contains("seed_failure"))
+                        //showIMAP();
+                        var splitAddress = sCurrAddress.Split('#');
+                        if (Globals.CurrentUrl == splitAddress[0])
+                        {
+                            if (!sCurrAddress.Contains("seed_failure"))
+                            {
+                                if (this.send_id_checker && IsComplianceUrl(sCurrAddress))
+                                {
+                                    Globals.chromeBrowser.ExecuteScriptAsync(@"
+                                waitUntil('#identificationproblem_button', 5000).then((element) => bound.sendToIdChecking(), (error) => console.log(error));");
+                                }
+                            }
+                            this.send_id_checker = false;
+                            return;
+                        }
+
+                        try
+                        {
+                            var RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3];
+                            var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3] : "";
+                            if (OldRoomName == RoomName)
+                            {
+                                this.send_id_checker = false;
+                            }
+                        }
+
+                        catch
+                        {
+                            return;
+                        }
+
+                        //Emailer for missed seed
+                        if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
+                        {
+                            //Send to API
+                            Seed seed = new Seed();
+                            seed.log_id = Globals.LAST_SUCCESS_ID;
+                            seed.url = sCurrAddress;
+                            seed.Save();
+
+                            Globals.LastSuccessUrl = "";
+                        }
+                        else
                         {
                             if (this.send_id_checker && IsComplianceUrl(sCurrAddress))
                             {
@@ -385,75 +426,39 @@ namespace WindowsFormsApp1
                                 waitUntil('#identificationproblem_button', 5000).then((element) => bound.sendToIdChecking(), (error) => console.log(error));");
                             }
                         }
+
+                        if (!Globals.StartTime_LastAction.HasValue)
+                        {
+                            Globals.StartTime_LastAction = DateTime.Now;
+                        }
                         this.send_id_checker = false;
-                        return;
-                    }
 
-                    try
-                    {
-                        var RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3];
-                        var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3] : "";
-                        if (OldRoomName == RoomName)
+                        Globals.AddToHistory(splitAddress[0]);
+                        Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
+                        Globals.CurrentUrl = splitAddress[0];
+                        StartTime_BrowserChanged = DateTime.Now;
+                        Globals.SKYPE_COMPLIANCE = false;
+                        lblCountdown.Text = Globals.room_duration.ToString();
+                        setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
+                        PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
+                        if (Globals.IsServer())
                         {
-                            this.send_id_checker = false;
+                            Globals.room_duration = 0;
+                            Globals.max_room_duration = ServerAsync.DurationThreshold();
+                            ServerAsync.SendToAll(redirectCommand);
+                            ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
                         }
-                    }
-
-                    catch
-                    {
-                        return;
-                    }
-
-                    //Emailer for missed seed
-                    if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
-                    {
-                        //Send to API
-                        Seed seed = new Seed();
-                        seed.log_id = Globals.LAST_SUCCESS_ID;
-                        seed.url = sCurrAddress;
-                        seed.Save();
-
-                        Globals.LastSuccessUrl = "";
-                    }
-                    else
-                    {
-                        if (this.send_id_checker && IsComplianceUrl(sCurrAddress))
+                        else if (Globals.IsClient())
                         {
-                            Globals.chromeBrowser.ExecuteScriptAsync(@"
-                                waitUntil('#identificationproblem_button', 5000).then((element) => bound.sendToIdChecking(), (error) => console.log(error));");
+                            AsynchronousClient.Send(Globals.Client, redirectCommand);
+                            AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
                         }
+                        else Globals.room_duration = 0;
                     }
 
-                    if (!Globals.StartTime_LastAction.HasValue)
-                    {
-                        Globals.StartTime_LastAction = DateTime.Now;
-                    }
-                    this.send_id_checker = false;
-                    Globals.AddToHistory(splitAddress[0]);
-                    Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
-                    Globals.CurrentUrl = splitAddress[0];
-                    StartTime_BrowserChanged = DateTime.Now;
-                    Globals.SKYPE_COMPLIANCE = false;
-                    lblCountdown.Text = Globals.room_duration.ToString();
-                    setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
-                    PairCommand redirectCommand = new PairCommand { Action = "GOTO", Message = Globals.CurrentUrl };
-                    if (Globals.IsServer())
-                    {
-                        Globals.room_duration = 0;
-                        Globals.max_room_duration = ServerAsync.DurationThreshold();
-                        ServerAsync.SendToAll(redirectCommand);
-                        ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_TIME", Message = Globals.max_room_duration.ToString(), RoomDuration = Globals.room_duration });
-                    }
-                    else if (Globals.IsClient())
-                    {
-                        AsynchronousClient.Send(Globals.Client, redirectCommand);
-                        AsynchronousClient.Send(Globals.Client, new PairCommand { Action = "REQUEST_TIME" });
-                    }
-                    else Globals.room_duration = 0;
+                    lblTierLvlBanner.Visible = false;
+                    cmbURL.Text = sCurrAddress;
                 }
-
-                lblTierLvlBanner.Visible = false;
-                cmbURL.Text = sCurrAddress;
             });
         }
 
@@ -843,6 +848,7 @@ namespace WindowsFormsApp1
                         bgWorkIIDC.CancelAsync();
                     }
                     Globals.INTERNAL_IIDC = new InternalIdentificationChecker();
+
                 }
                 catch (AggregateException e)
                 {
@@ -1907,6 +1913,13 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkIIDC.RunWorkerAsync();
+        }
+
+        private void setActionCounter_forRoomSeedRelease()
+        {
+            Random random = new Random();
+            Globals.action_count_before_seed_release = random.Next(1, 3);
+            Console.WriteLine("Marvs: " + Globals.action_count_before_seed_release);
         }
     }
  }

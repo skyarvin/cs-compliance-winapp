@@ -5,6 +5,7 @@ using CSTool.Models;
 using CSTool.Properties;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
@@ -47,6 +48,12 @@ namespace CSTool
             }
 
             browser.ExecuteScriptAsync(@"
+                   window.addEventListener('hashchange',()=>{
+                        if(bound.releaseRoomSeed()){
+                            bound.displayRoomSeed();
+                        }
+                   });
+
                    window.onload = function(e) {
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                             $(this).attr('buttonClicked', true);
@@ -420,6 +427,7 @@ namespace CSTool
 
         public void OnClicked(string id)
         {
+            --Globals.action_count_before_seed_release;
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
             if (HtmlItemClicked != null)
             {
@@ -536,6 +544,18 @@ namespace CSTool
                 Globals.room_photos_start_time = startDateTimeTabPhotos.Split('-')[0];
                 Globals.room_photos_end_time = endDateTimeTabPhotos.Split('-')[0];
             }
+        }
+
+        public void DisplayRoomSeed()
+        {
+            --Globals.action_count_before_seed_release;
+            string htmlContent = File.ReadAllText(Url.BASE_SEED_ROOM);
+            Globals.chromeBrowser.LoadHtml(htmlContent, "http://127.0.0.1:8000/compliance/1/show/seed_room");
+        }
+
+        public bool ReleaseRoomSeed()
+        {
+            return Globals.action_count_before_seed_release == 0;
         }
     }
 }

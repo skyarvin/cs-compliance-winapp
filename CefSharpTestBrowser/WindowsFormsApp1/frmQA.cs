@@ -38,18 +38,13 @@ namespace WindowsFormsApp1
             CefSharpSettings.WcfEnabled = true;
             settings.CachePath = @path + "/cache/cache/";
             settings.PersistSessionCookies = true;
+            settings.PersistUserPreferences = true;
             if (!Cef.IsInitialized)
             {
                 Cef.Initialize(settings);
             }
 
-            var requestContextSettings = new RequestContextSettings();
-            requestContextSettings.CachePath = @path + "/cache/cache/";
-            requestContextSettings.PersistSessionCookies = true;
-            requestContextSettings.PersistUserPreferences = true;
-
             chromeBrowserQA = new ChromiumWebBrowser(url);
-            chromeBrowserQA.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(chromeBrowserQA);
             chromeBrowserQA.Dock = DockStyle.Fill;
             chromeBrowserQA.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;   

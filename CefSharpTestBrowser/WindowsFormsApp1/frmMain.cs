@@ -74,6 +74,7 @@ namespace WindowsFormsApp1
             settings.BrowserSubprocessPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\CefSharp.BrowserSubprocess.exe";
             settings.CachePath = @path + "/cache/cache/";
             settings.PersistSessionCookies = true;
+            settings.PersistUserPreferences = true;
             if (!Cef.IsInitialized)
             {
                 Cef.Initialize(settings);
@@ -81,13 +82,7 @@ namespace WindowsFormsApp1
 
             this.CheckAgentSession();
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
-            var requestContextSettings = new RequestContextSettings();
-            requestContextSettings.CachePath = @path + "/cache/cache/";
-            requestContextSettings.PersistSessionCookies = true;
-            requestContextSettings.PersistUserPreferences = true;
-
             Globals.chromeBrowser = new ChromiumWebBrowser(url);
-            Globals.chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(Globals.chromeBrowser);
             Globals.chromeBrowser.Dock = DockStyle.Fill;
             Globals.chromeBrowser.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;

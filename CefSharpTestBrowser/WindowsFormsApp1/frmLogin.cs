@@ -141,7 +141,18 @@ namespace WindowsFormsApp1
 
             string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");
             if (Directory.Exists(cache_path))
-                Directory.Delete(cache_path, true);
+            {
+                DirectoryInfo cache_path_di = new DirectoryInfo(cache_path);
+                foreach (DirectoryInfo cache_directories in cache_path_di.GetDirectories().Where(directory => directory.Name != "Network"))
+                    cache_directories.Delete(true);
+                foreach (FileInfo file_directories in cache_path_di.GetFiles().Where(file => file.Name != "LocalPrefs.json"))
+                    file_directories.Delete();
+
+                //delete all except Cookies and Cookies-journal
+                DirectoryInfo cache_network_path_di = new DirectoryInfo(string.Concat(cache_path, "\\Network"));
+                foreach (FileInfo cache_network_files in cache_network_path_di.GetFiles().Where(file => !file.Name.Contains("Cookies")))
+                    cache_network_files.Delete();
+            }
         }
 
         private void Workshift_list_KeyDown(object sender, KeyEventArgs e)

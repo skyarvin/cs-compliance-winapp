@@ -229,6 +229,7 @@
   <ItemGroup>
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
+    <Compile Include="Class\ControlExtensions.cs" />
     <Compile Include="Class\StaffCam.cs" />
     <Compile Include="Class\StaffScreenshot.cs" />
     <Compile Include="Class\FileUtil.cs" />

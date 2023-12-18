@@ -469,6 +469,9 @@
     <Content Include="icudtl.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="locales\af.pak">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="locales\am.pak">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -617,6 +620,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="locales\uk.pak">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="locales\ur.pak">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="locales\vi.pak">

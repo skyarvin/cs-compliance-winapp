@@ -4,6 +4,7 @@ using CefSharp.WinForms.Internals;
 using System;
 using System.Windows.Forms;
 using WindowsFormsApp1;
+using CSTool.Class;
 using CSTool.Handlers;
 namespace CSTool
 {
@@ -32,13 +33,13 @@ namespace CSTool
             chromePopUp.FindHandler = new FindHandler(this);
             chromePopUp.FrameLoadEnd += new EventHandler<FrameLoadEndEventArgs>(OnFrameLoadEnd);
             chromePopUp.FrameLoadStart += new EventHandler<FrameLoadStartEventArgs>(onFrameLoadStart);
-            chromePopUp.IsBrowserInitializedChanged += new EventHandler<IsBrowserInitializedChangedEventArgs>(OnIsBrowserInitiazedChanged);
+            chromePopUp.IsBrowserInitializedChanged += new EventHandler(OnIsBrowserInitializedChanged);
             this.Text = url;
 
         }
-        private void OnIsBrowserInitiazedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
+        private void OnIsBrowserInitializedChanged(object sender, EventArgs e)
         {
-            isBrowserInitialized = e.IsBrowserInitialized;
+            isBrowserInitialized = true;
             Console.WriteLine(String.Concat("Initialize: ", isBrowserInitialized));
         }
         public void UpdateTextSearchCount(int matchcount, int index)
@@ -137,7 +138,7 @@ namespace CSTool
             }
             else
             {
-                chromePopUp.Find(0, txtSearch.Text, true, false, false);
+                chromePopUp.Find(txtSearch.Text, true, false, false);
             }
         }
 
@@ -151,7 +152,7 @@ namespace CSTool
             }
             if (e.KeyCode == Keys.Enter)
             {
-                chromePopUp.Find(0, txtSearch.Text, true, false, false);
+                chromePopUp.Find(txtSearch.Text, true, false, false);
                 e.Handled = true;
                 e.SuppressKeyPress = true;
             }
@@ -181,14 +182,14 @@ namespace CSTool
         {
             if (!isBrowserInitialized)
                 return;
-            chromePopUp.Find(0, txtSearch.Text, false, false, false);
+            chromePopUp.Find(txtSearch.Text, false, false, false);
         }
 
         private void btnNxt_Click(object sender, EventArgs e)
         {
             if (!isBrowserInitialized)
                 return;
-            chromePopUp.Find(0, txtSearch.Text, true, false, false);
+            chromePopUp.Find(txtSearch.Text, true, false, false);
         }
 
         private void pnlSearch_VisibleChanged(object sender, EventArgs e)

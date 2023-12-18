@@ -102,7 +102,7 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.JavascriptObjectRepository.Register("bound", obj, isAsync: false, options: BindingOptions.DefaultBinder);
             Globals.chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
             Globals.chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
-            Globals.chromeBrowser.IsBrowserInitializedChanged += OnIsBrowserInitiazedChanged;
+            Globals.chromeBrowser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged;
             Globals.chromeBrowser.LoadingStateChanged += OnLoadingStateChanged;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
@@ -461,9 +461,9 @@ namespace WindowsFormsApp1
             });
         }
 
-        private void OnIsBrowserInitiazedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
+        private void OnIsBrowserInitializedChanged(object sender, EventArgs e)
         {
-            isBrowserInitialized = e.IsBrowserInitialized;
+            isBrowserInitialized = true;
         }
 
         public void hideBanner()
@@ -643,7 +643,7 @@ namespace WindowsFormsApp1
         {
             if (!string.IsNullOrEmpty(txtSearch.Text))
             {
-                Globals.chromeBrowser.Find(0, txtSearch.Text, next, false, false);
+                Globals.chromeBrowser.Find(txtSearch.Text, next, false, false);
             }
         }
 
@@ -1297,7 +1297,7 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.StopFinding(true);
             if (!string.IsNullOrEmpty(txtSearch.Text))
             {
-                Globals.chromeBrowser.Find(0, txtSearch.Text, true, false, false);
+                Globals.chromeBrowser.Find(txtSearch.Text, true, false, false);
             }
         }
 

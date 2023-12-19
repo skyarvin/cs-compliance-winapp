@@ -49,34 +49,14 @@ namespace CSTool.Handlers
 
     public class BrowserRequestHandler : IRequestHandler
     {
-        public bool CanGetCookies(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request)
-        {
-            return true;
-        }
-
-        public bool CanSetCookie(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, Cookie cookie)
-        {
-            return true;
-        }
-
-        public bool GetAuthCredentials(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, bool isProxy, string host, int port, string realm, string scheme, IAuthCallback callback)
+        public bool GetAuthCredentials(IWebBrowser chromiumWebBrowser, IBrowser browser, string originUrl, bool isProxy, string host, int port, string realm, string scheme, IAuthCallback callback)
         {
             return false;
-        }
-
-        public IResponseFilter GetResourceResponseFilter(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response)
-        {
-            return null;
         }
 
         public bool OnBeforeBrowse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool userGesture, bool isRedirect)
         {
             return false;
-        }
-
-        public CefReturnValue OnBeforeResourceLoad(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IRequestCallback callback)
-        {
-            return CefReturnValue.Continue;
         }
 
         public bool OnCertificateError(IWebBrowser chromiumWebBrowser, IBrowser browser, CefErrorCode errorCode, string requestUrl, ISslInfo sslInfo, IRequestCallback callback)
@@ -89,21 +69,6 @@ namespace CSTool.Handlers
             return false;
         }
 
-        public void OnPluginCrashed(IWebBrowser chromiumWebBrowser, IBrowser browser, string pluginPath)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool OnProtocolExecution(IWebBrowser chromiumWebBrowser, IBrowser browser, string url)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool OnQuotaRequest(IWebBrowser chromiumWebBrowser, IBrowser browser, string originUrl, long newSize, IRequestCallback callback)
-        {
-            throw new NotImplementedException();
-        }
-
         public void OnRenderProcessTerminated(IWebBrowser chromiumWebBrowser, IBrowser browser, CefTerminationStatus status)
         {
             return;
@@ -111,12 +76,60 @@ namespace CSTool.Handlers
 
         public void OnRenderViewReady(IWebBrowser chromiumWebBrowser, IBrowser browser)
         {
+
+        }
+
+        public bool OnSelectClientCertificate(IWebBrowser chromiumWebBrowser, IBrowser browser, bool isProxy, string host, int port, X509Certificate2Collection certificates, ISelectClientCertificateCallback callback)
+        {
+            return false;
+        }
+
+        public void OnDocumentAvailableInMainFrame(IWebBrowser chromiumWebBrowser, IBrowser browser)
+        {
             
+        }
+
+        public IResourceRequestHandler GetResourceRequestHandler(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref bool disableDefaultHandling)
+        {
+            return new BrowserResourceRequestHandler();
+        }
+    }
+
+    public class BrowserResourceRequestHandler : IResourceRequestHandler
+    {
+        public void Dispose()
+        {
+            
+        }
+
+        public ICookieAccessFilter GetCookieAccessFilter(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request)
+        {
+            return null;
+        }
+
+        public IResourceHandler GetResourceHandler(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request)
+        {
+            return null;
+        }
+
+        public IResponseFilter GetResourceResponseFilter(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response)
+        {
+            return null;
+        }
+
+        public CefReturnValue OnBeforeResourceLoad(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IRequestCallback callback)
+        {
+            return CefReturnValue.Continue;
+        }
+
+        public bool OnProtocolExecution(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request)
+        {
+            return false;
         }
 
         public void OnResourceLoadComplete(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response, UrlRequestStatus status, long receivedContentLength)
         {
-
+            
         }
 
         public void OnResourceRedirect(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response, ref string newUrl)
@@ -137,8 +150,8 @@ namespace CSTool.Handlers
             //    }
             //}
 
-            string logData = string.Concat("Last Success Id: ", Globals.LAST_SUCCESS_ID, 
-                ", StartTime_LastAction: ", Globals.StartTime_LastAction, 
+            string logData = string.Concat("Last Success Id: ", Globals.LAST_SUCCESS_ID,
+                ", StartTime_LastAction: ", Globals.StartTime_LastAction,
                 ", ReferrerUrl: ", request.ReferrerUrl,
                 ", CurrentUrl: ", Globals.CurrentUrl, "/", newUrl);
             Globals.SaveToLogFile(logData, (int)LogType.Request_Handler);
@@ -147,26 +160,6 @@ namespace CSTool.Handlers
         public bool OnResourceResponse(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response)
         {
             return false;
-        }
-
-        public bool OnSelectClientCertificate(IWebBrowser chromiumWebBrowser, IBrowser browser, bool isProxy, string host, int port, X509Certificate2Collection certificates, ISelectClientCertificateCallback callback)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnDocumentAvailableInMainFrame(IWebBrowser chromiumWebBrowser, IBrowser browser)
-        {
-
-        }
-
-        public IResourceRequestHandler GetResourceRequestHandler(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref bool disableDefaultHandling)
-        {
-            return null;
-        }
-
-        public bool GetAuthCredentials(IWebBrowser chromiumWebBrowser, IBrowser browser, string originUrl, bool isProxy, string host, int port, string realm, string scheme, IAuthCallback callback)
-        {
-            return true;
         }
     }
 }

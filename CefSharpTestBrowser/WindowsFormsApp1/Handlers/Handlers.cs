@@ -71,7 +71,7 @@ namespace CSTool.Handlers
 
         public void OnRenderProcessTerminated(IWebBrowser chromiumWebBrowser, IBrowser browser, CefTerminationStatus status)
         {
-            return;
+            return; 
         }
 
         public void OnRenderViewReady(IWebBrowser chromiumWebBrowser, IBrowser browser)
@@ -81,7 +81,7 @@ namespace CSTool.Handlers
 
         public bool OnSelectClientCertificate(IWebBrowser chromiumWebBrowser, IBrowser browser, bool isProxy, string host, int port, X509Certificate2Collection certificates, ISelectClientCertificateCallback callback)
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public void OnDocumentAvailableInMainFrame(IWebBrowser chromiumWebBrowser, IBrowser browser)
@@ -124,7 +124,7 @@ namespace CSTool.Handlers
 
         public bool OnProtocolExecution(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request)
         {
-            return false;
+            throw new NotImplementedException();
         }
 
         public void OnResourceLoadComplete(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response, UrlRequestStatus status, long receivedContentLength)

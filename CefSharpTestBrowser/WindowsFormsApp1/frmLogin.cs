@@ -149,9 +149,13 @@ namespace WindowsFormsApp1
                     file_directories.Delete();
 
                 //delete all except Cookies and Cookies-journal
-                DirectoryInfo cache_network_path_di = new DirectoryInfo(string.Concat(cache_path, "\\Network"));
-                foreach (FileInfo cache_network_files in cache_network_path_di.GetFiles().Where(file => !file.Name.Contains("Cookies")))
-                    cache_network_files.Delete();
+                string cookies_path = string.Concat(cache_path, "\\Network");
+                DirectoryInfo cache_network_path_di = new DirectoryInfo(cookies_path);
+                if (Directory.Exists(cookies_path))
+                {
+                    foreach (FileInfo cache_network_files in cache_network_path_di.GetFiles().Where(file => !file.Name.Contains("Cookies")))
+                        cache_network_files.Delete();
+                }
             }
         }
 

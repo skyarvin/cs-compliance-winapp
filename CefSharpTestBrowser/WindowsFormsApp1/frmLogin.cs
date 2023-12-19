@@ -154,7 +154,9 @@ namespace WindowsFormsApp1
                 if (Directory.Exists(cookies_path))
                 {
                     foreach (FileInfo cache_network_files in cache_network_path_di.GetFiles().Where(file => !file.Name.Contains("Cookies")))
+                    {
                         cache_network_files.Delete();
+                    }
                 }
             }
         }

@@ -25,6 +25,7 @@ using CSTool.Properties;
 using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
+using CefSharp.SchemeHandler;
 
 namespace WindowsFormsApp1
 {
@@ -73,6 +74,18 @@ namespace WindowsFormsApp1
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
             settings.CachePath = @path + "/cache/cache/";
             settings.PersistSessionCookies = true;
+            settings.RegisterScheme(new CefCustomScheme
+                {
+                    SchemeName = "staffme",
+                    DomainName = "base-seed-room.com",
+                    SchemeHandlerFactory = new FolderSchemeHandlerFactory(
+                        rootFolder: Path.GetFullPath(@"..\..\..\Resources"),
+                        hostName: "base-seed-room.com",
+                        defaultPage: "base_seed.html"
+                    )
+                }
+            );
+
             if (!Cef.IsInitialized)
             {
                 Cef.Initialize(settings);

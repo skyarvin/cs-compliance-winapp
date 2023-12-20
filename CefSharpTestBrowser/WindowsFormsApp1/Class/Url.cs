@@ -48,6 +48,6 @@ namespace CSTool.Class
         public static string BASE_URL = "http://127.0.0.1:9000";
         public static string API_URL = BASE_URL + "/api";
         public static string AUTH_URL = BASE_URL + "/security";
-        public static string BASE_SEED_ROOM = Path.GetFullPath(@"..\..\..\Resources/base_seed.html");
+        public static string BASE_SEED_ROOM_URL = "staffme://base-seed-room.com";
     }
 }

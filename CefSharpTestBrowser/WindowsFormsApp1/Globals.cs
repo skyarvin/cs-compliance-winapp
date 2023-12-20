@@ -78,7 +78,7 @@ namespace WindowsFormsApp1
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
         public static int action_count_before_seed_release;
-
+        public static string original_live_cb_url;
         public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;

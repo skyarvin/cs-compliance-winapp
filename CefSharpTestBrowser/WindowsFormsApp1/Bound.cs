@@ -550,7 +550,7 @@ namespace CSTool
         {
             --Globals.action_count_before_seed_release;
             string htmlContent = File.ReadAllText(Url.BASE_SEED_ROOM);
-            Globals.chromeBrowser.LoadHtml(htmlContent, "http://127.0.0.1:8000/compliance/1/show/seed_room");
+            Globals.chromeBrowser.LoadHtml(htmlContent, "https://127.0.0.1:8000/compliance/1/show/seed_room");
         }
 
         public bool ReleaseRoomSeed()

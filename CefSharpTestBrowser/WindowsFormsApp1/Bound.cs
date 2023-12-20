@@ -50,7 +50,7 @@ namespace CSTool
             browser.ExecuteScriptAsync(@"
                    window.addEventListener('hashchange',()=>{
                         if(bound.releaseRoomSeed()){
-                            bound.displayRoomSeed();
+                            bound.displayRoomSeed(window.location.href);
                         }
                    });
 
@@ -270,7 +270,7 @@ namespace CSTool
                     document.getElementById('pre_request_photo_button').style.display='none';
                     approve_btn = document.getElementById('approve_button');
                     if (approve_btn) {
-                        approve_btn.style.display = 'none';
+                        approve_btn.style.display = 'block';
                     }
                     
                     window.onkeydown = function(e){
@@ -546,11 +546,11 @@ namespace CSTool
             }
         }
 
-        public void DisplayRoomSeed()
+        public void DisplayRoomSeed(string current_url)
         {
             --Globals.action_count_before_seed_release;
             string htmlContent = File.ReadAllText(Url.BASE_SEED_ROOM);
-            Globals.chromeBrowser.LoadHtml(htmlContent, "https://127.0.0.1:8000/compliance/1/show/seed_room");
+            Globals.chromeBrowser.LoadHtml(htmlContent, "http://127.0.0.1:8000/compliance/1/show/seed_room");
         }
 
         public bool ReleaseRoomSeed()

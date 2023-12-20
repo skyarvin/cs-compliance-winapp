@@ -459,6 +459,11 @@ namespace WindowsFormsApp1
                     lblTierLvlBanner.Visible = false;
                     cmbURL.Text = sCurrAddress;
                 }
+                else
+                {
+                    Globals.original_live_cb_url = e.Address;
+                    Console.WriteLine(e.Address);
+                }
             });
         }
 

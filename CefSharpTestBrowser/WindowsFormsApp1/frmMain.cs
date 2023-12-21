@@ -960,7 +960,7 @@ namespace WindowsFormsApp1
 
             if (e.KeyChar == (char)13)
             {
-                e.Handled = false;
+                this.send_id_checker = false;
             }
             else
             {

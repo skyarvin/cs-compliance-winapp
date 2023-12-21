@@ -211,12 +211,12 @@ namespace WindowsFormsApp1
                     //}
                 ";
 
-            browser.EvaluateScriptAsync(submit_script);
+            browser.GetMainFrame().EvaluateScriptAsync(submit_script);
             //if (!String.IsNullOrEmpty(formQA.chatStart) && !String.IsNullOrEmpty(formQA.chatEnd))
             //{
-            //    browser.EvaluateScriptAsync(@"
+            //    browser.GetMainFrame().EvaluateScriptAsync(@"
             //        document.addEventListener('DOMContentLoaded', function(){
-                        
+
             //            function qa_chatlog_highlight(){
             //                waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_start}}','#0f0'), (error) => console.log(error));
             //                waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_end}}' ), (error) => console.log(error));
@@ -228,7 +228,7 @@ namespace WindowsFormsApp1
             //            {
             //                qa_chatlog_highlight();
             //            });
-                       
+
             //        });
             //    ".Replace("{{chat_start}}", formQA.chatStart)
             //     .Replace("{{chat_end}}",formQA.chatEnd)

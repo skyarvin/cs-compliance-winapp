@@ -376,7 +376,7 @@ namespace CSTool
                 return;
             }
                 Globals.ForceHideComliance = false;
-            browser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
+            browser.GetMainFrame().EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
         }
 
         public void showTierLevelBanner(string followRaw)

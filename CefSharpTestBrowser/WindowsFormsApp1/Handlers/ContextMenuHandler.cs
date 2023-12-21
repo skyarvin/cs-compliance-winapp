@@ -105,7 +105,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         if (commandId == (CefMenuCommand)26504)
         {
             var surl = string.Concat(Url.GOOGLE_TRANSLATE_URL, Uri.EscapeDataString(parameters.SelectionText));
-            browserControl.EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
+            browserControl.GetMainFrame().EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
             return true;
         }
 

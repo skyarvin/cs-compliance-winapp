@@ -32,7 +32,7 @@ namespace WindowsFormsApp1
             cmbViolation.ValueMember = "Key";
             cmbViolation.Text = "";
             int followers = 0;
-            string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[2].textContent").Result.Result);
+            string followRaw = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#room_info').children()[2].textContent").Result.Result);
             followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
             if (!String.IsNullOrEmpty(followRaw)) followers = int.Parse(followRaw);
 

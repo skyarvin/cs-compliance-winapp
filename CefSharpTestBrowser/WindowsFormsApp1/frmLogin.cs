@@ -149,11 +149,12 @@ namespace WindowsFormsApp1
                     "Session Storage"
                 };
 
-                //delete all except LocalPrefs.json
-                //contains encryption key required for Cookie persistence
+                //delete all folders except Network, Local Storage, Session Storage
                 DirectoryInfo cache_path_di = new DirectoryInfo(cache_path);
                 foreach (DirectoryInfo cache_directories in cache_path_di.GetDirectories().Where(directory => !IgnoreCredentialDirectories.Contains(directory.Name)))
                     cache_directories.Delete(true);
+                //delete all files except LocalPrefs.json
+                //contains encryption key required for Cookie persistence
                 foreach (FileInfo file_directories in cache_path_di.GetFiles().Where(file => file.Name != "LocalPrefs.json"))
                     file_directories.Delete();
 

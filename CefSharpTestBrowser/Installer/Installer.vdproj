@@ -4087,7 +4087,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSTool"
         "ProductCode" = "8:{E4A68519-1AEA-4CA3-8A44-5F864D4E0DEF}"
-        "PackageCode" = "8:{4C5C22C0-8DE6-44F3-B45F-476682E886D2}"
+        "PackageCode" = "8:{4FD14264-DE16-4C61-A04C-CF00166951D6}"
         "UpgradeCode" = "8:{E3D5D40B-6234-4CCB-832E-98F8206BE10A}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
@@ -4565,7 +4565,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FED9E810F53548D49DAE1ED908E8AC96"
             {
-            "SourcePath" = "8:..\\WindowsFormsApp1\\obj\\x86\\Debug\\COMPLIANCE_TOOL.exe"
+            "SourcePath" = "8:..\\WindowsFormsApp1\\obj\\x86\\Release\\COMPLIANCE_TOOL.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0CDCD8ED2B364C83BAF51C37929BF68A"

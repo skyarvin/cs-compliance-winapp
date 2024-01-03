@@ -129,7 +129,7 @@
             this.pnlURL.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlURL.Location = new System.Drawing.Point(35, 0);
             this.pnlURL.Name = "pnlURL";
-            this.pnlURL.Size = new System.Drawing.Size(146, 40);
+            this.pnlURL.Size = new System.Drawing.Size(121, 40);
             this.pnlURL.TabIndex = 14;
             // 
             // cmbURL
@@ -144,7 +144,7 @@
             this.cmbURL.FormattingEnabled = true;
             this.cmbURL.Location = new System.Drawing.Point(6, 7);
             this.cmbURL.Name = "cmbURL";
-            this.cmbURL.Size = new System.Drawing.Size(134, 25);
+            this.cmbURL.Size = new System.Drawing.Size(109, 25);
             this.cmbURL.TabIndex = 8;
             this.cmbURL.DropDown += new System.EventHandler(this.CmbURL_DropDown);
             this.cmbURL.Click += new System.EventHandler(this.CmbURL_Click_1);
@@ -159,7 +159,7 @@
             this.pnlAction.Controls.Add(this.pbProgress);
             this.pnlAction.Controls.Add(this.btnClear);
             this.pnlAction.Dock = System.Windows.Forms.DockStyle.Right;
-            this.pnlAction.Location = new System.Drawing.Point(181, 0);
+            this.pnlAction.Location = new System.Drawing.Point(156, 0);
             this.pnlAction.Name = "pnlAction";
             this.pnlAction.Size = new System.Drawing.Size(197, 40);
             this.pnlAction.TabIndex = 10;
@@ -224,7 +224,7 @@
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.panel4.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel4.Location = new System.Drawing.Point(378, 0);
+            this.panel4.Location = new System.Drawing.Point(353, 0);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1, 40);
             this.panel4.TabIndex = 13;
@@ -234,9 +234,9 @@
             this.lblCountdown.Dock = System.Windows.Forms.DockStyle.Right;
             this.lblCountdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCountdown.ForeColor = System.Drawing.Color.White;
-            this.lblCountdown.Location = new System.Drawing.Point(379, 0);
+            this.lblCountdown.Location = new System.Drawing.Point(354, 0);
             this.lblCountdown.Name = "lblCountdown";
-            this.lblCountdown.Size = new System.Drawing.Size(55, 40);
+            this.lblCountdown.Size = new System.Drawing.Size(80, 40);
             this.lblCountdown.TabIndex = 9;
             this.lblCountdown.Text = "0";
             this.lblCountdown.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -264,6 +264,7 @@
             this.btnConnect.TabIndex = 1;
             this.btnConnect.Text = "CONNECT";
             this.btnConnect.UseVisualStyleBackColor = false;
+            this.btnConnect.Visible = false;
             this.btnConnect.Click += new System.EventHandler(this.BtnConnect_Click);
             // 
             // pnlSplitter2
@@ -402,6 +403,7 @@
             // 
             // contextMenuStrip1
             // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.switchToolStripMenuItem,
             this.settingsToolStripMenuItem,
@@ -430,7 +432,7 @@
             // cameraToolStripMenuItem
             // 
             this.cameraToolStripMenuItem.Name = "cameraToolStripMenuItem";
-            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.cameraToolStripMenuItem.Size = new System.Drawing.Size(115, 22);
             this.cameraToolStripMenuItem.Text = "Camera";
             this.cameraToolStripMenuItem.Click += new System.EventHandler(this.cameraToolStripMenuItem_Click);
             // 

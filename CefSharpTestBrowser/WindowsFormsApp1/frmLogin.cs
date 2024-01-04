@@ -158,7 +158,7 @@ namespace WindowsFormsApp1
                 foreach (FileInfo file_directories in cache_path_di.GetFiles().Where(file => file.Name != "LocalPrefs.json"))
                     file_directories.Delete();
 
-                //delete all except Cookies and Cookies-journal
+                //delete all files inside Network folder except Cookies and Cookies-journal
                 string cookies_path = string.Concat(cache_path, "\\Network");
                 DirectoryInfo cache_network_path_di = new DirectoryInfo(cookies_path);
                 if (Directory.Exists(cookies_path))

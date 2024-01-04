@@ -9,6 +9,10 @@ namespace CSTool.Class
 {
     public static class ControlExtensions
     {
+        /// CefSharp.WinForms.Internals.ControlExtensions.InvokeOnUiThreadIfRequired is now internal,
+        /// it was never intended to be part of the public API
+        /// https://github.com/cefsharp/CefSharp/issues/2983
+
         /// <summary>
         /// Executes the Action asynchronously on the UI thread, does not block execution on the calling thread.
         /// No action will be performed if the control doesn't have a valid handle or the control is Disposed/Disposing.

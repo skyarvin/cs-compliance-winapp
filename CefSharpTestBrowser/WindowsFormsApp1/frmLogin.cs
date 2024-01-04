@@ -145,8 +145,7 @@ namespace WindowsFormsApp1
                 string[] IgnoreCredentialDirectories =
                 {
                     "Network",
-                    "Local Storage",
-                    "Session Storage"
+                    "Local Storage"
                 };
 
                 //delete all folders except Network, Local Storage, Session Storage

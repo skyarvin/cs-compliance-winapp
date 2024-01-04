@@ -80,7 +80,6 @@ namespace WindowsFormsApp1
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.Profile.Name + "/", true);
             this.CheckAgentSession();
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
             Globals.chromeBrowser = new ChromiumWebBrowser(url);

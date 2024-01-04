@@ -44,8 +44,6 @@ namespace WindowsFormsApp1
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.ComplianceAgent.profile + "_qa/", true);
-
             chromeBrowserQA = new ChromiumWebBrowser(url);
             this.pnlBrowser.Controls.Add(chromeBrowserQA);
             chromeBrowserQA.Dock = DockStyle.Fill;

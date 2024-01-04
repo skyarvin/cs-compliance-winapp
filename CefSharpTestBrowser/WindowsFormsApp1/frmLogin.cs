@@ -142,31 +142,7 @@ namespace WindowsFormsApp1
             string cache_path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "/cache/cache/");
             if (Directory.Exists(cache_path))
             {
-                string[] IgnoreCredentialDirectories =
-                {
-                    "Network",
-                    "Local Storage"
-                };
-
-                //delete all folders except Network, Local Storage, Session Storage
-                DirectoryInfo cache_path_di = new DirectoryInfo(cache_path);
-                foreach (DirectoryInfo cache_directories in cache_path_di.GetDirectories().Where(directory => !IgnoreCredentialDirectories.Contains(directory.Name)))
-                    cache_directories.Delete(true);
-                //delete all files except LocalPrefs.json
-                //contains encryption key required for Cookie persistence
-                foreach (FileInfo file_directories in cache_path_di.GetFiles().Where(file => file.Name != "LocalPrefs.json"))
-                    file_directories.Delete();
-
-                //delete all files inside Network folder except Cookies and Cookies-journal
-                string cookies_path = string.Concat(cache_path, "\\Network");
-                DirectoryInfo cache_network_path_di = new DirectoryInfo(cookies_path);
-                if (Directory.Exists(cookies_path))
-                {
-                    foreach (FileInfo cache_network_files in cache_network_path_di.GetFiles().Where(file => !file.Name.Contains("Cookies")))
-                    {
-                        cache_network_files.Delete();
-                    }
-                }
+                Directory.Delete(cache_path, true);
             }
         }
 

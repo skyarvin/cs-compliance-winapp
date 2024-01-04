@@ -33,8 +33,7 @@ namespace CSTool.Handlers
         }
         public void OnAfterCreated(IWebBrowser browserControl, IBrowser browser)
         {
-            //
-
+            return;
         }
         public bool DoClose(IWebBrowser browserControl, IBrowser browser)
         {
@@ -42,7 +41,7 @@ namespace CSTool.Handlers
         }
         public void OnBeforeClose(IWebBrowser browserControl, IBrowser browser)
         {
-            //nothing
+            return;
         }
     }
 
@@ -76,7 +75,7 @@ namespace CSTool.Handlers
 
         public void OnRenderViewReady(IWebBrowser chromiumWebBrowser, IBrowser browser)
         {
-
+            return;
         }
 
         public bool OnSelectClientCertificate(IWebBrowser chromiumWebBrowser, IBrowser browser, bool isProxy, string host, int port, X509Certificate2Collection certificates, ISelectClientCertificateCallback callback)
@@ -86,7 +85,7 @@ namespace CSTool.Handlers
 
         public void OnDocumentAvailableInMainFrame(IWebBrowser chromiumWebBrowser, IBrowser browser)
         {
-            
+            return;
         }
 
         public IResourceRequestHandler GetResourceRequestHandler(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, bool isNavigation, bool isDownload, string requestInitiator, ref bool disableDefaultHandling)
@@ -99,7 +98,7 @@ namespace CSTool.Handlers
     {
         public void Dispose()
         {
-            
+            return;   
         }
 
         public ICookieAccessFilter GetCookieAccessFilter(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request)
@@ -129,7 +128,7 @@ namespace CSTool.Handlers
 
         public void OnResourceLoadComplete(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response, UrlRequestStatus status, long receivedContentLength)
         {
-            
+            return;
         }
 
         public void OnResourceRedirect(IWebBrowser chromiumWebBrowser, IBrowser browser, IFrame frame, IRequest request, IResponse response, ref string newUrl)

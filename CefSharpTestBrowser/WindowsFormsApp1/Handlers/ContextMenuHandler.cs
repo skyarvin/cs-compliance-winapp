@@ -10,9 +10,23 @@ using CSTool.Class;
 using CSTool.Properties;
 using CSTool.Models;
 using CefSharp.WinForms.Internals;
+using System.Collections.Generic;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
+    private Dictionary<string, CefMenuCommand> CSToolCommands = new Dictionary<string, CefMenuCommand>
+    {
+        { "Copy URL", (CefMenuCommand)26503 },
+        { "Open Image", (CefMenuCommand)26501 },
+        { "Open room in Chrome", (CefMenuCommand)26502 },
+        { "Send Internal Request Face Photo", (CefMenuCommand)26514 },
+        { "Send Internal Identification Checker", (CefMenuCommand)26515 },
+        { "Translate", (CefMenuCommand)26504 },
+        { "View User", (CefMenuCommand)26505 },
+        { "Log Viewer", (CefMenuCommand)26507 },
+        { "Devtools", (CefMenuCommand)26506 }
+    };
+
     public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
     {
         // Remove any existent option using the Clear method of the model
@@ -29,22 +43,22 @@ public class MyCustomMenuHandler : IContextMenuHandler
    
 
         //model.AddItem((CefMenuCommand)26512, "Send Internal Review");
-        model.AddItem((CefMenuCommand)26503, "Copy URL");
+        model.AddItem(CSToolCommands["Copy URL"], "Copy URL");
 
         // Add a new item to the list using the AddItem method of the model
-        model.AddItem((CefMenuCommand)26501, "Open Image");
-        model.AddItem((CefMenuCommand)26502, "Open room in Chrome");
+        model.AddItem(CSToolCommands["Open Image"], "Open Image");
+        model.AddItem(CSToolCommands["Open room in Chrome"], "Open room in Chrome");
 
         model.AddSeparator();
-        model.AddItem((CefMenuCommand)26514, "Send Internal Request Face Photo");
-        model.AddItem((CefMenuCommand)26515, "Send Internal Identification Checker");
-        model.AddItem((CefMenuCommand)26504, "Translate");
+        model.AddItem(CSToolCommands["Send Internal Request Face Photo"], "Send Internal Request Face Photo");
+        model.AddItem(CSToolCommands["Send Internal Identification Checker"], "Send Internal Identification Checker");
+        model.AddItem(CSToolCommands["Translate"], "Translate");
 
         model.AddSeparator();
-        model.AddItem((CefMenuCommand)26505, "View User");
-        model.AddItem((CefMenuCommand)26507, "Log Viewer");
+        model.AddItem(CSToolCommands["View User"], "View User");
+        model.AddItem(CSToolCommands["Log Viewer"], "Log Viewer");
         model.AddSeparator();
-        model.AddItem((CefMenuCommand)26506, "Devtools");
+        model.AddItem(CSToolCommands["Devtools"], "Devtools");
 
         if (Globals.IsClient())
         {
@@ -73,7 +87,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
     {
         // React to the first ID (show dev tools method)
 
-        if (commandId == (CefMenuCommand)26501)
+        if (commandId == CSToolCommands["Open Image"])
         {
             if (parameters.MediaType == CefSharp.ContextMenuMediaType.Image) {
                 frmPopup frmpop = new frmPopup(parameters.SourceUrl);
@@ -83,7 +97,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
             return true;
         }
 
-        if (commandId == (CefMenuCommand)26502)
+        if (commandId == CSToolCommands["Open room in Chrome"])
         {
             if (parameters.MediaType == CefSharp.ContextMenuMediaType.None && !String.IsNullOrEmpty(parameters.LinkUrl))
             {
@@ -92,7 +106,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
             return true;
         }
 
-        if (commandId == (CefMenuCommand)26503)
+        if (commandId == CSToolCommands["Copy URL"])
         {
             if (!String.IsNullOrEmpty(parameters.PageUrl))
             {
@@ -101,14 +115,14 @@ public class MyCustomMenuHandler : IContextMenuHandler
             return true;
         }
 
-        if (commandId == (CefMenuCommand)26504)
+        if (commandId == CSToolCommands["Translate"])
         {
             var surl = string.Concat(Url.GOOGLE_TRANSLATE_URL, Uri.EscapeDataString(parameters.SelectionText));
             browserControl.GetMainFrame().EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
             return true;
         }
 
-        if (commandId == (CefMenuCommand)26505)
+        if (commandId == CSToolCommands["View User"])
         {
             if (!String.IsNullOrEmpty((parameters.SelectionText))){
                 Globals.frmMain.send_id_checker = false;
@@ -117,12 +131,12 @@ public class MyCustomMenuHandler : IContextMenuHandler
             }
         }
 
-        if (commandId == (CefMenuCommand)26506)
+        if (commandId == CSToolCommands["Devtools"])
         {
             browserControl.ShowDevTools();
         }
 
-        if (commandId == (CefMenuCommand)26507)
+        if (commandId == CSToolCommands["Log Viewer"])
         {
             frmLogViewer frmLogViewer = new frmLogViewer();
             frmLogViewer.Show();
@@ -164,7 +178,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         //}
 
 
-        if (commandId == (CefMenuCommand)26514)
+        if (commandId == CSToolCommands["Send Internal Request Face Photo"])
         {
             if (Globals.INTERNAL_IRFP.id != 0 && Globals.INTERNAL_IRFP.url == Globals.CurrentUrl)
             {
@@ -202,7 +216,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
             }
         }
 
-        if (commandId == (CefMenuCommand)26515)
+        if (commandId == CSToolCommands["Send Internal Identification Checker"])
         {
             if (Globals.INTERNAL_IIDC.id != 0 && Globals.INTERNAL_IIDC.url == Globals.CurrentUrl)
             {

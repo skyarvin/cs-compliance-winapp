@@ -28,7 +28,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         }
    
 
-        model.AddItem((CefMenuCommand)26512, "Send Internal Review");
+        //model.AddItem((CefMenuCommand)26512, "Send Internal Review");
         model.AddItem((CefMenuCommand)26503, "Copy URL");
 
         // Add a new item to the list using the AddItem method of the model
@@ -45,7 +45,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26507, "Log Viewer");
         model.AddSeparator();
         model.AddItem((CefMenuCommand)26506, "Devtools");
-        model.AddItem((CefMenuCommand)26513, "Set Preference");
+        //model.AddItem((CefMenuCommand)26513, "Set Preference");
 
         if (Globals.IsClient())
         {
@@ -105,7 +105,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
         if (commandId == (CefMenuCommand)26504)
         {
             var surl = string.Concat(Url.GOOGLE_TRANSLATE_URL, Uri.EscapeDataString(parameters.SelectionText));
-            browserControl.EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
+            browserControl.GetMainFrame().EvaluateScriptAsync(string.Concat("window.open('", surl, "', '_blank');"));
             return true;
         }
 
@@ -130,47 +130,47 @@ public class MyCustomMenuHandler : IContextMenuHandler
         }
 
 
-        if (commandId == (CefMenuCommand)26513)
-        {
-            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-            {
-                Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
-            });
-        }
+        //if (commandId == (CefMenuCommand)26513)
+        //{
+        //    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+        //    {
+        //        Globals.FrmSetPreferences.ShowDialog(Globals.frmMain);
+        //    });
+        //}
 
-        if (commandId == (CefMenuCommand)26512)
-        {
-           if (Globals.INTERNAL_RR.id != 0)
-            {
-                if (Globals.INTERNAL_RR.url == Globals.CurrentUrl)
-                {
-                    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-                    {
+        //if (commandId == (CefMenuCommand)26512)
+        //{
+        //   if (Globals.INTERNAL_RR.id != 0)
+        //    {
+        //        if (Globals.INTERNAL_RR.url == Globals.CurrentUrl)
+        //        {
+        //            Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+        //            {
 
-                        if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                            Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                        Globals.FrmInternalRequestReview.update_info();
-                        Globals.FrmInternalRequestReview.Show();
-                    });
-                    return false;
-                }
-            }
+        //                if (Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+        //                    Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+        //                Globals.FrmInternalRequestReview.update_info();
+        //                Globals.FrmInternalRequestReview.Show();
+        //            });
+        //            return false;
+        //        }
+        //    }
 
 
-                Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
-            {
-                if (Globals.frmMain.isBrowserInitialized) {
-                    Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
-                    Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
-                    if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)
-                    {
-                        if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
-                            Globals.FrmInternalRequestReview = new frmInternalRequestReview();
-                        Globals.FrmInternalRequestReview.Show();
-                    }
-                }
-            });
-        }
+        //        Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+        //    {
+        //        if (Globals.frmMain.isBrowserInitialized) {
+        //            Globals.FrmSendInternalRequestReview = new frmSendInternalRequestReview();
+        //            Globals.FrmSendInternalRequestReview.ShowDialog(Globals.frmMain);
+        //            if(Globals.FrmSendInternalRequestReview.DialogResult == DialogResult.OK)
+        //            {
+        //                if ( Globals.FrmInternalRequestReview == null || Globals.FrmInternalRequestReview.IsDisposed)
+        //                    Globals.FrmInternalRequestReview = new frmInternalRequestReview();
+        //                Globals.FrmInternalRequestReview.Show();
+        //            }
+        //        }
+        //    });
+        //}
 
 
         if (commandId == (CefMenuCommand)26514)

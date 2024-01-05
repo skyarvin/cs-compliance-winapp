@@ -34,31 +34,24 @@ namespace WindowsFormsApp1
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
-            CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+            settings.BrowserSubprocessPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\CefSharp.BrowserSubprocess.exe";
+            CefSharpSettings.WcfEnabled = true;
             settings.CachePath = @path + "/cache/cache/";
             settings.PersistSessionCookies = true;
+            settings.PersistUserPreferences = true;
             if (!Cef.IsInitialized)
             {
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.ComplianceAgent.profile + "_qa/", true);
-
-            var requestContextSettings = new RequestContextSettings();
-            requestContextSettings.CachePath = @path + "/cache/cache/";
-            requestContextSettings.PersistSessionCookies = true;
-            requestContextSettings.PersistUserPreferences = true;
-
             chromeBrowserQA = new ChromiumWebBrowser(url);
-            chromeBrowserQA.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(chromeBrowserQA);
             chromeBrowserQA.Dock = DockStyle.Fill;
-
+            chromeBrowserQA.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;   
 
             var obj = new BoundObjectQA(chromeBrowserQA,this);
 
-
-            chromeBrowserQA.RegisterJsObject("bound", obj);
+            chromeBrowserQA.JavascriptObjectRepository.Register("bound", obj, isAsync: false, options: BindingOptions.DefaultBinder);
             chromeBrowserQA.FrameLoadStart += obj.OnFrameLoadStart;
             chromeBrowserQA.FrameLoadEnd += obj.OnFrameLoadEnd;
             chromeBrowserQA.MenuHandler = new MyCustomMenuHandler();
@@ -218,12 +211,12 @@ namespace WindowsFormsApp1
                     //}
                 ";
 
-            browser.EvaluateScriptAsync(submit_script);
+            browser.GetMainFrame().EvaluateScriptAsync(submit_script);
             //if (!String.IsNullOrEmpty(formQA.chatStart) && !String.IsNullOrEmpty(formQA.chatEnd))
             //{
-            //    browser.EvaluateScriptAsync(@"
+            //    browser.GetMainFrame().EvaluateScriptAsync(@"
             //        document.addEventListener('DOMContentLoaded', function(){
-                        
+
             //            function qa_chatlog_highlight(){
             //                waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_start}}','#0f0'), (error) => console.log(error));
             //                waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, '{{chat_end}}' ), (error) => console.log(error));
@@ -235,7 +228,7 @@ namespace WindowsFormsApp1
             //            {
             //                qa_chatlog_highlight();
             //            });
-                       
+
             //        });
             //    ".Replace("{{chat_start}}", formQA.chatStart)
             //     .Replace("{{chat_end}}",formQA.chatEnd)

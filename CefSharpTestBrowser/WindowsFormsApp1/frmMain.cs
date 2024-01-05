@@ -70,35 +70,31 @@ namespace WindowsFormsApp1
             lblProfile.Text = String.Concat("Profile: ", Globals.Profile.Name);
             string path = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             CefSettings settings = new CefSettings();
-            CefSharpSettings.LegacyJavascriptBindingEnabled = true;
+            CefSharpSettings.WcfEnabled = true;
+            settings.BrowserSubprocessPath = Environment.GetFolderPath(Environment.SpecialFolder.Windows) + $"\\SysWOW64\\stfm\\CefSharp.BrowserSubprocess.exe";
             settings.CachePath = @path + "/cache/cache/";
             settings.PersistSessionCookies = true;
+            settings.PersistUserPreferences = true;
             if (!Cef.IsInitialized)
             {
                 Cef.Initialize(settings);
             }
 
-            Cef.GetGlobalCookieManager().SetStoragePath(@path + "/CsTool/cookies/" + Globals.Profile.Name + "/", true);
             this.CheckAgentSession();
             Globals.SaveToLogFile(string.Concat("Initialize Cookie: ", Globals.Profile.Name), (int)LogType.Action);
-            var requestContextSettings = new RequestContextSettings();
-            requestContextSettings.CachePath = @path + "/cache/cache/";
-            requestContextSettings.PersistSessionCookies = true;
-            requestContextSettings.PersistUserPreferences = true;
-
             Globals.chromeBrowser = new ChromiumWebBrowser(url);
-            Globals.chromeBrowser.RequestContext = new RequestContext(requestContextSettings);
             this.pnlBrowser.Controls.Add(Globals.chromeBrowser);
             Globals.chromeBrowser.Dock = DockStyle.Fill;
+            Globals.chromeBrowser.JavascriptObjectRepository.Settings.LegacyBindingEnabled = true;
 
             Globals.chromeBrowser.AddressChanged += Browser_AddressChanged;
             var obj = new BoundObject(Globals.chromeBrowser);
             obj.HtmlItemClicked += Obj_HtmlItemClicked;
 
-            Globals.chromeBrowser.RegisterJsObject("bound", obj);
+            Globals.chromeBrowser.JavascriptObjectRepository.Register("bound", obj, isAsync: false, options: BindingOptions.DefaultBinder);
             Globals.chromeBrowser.FrameLoadStart += obj.OnFrameLoadStart;
             Globals.chromeBrowser.FrameLoadEnd += obj.OnFrameLoadEnd;
-            Globals.chromeBrowser.IsBrowserInitializedChanged += OnIsBrowserInitiazedChanged;
+            Globals.chromeBrowser.IsBrowserInitializedChanged += OnIsBrowserInitializedChanged;
             Globals.chromeBrowser.LoadingStateChanged += OnLoadingStateChanged;
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
@@ -266,13 +262,13 @@ namespace WindowsFormsApp1
             if (++Globals.room_duration >= Globals.max_room_duration) {
             setHeaderColor(Color.Red, Color.DarkRed);
             if (isBrowserInitialized && Globals.ForceHideComliance)
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
             }
             else
             {
                 setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
                 if (isBrowserInitialized)
-                    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'block'; });");
+                    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'block'; });");
             }
 
             ShowRequestPhotoAndApproveButton();
@@ -457,9 +453,9 @@ namespace WindowsFormsApp1
             });
         }
 
-        private void OnIsBrowserInitiazedChanged(object sender, IsBrowserInitializedChangedEventArgs e)
+        private void OnIsBrowserInitializedChanged(object sender, EventArgs e)
         {
-            isBrowserInitialized = e.IsBrowserInitialized;
+            isBrowserInitialized = true;
         }
 
         public void hideBanner()
@@ -639,7 +635,7 @@ namespace WindowsFormsApp1
         {
             if (!string.IsNullOrEmpty(txtSearch.Text))
             {
-                Globals.chromeBrowser.Find(0, txtSearch.Text, next, false, false);
+                Globals.chromeBrowser.Find(txtSearch.Text, next, false, false);
             }
         }
 
@@ -671,26 +667,26 @@ namespace WindowsFormsApp1
                 this.send_id_checker = true;
                 var urlToSave = Globals.CurrentUrl;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
-                string violation = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
-                string notes = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
-                string reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
+                string violation = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
+                string notes = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
+                string reply = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
                 string remarks = String.Concat(violation, notes);
                 if (!string.IsNullOrEmpty(reply))
                 {
-                    reply = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
+                    reply = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
                 }
                 if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes)) return;
                 if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
                 if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
                 {
-                    Globals.chromeBrowser.EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
-                    Globals.chromeBrowser.EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
+                    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
+                    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
                 }
                 if (element_id == Action.ChatReply.Value) notes = reply;
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";
                 if (element_id == Action.Approve.Value) remarks = "";
 
-                string followRaw = Globals.myStr(Globals.chromeBrowser.EvaluateScriptAsync(@"$('#room_info').children()[2].textContent").Result.Result);
+                string followRaw = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#room_info').children()[2].textContent").Result.Result);
                 followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
                 int followers = 0;
                 if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
@@ -699,8 +695,8 @@ namespace WindowsFormsApp1
                 string last_photo = "";
                 if (element_id == Action.Approve.Value)
                 {
-                    last_chatlog = (string)Globals.chromeBrowser.EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
-                    last_photo = (string)Globals.chromeBrowser.EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
+                    last_chatlog = (string)Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
+                    last_photo = (string)Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
 
                 var actual_start_time = Globals.StartTime_LastAction;
@@ -965,7 +961,6 @@ namespace WindowsFormsApp1
             if (e.KeyChar == (char)13)
             {
                 this.send_id_checker = false;
-                LoadUrl(cmbURL.Text.ToString());
             }
             else
             {
@@ -1239,14 +1234,14 @@ namespace WindowsFormsApp1
             if (number_of_approve_agents == number_of_agents)
             {
                 this.InvokeOnUiThreadIfRequired(() => btnClear.Enabled = false);
-                Globals.chromeBrowser.EvaluateScriptAsync(@"
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
                        console.log(`Show approve button`);
                        document.getElementById(`main`).style[`background`] = `#00B159`;
                        ");
                 Globals.SaveToLogFile(String.Concat("Display approval rate, Trigger auto approve:", number_of_approve_agents, "/", number_of_agents), (int)LogType.Activity);
                 if (Globals.IsServer())
                 {
-                    Globals.chromeBrowser.EvaluateScriptAsync(@"
+                    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
                     if (window.location.href.replace(location.hash, '') == '{{target_url}}'){
                         console.log('Url matched clicking approve for :{{target_url}}');
                         document.getElementById(`approve_button`).click();
@@ -1257,7 +1252,7 @@ namespace WindowsFormsApp1
             }
             else if (number_of_approve_agents > 0) {
                 Globals.SaveToLogFile(String.Concat("Display approval rate:", number_of_approve_agents, "/", number_of_agents), (int)LogType.Activity);
-                Globals.chromeBrowser.EvaluateScriptAsync(@"
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
 
                      var old_bg = document.getElementById(`main`).style[`background`];
                      document.getElementById(`main`).style[`background`] = `#00B159`;
@@ -1279,7 +1274,7 @@ namespace WindowsFormsApp1
                     return;
                 }
                 Globals.ForceHideComliance = false;
-                Globals.chromeBrowser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
 
             }
             else if (e.Control && e.KeyCode == Keys.Oemtilde)
@@ -1293,7 +1288,7 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.StopFinding(true);
             if (!string.IsNullOrEmpty(txtSearch.Text))
             {
-                Globals.chromeBrowser.Find(0, txtSearch.Text, true, false, false);
+                Globals.chromeBrowser.Find(txtSearch.Text, true, false, false);
             }
         }
 
@@ -1460,16 +1455,16 @@ namespace WindowsFormsApp1
                         lblIdStatus.Text = "PENDING FOR ID CHECKING";
                         break;
                     case "Approve":
-                        Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
-                        Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");
+                        Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
+                        Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");
                         lblIdStatus.BackColor = Color.Green;
                         lblIdStatus.Text = string.Concat("ID APPROVED", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
                         lblIdStatus.ForeColor = Color.White;
                         //bgWorkID.CancelAsync();
                         break;
                     case "Id Missing":
-                        Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
-                        Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'none'; });");
+                        Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
+                        Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'none'; });");
                         lblIdStatus.BackColor = Color.Red;
                         lblIdStatus.Text = string.Concat("REPORT FOR ID MISSING", !string.IsNullOrEmpty(idchecker.reviewer_notes) ? " (Notes): " + idchecker.reviewer_notes : "");
                         lblIdStatus.ForeColor = Color.White;
@@ -1504,19 +1499,19 @@ namespace WindowsFormsApp1
         {
             //if(idChecker.id == 0 || ExtractUsername(idChecker.url) != ExtractUsername(Globals.CurrentUrl) || !isBrowserInitialized)
             //{
-            //    Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #approve_button').forEach(function(el){ el.style.display = 'none'; });");
+            //    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#identificationproblem_button, #approve_button').forEach(function(el){ el.style.display = 'none'; });");
             //    return;
             //}
         }
 
         public void showIMAP()
         {
-            Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button, #identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
+            Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#approve_button, #identificationproblem_button').forEach(function(el){ el.style.display = 'block'; });");
         }
 
         public void hideIMAP()
         {
-            Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button, #identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");
+            Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#approve_button, #identificationproblem_button').forEach(function(el){ el.style.display = 'none'; });");
         }
 
         private void lblIdStatus_Click(object sender, EventArgs e)
@@ -1677,7 +1672,7 @@ namespace WindowsFormsApp1
         {
             if (Globals.LogsTabButtonClicked && Globals.room_duration >= 10)
             {
-                Globals.chromeBrowser.EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#approve_button').forEach(function(el){ el.style.display = 'block'; });");
             }
         }
 
@@ -1814,7 +1809,7 @@ namespace WindowsFormsApp1
         {
             if (Globals.INTERNAL_IRFP.status == "Approved")
             {
-                Globals.chromeBrowser.EvaluateScriptAsync("document.getElementById('pre_request_photo_button').style.display = 'block';");
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.getElementById('pre_request_photo_button').style.display = 'block';");
             }
         }
 

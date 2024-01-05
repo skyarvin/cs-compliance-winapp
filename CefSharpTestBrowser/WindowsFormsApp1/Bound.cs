@@ -186,9 +186,9 @@ namespace CSTool
                     }
                 ";
 
-            browser.EvaluateScriptAsync(submit_script);
+            browser.GetMainFrame().EvaluateScriptAsync(submit_script);
 
-            browser.EvaluateScriptAsync(@"
+            browser.GetMainFrame().EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                         $(this).attr('buttonClicked', true);
@@ -299,7 +299,7 @@ namespace CSTool
 
             if (e.Url.Contains("/compliance/seed_failure") && !string.IsNullOrEmpty(Globals.LastSuccessUrl) && e.Url.Contains(Globals.frmMain.ExtractUsername(Globals.LastSuccessUrl)))
             {
-                browser.EvaluateScriptAsync(@"
+                browser.GetMainFrame().EvaluateScriptAsync(@"
                     document.addEventListener('DOMContentLoaded', function(){
                         waitUntil(`#id_photos`,5000).then((el) => compareImages(), (err) => console.log(`img for comparing not found`));
                     });
@@ -307,7 +307,7 @@ namespace CSTool
             }
             else
             {
-                browser.EvaluateScriptAsync(@"
+                browser.GetMainFrame().EvaluateScriptAsync(@"
                     document.addEventListener('DOMContentLoaded', function(){
                         waitUntil(`#id_photos`,5000).then((el) => storeImages(), (err) => console.log(`img for storing not found`));
                     });
@@ -376,7 +376,7 @@ namespace CSTool
                 return;
             }
                 Globals.ForceHideComliance = false;
-            browser.EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
+            browser.GetMainFrame().EvaluateScriptAsync("$(`#compliance_details,#id_photos`).show()");
         }
 
         public void showTierLevelBanner(string followRaw)

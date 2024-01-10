@@ -31,11 +31,13 @@
             this.components = new System.ComponentModel.Container();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.device_label = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.subText = new System.Windows.Forms.Label();
             this.device_list = new System.Windows.Forms.ComboBox();
             this.submit_tfa = new System.Windows.Forms.Button();
             this.back_btn = new System.Windows.Forms.Button();
             this.tfa_code = new System.Windows.Forms.TextBox();
+            this.resendCodeButton = new System.Windows.Forms.Button();
+            this.resendCodeTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -55,15 +57,16 @@
             this.device_label.Text = "Header1";
             this.device_label.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
-            // label2
+            // subText
             // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(20, 150);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(334, 15);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Enter 6-digit code from your Two Factor Authenticator Device";
+            this.subText.AutoSize = true;
+            this.subText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subText.Location = new System.Drawing.Point(20, 150);
+            this.subText.Name = "subText";
+            this.subText.Size = new System.Drawing.Size(334, 15);
+            this.subText.TabIndex = 3;
+            this.subText.Text = "Enter 6-digit code from your Two Factor Authenticator Device";
+            this.subText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // device_list
             // 
@@ -98,7 +101,7 @@
             this.back_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.back_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.back_btn.ForeColor = System.Drawing.Color.White;
-            this.back_btn.Location = new System.Drawing.Point(23, 317);
+            this.back_btn.Location = new System.Drawing.Point(23, 364);
             this.back_btn.Name = "back_btn";
             this.back_btn.Size = new System.Drawing.Size(331, 39);
             this.back_btn.TabIndex = 2;
@@ -116,16 +119,37 @@
             this.tfa_code.TabIndex = 0;
             this.tfa_code.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Tfa_code_KeyDown);
             // 
+            // resendCodeButton
+            // 
+            this.resendCodeButton.BackColor = System.Drawing.Color.Gray;
+            this.resendCodeButton.Enabled = false;
+            this.resendCodeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.resendCodeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.resendCodeButton.ForeColor = System.Drawing.Color.White;
+            this.resendCodeButton.Location = new System.Drawing.Point(23, 316);
+            this.resendCodeButton.Name = "resendCodeButton";
+            this.resendCodeButton.Size = new System.Drawing.Size(331, 39);
+            this.resendCodeButton.TabIndex = 5;
+            this.resendCodeButton.Text = "Resend code";
+            this.resendCodeButton.UseVisualStyleBackColor = false;
+            this.resendCodeButton.Click += new System.EventHandler(this.resendCodeButton_click);
+            // 
+            // resendCodeTimer
+            // 
+            this.resendCodeTimer.Interval = 1000;
+            this.resendCodeTimer.Tick += new System.EventHandler(this.resendCodeTimer_Tick);
+            // 
             // frmTfa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(370, 376);
+            this.ClientSize = new System.Drawing.Size(370, 420);
+            this.Controls.Add(this.resendCodeButton);
             this.Controls.Add(this.tfa_code);
             this.Controls.Add(this.back_btn);
             this.Controls.Add(this.submit_tfa);
             this.Controls.Add(this.device_list);
-            this.Controls.Add(this.label2);
+            this.Controls.Add(this.subText);
             this.Controls.Add(this.device_label);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
@@ -142,10 +166,12 @@
         #endregion
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.Label device_label;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label subText;
         private System.Windows.Forms.ComboBox device_list;
         private System.Windows.Forms.Button submit_tfa;
         private System.Windows.Forms.Button back_btn;
         private System.Windows.Forms.TextBox tfa_code;
+        private System.Windows.Forms.Button resendCodeButton;
+        private System.Windows.Forms.Timer resendCodeTimer;
     }
 }

@@ -98,5 +98,41 @@ namespace CSTool.Models
                 throw ex;
             }
         }
+
+        public string ResendTfaCode()
+        {
+            try
+            {
+                using (IHttpHandler client = new HttpHandler())
+                {
+                    var uri = string.Concat(Url.AUTH_URL, "/tfa/resend/");
+                    client.Timeout = TimeSpan.FromSeconds(5);
+                    var content = new StringContent(JsonConvert.SerializeObject(new
+                    {
+                        this.nonce,
+                        this.user_id,
+                        this.device_id,
+                    }), Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            UserTFA tfa = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
+                            return tfa.nonce;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            } catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

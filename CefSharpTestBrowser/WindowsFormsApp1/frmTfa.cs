@@ -29,12 +29,15 @@ namespace CSTool
         private readonly UserTFA userTfa;
         private string prev_device_id;
         private TFA tfa = new TFA();
+        private int timer =  10;
 
         public frmTfa(FormType frmType, UserTFA userTfa)
         {
             InitializeComponent();
             this.frmType = frmType;
             this.userTfa = userTfa;
+            this.resendCodeTimer.Start();
+            this.resetTimer();
         }
 
         private void frmTfa_Load(object sender, EventArgs e)
@@ -153,8 +156,21 @@ namespace CSTool
         {
             string device_name = device_list.SelectedItem.GetType().GetProperty("Value").GetValue(device_list.SelectedItem, null).ToString();
             string device_id = device_list.SelectedItem.GetType().GetProperty("Key").GetValue(device_list.SelectedItem, null).ToString();
-            device_label.Text = "Authenticate your account on " + device_name + "'s Device";
+            var device_type = device_list.SelectedItem.GetType().GetProperty("Type").GetValue(device_list.SelectedItem, null).ToString();
+            device_label.Text = "Authenticate your account on " + device_name;
             this.device_id = device_id;
+
+            if (device_type != "Authenticator")
+            {
+                this.resendCodeButton.Visible = true;
+                this.resendCodeButton.Enabled = false;
+                this.resetTimer();
+                this.resendCodeTimer.Start();
+            } else
+            {
+                this.resendCodeButton.Visible = false;
+                this.resetTimer();
+            }
 
             if (this.prev_device_id != null && this.prev_device_id != this.device_id)
             {
@@ -180,6 +196,48 @@ namespace CSTool
         {
             bExitApp = false;
             this.Close();
+        }
+
+        private void resendCodeTimer_Tick(object sender, EventArgs e)
+        {
+            runTimer();
+        }
+
+        private void runTimer()
+        {
+            this.resendCodeButton.Enabled = false;
+            if (--this.timer < 0)
+            {
+                this.resendCodeButton.Enabled = true;
+                this.resendCodeTimer.Stop();
+            }
+        }
+
+        private void resetTimer()
+        {
+            this.resendCodeTimer.Stop();
+            this.timer = 5;
+        }
+
+        private void resendCodeButton_click(object sender, EventArgs e)
+        {
+            this.resetTimer();
+            runTimer();
+            this.resendCodeTimer.Start();
+            try
+            {
+                this.tfa.device_id = device_id;
+                this.tfa.nonce = this.userTfa.nonce;
+                this.tfa.user_id = this.userTfa.user_id;
+                this.userTfa.nonce = this.tfa.ResendTfaCode();
+                MessageBox.Show("We sent a new TFA code to your email");
+            }
+            catch (Exception ex)
+            {
+                Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+            }
         }
     }
 }

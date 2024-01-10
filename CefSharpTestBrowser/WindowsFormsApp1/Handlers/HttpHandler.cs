@@ -92,7 +92,7 @@ namespace CSTool.Handlers
 
         private void SetRequestHeaders(string requestUri)
         {
-            string[] public_routes = { "/security/login/", "/security/tfa_code/", "/security/tfa/device/change/" };
+            string[] public_routes = { "/security/login/", "/security/tfa_code/", "/security/tfa/device/change/", "/security/tfa/resend/" };
             DefaultRequestHeaders.Add("Staffme-Authorization", Globals.apiKey);
             if (!public_routes.Contains(new Uri(requestUri).AbsolutePath))
             {

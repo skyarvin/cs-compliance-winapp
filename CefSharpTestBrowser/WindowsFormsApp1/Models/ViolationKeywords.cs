@@ -10,14 +10,21 @@ namespace CSTool.Models
         {
             using (IHttpHandler client = new HttpHandler())
             {
-                var uri = string.Concat(Class.Url.API_URL, "/fetch_violation_list");
-                var response = client.CustomGetAsync(uri).Result;
+                try
+                {
+                    var uri = string.Concat(Class.Url.API_URL, "/fetch_violation_list");
+                    var response = client.CustomGetAsync(uri).Result;
 
-                HttpContent data = response.Content;
-                var jsonString = data.ReadAsStringAsync();
-                jsonString.Wait();
+                    HttpContent data = response.Content;
+                    var jsonString = data.ReadAsStringAsync();
+                    jsonString.Wait();
 
-                return jsonString.Result;
+                    return jsonString.Result;
+                }
+                catch
+                {
+                    return "";
+                }
             }
         }
     }

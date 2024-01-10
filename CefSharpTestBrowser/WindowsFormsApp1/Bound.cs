@@ -59,7 +59,7 @@ namespace CSTool
                         });
                    }
                     
-                   bound.injectViolationScript();
+                   bound.injectHighlightViolationScript();
                    window.onclick = function(e) { 
                         if(e.target.id === 'tab_chatlog_user'){
                             highlight_text();
@@ -546,7 +546,7 @@ namespace CSTool
             }
         }
 
-        public void InjectViolationScript()
+        public void InjectHighlightViolationScript()
         {
             if (!Globals.violation_keywords.IsNullOrEmpty())
             {

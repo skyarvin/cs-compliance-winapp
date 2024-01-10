@@ -1809,7 +1809,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:COMPLIANCE_TOOL, Version=5.0.0.0, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:COMPLIANCE_TOOL, Version=5.0.0.1, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
                     "_21FCE984A3B8461C97071A34AA469322"
@@ -4086,15 +4086,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSTool"
-        "ProductCode" = "8:{E4A68519-1AEA-4CA3-8A44-5F864D4E0DEF}"
-        "PackageCode" = "8:{4FD14264-DE16-4C61-A04C-CF00166951D6}"
+        "ProductCode" = "8:{656726F2-E4F7-44D2-A565-B78BAE76F82D}"
+        "PackageCode" = "8:{73287164-2208-45ED-82D0-A202EA60489B}"
         "UpgradeCode" = "8:{E3D5D40B-6234-4CCB-832E-98F8206BE10A}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:5.0.0"
+        "ProductVersion" = "8:5.0.1"
         "Manufacturer" = "8:Staffme"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

@@ -216,7 +216,7 @@ namespace CSTool
         private void resetTimer()
         {
             this.resendCodeTimer.Stop();
-            this.timer = 5;
+            this.timer = 300;
         }
 
         private void resendCodeButton_click(object sender, EventArgs e)

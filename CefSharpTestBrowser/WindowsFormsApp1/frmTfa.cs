@@ -29,7 +29,7 @@ namespace CSTool
         private readonly UserTFA userTfa;
         private string prev_device_id;
         private TFA tfa = new TFA();
-        private int timer =  10;
+        private int timer =  300;
 
         public frmTfa(FormType frmType, UserTFA userTfa)
         {

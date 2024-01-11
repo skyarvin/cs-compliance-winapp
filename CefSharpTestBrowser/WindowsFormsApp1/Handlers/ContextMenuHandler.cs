@@ -97,7 +97,17 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             if (!String.IsNullOrEmpty(parameters.PageUrl))
             {
-                System.Windows.Forms.Clipboard.SetText(parameters.PageUrl) ;
+                try
+                {
+                    System.Windows.Forms.Clipboard.SetText(parameters.PageUrl);
+                }
+                catch (Exception)
+                {
+                    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        Globals.ShowMessageDialog(Globals.frmMain, "Copy URL failed, please try again.");
+                    });
+                }
             }
             return true;
         }

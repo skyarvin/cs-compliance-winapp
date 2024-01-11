@@ -10,9 +10,17 @@ using CSTool.Class;
 using CSTool.Properties;
 using CSTool.Models;
 using CefSharp.WinForms.Internals;
+using System.Runtime.InteropServices;
+using System.Text;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern IntPtr GetOpenClipboardWindow();
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+
     public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
     {
         // Remove any existent option using the Clear method of the model
@@ -103,9 +111,19 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 }
                 catch (Exception)
                 {
+                    string dialogMessage = "";
+
+                    int processId;
+                    GetWindowThreadProcessId(GetOpenClipboardWindow(), out processId);
+
+                    if (processId != 0)
+                        dialogMessage = $"Copy URL is being blocked by \"{Process.GetProcessById(processId).MainWindowTitle}\".";
+                    else
+                        dialogMessage = "Copy URL failed. Please try again.";
+
                     Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                     {
-                        Globals.ShowMessageDialog(Globals.frmMain, "Copy URL failed, please try again.");
+                        Globals.ShowMessageDialog(Globals.frmMain, dialogMessage);
                     });
                 }
             }

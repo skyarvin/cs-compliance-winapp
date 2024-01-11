@@ -15,13 +15,7 @@ using System.Text;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern IntPtr GetOpenClipboardWindow();
-
-    [DllImport("user32.dll", SetLastError = true)]
-    private static extern int GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
-
-    public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+        public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
     {
         // Remove any existent option using the Clear method of the model
         //

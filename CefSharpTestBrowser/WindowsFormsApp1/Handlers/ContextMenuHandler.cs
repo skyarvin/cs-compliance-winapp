@@ -111,19 +111,9 @@ public class MyCustomMenuHandler : IContextMenuHandler
                 }
                 catch (Exception)
                 {
-                    string dialogMessage = "";
-
-                    int processId;
-                    GetWindowThreadProcessId(GetOpenClipboardWindow(), out processId);
-
-                    if (processId != 0)
-                        dialogMessage = "Copy URL is being blocked by another application.";
-                    else
-                        dialogMessage = "Copy URL failed. Please try again.";
-
                     Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                     {
-                        Globals.ShowMessageDialog(Globals.frmMain, dialogMessage);
+                        Globals.ShowMessageDialog(Globals.frmMain, "Copy URL failed.");
                     });
                 }
             }

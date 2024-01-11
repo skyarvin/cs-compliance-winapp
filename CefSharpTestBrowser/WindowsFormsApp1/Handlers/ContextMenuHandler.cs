@@ -117,7 +117,7 @@ public class MyCustomMenuHandler : IContextMenuHandler
                     GetWindowThreadProcessId(GetOpenClipboardWindow(), out processId);
 
                     if (processId != 0)
-                        dialogMessage = $"Copy URL is being blocked by \"{Process.GetProcessById(processId).MainWindowTitle}\".";
+                        dialogMessage = $"Copy URL is being blocked by another application.";
                     else
                         dialogMessage = "Copy URL failed. Please try again.";
 

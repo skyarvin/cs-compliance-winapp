@@ -14,8 +14,8 @@ using System.Runtime.InteropServices;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
-        public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
-        {
+    public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+    {
         // Remove any existent option using the Clear method of the model
         //
         model.Clear();

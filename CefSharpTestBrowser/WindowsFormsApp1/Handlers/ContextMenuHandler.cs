@@ -10,12 +10,10 @@ using CSTool.Class;
 using CSTool.Properties;
 using CSTool.Models;
 using CefSharp.WinForms.Internals;
-using System.Runtime.InteropServices;
-using System.Text;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
-        public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
+    public void OnBeforeContextMenu(IWebBrowser browserControl, IBrowser browser, IFrame frame, IContextMenuParams parameters, IMenuModel model)
     {
         // Remove any existent option using the Clear method of the model
         //

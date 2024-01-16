@@ -297,8 +297,8 @@ namespace WindowsFormsApp1
             if (Globals.IsServer())
             {
                 ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
-               
-           
+
+
             }
             else if (Globals.IsClient())
             {
@@ -362,9 +362,25 @@ namespace WindowsFormsApp1
                 Process.GetCurrentProcess().Kill();
             }
         }
+
+        public static void OnDateTimeChanged(object sender, EventArgs e)
+        {
+            if (Globals.networkDateTimeRegistry == "NoSync" || TimeZone.CurrentTimeZone.StandardName == Globals.requiredTimezone)
+            {
+                if(UserToken != null)
+                {
+                    frmMain mainForm = new frmMain();
+                    mainForm.CleanupTasks();
+                }
+                else
+                {
+                    Environment.Exit(Environment.ExitCode);
+                }
+            }
+        }
     }
 
-  
+
 
     public enum LogType:int
     {

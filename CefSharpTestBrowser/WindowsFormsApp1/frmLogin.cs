@@ -20,6 +20,7 @@ namespace WindowsFormsApp1
         private bool bExitApp = true;
         public frmLogin()
         {
+            SystemEvents.TimeChanged += Globals.OnDateTimeChanged;
             InitializeComponent();
             lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());    
         }

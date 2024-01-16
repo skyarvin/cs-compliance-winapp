@@ -238,7 +238,6 @@ namespace WindowsFormsApp1
                 IsActive = true
             };
             Globals.Profiles.Add(Globals.Profile);
-            SystemEvents.TimeChanged += this.OnDateTimeChanged;
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
@@ -1901,7 +1900,7 @@ namespace WindowsFormsApp1
                 bgWorkIIDC.RunWorkerAsync();
         }
 
-        private void CleanupTasks()
+        public void CleanupTasks()
         {
             Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
             Globals.UpdateActivity();
@@ -1909,15 +1908,6 @@ namespace WindowsFormsApp1
 
             UserAccount.UserLogout();
             Environment.Exit(Environment.ExitCode);
-        }
-
-        private void OnDateTimeChanged(object sender, EventArgs e)
-        {
-            Console.WriteLine("marvs123");
-            if (Globals.networkDateTimeRegistry == "NoSync" || TimeZone.CurrentTimeZone.StandardName == Globals.requiredTimezone)
-            {
-                CleanupTasks();
-            }
         }
     }
  }

@@ -77,6 +77,8 @@ namespace WindowsFormsApp1
         public static UserToken UserToken;
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
+        public static string networkDateTimeRegistry;
+        public static string requiredTimezone = "Malay Peninsula Standard Time";
 
         public static bool ShouldResizeImage(long fileLength)
         {

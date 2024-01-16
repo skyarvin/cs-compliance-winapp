@@ -25,6 +25,7 @@ using CSTool.Properties;
 using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
+using Microsoft.Win32;
 
 namespace WindowsFormsApp1
 {
@@ -237,6 +238,7 @@ namespace WindowsFormsApp1
                 IsActive = true
             };
             Globals.Profiles.Add(Globals.Profile);
+            SystemEvents.TimeChanged += this.OnDateTimeChanged;
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
@@ -595,12 +597,7 @@ namespace WindowsFormsApp1
         }
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            Globals.UpdateActivity();
-            Globals.EnableTimer = false;
-
-            UserAccount.UserLogout();
-            Environment.Exit(Environment.ExitCode);
+            this.CleanupTasks();   
             //Application.Exit();
         }
 
@@ -1902,6 +1899,25 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkIIDC.RunWorkerAsync();
+        }
+
+        private void CleanupTasks()
+        {
+            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
+            Globals.UpdateActivity();
+            Globals.EnableTimer = false;
+
+            UserAccount.UserLogout();
+            Environment.Exit(Environment.ExitCode);
+        }
+
+        private void OnDateTimeChanged(object sender, EventArgs e)
+        {
+            Console.WriteLine("marvs123");
+            if (Globals.networkDateTimeRegistry == "NoSync" || TimeZone.CurrentTimeZone.StandardName == Globals.requiredTimezone)
+            {
+                CleanupTasks();
+            }
         }
     }
  }

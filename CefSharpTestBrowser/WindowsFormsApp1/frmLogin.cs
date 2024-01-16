@@ -1,9 +1,11 @@
 ﻿using CSTool;
 using CSTool.Models;
 using CSTool.Properties;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -44,9 +46,15 @@ namespace WindowsFormsApp1
                 Login();
             }
         }
-
+        
         private void Login()
         {
+            Globals.networkDateTimeRegistry = (String)Registry.GetValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters", "type", null);
+
+            if(Process.GetProcessesByName("SystemSettings").Length > 0 || Globals.networkDateTimeRegistry == "NoSync" || TimeZone.CurrentTimeZone.StandardName != Globals.requiredTimezone) {
+                Environment.Exit(Environment.ExitCode);
+            }
+
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))
             {
                 MessageBox.Show("Please fill out all required fields", "Error");

@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/CefSharpTestBrowser/WindowsFormsApp1/libcef.dll

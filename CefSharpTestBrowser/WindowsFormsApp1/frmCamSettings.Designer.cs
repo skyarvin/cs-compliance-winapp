@@ -39,11 +39,11 @@
             // 
             // cmbSource
             // 
-            this.cmbSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cmbSource.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbSource.FormattingEnabled = true;
             this.cmbSource.Location = new System.Drawing.Point(132, 25);
             this.cmbSource.Name = "cmbSource";
-            this.cmbSource.Size = new System.Drawing.Size(234, 26);
+            this.cmbSource.Size = new System.Drawing.Size(234, 28);
             this.cmbSource.TabIndex = 0;
             this.cmbSource.SelectedIndexChanged += new System.EventHandler(this.cmbSource_SelectedIndexChanged);
             this.cmbSource.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cmbSource_KeyDown);
@@ -51,20 +51,20 @@
             // lblCameraSource
             // 
             this.lblCameraSource.AutoSize = true;
-            this.lblCameraSource.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCameraSource.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCameraSource.Location = new System.Drawing.Point(12, 30);
             this.lblCameraSource.Name = "lblCameraSource";
-            this.lblCameraSource.Size = new System.Drawing.Size(114, 16);
+            this.lblCameraSource.Size = new System.Drawing.Size(99, 17);
             this.lblCameraSource.TabIndex = 1;
             this.lblCameraSource.Text = "Camera Source";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(12, 57);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 16);
+            this.label1.Size = new System.Drawing.Size(55, 17);
             this.label1.TabIndex = 4;
             this.label1.Text = "Preview";
             // 
@@ -73,7 +73,7 @@
             this.btnSaveSettings.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
             this.btnSaveSettings.FlatAppearance.BorderSize = 0;
             this.btnSaveSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSaveSettings.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold);
+            this.btnSaveSettings.Font = new System.Drawing.Font("Segoe UI Semibold", 8.25F);
             this.btnSaveSettings.ForeColor = System.Drawing.Color.White;
             this.btnSaveSettings.Location = new System.Drawing.Point(132, 244);
             this.btnSaveSettings.Name = "btnSaveSettings";
@@ -82,7 +82,7 @@
             this.btnSaveSettings.Text = "SET";
             this.btnSaveSettings.UseVisualStyleBackColor = false;
             this.btnSaveSettings.Click += new System.EventHandler(this.btnSaveSettings_Click);
-            // 
+            //
             // pbVideoHandler
             // 
             this.pbVideoHandler.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -115,6 +115,7 @@
             this.Controls.Add(this.pbVideoHandler);
             this.Controls.Add(this.lblCameraSource);
             this.Controls.Add(this.cmbSource);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "frmCamSettings";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

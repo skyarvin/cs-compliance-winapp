@@ -29,7 +29,6 @@ namespace WindowsFormsApp1
         {
             var result = InternalRequestFacePhoto.Get(Globals.INTERNAL_IRFP.id, Globals.Profile.AgentID);
             lblStatus.Text = result.status;
-            Height = 210;
             switch (result.status)
             {
                 case "New":
@@ -39,15 +38,13 @@ namespace WindowsFormsApp1
                 case "Approved":
                     if (result.reviewer_notes.Length > 0)
                     {
-                        reviewer_note.Visible = true;
-                        reviewer_note_label.Visible = true;
+                        panelReviewer.Visible = true;
                         reviewer_note.Text = result.reviewer_notes;
                     }
                     BackColor = Color.Green;
                     break;
                 case "Denied":
-                    reviewer_note.Visible = true;
-                    reviewer_note_label.Visible = true;
+                    panelReviewer.Visible = true;
                     reviewer_note.Text = result.reviewer_notes;
                     BackColor = Color.Red;
                     break;

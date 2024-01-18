@@ -107,7 +107,7 @@
             this.upload_photo.Location = new System.Drawing.Point(109, 55);
             this.upload_photo.Name = "upload_photo";
             this.upload_photo.ReadOnly = true;
-            this.upload_photo.Size = new System.Drawing.Size(467, 20);
+            this.upload_photo.Size = new System.Drawing.Size(467, 22);
             this.upload_photo.TabIndex = 28;
             // 
             // frmSendInternalIdentificationChecker
@@ -123,6 +123,7 @@
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSendIIDC);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

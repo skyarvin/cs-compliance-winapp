@@ -114,19 +114,21 @@
             // label7
             // 
             this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.label7.ForeColor = System.Drawing.Color.White;
             this.label7.Location = new System.Drawing.Point(6, 108);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(129, 13);
+            this.label7.Size = new System.Drawing.Size(140, 13);
             this.label7.TabIndex = 25;
             this.label7.Text = "Reviewer Photo Violation:";
             // 
             // lblReviewerPhotoGcsUrl
             // 
             this.lblReviewerPhotoGcsUrl.AutoSize = true;
-            this.lblReviewerPhotoGcsUrl.Location = new System.Drawing.Point(141, 108);
+            this.lblReviewerPhotoGcsUrl.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.lblReviewerPhotoGcsUrl.Location = new System.Drawing.Point(144, 108);
             this.lblReviewerPhotoGcsUrl.Name = "lblReviewerPhotoGcsUrl";
-            this.lblReviewerPhotoGcsUrl.Size = new System.Drawing.Size(98, 13);
+            this.lblReviewerPhotoGcsUrl.Size = new System.Drawing.Size(105, 13);
             this.lblReviewerPhotoGcsUrl.TabIndex = 26;
             this.lblReviewerPhotoGcsUrl.TabStop = true;
             this.lblReviewerPhotoGcsUrl.Text = "Click to view image";

@@ -10,7 +10,7 @@ namespace CSTool.Class
 {
     public class ReadTextFile
     {
-        static readonly string textFile = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/CsTool/logs/", DateTime.Now.ToString("MM-dd-yyyy"), "/activity_log.txt"));
+        static readonly string textFile = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/CsTool/logs/", ServerTime.Now().ToString("MM-dd-yyyy"), "/activity_log.txt"));
         public static string Read()
         {
             string txt = ""; 

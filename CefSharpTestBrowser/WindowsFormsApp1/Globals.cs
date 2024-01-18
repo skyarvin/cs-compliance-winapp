@@ -79,6 +79,7 @@ namespace WindowsFormsApp1
         public static object sharedRequestLock = new object();
         public static string networkDateTimeRegistry;
         public static string requiredTimezone = "Malay Peninsula Standard Time";
+        public static TimeSpan timeOffset = new TimeSpan();
 
         public static bool ShouldResizeImage(long fileLength)
         {
@@ -130,7 +131,7 @@ namespace WindowsFormsApp1
             try
             {
                 string logFilePath = "";
-                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/CsTool/logs/", DateTime.Now.ToString("MM-dd-yyyy"), "/"));
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/CsTool/logs/", ServerTime.Now().ToString("MM-dd-yyyy"), "/"));
                 switch (logtype)
                 {
                     case (int)LogType.Action:
@@ -160,7 +161,7 @@ namespace WindowsFormsApp1
                 {
                     using (StreamWriter log = new StreamWriter(fileStream))
                     {
-                        log.WriteLine(DateTime.Now.ToString());
+                        log.WriteLine(ServerTime.Now().ToString());
                         log.WriteLine(logText);
                         log.Write(System.Environment.NewLine);
                         log.Close();
@@ -210,9 +211,9 @@ namespace WindowsFormsApp1
         {
             try
             {
-                Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                Globals.activity.start_time = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss");
                 Globals.activity.agent_id = Globals.ComplianceAgent.id;
-                Globals.activity.work_date = DateTime.Now.Date.ToString("yyyy-MM-dd"); //Globals.ComplianceAgent.review_date;
+                Globals.activity.work_date = ServerTime.Now().Date.ToString("yyyy-MM-dd"); //Globals.ComplianceAgent.review_date;
                 Globals.activity.Save();
             }
             catch (AggregateException e)
@@ -236,7 +237,7 @@ namespace WindowsFormsApp1
             {
                 if (Globals.activity.id.HasValue)
                 {
-                    Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    Globals.activity.end_time = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss");
                     Globals.activity.Update();
                 }
                 else
@@ -365,19 +366,15 @@ namespace WindowsFormsApp1
 
         public static void OnDateTimeChanged(object sender, EventArgs e)
         {
-            if (Globals.networkDateTimeRegistry == "NoSync" || TimeZone.CurrentTimeZone.StandardName == Globals.requiredTimezone)
-            {
-                if(UserToken != null)
-                {
-                    frmMain mainForm = new frmMain();
-                    mainForm.CleanupTasks();
-                }
-                else
-                {
-                    Environment.Exit(Environment.ExitCode);
-                }
-            }
+            TimeZoneInfo.ClearCachedData();
+            ServerTimeSync();
         }
+
+        public static void ServerTimeSync()
+        {
+            Globals.timeOffset = new ServerTime().GetTimeOffset();
+        }
+
     }
 
 

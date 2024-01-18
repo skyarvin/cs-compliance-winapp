@@ -26,6 +26,8 @@ using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
+using System.Net.Http;
+using CSTool.Handlers.Interfaces;
 
 namespace WindowsFormsApp1
 {
@@ -116,7 +118,7 @@ namespace WindowsFormsApp1
             if (data != null)
             {
                 Globals.LastActionLog = DateTime.Parse(data.actual_end_time).ToUniversalTime();
-                double timediff = Math.Abs((DateTime.UtcNow - Globals.LastActionLog).TotalMinutes);
+                double timediff = Math.Abs((ServerTime.UtcNow() - Globals.LastActionLog).TotalMinutes);
                 if (timediff >= Globals.SIXTY_MINUTES_IDLE_TIME)
                 {
                     Cef.GetGlobalCookieManager().DeleteCookies();
@@ -238,6 +240,8 @@ namespace WindowsFormsApp1
                 IsActive = true
             };
             Globals.Profiles.Add(Globals.Profile);
+            Globals.ServerTimeSync();
+            SystemEvents.TimeChanged += Globals.OnDateTimeChanged;
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
@@ -253,7 +257,7 @@ namespace WindowsFormsApp1
 
             Task.Run(() => 
             {
-                var timediff = Math.Floor(Math.Abs((DateTime.UtcNow - Globals.LastActionLog).TotalMinutes));
+                var timediff = Math.Floor(Math.Abs((ServerTime.UtcNow() - Globals.LastActionLog).TotalMinutes));
                 if (Globals.LastActionLog != null && timediff >= Globals.SIXTY_MINUTES_IDLE_TIME && (Globals.SIXTY_MINUTES_IDLE_TIME % timediff) == 0)
                 {
                     this.CheckAgentSession();
@@ -341,12 +345,12 @@ namespace WindowsFormsApp1
         public void ResetRoomDurationTimer()
         {
             Globals.room_duration = 0;
-            this.StartTime_BrowserChanged = DateTime.Now;
+            this.StartTime_BrowserChanged = ServerTime.Now();
             this.WindowState = FormWindowState.Maximized;
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
-            Globals._wentIdle = DateTime.Now;
+            Globals._wentIdle = ServerTime.Now();
         }
 
         #endregion
@@ -423,13 +427,13 @@ namespace WindowsFormsApp1
 
                     if (!Globals.StartTime_LastAction.HasValue)
                     {
-                        Globals.StartTime_LastAction = DateTime.Now;
+                        Globals.StartTime_LastAction = ServerTime.Now();
                     }
                     this.send_id_checker = false;
                     Globals.AddToHistory(splitAddress[0]);
                     Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                     Globals.CurrentUrl = splitAddress[0];
-                    StartTime_BrowserChanged = DateTime.Now;
+                    StartTime_BrowserChanged = ServerTime.Now();
                     Globals.SKYPE_COMPLIANCE = false;
                     lblCountdown.Text = Globals.room_duration.ToString();
                     setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
@@ -488,7 +492,7 @@ namespace WindowsFormsApp1
         #region Form Events
         private void setScheduledCaptureTime()
         {
-            DateTime now = DateTime.UtcNow;
+            DateTime now = ServerTime.UtcNow();
             Random rnd = new Random();
             foreach (int value in Enumerable.Range(1, 432))
             {
@@ -701,7 +705,7 @@ namespace WindowsFormsApp1
                     actual_start_time = StartTime_BrowserChanged;
                 }
 
-                var actual_end_time = DateTime.Now;
+                var actual_end_time = ServerTime.Now();
                 var logData = new Logger
                 {
                     url = urlToSave,
@@ -711,7 +715,7 @@ namespace WindowsFormsApp1
                     followers = followers,
                     sc = followers >= Globals.SC_THRESHOLD ? true : false,
                     rr = string.IsNullOrEmpty(reply.Trim()) ? false : true,
-                    review_date = DateTime.Now.Date.ToString("yyyy-MM-dd"), //Globals.ComplianceAgent.review_date,
+                    review_date = ServerTime.Now().Date.ToString("yyyy-MM-dd"), //Globals.ComplianceAgent.review_date,
                     workshift = "DS",
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
@@ -924,7 +928,7 @@ namespace WindowsFormsApp1
             if (!string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
-                Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                Globals.activity.start_time = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss");
             }
         }
 
@@ -1686,16 +1690,16 @@ namespace WindowsFormsApp1
 
         private void monitorActivity()
         {
-            DateTime now = DateTime.UtcNow;
+            DateTime now = ServerTime.UtcNow();
             TimeSpan ts = now - new DateTime(1970, 1, 1);
             int nowUnixTime = (int)ts.TotalSeconds;
             if (scheduledCaptureTimeList.Contains(nowUnixTime))
             {
-                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", DateTime.Now.ToString("MM-dd-yyyy"), "\\"));
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", ServerTime.Now().ToString("MM-dd-yyyy"), "\\"));
                 FileInfo logFileInfo = new FileInfo(path);
                 DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
                 if (!logDirInfo.Exists) logDirInfo.Create();
-                string nowStr = DateTime.Now.ToString("yyyy-dd-M--HH-mm-ss");
+                string nowStr = ServerTime.Now().ToString("yyyy-dd-M--HH-mm-ss");
                 string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
                 startScreenCapture(scFileName);
                 if (Globals.ComplianceAgent.webcam_capture)
@@ -1751,7 +1755,7 @@ namespace WindowsFormsApp1
         {
             Task.Run(() =>
             {
-                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", DateTime.Now.ToString("MM-dd-yyyy"), "\\"));
+                string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", ServerTime.Now().ToString("MM-dd-yyyy"), "\\"));
 
                 foreach (string file in Directory.GetFiles(path, "*.jpeg"))
                 {
@@ -1889,7 +1893,7 @@ namespace WindowsFormsApp1
                 e.Cancel = true;
             }
         }
-
+        
         private void bgWorkIIDC_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)

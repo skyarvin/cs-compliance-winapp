@@ -420,6 +420,7 @@ namespace CSTool
 
         public void OnClicked(string id)
         {
+            Console.WriteLine("Now: {0} | UtcNow: {1}", ServerTime.Now(), ServerTime.UtcNow());
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
             if (HtmlItemClicked != null)
             {

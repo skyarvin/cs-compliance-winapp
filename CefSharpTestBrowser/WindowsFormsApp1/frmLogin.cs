@@ -20,7 +20,6 @@ namespace WindowsFormsApp1
         private bool bExitApp = true;
         public frmLogin()
         {
-            SystemEvents.TimeChanged += Globals.OnDateTimeChanged;
             InitializeComponent();
             lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());    
         }
@@ -50,11 +49,11 @@ namespace WindowsFormsApp1
         
         private void Login()
         {
-            Globals.networkDateTimeRegistry = (String)Registry.GetValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters", "type", null);
+            //Globals.networkDateTimeRegistry = (String)Registry.GetValue("HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\W32Time\\Parameters", "type", null);
 
-            if(Process.GetProcessesByName("SystemSettings").Length > 0 || Globals.networkDateTimeRegistry == "NoSync" || TimeZone.CurrentTimeZone.StandardName != Globals.requiredTimezone) {
-                Environment.Exit(Environment.ExitCode);
-            }
+            //if(Process.GetProcessesByName("SystemSettings").Length > 0 || Globals.networkDateTimeRegistry == "NoSync" || TimeZone.CurrentTimeZone.StandardName != Globals.requiredTimezone) {
+            //    Environment.Exit(Environment.ExitCode);
+            //}
 
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))
             {

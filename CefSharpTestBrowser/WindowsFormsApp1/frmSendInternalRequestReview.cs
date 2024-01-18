@@ -69,7 +69,7 @@ namespace WindowsFormsApp1
                 url = Globals.CurrentUrl,
                 agent_id = Globals.Profile.AgentID,
                 agent_notes = txtNotes.Text,
-                duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds),
+                duration = (int)((ServerTime.Now() - (DateTime)start_time).TotalSeconds),
                 violation = cmbViolation.SelectedValue.ToString(),
                 is_trainee = Globals.ComplianceAgent.is_trainee,
                 skype_compliance = chkSkypeCompliance.Checked

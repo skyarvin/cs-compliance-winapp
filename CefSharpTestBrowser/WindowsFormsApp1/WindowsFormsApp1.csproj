@@ -363,6 +363,7 @@
     <Compile Include="Models\InternalRequestReview.cs" />
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Models\Seed.cs" />
+    <Compile Include="Models\ServerTime.cs" />
     <Compile Include="Models\UserAccount.cs" />
     <Compile Include="Models\UserToken.cs" />
     <Compile Include="Program.cs" />

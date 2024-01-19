@@ -239,5 +239,12 @@ namespace CSTool
                 System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
             }
         }
+
+        private void useRecoveryCode(object sender, EventArgs e)
+        {
+            var frmRecoveryCode = new frmRecoveryCode(this.userTfa);
+            frmRecoveryCode.Show();
+            this.Hide();
+        }
     }
 }

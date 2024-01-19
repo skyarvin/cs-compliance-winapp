@@ -234,6 +234,12 @@
     <Compile Include="Class\StaffScreenshot.cs" />
     <Compile Include="Class\FileUtil.cs" />
     <Compile Include="Class\WindowsActivityMonitor.cs" />
+    <Compile Include="frmRecoveryCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRecoveryCode.Designer.cs">
+      <DependentUpon>frmRecoveryCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmAnnouncement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -391,6 +397,9 @@
     <Content Include="cscb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="frmRecoveryCode.resx">
+      <DependentUpon>frmRecoveryCode.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmInternalIdentificationChecker.resx">
       <DependentUpon>frmInternalIdentificationChecker.cs</DependentUpon>
     </EmbeddedResource>

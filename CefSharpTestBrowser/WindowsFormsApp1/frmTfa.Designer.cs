@@ -38,6 +38,7 @@
             this.tfa_code = new System.Windows.Forms.TextBox();
             this.resendCodeButton = new System.Windows.Forms.Button();
             this.resendCodeTimer = new System.Windows.Forms.Timer(this.components);
+            this.useRecoveryCodeButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // contextMenuStrip1
@@ -48,7 +49,7 @@
             // device_label
             // 
             this.device_label.Dock = System.Windows.Forms.DockStyle.Top;
-            this.device_label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.device_label.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.device_label.ForeColor = System.Drawing.Color.Black;
             this.device_label.Location = new System.Drawing.Point(0, 0);
             this.device_label.Name = "device_label";
@@ -60,10 +61,10 @@
             // subText
             // 
             this.subText.AutoSize = true;
-            this.subText.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.subText.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.subText.Location = new System.Drawing.Point(20, 150);
             this.subText.Name = "subText";
-            this.subText.Size = new System.Drawing.Size(334, 15);
+            this.subText.Size = new System.Drawing.Size(331, 15);
             this.subText.TabIndex = 3;
             this.subText.Text = "Enter 6-digit code from your Two Factor Authenticator Device";
             this.subText.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -84,9 +85,9 @@
             this.submit_tfa.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.submit_tfa.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.submit_tfa.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.submit_tfa.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.submit_tfa.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.submit_tfa.ForeColor = System.Drawing.Color.White;
-            this.submit_tfa.Location = new System.Drawing.Point(23, 271);
+            this.submit_tfa.Location = new System.Drawing.Point(23, 305);
             this.submit_tfa.Name = "submit_tfa";
             this.submit_tfa.Size = new System.Drawing.Size(331, 39);
             this.submit_tfa.TabIndex = 1;
@@ -99,9 +100,9 @@
             this.back_btn.BackColor = System.Drawing.Color.Gray;
             this.back_btn.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.back_btn.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.back_btn.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.back_btn.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.back_btn.ForeColor = System.Drawing.Color.White;
-            this.back_btn.Location = new System.Drawing.Point(23, 364);
+            this.back_btn.Location = new System.Drawing.Point(23, 422);
             this.back_btn.Name = "back_btn";
             this.back_btn.Size = new System.Drawing.Size(331, 39);
             this.back_btn.TabIndex = 2;
@@ -124,9 +125,9 @@
             this.resendCodeButton.BackColor = System.Drawing.Color.Gray;
             this.resendCodeButton.Enabled = false;
             this.resendCodeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.resendCodeButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F);
+            this.resendCodeButton.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.resendCodeButton.ForeColor = System.Drawing.Color.White;
-            this.resendCodeButton.Location = new System.Drawing.Point(23, 316);
+            this.resendCodeButton.Location = new System.Drawing.Point(23, 260);
             this.resendCodeButton.Name = "resendCodeButton";
             this.resendCodeButton.Size = new System.Drawing.Size(331, 39);
             this.resendCodeButton.TabIndex = 5;
@@ -139,11 +140,26 @@
             this.resendCodeTimer.Interval = 1000;
             this.resendCodeTimer.Tick += new System.EventHandler(this.resendCodeTimer_Tick);
             // 
+            // useRecoveryCodeButton
+            // 
+            this.useRecoveryCodeButton.BackColor = System.Drawing.Color.Gray;
+            this.useRecoveryCodeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.useRecoveryCodeButton.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.useRecoveryCodeButton.ForeColor = System.Drawing.Color.White;
+            this.useRecoveryCodeButton.Location = new System.Drawing.Point(23, 359);
+            this.useRecoveryCodeButton.Name = "useRecoveryCodeButton";
+            this.useRecoveryCodeButton.Size = new System.Drawing.Size(331, 39);
+            this.useRecoveryCodeButton.TabIndex = 6;
+            this.useRecoveryCodeButton.Text = "Use recovery code";
+            this.useRecoveryCodeButton.UseVisualStyleBackColor = false;
+            this.useRecoveryCodeButton.Click += new System.EventHandler(this.useRecoveryCode);
+            // 
             // frmTfa
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(370, 420);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(370, 480);
+            this.Controls.Add(this.useRecoveryCodeButton);
             this.Controls.Add(this.resendCodeButton);
             this.Controls.Add(this.tfa_code);
             this.Controls.Add(this.back_btn);
@@ -151,11 +167,12 @@
             this.Controls.Add(this.device_list);
             this.Controls.Add(this.subText);
             this.Controls.Add(this.device_label);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.Name = "frmTfa";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Authenticator";
+            this.Text = "Two Factor Authentication";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmTfa_FormClosing);
             this.Load += new System.EventHandler(this.frmTfa_Load);
             this.ResumeLayout(false);
@@ -173,5 +190,6 @@
         private System.Windows.Forms.TextBox tfa_code;
         private System.Windows.Forms.Button resendCodeButton;
         private System.Windows.Forms.Timer resendCodeTimer;
+        private System.Windows.Forms.Button useRecoveryCodeButton;
     }
 }

@@ -1,11 +1,9 @@
 ﻿using CSTool;
 using CSTool.Models;
 using CSTool.Properties;
-using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -46,7 +44,6 @@ namespace WindowsFormsApp1
                 Login();
             }
         }
-        
         private void Login()
         {
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))

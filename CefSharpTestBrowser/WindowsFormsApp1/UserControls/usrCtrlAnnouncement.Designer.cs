@@ -36,8 +36,8 @@ namespace CSTool
             // lblTitle
             // 
             this.lblTitle.AutoEllipsis = true;
-            this.lblTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitle.Location = new System.Drawing.Point(-1, 6);
+            this.lblTitle.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.lblTitle.Location = new System.Drawing.Point(1, 6);
             this.lblTitle.Name = "lblTitle";
             this.lblTitle.Size = new System.Drawing.Size(214, 28);
             this.lblTitle.TabIndex = 0;
@@ -48,10 +48,11 @@ namespace CSTool
             // lblTimePosted
             // 
             this.lblTimePosted.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblTimePosted.Location = new System.Drawing.Point(0, 38);
+            this.lblTimePosted.Location = new System.Drawing.Point(4, 31);
+            this.lblTimePosted.MinimumSize = new System.Drawing.Size(0, 16);
             this.lblTimePosted.Name = "lblTimePosted";
             this.lblTimePosted.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.lblTimePosted.Size = new System.Drawing.Size(228, 13);
+            this.lblTimePosted.Size = new System.Drawing.Size(220, 16);
             this.lblTimePosted.TabIndex = 2;
             this.lblTimePosted.Text = "2 days ago";
             this.lblTimePosted.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -59,14 +60,16 @@ namespace CSTool
             // 
             // usrCtrlAnnouncement
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.lblTimePosted);
             this.Controls.Add(this.lblTitle);
             this.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.Name = "usrCtrlAnnouncement";
+            this.Padding = new System.Windows.Forms.Padding(4);
             this.Size = new System.Drawing.Size(228, 51);
             this.Click += new System.EventHandler(this.usrCtrlAnnouncement_Click);
             this.ResumeLayout(false);

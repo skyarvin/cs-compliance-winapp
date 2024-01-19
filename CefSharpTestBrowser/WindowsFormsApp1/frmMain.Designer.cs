@@ -553,6 +553,7 @@
             this.flpAnnouncementList.AutoScroll = true;
             this.flpAnnouncementList.AutoSize = true;
             this.flpAnnouncementList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpAnnouncementList.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.flpAnnouncementList.Location = new System.Drawing.Point(878, 40);
             this.flpAnnouncementList.MaximumSize = new System.Drawing.Size(250, 229);
             this.flpAnnouncementList.MinimumSize = new System.Drawing.Size(250, 25);

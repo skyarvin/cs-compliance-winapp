@@ -77,7 +77,7 @@ namespace WindowsFormsApp1
             this.lblMessage.Location = new System.Drawing.Point(0, 120);
             this.lblMessage.Name = "lblMessage";
             this.lblMessage.Padding = new System.Windows.Forms.Padding(16);
-            this.lblMessage.Size = new System.Drawing.Size(708, 134);
+            this.lblMessage.Size = new System.Drawing.Size(708, 135);
             this.lblMessage.TabIndex = 3;
             this.lblMessage.Text = "Enter Announcement Message";
             this.lblMessage.TextAlign = System.Drawing.ContentAlignment.TopCenter;
@@ -162,7 +162,7 @@ namespace WindowsFormsApp1
             this.controlsPanel.Controls.Add(this.btnPrevious);
             this.controlsPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.controlsPanel.Font = new System.Drawing.Font("Segoe UI", 9F);
-            this.controlsPanel.Location = new System.Drawing.Point(0, 254);
+            this.controlsPanel.Location = new System.Drawing.Point(0, 255);
             this.controlsPanel.Name = "controlsPanel";
             this.controlsPanel.Size = new System.Drawing.Size(708, 167);
             this.controlsPanel.TabIndex = 10;
@@ -176,7 +176,7 @@ namespace WindowsFormsApp1
             this.Controls.Add(this.lblMessage);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.controlsPanel);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.MaximizeBox = false;
             this.MinimizeBox = false;

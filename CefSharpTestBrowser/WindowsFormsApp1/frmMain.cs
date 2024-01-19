@@ -26,8 +26,6 @@ using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
-using System.Net.Http;
-using CSTool.Handlers.Interfaces;
 
 namespace WindowsFormsApp1
 {

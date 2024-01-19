@@ -60,14 +60,13 @@ namespace WindowsFormsApp1
             // lblPostedDate
             // 
             this.lblPostedDate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblPostedDate.AutoSize = true;
             this.lblPostedDate.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPostedDate.Location = new System.Drawing.Point(576, 48);
+            this.lblPostedDate.Location = new System.Drawing.Point(570, 48);
             this.lblPostedDate.Name = "lblPostedDate";
             this.lblPostedDate.Size = new System.Drawing.Size(132, 17);
             this.lblPostedDate.TabIndex = 2;
             this.lblPostedDate.Text = "2021-12-14 12:55 PM";
-            this.lblPostedDate.TextAlign = System.Drawing.ContentAlignment.TopRight;
+            this.lblPostedDate.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblMessage
             // 
@@ -142,11 +141,10 @@ namespace WindowsFormsApp1
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.label1.Location = new System.Drawing.Point(516, 48);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 17);
+            this.label1.Size = new System.Drawing.Size(56, 17);
             this.label1.TabIndex = 9;
             this.label1.Text = "Posted:";
             // 

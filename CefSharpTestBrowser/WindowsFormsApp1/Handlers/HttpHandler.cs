@@ -103,5 +103,5 @@ namespace CSTool.Handlers
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
         }
-    }                           
+    }
 }

@@ -147,7 +147,6 @@ namespace CSTool.Models
         
         public string ToggleTFAMethod(bool use_recovery_code)
         {
-            Console.WriteLine($"Nonce: {this.nonce} || User id: {this.user_id} || Device id: {this.device_id}");
             try
             {
                 using (IHttpHandler client = new HttpHandler())

@@ -131,6 +131,12 @@ namespace CSTool
                     return;
                 }
             }
+            catch (ForbiddenException f)
+            {
+                MessageBox.Show("Invalid action. Please try again", "Error");
+                bExitApp = false;
+                this.Close();
+            }
             catch (AggregateException ex)
             {
                 Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);

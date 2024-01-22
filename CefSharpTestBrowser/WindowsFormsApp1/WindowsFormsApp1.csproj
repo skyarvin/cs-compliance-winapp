@@ -357,6 +357,7 @@
       <DependentUpon>frmMessage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Handlers\ErrorsHandler\ForbiddenException.cs" />
     <Compile Include="Handlers\ErrorsHandler\TFARequiredException.cs" />
     <Compile Include="Handlers\ErrorsHandler\UnauthorizeException.cs" />
     <Compile Include="Handlers\FindHandler.cs" />

@@ -76,6 +76,10 @@ namespace CSTool.Handlers
             {
                 throw new UnauthorizeException(response.Content);
             }
+            if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+            {
+                throw new ForbiddenException(response.Content);
+            }
             return await Task.FromResult(response);
         }
 
@@ -99,5 +103,5 @@ namespace CSTool.Handlers
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
         }
-    }
+    }                           
 }

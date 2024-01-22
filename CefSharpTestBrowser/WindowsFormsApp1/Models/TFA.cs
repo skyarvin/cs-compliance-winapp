@@ -55,6 +55,10 @@ namespace CSTool.Models
             {
                 throw unauthorize;
             }
+            catch (AggregateException e) when (e.InnerException is ForbiddenException forbidden)
+            {
+                throw forbidden;
+            }
             catch (Exception e)
             {
                 throw e;

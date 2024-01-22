@@ -2,14 +2,7 @@
 using CSTool.Models;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
 using WindowsFormsApp1;
@@ -43,7 +36,7 @@ namespace CSTool
                 this.tfa.nonce = this.userTfa.nonce;
                 this.tfa.tfa_code = recoveryCodeInput.Text;
                 this.tfa.user_id = this.userTfa.user_id;
-                this.tfa.ValidateTfa();
+                this.tfa.ValidateTfa(true);
                 Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
                 if (Globals.ComplianceAgent != null)
                 {
@@ -89,7 +82,7 @@ namespace CSTool
                     jsonString.Wait();
                     UserTFA result = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
                     this.userTfa.nonce = result.nonce;
-                    MessageBox.Show("Invalid Two Factor Authenticator Code! \nPlease Try Again.", "Error");
+                    MessageBox.Show("Invalid Recovery Code! \nPlease Try Again.", "Error");
                     return;
                 }
             }
@@ -103,6 +96,14 @@ namespace CSTool
             {
                 Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
                 MessageBox.Show(String.Concat(ex.Message.ToString(), System.Environment.NewLine, "Please contact Admin."), "Error");
+            }
+        }
+
+        private void FrmTfa_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (bExitApp)
+            {
+                Application.Exit();
             }
         }
     }

@@ -242,9 +242,29 @@ namespace CSTool
 
         private void useRecoveryCode(object sender, EventArgs e)
         {
+            this.userTfa.nonce = ToggleTfaMethod(true);
             var frmRecoveryCode = new frmRecoveryCode(this.userTfa);
+            frmRecoveryCode.FormClosed += new FormClosedEventHandler(RecoveryCodeForm_Close);
             frmRecoveryCode.Show();
             this.Hide();
+        }
+
+        private void RecoveryCodeForm_Close(object sender, FormClosedEventArgs e)
+        {
+            if (Globals.frmMain == null && Globals.FrmQA == null)
+            {
+                this.userTfa.nonce = ToggleTfaMethod(false);
+                bExitApp = true;
+                this.Show();
+            }
+        }
+
+        private string ToggleTfaMethod(bool use_recovery_code)
+        {
+            this.tfa.device_id = this.device_id;
+            this.tfa.nonce = this.userTfa.nonce;
+            this.tfa.user_id = this.userTfa.user_id;
+            return this.tfa.ToggleTFAMethod(use_recovery_code);
         }
     }
 }

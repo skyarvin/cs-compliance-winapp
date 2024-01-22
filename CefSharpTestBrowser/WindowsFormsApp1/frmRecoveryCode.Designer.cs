@@ -107,6 +107,7 @@
             this.Controls.Add(this.label1);
             this.Name = "frmRecoveryCode";
             this.Text = "Use Recovery Code";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTfa_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -1,7 +1,6 @@
 ﻿using CSTool.Handlers;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using WindowsFormsApp1;
@@ -19,7 +18,7 @@ namespace CSTool.Models
         public string device_id { get; set; }
         public string prev_device_id { get; set; }
 
-        public void ValidateTfa()
+        public void ValidateTfa(bool use_recovery_code = false)
         {
             try
             {
@@ -33,6 +32,7 @@ namespace CSTool.Models
                         this.nonce,
                         this.user_id,
                         this.device_id,
+                        use_recovery_code
                     }), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
                     if (response.IsSuccessStatusCode)
@@ -130,6 +130,45 @@ namespace CSTool.Models
                     }
                 }
             } catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        
+        public string ToggleTFAMethod(bool use_recovery_code)
+        {
+            Console.WriteLine($"Nonce: {this.nonce} || User id: {this.user_id} || Device id: {this.device_id}");
+            try
+            {
+                using (IHttpHandler client = new HttpHandler())
+                {
+                    var uri = string.Concat(Url.AUTH_URL, "/tfa_code/toggle/");
+                    client.Timeout = TimeSpan.FromSeconds(5);
+                    var content = new StringContent(JsonConvert.SerializeObject(new
+                    {
+                        this.nonce,
+                        this.user_id,
+                        this.device_id,
+                        use_recovery_code
+                    }), Encoding.UTF8, "application/json");
+                    var response = client.CustomPostAsync(uri, content).Result;
+                    if (response.IsSuccessStatusCode)
+                    {
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            UserTFA tfa = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
+                            return tfa.nonce;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }

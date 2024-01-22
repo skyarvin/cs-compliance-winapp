@@ -167,6 +167,7 @@ namespace CSTool
             this.device_id = device_id;
 
             if (device_type != "Authenticator")
+            if (device_type != DeviceType.AUTHENTICATOR)
             {
                 this.resendCodeButton.Visible = true;
                 this.resendCodeButton.Enabled = false;

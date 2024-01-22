@@ -10,6 +10,12 @@ using CSTool.Handlers.ErrorsHandler;
 
 namespace CSTool.Models
 {
+    public class DeviceType
+    {
+        public const string AUTHENTICATOR = "Authenticator";
+        public const string EMAIL = "Email";
+    }
+
     public class TFA
     {
         public string tfa_code { get; set; }

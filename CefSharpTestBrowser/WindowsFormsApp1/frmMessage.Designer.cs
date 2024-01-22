@@ -43,7 +43,7 @@
             this.lblMessage.Margin = new System.Windows.Forms.Padding(0, 0, 0, 16);
             this.lblMessage.MinimumSize = new System.Drawing.Size(452, 64);
             this.lblMessage.Name = "lblMessage";
-            this.lblMessage.Size = new System.Drawing.Size(452, 68);
+            this.lblMessage.Size = new System.Drawing.Size(452, 64);
             this.lblMessage.TabIndex = 0;
             this.lblMessage.Text = "Display your message here.";
             this.lblMessage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -57,7 +57,7 @@
             this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.button1.Font = new System.Drawing.Font("Segoe UI", 9.75F);
             this.button1.ForeColor = System.Drawing.Color.White;
-            this.button1.Location = new System.Drawing.Point(150, 84);
+            this.button1.Location = new System.Drawing.Point(150, 80);
             this.button1.Margin = new System.Windows.Forms.Padding(150, 0, 150, 0);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(152, 28);
@@ -88,6 +88,7 @@
             this.ClientSize = new System.Drawing.Size(500, 160);
             this.ControlBox = false;
             this.Controls.Add(this.panelMessage);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.ForeColor = System.Drawing.Color.White;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;

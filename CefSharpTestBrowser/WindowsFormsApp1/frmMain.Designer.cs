@@ -599,6 +599,7 @@
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.lblIdStatus);
             this.Controls.Add(this.pnlHeader);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.KeyPreview = true;
             this.Name = "frmMain";
             this.Text = "Compliance Browser";

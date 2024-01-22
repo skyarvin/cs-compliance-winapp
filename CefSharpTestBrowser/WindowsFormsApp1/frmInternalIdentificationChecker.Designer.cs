@@ -172,10 +172,11 @@
             this.Controls.Add(this.panelReviewer);
             this.Controls.Add(this.panel1);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(517, 0);
+            this.MinimumSize = new System.Drawing.Size(517, 39);
             this.Name = "frmInternalIdentificationChecker";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Internal Identification Checker";

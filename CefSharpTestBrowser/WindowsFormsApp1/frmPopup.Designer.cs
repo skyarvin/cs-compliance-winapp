@@ -137,6 +137,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1018, 506);
             this.Controls.Add(this.pnlSearch);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.Name = "frmPopup";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "frmPopup";

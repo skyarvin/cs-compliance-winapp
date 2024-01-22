@@ -134,6 +134,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panelReviewer);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

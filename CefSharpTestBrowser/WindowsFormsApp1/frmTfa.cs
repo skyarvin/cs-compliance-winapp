@@ -166,17 +166,14 @@ namespace CSTool
             device_label.Text = "Authenticate your account on " + device_name;
             this.device_id = device_id;
 
-            if (device_type != "Authenticator")
+            this.resetTimer();
+            this.resendCodeButton.Visible = false;
+
             if (device_type != DeviceType.AUTHENTICATOR)
             {
                 this.resendCodeButton.Visible = true;
                 this.resendCodeButton.Enabled = false;
-                this.resetTimer();
                 this.resendCodeTimer.Start();
-            } else
-            {
-                this.resendCodeButton.Visible = false;
-                this.resetTimer();
             }
 
             if (this.prev_device_id != null && this.prev_device_id != this.device_id)

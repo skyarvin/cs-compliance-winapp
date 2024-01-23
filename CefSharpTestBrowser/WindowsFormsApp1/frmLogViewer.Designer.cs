@@ -55,9 +55,9 @@
             // lblRecordCount
             // 
             this.lblRecordCount.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.lblRecordCount.Location = new System.Drawing.Point(0, 446);
+            this.lblRecordCount.Location = new System.Drawing.Point(0, 437);
             this.lblRecordCount.Name = "lblRecordCount";
-            this.lblRecordCount.Size = new System.Drawing.Size(800, 4);
+            this.lblRecordCount.Size = new System.Drawing.Size(800, 13);
             this.lblRecordCount.TabIndex = 1;
             // 
             // menuStrip1
@@ -74,7 +74,7 @@
             // refreshToolStripMenuItem
             // 
             this.refreshToolStripMenuItem.Name = "refreshToolStripMenuItem";
-            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(58, 15);
+            this.refreshToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
             this.refreshToolStripMenuItem.Text = "Refresh";
             this.refreshToolStripMenuItem.Click += new System.EventHandler(this.RefreshToolStripMenuItem_Click);
             // 

@@ -27,7 +27,7 @@ namespace CSTool.Models
                 }
                 catch(Exception e)
                 {
-                    return FetchServerTime();
+                    return DateTime.Now;
                 }
             }
         }

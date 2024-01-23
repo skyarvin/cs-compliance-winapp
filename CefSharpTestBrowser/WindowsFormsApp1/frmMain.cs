@@ -600,7 +600,12 @@ namespace WindowsFormsApp1
         }
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            this.CleanupTasks();   
+            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
+            Globals.UpdateActivity();
+            Globals.EnableTimer = false;
+
+            UserAccount.UserLogout();
+            Environment.Exit(Environment.ExitCode);
             //Application.Exit();
         }
 
@@ -1902,16 +1907,6 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkIIDC.RunWorkerAsync();
-        }
-
-        public void CleanupTasks()
-        {
-            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            Globals.UpdateActivity();
-            Globals.EnableTimer = false;
-
-            UserAccount.UserLogout();
-            Environment.Exit(Environment.ExitCode);
         }
     }
  }

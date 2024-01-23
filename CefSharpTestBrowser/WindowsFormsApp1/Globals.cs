@@ -17,6 +17,7 @@ using System.Text;
 using System.Net;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 
 namespace WindowsFormsApp1
 {
@@ -364,16 +365,19 @@ namespace WindowsFormsApp1
 
         public static void OnDateTimeChanged(object sender, EventArgs e)
         {
-            TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
-            TimeZoneInfo.ClearCachedData();
-            ServerTimeSync();
-            if(last_action.TotalMilliseconds > 0)
+            if (NetworkInterface.GetIsNetworkAvailable())
             {
-                Globals.StartTime_LastAction = ServerTime.Now() - last_action;
-            }
-            else
-            {
-                Globals.StartTime_LastAction = ServerTime.Now() + last_action;
+                TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
+                TimeZoneInfo.ClearCachedData();
+                ServerTimeSync();
+                if (last_action.TotalMilliseconds > 0)
+                {
+                    Globals.StartTime_LastAction = ServerTime.Now() - last_action;
+                }
+                else
+                {
+                    Globals.StartTime_LastAction = ServerTime.Now() + last_action;
+                }
             }
         }
 

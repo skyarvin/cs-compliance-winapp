@@ -26,6 +26,7 @@ using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
+using System.Net.NetworkInformation;
 
 namespace WindowsFormsApp1
 {
@@ -240,6 +241,7 @@ namespace WindowsFormsApp1
             Globals.Profiles.Add(Globals.Profile);
             Globals.ServerTimeSync();
             SystemEvents.TimeChanged += Globals.OnDateTimeChanged;
+            NetworkChange.NetworkAvailabilityChanged += Globals.OnDateTimeChanged;
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);

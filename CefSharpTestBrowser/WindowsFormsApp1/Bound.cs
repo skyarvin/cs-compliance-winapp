@@ -421,13 +421,10 @@ namespace CSTool
 
         public void OnClicked(string id)
         {
-            if (NetworkInterface.GetIsNetworkAvailable())
+            Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
+            if (HtmlItemClicked != null)
             {
-                Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
-                if (HtmlItemClicked != null)
-                {
-                    HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });
-                }
+                HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });
             }
         }
 

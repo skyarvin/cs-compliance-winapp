@@ -365,20 +365,7 @@ namespace WindowsFormsApp1
 
         public static void ServerTimeSync()
         {
-            if (NetworkInterface.GetIsNetworkAvailable())
-            {
-                TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
-                TimeZoneInfo.ClearCachedData();
-                Globals.timeOffset = new ServerTime().GetTimeOffset();
-                if (last_action.TotalMilliseconds > 0)
-                {
-                    Globals.StartTime_LastAction = ServerTime.Now() - last_action;
-                }
-                else
-                {
-                    Globals.StartTime_LastAction = ServerTime.Now() + last_action;
-                }
-            }
+            Globals.timeOffset = new ServerTime().GetTimeOffset();
         }
 
     }

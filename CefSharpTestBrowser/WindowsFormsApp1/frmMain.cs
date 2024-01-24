@@ -26,7 +26,6 @@ using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
-using System.Net.NetworkInformation;
 
 namespace WindowsFormsApp1
 {
@@ -241,7 +240,6 @@ namespace WindowsFormsApp1
             Globals.Profiles.Add(Globals.Profile);
             Globals.ServerTimeSync();
             SystemEvents.TimeChanged += OnDateTimeChanged;
-            NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
@@ -1911,12 +1909,18 @@ namespace WindowsFormsApp1
 
         public static void OnDateTimeChanged(object sender, EventArgs e)
         {
+            TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
+            TimeZoneInfo.ClearCachedData();
             Globals.ServerTimeSync();
-        }
-
-        public static void OnNetworkAvailabilityChanged(object sender, EventArgs e)
-        {
-            Globals.ServerTimeSync();
+            if (last_action.TotalMilliseconds > 0)
+            {
+                Globals.StartTime_LastAction = ServerTime.Now() - last_action;
+            }
+            else
+            {
+                Globals.StartTime_LastAction = ServerTime.Now() + last_action;
+            }
+            
         }
     }
  }

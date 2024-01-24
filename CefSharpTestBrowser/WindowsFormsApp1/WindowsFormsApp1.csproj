@@ -370,7 +370,6 @@
     <Compile Include="Models\Activity.cs" />
     <Compile Include="Models\Agent.cs" />
     <Compile Include="Models\Announcements.cs" />
-    <Compile Include="Models\DeviceRegistration.cs" />
     <Compile Include="Models\Emailer.cs" />
     <Compile Include="Models\ErrorLogs.cs" />
     <Compile Include="Models\IdChecker.cs" />

@@ -78,29 +78,6 @@ namespace CSTool.Handlers
         {
             if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                using (HttpContent data = response.Content)
-                {
-                    var jsonString = data.ReadAsStringAsync();
-                    jsonString.Wait();
-
-                    var type = new { message = "" };
-                    var message = JsonConvert.DeserializeAnonymousType(jsonString.Result, type);
-
-                    if (message.message == "register_device")
-                    {
-                        var parsedBody = JsonConvert.DeserializeObject<DeviceRegistration>(jsonString.Result);
-                        var registerDevice = new DeviceRegistration
-                        {
-                            nonce = parsedBody.nonce,
-                            user_id = parsedBody.user_id
-                        };
-                        MessageBox.Show("You need to register this device in order to continue");
-                        var form = new frmRegisterDevice(registerDevice.nonce, registerDevice.user_id);
-                        form.ShowDialog();
-                        // throw new RegisterDeviceException(registerDevice.nonce, registerDevice.user_id);
-                    }
-
-                }
                 throw new UnauthorizeException(response.Content);
             }
             if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)

@@ -363,13 +363,13 @@ namespace WindowsFormsApp1
             }
         }
 
-        public static void OnDateTimeChanged(object sender, EventArgs e)
+        public static void ServerTimeSync()
         {
             if (NetworkInterface.GetIsNetworkAvailable())
             {
                 TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
                 TimeZoneInfo.ClearCachedData();
-                ServerTimeSync();
+                Globals.timeOffset = new ServerTime().GetTimeOffset();
                 if (last_action.TotalMilliseconds > 0)
                 {
                     Globals.StartTime_LastAction = ServerTime.Now() - last_action;
@@ -379,11 +379,6 @@ namespace WindowsFormsApp1
                     Globals.StartTime_LastAction = ServerTime.Now() + last_action;
                 }
             }
-        }
-
-        public static void ServerTimeSync()
-        {
-            Globals.timeOffset = new ServerTime().GetTimeOffset();
         }
 
     }

@@ -240,8 +240,8 @@ namespace WindowsFormsApp1
             };
             Globals.Profiles.Add(Globals.Profile);
             Globals.ServerTimeSync();
-            SystemEvents.TimeChanged += Globals.OnDateTimeChanged;
-            NetworkChange.NetworkAvailabilityChanged += Globals.OnDateTimeChanged;
+            SystemEvents.TimeChanged += OnDateTimeChanged;
+            NetworkChange.NetworkAvailabilityChanged += OnNetworkAvailabilityChanged;
             InitializeComponent();
             InitializeAppFolders();
             InitializeChromium(Url.CB_HOME);
@@ -1907,6 +1907,16 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkIIDC.RunWorkerAsync();
+        }
+
+        public static void OnDateTimeChanged(object sender, EventArgs e)
+        {
+            Globals.ServerTimeSync();
+        }
+
+        public static void OnNetworkAvailabilityChanged(object sender, EventArgs e)
+        {
+            Globals.ServerTimeSync();
         }
     }
  }

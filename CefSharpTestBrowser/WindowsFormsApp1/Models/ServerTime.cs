@@ -3,6 +3,7 @@ using CSTool.Handlers.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
+using System.Windows.Forms;
 using WindowsFormsApp1;
 
 namespace CSTool.Models
@@ -27,14 +28,19 @@ namespace CSTool.Models
                 }
                 catch(Exception e)
                 {
-                    return DateTime.Now;
+                    MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"));
+                    
+                    return FetchServerTime();
                 }
             }
         }
 
         public TimeSpan GetTimeOffset()
         {
+            Globals.isServerTimeFetched = false;
             DateTime result = FetchServerTime();
+            Globals.isServerTimeFetched = true;
             return result - DateTime.Now;
         }
 

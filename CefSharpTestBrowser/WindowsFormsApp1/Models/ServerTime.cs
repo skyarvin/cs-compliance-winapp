@@ -28,8 +28,7 @@ namespace CSTool.Models
                 }
                 catch(Exception e)
                 {
-                    MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
-                    System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"));
+                    MessageBox.Show("Error connecting to Compliance servers \n Please refresh and try again. \n If internet is NOT down and you are still getting the error, Please contact dev team", "Prompt", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     
                     return FetchServerTime();
                 }

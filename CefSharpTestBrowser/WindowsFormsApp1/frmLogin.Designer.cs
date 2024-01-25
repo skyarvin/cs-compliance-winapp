@@ -200,6 +200,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(396, 523);
+            this.Controls.Add(this.eyeViewPictureBox);
             this.Controls.Add(this.txtPwd);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);

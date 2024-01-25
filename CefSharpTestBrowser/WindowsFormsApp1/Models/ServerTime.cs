@@ -37,9 +37,7 @@ namespace CSTool.Models
 
         public TimeSpan GetTimeOffset()
         {
-            Globals.isServerTimeFetched = false;
             DateTime result = FetchServerTime();
-            Globals.isServerTimeFetched = true;
             return result - DateTime.Now;
         }
 

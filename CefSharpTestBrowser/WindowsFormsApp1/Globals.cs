@@ -79,7 +79,6 @@ namespace WindowsFormsApp1
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
         public static TimeSpan timeOffset = new TimeSpan();
-        public static bool isServerTimeFetched;
 
         public static bool ShouldResizeImage(long fileLength)
         {

@@ -44,6 +44,7 @@ namespace WindowsFormsApp1
                 Login();
             }
         }
+
         private void Login()
         {
             if (string.IsNullOrEmpty(txtEmail.Text.Trim()) || string.IsNullOrEmpty(txtPwd.Text.Trim()))

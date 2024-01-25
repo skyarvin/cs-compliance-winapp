@@ -298,8 +298,6 @@ namespace WindowsFormsApp1
             if (Globals.IsServer())
             {
                 ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
-
-
             }
             else if (Globals.IsClient())
             {
@@ -368,7 +366,6 @@ namespace WindowsFormsApp1
         {
             Globals.timeOffset = new ServerTime().GetTimeOffset();
         }
-
     }
 
     public enum LogType:int

@@ -1896,7 +1896,6 @@ namespace WindowsFormsApp1
                 e.Cancel = true;
             }
         }
-        
         private void bgWorkIIDC_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (e.Cancelled)
@@ -1920,7 +1919,6 @@ namespace WindowsFormsApp1
             {
                 Globals.StartTime_LastAction = ServerTime.Now() + last_action;
             }
-            
         }
     }
  }

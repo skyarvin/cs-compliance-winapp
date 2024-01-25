@@ -1911,13 +1911,17 @@ namespace WindowsFormsApp1
             TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
             TimeZoneInfo.ClearCachedData();
             Globals.ServerTimeSync();
-            if (last_action.TotalMilliseconds > 0)
+
+            if(!Globals.StartTime_LastAction.ToString().Contains("01/01/0001"))
             {
-                Globals.StartTime_LastAction = ServerTime.Now() - last_action;
-            }
-            else
-            {
-                Globals.StartTime_LastAction = ServerTime.Now() + last_action;
+                if (last_action.TotalMilliseconds > 0)
+                {
+                    Globals.StartTime_LastAction = ServerTime.Now() - last_action;
+                }
+                else
+                {
+                    Globals.StartTime_LastAction = ServerTime.Now() + last_action;
+                }
             }
         }
     }

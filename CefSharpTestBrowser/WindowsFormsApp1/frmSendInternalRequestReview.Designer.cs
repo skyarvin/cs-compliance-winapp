@@ -143,6 +143,7 @@
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSendRR);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

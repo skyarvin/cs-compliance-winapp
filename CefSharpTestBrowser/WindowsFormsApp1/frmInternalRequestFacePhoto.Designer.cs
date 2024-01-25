@@ -28,6 +28,10 @@
             this.lblUrl = new System.Windows.Forms.Label();
             this.reviewer_note_label = new System.Windows.Forms.Label();
             this.reviewer_note = new System.Windows.Forms.TextBox();
+            this.panelReviewer = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panelReviewer.SuspendLayout();
+            this.panel2.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblStatus
@@ -77,50 +81,73 @@
             // 
             this.reviewer_note_label.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.reviewer_note_label.ForeColor = System.Drawing.Color.White;
-            this.reviewer_note_label.Location = new System.Drawing.Point(7, 60);
+            this.reviewer_note_label.Location = new System.Drawing.Point(7, 0);
             this.reviewer_note_label.Name = "reviewer_note_label";
             this.reviewer_note_label.Size = new System.Drawing.Size(61, 29);
             this.reviewer_note_label.TabIndex = 15;
             this.reviewer_note_label.Text = "Reviewer Note: ";
             this.reviewer_note_label.UseCompatibleTextRendering = true;
-            this.reviewer_note_label.Visible = false;
             // 
             // reviewer_note
             // 
             this.reviewer_note.BackColor = System.Drawing.SystemColors.Window;
             this.reviewer_note.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.reviewer_note.Location = new System.Drawing.Point(68, 60);
+            this.reviewer_note.Location = new System.Drawing.Point(68, 0);
             this.reviewer_note.Multiline = true;
             this.reviewer_note.Name = "reviewer_note";
             this.reviewer_note.ReadOnly = true;
             this.reviewer_note.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.reviewer_note.Size = new System.Drawing.Size(415, 91);
             this.reviewer_note.TabIndex = 16;
-            this.reviewer_note.Visible = false;
+            // 
+            // panelReviewer
+            // 
+            this.panelReviewer.Controls.Add(this.reviewer_note_label);
+            this.panelReviewer.Controls.Add(this.reviewer_note);
+            this.panelReviewer.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panelReviewer.Location = new System.Drawing.Point(0, 60);
+            this.panelReviewer.Name = "panelReviewer";
+            this.panelReviewer.Size = new System.Drawing.Size(501, 124);
+            this.panelReviewer.TabIndex = 17;
+            this.panelReviewer.Visible = false;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.lblUrl);
+            this.panel2.Controls.Add(this.label1);
+            this.panel2.Controls.Add(this.lblStatus);
+            this.panel2.Controls.Add(this.label3);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(501, 57);
+            this.panel2.TabIndex = 18;
             // 
             // frmInternalRequestFacePhoto
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoSize = true;
+            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(501, 184);
-            this.Controls.Add(this.reviewer_note);
-            this.Controls.Add(this.reviewer_note_label);
-            this.Controls.Add(this.lblUrl);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.lblStatus);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.panel2);
+            this.Controls.Add(this.panelReviewer);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(517, 150);
             this.Name = "frmInternalRequestFacePhoto";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Internal Request Face Photo";
             this.TopMost = true;
             this.SizeChanged += new System.EventHandler(this.frmInternalRequestFacePhoto_SizeChanged);
+            this.panelReviewer.ResumeLayout(false);
+            this.panelReviewer.PerformLayout();
+            this.panel2.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
         #region Windows Form Designer generated code
@@ -137,5 +164,7 @@
         public System.Windows.Forms.Label lblUrl;
         public System.Windows.Forms.Label reviewer_note_label;
         private System.Windows.Forms.TextBox reviewer_note;
+        private System.Windows.Forms.Panel panelReviewer;
+        private System.Windows.Forms.Panel panel2;
     }
 }

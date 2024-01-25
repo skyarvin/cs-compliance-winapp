@@ -62,6 +62,7 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.refreshToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
@@ -79,12 +80,13 @@
             // 
             // frmLogViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.lblRecordCount);
             this.Controls.Add(this.dgErrorLogs);
             this.Controls.Add(this.menuStrip1);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmLogViewer";
             this.Text = "Log Viewer";

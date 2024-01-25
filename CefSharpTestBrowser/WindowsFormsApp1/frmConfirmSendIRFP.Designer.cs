@@ -68,11 +68,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 14.25F);
             this.label2.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.label2.Location = new System.Drawing.Point(40, 58);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(518, 24);
+            this.label2.Size = new System.Drawing.Size(514, 25);
             this.label2.TabIndex = 6;
             this.label2.Text = "Are you sure you want to send Internal Request Face Photo?";
             // 
@@ -90,8 +90,8 @@
             // 
             // frmConfirmSendIRFP
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(95)))), ((int)(((byte)(167)))));
             this.ClientSize = new System.Drawing.Size(592, 159);
             this.Controls.Add(this.BtnNo);
@@ -99,6 +99,7 @@
             this.Controls.Add(this.lblUrl);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnOk);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

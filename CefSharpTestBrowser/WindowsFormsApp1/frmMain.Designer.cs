@@ -232,7 +232,7 @@
             // lblCountdown
             // 
             this.lblCountdown.Dock = System.Windows.Forms.DockStyle.Right;
-            this.lblCountdown.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblCountdown.Font = new System.Drawing.Font("Segoe UI Semibold", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblCountdown.ForeColor = System.Drawing.Color.White;
             this.lblCountdown.Location = new System.Drawing.Point(354, 0);
             this.lblCountdown.Name = "lblCountdown";
@@ -553,6 +553,7 @@
             this.flpAnnouncementList.AutoScroll = true;
             this.flpAnnouncementList.AutoSize = true;
             this.flpAnnouncementList.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flpAnnouncementList.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.flpAnnouncementList.Location = new System.Drawing.Point(878, 40);
             this.flpAnnouncementList.MaximumSize = new System.Drawing.Size(250, 229);
             this.flpAnnouncementList.MinimumSize = new System.Drawing.Size(250, 25);
@@ -590,14 +591,15 @@
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1128, 517);
             this.Controls.Add(this.lblTierLvlBanner);
             this.Controls.Add(this.flpAnnouncementList);
             this.Controls.Add(this.pnlBrowser);
             this.Controls.Add(this.lblIdStatus);
             this.Controls.Add(this.pnlHeader);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.KeyPreview = true;
             this.Name = "frmMain";
             this.Text = "Compliance Browser";

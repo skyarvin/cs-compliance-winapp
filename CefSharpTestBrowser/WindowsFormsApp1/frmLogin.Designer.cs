@@ -69,7 +69,7 @@
             this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.btnLogin.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLogin.Font = new System.Drawing.Font("Segoe UI", 11.25F);
             this.btnLogin.ForeColor = System.Drawing.Color.White;
             this.btnLogin.Location = new System.Drawing.Point(31, 378);
             this.btnLogin.Name = "btnLogin";
@@ -84,7 +84,7 @@
             this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.btnExit.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnExit.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExit.Font = new System.Drawing.Font("Segoe UI", 11.25F);
             this.btnExit.ForeColor = System.Drawing.Color.White;
             this.btnExit.Location = new System.Drawing.Point(31, 422);
             this.btnExit.Name = "btnExit";
@@ -97,10 +97,11 @@
             // lblVersion
             // 
             this.lblVersion.AutoSize = true;
+            this.lblVersion.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.lblVersion.ForeColor = System.Drawing.Color.White;
             this.lblVersion.Location = new System.Drawing.Point(0, 4);
             this.lblVersion.Name = "lblVersion";
-            this.lblVersion.Size = new System.Drawing.Size(49, 13);
+            this.lblVersion.Size = new System.Drawing.Size(48, 13);
             this.lblVersion.TabIndex = 4;
             this.lblVersion.Text = "v 1.0.0.0";
             // 
@@ -109,7 +110,7 @@
             this.pnlFooter.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(169)))), ((int)(((byte)(23)))));
             this.pnlFooter.Controls.Add(this.lblVersion);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 504);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 501);
             this.pnlFooter.Name = "pnlFooter";
             this.pnlFooter.Size = new System.Drawing.Size(396, 22);
             this.pnlFooter.TabIndex = 6;
@@ -181,10 +182,10 @@
             // 
             // frmLogin
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(396, 526);
+            this.ClientSize = new System.Drawing.Size(396, 523);
             this.Controls.Add(this.txtPwd);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label3);
@@ -195,6 +196,7 @@
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.txtEmail);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

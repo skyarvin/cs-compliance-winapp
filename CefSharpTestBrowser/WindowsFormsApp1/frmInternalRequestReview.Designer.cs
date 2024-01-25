@@ -200,6 +200,7 @@
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.label3);
             this.DoubleBuffered = true;
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "frmInternalRequestReview";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

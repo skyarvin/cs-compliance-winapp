@@ -10,6 +10,7 @@ using CSTool.Class;
 using CSTool.Properties;
 using CSTool.Models;
 using CefSharp.WinForms.Internals;
+using System.Runtime.InteropServices;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -97,7 +98,17 @@ public class MyCustomMenuHandler : IContextMenuHandler
         {
             if (!String.IsNullOrEmpty(parameters.PageUrl))
             {
-                System.Windows.Forms.Clipboard.SetText(parameters.PageUrl) ;
+                try
+                {
+                    System.Windows.Forms.Clipboard.SetText(parameters.PageUrl);
+                }
+                catch (ExternalException)
+                {
+                    Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
+                    {
+                        Globals.ShowMessageDialog(Globals.frmMain, "Copy URL failed.");
+                    });
+                }
             }
             return true;
         }

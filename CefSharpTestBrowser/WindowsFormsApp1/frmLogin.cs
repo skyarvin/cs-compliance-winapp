@@ -122,6 +122,11 @@ namespace WindowsFormsApp1
                 MessageBox.Show("Username or password is incorrect", "Error");
             }
             catch (AggregateException e)
+            {
+                Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
+                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+            }
             catch (Exception e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);

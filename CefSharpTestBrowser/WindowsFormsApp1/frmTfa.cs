@@ -29,7 +29,7 @@ namespace CSTool
         private readonly UserTFA userTfa;
         private string prev_device_id;
         private TFA tfa = new TFA();
-        private int timer =  300;
+        private int timer =  180;
 
         public frmTfa(FormType frmType, UserTFA userTfa)
         {
@@ -220,7 +220,7 @@ namespace CSTool
         private void resetTimer()
         {
             this.resendCodeTimer.Stop();
-            this.timer = 300;
+            this.timer = 180;
         }
 
         private void resendCodeButton_click(object sender, EventArgs e)

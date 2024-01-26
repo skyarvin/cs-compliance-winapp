@@ -121,6 +121,7 @@ namespace WindowsFormsApp1
                 Globals.SaveToLogFile(unauthorize.ToString(), (int)LogType.Error);
                 MessageBox.Show("Username or password is incorrect", "Error");
             }
+            catch (AggregateException e)
             catch (Exception e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);

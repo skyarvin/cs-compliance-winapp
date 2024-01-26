@@ -598,12 +598,7 @@ namespace WindowsFormsApp1
         }
         private void FrmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            Globals.UpdateActivity();
-            Globals.EnableTimer = false;
-
-            UserAccount.UserLogout();
-            Environment.Exit(Environment.ExitCode);
+            Globals.CloseApplication();
             //Application.Exit();
         }
 

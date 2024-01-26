@@ -97,14 +97,15 @@
             // 
             // frmRecoveryCode
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(370, 397);
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.submitRecoveryCodeButton);
             this.Controls.Add(this.recoveryCodeInput);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Font = new System.Drawing.Font("Segoe UI", 8.25F);
             this.Name = "frmRecoveryCode";
             this.Text = "Use Recovery Code";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmTfa_FormClosing);

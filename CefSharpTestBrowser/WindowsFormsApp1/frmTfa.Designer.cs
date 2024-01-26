@@ -72,11 +72,11 @@
             // device_list
             // 
             this.device_list.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.device_list.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.device_list.Font = new System.Drawing.Font("Segoe UI", 12F);
             this.device_list.FormattingEnabled = true;
             this.device_list.Location = new System.Drawing.Point(23, 185);
             this.device_list.Name = "device_list";
-            this.device_list.Size = new System.Drawing.Size(331, 28);
+            this.device_list.Size = new System.Drawing.Size(331, 29);
             this.device_list.TabIndex = 4;
             this.device_list.SelectedIndexChanged += new System.EventHandler(this.device_list_SelectedIndexChanged);
             // 

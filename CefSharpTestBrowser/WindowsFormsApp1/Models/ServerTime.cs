@@ -1,9 +1,9 @@
 ﻿using CSTool.Handlers;
+using CSTool.Class;
 using CSTool.Handlers.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
-using System.Windows.Forms;
 using WindowsFormsApp1;
 
 namespace CSTool.Models
@@ -18,7 +18,7 @@ namespace CSTool.Models
             {
                 try
                 {
-                    var uri = string.Concat(Class.Url.API_URL, "/get_server_time");
+                    var uri = string.Concat(Url.API_URL, "/get_server_time");
                     var response = client.CustomGetAsync(uri).Result;
                     HttpContent data = response.Content;
                     var jsonString = data.ReadAsStringAsync();

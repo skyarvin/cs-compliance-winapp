@@ -17,7 +17,6 @@ using System.Text;
 using System.Net;
 using System.Security.Cryptography;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 
 namespace WindowsFormsApp1
 {

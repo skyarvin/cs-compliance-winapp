@@ -6,7 +6,6 @@ using CSTool.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using WindowsFormsApp1;
 using WindowsFormsApp1.Models;

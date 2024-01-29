@@ -368,16 +368,6 @@ namespace WindowsFormsApp1
             Console.WriteLine("NOW : " + ServerTime.Now());
             Console.WriteLine("UTCNOW : " + ServerTime.UtcNow());
         }
-
-        public static void CloseApplication()
-        {
-            Globals.SaveToLogFile("Application CLOSE", (int)LogType.Activity);
-            Globals.UpdateActivity();
-            Globals.EnableTimer = false;
-
-            UserAccount.UserLogout();
-            Environment.Exit(Environment.ExitCode);
-        }
     }
 
     public enum LogType:int

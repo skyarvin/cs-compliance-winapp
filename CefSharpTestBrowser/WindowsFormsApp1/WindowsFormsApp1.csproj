@@ -234,6 +234,12 @@
     <Compile Include="Class\StaffScreenshot.cs" />
     <Compile Include="Class\FileUtil.cs" />
     <Compile Include="Class\WindowsActivityMonitor.cs" />
+    <Compile Include="frmRecoveryCode.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmRecoveryCode.Designer.cs">
+      <DependentUpon>frmRecoveryCode.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmAnnouncement.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,6 +269,12 @@
     </Compile>
     <Compile Include="frmConfirmSendIRFP.Designer.cs">
       <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmTfa.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTfa.Designer.cs">
+      <DependentUpon>frmTfa.cs</DependentUpon>
     </Compile>
     <Compile Include="frmQA.cs">
       <SubType>Form</SubType>
@@ -345,6 +357,8 @@
       <DependentUpon>frmMessage.cs</DependentUpon>
     </Compile>
     <Compile Include="Globals.cs" />
+    <Compile Include="Handlers\ErrorsHandler\ForbiddenException.cs" />
+    <Compile Include="Handlers\ErrorsHandler\TFARequiredException.cs" />
     <Compile Include="Handlers\ErrorsHandler\UnauthorizeException.cs" />
     <Compile Include="Handlers\FindHandler.cs" />
     <Compile Include="Handlers\Handlers.cs" />
@@ -362,8 +376,10 @@
     <Compile Include="Models\InternalRequestFacePhoto.cs" />
     <Compile Include="Models\InternalRequestReview.cs" />
     <Compile Include="Models\Logger.cs" />
+    <Compile Include="Models\TFA.cs" />
     <Compile Include="Models\Seed.cs" />
     <Compile Include="Models\UserAccount.cs" />
+    <Compile Include="Models\UserTFA.cs" />
     <Compile Include="Models\UserToken.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -382,6 +398,9 @@
     <Content Include="cscb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="frmRecoveryCode.resx">
+      <DependentUpon>frmRecoveryCode.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmInternalIdentificationChecker.resx">
       <DependentUpon>frmInternalIdentificationChecker.cs</DependentUpon>
     </EmbeddedResource>
@@ -390,6 +409,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmConfirmSendIRFP.resx">
       <DependentUpon>frmConfirmSendIRFP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmTfa.resx">
+      <DependentUpon>frmTfa.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmSendInternalIdentificationChecker.resx">
       <DependentUpon>frmSendInternalIdentificationChecker.cs</DependentUpon>
@@ -405,6 +427,8 @@
     <None Include="Resources\announcement-unread-icon.png" />
     <None Include="Resources\announcement-icon.png" />
     <None Include="Resources\tierlvl_change.png" />
+    <Content Include="Resources\eye-hidden.png" />
+    <Content Include="Resources\eye-view.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

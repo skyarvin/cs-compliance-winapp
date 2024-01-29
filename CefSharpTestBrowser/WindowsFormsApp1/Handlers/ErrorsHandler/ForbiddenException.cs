@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace CSTool.Handlers.ErrorsHandler
 {
-    internal class UnauthorizeException: Exception
+    internal class ForbiddenException : Exception
     {
         public HttpContent responseContent;
-        public UnauthorizeException() : base("Invalid token") { }
-        public UnauthorizeException(string message) : base(message) { }
-        public UnauthorizeException(HttpContent responseContent) : base() { 
+        public ForbiddenException() : base("Invalid action") { }
+        public ForbiddenException(string message) : base(message) { }
+        public ForbiddenException(HttpContent responseContent) : base()
+        {
             this.responseContent = responseContent;
         }
     }

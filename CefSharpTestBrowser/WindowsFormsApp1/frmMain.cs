@@ -599,7 +599,7 @@ namespace WindowsFormsApp1
             Globals.UpdateActivity();
             Globals.EnableTimer = false;
 
-            UserAccount.UserLogout();
+            Globals.user_account.UserLogout();
             Environment.Exit(Environment.ExitCode);
             //Application.Exit();
         }

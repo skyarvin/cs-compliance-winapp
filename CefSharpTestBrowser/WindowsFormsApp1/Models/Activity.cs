@@ -29,7 +29,7 @@ namespace CSTool.Models
                 Globals.SaveToLogFile(string.Concat("Save Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.API_URL, "/activity/"); ;
+                    var uri = string.Concat(Url.API_URL, "/activity/");
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
                     if (response.IsSuccessStatusCode)
@@ -62,7 +62,7 @@ namespace CSTool.Models
                 Globals.SaveToLogFile(string.Concat("Update Activity: ", JsonConvert.SerializeObject(this)), (int)LogType.Activity);
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.API_URL, "/activity/", this.id); ;
+                    var uri = string.Concat(Url.API_URL, "/activity/", this.id);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                     var response = client.CustomPutAsync(uri, content).Result;
                     if (response.IsSuccessStatusCode)

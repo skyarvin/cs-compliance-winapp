@@ -77,6 +77,7 @@ namespace WindowsFormsApp1
         public static UserToken UserToken;
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
+        public static UserAccount user_account = new UserAccount();
 
         public static bool ShouldResizeImage(long fileLength)
         {
@@ -360,6 +361,20 @@ namespace WindowsFormsApp1
                 Process.GetCurrentProcess().Kill();
             }
         }
+
+        public static void SaveUserSettings()
+        {
+            if (Globals.user_account.username != Settings.Default.email || (Settings.Default.role != Globals.ComplianceAgent.role))
+            {
+                Settings.Default.irr_id = 0;
+            }
+            Settings.Default.role = Globals.ComplianceAgent.role;
+            Settings.Default.user_type = Globals.user_account.role;
+            Settings.Default.preference = null;
+            Settings.Default.email = Globals.user_account.username;
+            Settings.Default.tier_level = Convert.ToInt32(Globals.ComplianceAgent.tier_level);
+            Settings.Default.Save();
+        }
     }
 
   
@@ -374,4 +389,9 @@ namespace WindowsFormsApp1
         Request_Handler = 6,
     }
 
+    public enum FormType
+    {
+        LoginForm,
+        MainForm
+    }
 }

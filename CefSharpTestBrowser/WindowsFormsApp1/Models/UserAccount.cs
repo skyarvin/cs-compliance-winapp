@@ -16,27 +16,21 @@ using System.Security.Principal;
 using CSTool.Properties;
 using CSTool.Handlers.Interfaces;
 using CSTool.Handlers.ErrorsHandler;
+using Newtonsoft.Json.Linq;
 
 namespace CSTool.Models
 {
-    public static class UserAccount
+    public class UserAccount
     {
-        //public int id { get; set; }
-        //public string username { get; set; }
-        //public string password { get; set; }
-
-        /// <summary>
-        /// API get to fetch account from  User pool
-        /// </summary>
-        /// <returns></returns>
-
-        public static bool UserLogin(string username, string password)
+        public string username;
+        public string role;
+        public UserToken UserLogin(string password)
         {
             try
             {
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.AUTH_URL, "/login");
+                    var uri = string.Concat(Url.AUTH_URL, "/login/");
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(new
                     {
@@ -44,37 +38,76 @@ namespace CSTool.Models
                         password
                     }), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
-                    if (response.IsSuccessStatusCode)
+                    if (response.StatusCode == System.Net.HttpStatusCode.Accepted)
                     {
                         using (HttpContent data = response.Content)
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
-                            var tokens = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
-                            Globals.UserToken = new UserToken
+                            UserTFA result = JsonConvert.DeserializeObject<UserTFA>(jsonString.Result);
+                            UserTFA userTfa = new UserTFA
                             {
-                                access_token = tokens.access_token,
-                                refresh_token = tokens.refresh_token,
+                                user_id = result.user_id,
+                                devices = result.devices,
+                                nonce = result.nonce,
                             };
-                            return true;
+                            throw new TFARequiredException(userTfa);
                         }
                     }
-                    return false; 
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                    {
+                        using (HttpContent data = response.Content)
+                        {
+                            var jsonString = data.ReadAsStringAsync();
+                            jsonString.Wait();
+                            UserToken result = JsonConvert.DeserializeObject<UserToken>(jsonString.Result);
+                            Globals.UserToken = new UserToken
+                            {
+                                access_token = result.access_token,
+                                refresh_token = result.refresh_token,
+                            };
+                            return result;
+                        }
+                    }
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.SeeOther)
+                    {
+                        var headers = response.Headers;
+                        string redirectUrl;
+                        IEnumerable<string> values;
+                        
+                        if (headers.TryGetValues("Redirect", out values)) 
+                        {
+                            redirectUrl = values.First();
+                        } 
+                        else
+                        {
+                            return null;
+                        }
+
+                        throw new TfaRegistrationRequiredException(redirectUrl);
+                    }
+                    return null; 
                 }
             }
-            catch
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException unauthorize)
             {
-                return false;
+                throw unauthorize;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
-        public static bool UserLogout()
+        public bool UserLogout()
         {
             try
             {
                 using (IHttpHandler client = new HttpHandler())
                 {
-                    var uri = string.Concat(Url.AUTH_URL, "/logout");
+                    var uri = string.Concat(Url.AUTH_URL, "/logout/");
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var response = client.CustomPostAsync(uri).Result;
                     return response.IsSuccessStatusCode;

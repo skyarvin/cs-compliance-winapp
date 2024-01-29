@@ -1910,7 +1910,7 @@ namespace WindowsFormsApp1
         {
             Emailer email = new Emailer();
             email.subject = "Agent PC DATE/TIME modification";
-            email.message = string.Concat("Agent Name : " + Globals.ComplianceAgent.name + "\n" + "Agent ID : " + Globals.ComplianceAgent.id + "\n" + "Agent Time : " + DateTime.Now);
+            email.message = string.Concat("Agent Name : " + Globals.ComplianceAgent.name + "\n" + "Agent ID : " + Globals.ComplianceAgent.id + "\n" + "Agent Time : " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
             email.Send();
 
             TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());

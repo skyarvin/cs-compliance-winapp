@@ -1921,12 +1921,10 @@ namespace WindowsFormsApp1
             {
                 if (last_action.TotalMilliseconds > 0)
                 {
-                    Console.WriteLine("POSITIVE : ");
                     Globals.StartTime_LastAction = ServerTime.Now() - last_action;
                 }
                 else
                 {
-                    Console.WriteLine("NEGATIVE : ");
                     Globals.StartTime_LastAction = ServerTime.Now() + last_action;
                 }
             }

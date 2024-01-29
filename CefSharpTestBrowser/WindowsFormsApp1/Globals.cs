@@ -364,9 +364,6 @@ namespace WindowsFormsApp1
         public static void ServerTimeSync()
         {
             Globals.timeOffset = new ServerTime().GetTimeOffset();
-            Console.WriteLine("OFFSET : " + Globals.timeOffset);
-            Console.WriteLine("NOW : " + ServerTime.Now());
-            Console.WriteLine("UTCNOW : " + ServerTime.UtcNow());
         }
     }
 

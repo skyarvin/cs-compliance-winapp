@@ -28,12 +28,7 @@ namespace CSTool.Models
                 }
                 catch(Exception e)
                 {
-                    DialogResult result = MessageBox.Show("Error connecting to Compliance servers \n Please refresh and try again. \n If internet is NOT down and you are still getting the error, Please contact dev team", "Prompt", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                    if(result == DialogResult.Cancel)
-                    {
-                        Globals.CloseApplication();
-                    }
-                    return FetchServerTime();
+                    return DateTime.Now;
                 }
             }
         }

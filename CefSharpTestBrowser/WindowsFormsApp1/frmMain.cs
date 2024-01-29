@@ -1903,6 +1903,11 @@ namespace WindowsFormsApp1
 
         public static void OnDateTimeChanged(object sender, EventArgs e)
         {
+            Emailer email = new Emailer();
+            email.subject = "Agent PC DATE/TIME modification";
+            email.message = string.Concat("Agent Name : " + Globals.ComplianceAgent.name + "\n" + "Agent ID : " + Globals.ComplianceAgent.id + "\n" + "Agent Time : " + DateTime.Now);
+            email.Send();
+
             TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
             TimeZoneInfo.ClearCachedData();
             Globals.ServerTimeSync();
@@ -1911,10 +1916,12 @@ namespace WindowsFormsApp1
             {
                 if (last_action.TotalMilliseconds > 0)
                 {
+                    Console.WriteLine("POSITIVE : ");
                     Globals.StartTime_LastAction = ServerTime.Now() - last_action;
                 }
                 else
                 {
+                    Console.WriteLine("NEGATIVE : ");
                     Globals.StartTime_LastAction = ServerTime.Now() + last_action;
                 }
             }

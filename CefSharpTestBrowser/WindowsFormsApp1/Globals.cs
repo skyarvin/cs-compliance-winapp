@@ -151,6 +151,9 @@ namespace WindowsFormsApp1
                     case (int)LogType.Request_Handler:
                         logFilePath = @path + "request_handler.txt";
                         break;
+                    case (int)LogType.DateTime_Handler:
+                        logFilePath = path + "datetime_handler.txt";
+                        break;
                 }
 
                 FileInfo logFileInfo = new FileInfo(logFilePath);
@@ -389,6 +392,7 @@ namespace WindowsFormsApp1
         Activity = 4,
         UserClick = 5,
         Request_Handler = 6,
+        DateTime_Handler = 7,
     }
 
     public enum FormType

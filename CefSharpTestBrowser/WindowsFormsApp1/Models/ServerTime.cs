@@ -28,6 +28,7 @@ namespace CSTool.Models
                 }
                 catch(Exception e)
                 {
+                    Globals.SaveToLogFile(String.Concat("Failed to Fetch Time: ", e), (int)LogType.DateTime_Handler);
                     return DateTime.Now;
                 }
             }

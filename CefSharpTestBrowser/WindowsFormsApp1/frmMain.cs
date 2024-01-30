@@ -1930,6 +1930,8 @@ namespace WindowsFormsApp1
                 "\nAgent ID: ", Globals.ComplianceAgent.id,
                 "\nAgent Time: ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
             email.Send();
+
+            Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
         }
     }
 }

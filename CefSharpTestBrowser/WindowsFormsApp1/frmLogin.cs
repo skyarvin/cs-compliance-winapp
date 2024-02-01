@@ -14,6 +14,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Management;
+using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
@@ -27,6 +28,10 @@ namespace WindowsFormsApp1
         public frmLogin()
         {
             InitializeComponent();
+            var hostname = Dns.GetHostName();
+            IPAddress[] addresses = Dns.GetHostAddresses(hostname);
+            Console.WriteLine($"GetHostAddresses({hostname}) returns:", addresses[0]);
+
             lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());
             GenerateDeviceIdentifier();
         }

@@ -101,10 +101,15 @@ namespace CSTool.Handlers
             DefaultRequestHeaders.Add("Staffme-Authorization", Globals.apiKey);
             if (!public_routes.Contains(new Uri(requestUri).AbsolutePath))
             {
+                Console.WriteLine("testtest : " + requestUri);
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
 
-            DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
+            RegistryKey localMachine = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey windowsNTKey = localMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion");
+            var productID = windowsNTKey.GetValue("ProductId");
+            DefaultRequestHeaders.Add("Device-Id", $"{productID}");
+            DefaultRequestHeaders.Add("Ip-Address", $"{productID}");
         }
     }
 }

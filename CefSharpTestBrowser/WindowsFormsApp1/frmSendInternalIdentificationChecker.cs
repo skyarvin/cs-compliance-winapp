@@ -74,7 +74,7 @@ namespace WindowsFormsApp1
                 agent_id = Globals.Profile.AgentID,
                 agent_notes = txtNotes.Text,
                 agent_uploaded_photo = imagePath,
-                duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds)
+                duration = (int)((ServerTime.Now() - (DateTime)start_time).TotalSeconds)
             };
 
             var result = internalIdentificationChecker.Save();

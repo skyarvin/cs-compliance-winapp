@@ -33,7 +33,7 @@ namespace CSTool.Class
                     {
                         Data = JsonData,
                         Action = action,
-                        Created_at = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
+                        Created_at = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss")
                     });
             }
         }

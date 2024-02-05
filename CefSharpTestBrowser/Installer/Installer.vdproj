@@ -1719,6 +1719,11 @@
             "AssemblyAsmDisplayName" = "8:COMPLIANCE_TOOL, Version=6.0.0.1, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_21FCE984A3B8461C97071A34AA469322"
+                    {
+                    "Name" = "8:COMPLIANCE_TOOL.exe"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\WindowsFormsApp1\\bin\\x86\\Release\\app.publish\\COMPLIANCE_TOOL.exe"
             "TargetName" = "8:"
@@ -2273,6 +2278,11 @@
             "AssemblyAsmDisplayName" = "8:CefSharp.BrowserSubprocess.Core, Version=119.4.30.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_5C30444F298468C98BC1812343A91937"
+                    {
+                    "Name" = "8:CefSharp.BrowserSubprocess.Core.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CefSharp.BrowserSubprocess.Core.dll"
             "TargetName" = "8:"
@@ -2339,6 +2349,11 @@
             "AssemblyAsmDisplayName" = "8:UserInactivityMonitoring, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_68DBEB5104A34E42A45A5B4D5D24E55F"
+                    {
+                    "Name" = "8:UserInactivityMonitoring.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\WindowsFormsApp1\\bin\\x86\\Release\\UserInactivityMonitoring.dll"
             "TargetName" = "8:"
@@ -2811,6 +2826,11 @@
             "AssemblyAsmDisplayName" = "8:CefSharp.BrowserSubprocess, Version=119.4.30.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_85DBED10A6BC45368802F49AFD91A307"
+                    {
+                    "Name" = "8:CefSharp.BrowserSubprocess.exe"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\WindowsFormsApp1\\bin\\x86\\Release\\CefSharp.BrowserSubprocess.exe"
             "TargetName" = "8:"
@@ -4066,15 +4086,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSTool"
-        "ProductCode" = "8:{14B0338E-815B-4A6D-B638-8BAD370781E7}"
-        "PackageCode" = "8:{03257EDB-586A-44FA-8696-3063464EE921}"
+        "ProductCode" = "8:{0C783676-D1FD-4854-A78A-DBB795A84FF9}"
+        "PackageCode" = "8:{725CF3FA-7231-4319-A4F7-887F3BFCE28D}"
         "UpgradeCode" = "8:{E3D5D40B-6234-4CCB-832E-98F8206BE10A}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:6.0.1"
+        "ProductVersion" = "8:6.0.2"
         "Manufacturer" = "8:Staffme"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -4545,7 +4565,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FED9E810F53548D49DAE1ED908E8AC96"
             {
-            "SourcePath" = "8:..\\WindowsFormsApp1\\obj\\x86\\Release\\COMPLIANCE_TOOL.exe"
+            "SourcePath" = "8:..\\WindowsFormsApp1\\obj\\x86\\Debug\\COMPLIANCE_TOOL.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0CDCD8ED2B364C83BAF51C37929BF68A"

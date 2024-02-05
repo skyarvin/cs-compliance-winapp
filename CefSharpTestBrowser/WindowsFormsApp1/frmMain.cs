@@ -783,23 +783,26 @@ namespace WindowsFormsApp1
 
                 try
                 {
-                    if (Globals.CurrentUrl == Globals.LastSuccessUrl)
+                    if (logData.actual_end_time != logData.actual_start_time)
                     {
-                        logData.id = Globals.LAST_SUCCESS_ID;
-                        if (logData.id != 0)
+                        if (Globals.CurrentUrl == Globals.LastSuccessUrl)
                         {
-                            logData.Update();
+                            logData.id = Globals.LAST_SUCCESS_ID;
+                            if (logData.id != 0)
+                            {
+                                logData.Update();
+                            }
+                            else
+                            {
+                                var result = logData.Save();
+                                Globals.LAST_SUCCESS_ID = result.id;
+                            }
                         }
                         else
                         {
                             var result = logData.Save();
                             Globals.LAST_SUCCESS_ID = result.id;
                         }
-                    }
-                    else
-                    {
-                        var result = logData.Save();
-                        Globals.LAST_SUCCESS_ID = result.id;
                     }
 
                     if (element_id == Action.SetExpiration.Value || element_id == Action.ChangeGender.Value)

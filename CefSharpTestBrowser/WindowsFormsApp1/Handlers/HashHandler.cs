@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Security.Cryptography;
+using WindowsFormsApp1;
 
 namespace CSTool.Handlers
 {
     internal class HashHandler
     {
-        private static string salt = "k@39JRdNUF63Usf5";
         public static string GetHash(string text)
         {
 
             using (var sha = new SHA256Managed())
             {
-                byte[] textBytes = System.Text.Encoding.UTF8.GetBytes(text + salt);
+                byte[] textBytes = System.Text.Encoding.UTF8.GetBytes(text + Globals.salt);
                 byte[] hashBytes = sha.ComputeHash(textBytes);
 
                 string hash = BitConverter

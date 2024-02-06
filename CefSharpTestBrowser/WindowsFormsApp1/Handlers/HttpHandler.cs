@@ -131,9 +131,7 @@ namespace CSTool.Handlers
 
                 var finalDeviceId = $"{processorId}-{diskSerialNumber}-{productID}";
                 Globals.device_identifier = HashHandler.GetHash(finalDeviceId);
-                Console.WriteLine("INSIDE HASHING");
             }
-            Console.WriteLine("OUTSIDE HASHING");
             DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
         }
     }

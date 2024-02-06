@@ -108,27 +108,33 @@ namespace CSTool.Handlers
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
 
-            var proccessor = new ManagementObjectSearcher("select ProcessorId from Win32_Processor");
-            var diskDrive = new ManagementObjectSearcher("select SerialNumber from Win32_DiskDrive");
-            string processorId = "";
-            string diskSerialNumber = "";
-
-            foreach (ManagementObject share in diskDrive.Get()) 
+            if(Globals.device_identifier == "")
             {
-                processorId = share["SerialNumber"].ToString();
-            }
-            
-            foreach (ManagementObject share in proccessor.Get())
-            {
-                diskSerialNumber =  share["ProcessorId"].ToString();
-            }
+                var proccessor = new ManagementObjectSearcher("select ProcessorId from Win32_Processor");
+                var diskDrive = new ManagementObjectSearcher("select SerialNumber from Win32_DiskDrive");
+                string processorId = "";
+                string diskSerialNumber = "";
 
-            RegistryKey localMachine = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
-            RegistryKey windowsNTKey = localMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion");
-            var productID = windowsNTKey.GetValue("ProductId");
+                foreach (ManagementObject share in diskDrive.Get())
+                {
+                    processorId = share["SerialNumber"].ToString();
+                }
 
-            var finalDeviceId = $"{processorId}-{diskSerialNumber}-{productID}";
-            DefaultRequestHeaders.Add("Device-Id", $"{finalDeviceId}");
+                foreach (ManagementObject share in proccessor.Get())
+                {
+                    diskSerialNumber = share["ProcessorId"].ToString();
+                }
+
+                RegistryKey localMachine = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
+                RegistryKey windowsNTKey = localMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion");
+                var productID = windowsNTKey.GetValue("ProductId");
+
+                var finalDeviceId = $"{processorId}-{diskSerialNumber}-{productID}";
+                Globals.device_identifier = HashHandler.GetHash(finalDeviceId);
+                Console.WriteLine("INSIDE HASHING");
+            }
+            Console.WriteLine("OUTSIDE HASHING");
+            DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
         }
     }
 }

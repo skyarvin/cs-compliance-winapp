@@ -78,7 +78,7 @@ namespace WindowsFormsApp1
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
         public static UserAccount user_account = new UserAccount();
-
+        public static string device_identifier = "";
         public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;

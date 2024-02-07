@@ -14,9 +14,7 @@ namespace CSTool.Handlers
                 byte[] textBytes = System.Text.Encoding.UTF8.GetBytes(text + Globals.salt);
                 byte[] hashBytes = sha.ComputeHash(textBytes);
 
-                string hash = BitConverter
-                    .ToString(hashBytes)
-                    .Replace("-", String.Empty);
+                string hash = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
 
                 return hash;
             }

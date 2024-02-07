@@ -12,7 +12,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WindowsFormsApp1;
-using System.Management;
 
 namespace CSTool.Handlers
 {
@@ -105,30 +104,6 @@ namespace CSTool.Handlers
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
 
-            if(Globals.device_identifier == "")
-            {
-                var proccessor = new ManagementObjectSearcher("select ProcessorId from Win32_Processor");
-                var diskDrive = new ManagementObjectSearcher("select SerialNumber from Win32_DiskDrive");
-                string processorId = "";
-                string diskSerialNumber = "";
-
-                foreach (ManagementObject share in diskDrive.Get())
-                {
-                    processorId = share["SerialNumber"].ToString();
-                }
-
-                foreach (ManagementObject share in proccessor.Get())
-                {
-                    diskSerialNumber = share["ProcessorId"].ToString();
-                }
-
-                RegistryKey localMachine = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
-                RegistryKey windowsNTKey = localMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion");
-                var productID = windowsNTKey.GetValue("ProductId");
-
-                var deviceId = $"{processorId}-{diskSerialNumber}-{productID}";
-                Globals.device_identifier = HashHandler.GetHash(deviceId);
-            }
             DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
         }
     }

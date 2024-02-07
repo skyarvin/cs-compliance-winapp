@@ -190,6 +190,10 @@ namespace CSTool
 
             browser.GetMainFrame().EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
+                    if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
+                        bound.displayTierBtn();
+                    }
+
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                         $(this).attr('buttonClicked', true);
 
@@ -282,12 +286,6 @@ namespace CSTool
                     {
                         bound.saveAsBounce();
                     }
-
-                    if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0)
-                    {
-                        bound.displayTierBtn();
-                    }
-                    
 
                     var followRaw = $('#room_info').children().eq(2).text();
                     bound.showTierLevelBanner(followRaw);

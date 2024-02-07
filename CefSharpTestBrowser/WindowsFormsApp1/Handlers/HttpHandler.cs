@@ -126,8 +126,8 @@ namespace CSTool.Handlers
                 RegistryKey windowsNTKey = localMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion");
                 var productID = windowsNTKey.GetValue("ProductId");
 
-                var finalDeviceId = $"{processorId}-{diskSerialNumber}-{productID}";
-                Globals.device_identifier = HashHandler.GetHash(finalDeviceId);
+                var deviceId = $"{processorId}-{diskSerialNumber}-{productID}";
+                Globals.device_identifier = HashHandler.GetHash(deviceId);
             }
             DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
         }

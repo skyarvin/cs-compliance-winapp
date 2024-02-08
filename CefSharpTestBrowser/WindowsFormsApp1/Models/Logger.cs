@@ -54,7 +54,6 @@ namespace WindowsFormsApp1.Models
                     client.Timeout = TimeSpan.FromSeconds(5);
                     var content = new StringContent(JsonConvert.SerializeObject(this), Encoding.UTF8, "application/json");
                     var response = client.CustomPostAsync(uri, content).Result;
-
                     if (response.IsSuccessStatusCode)
                     {
                         using (HttpContent data = response.Content)
@@ -71,7 +70,7 @@ namespace WindowsFormsApp1.Models
                     }
                 }
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException || e.InnerException is ForbiddenException)
             {
                 this.SaveLogAction("Save");
                 Globals.SessionExpired();
@@ -101,7 +100,7 @@ namespace WindowsFormsApp1.Models
                     }
                 }
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException || e.InnerException is ForbiddenException)
             {
                 this.SaveLogAction("Update");
                 Globals.SessionExpired();

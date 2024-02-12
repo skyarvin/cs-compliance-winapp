@@ -46,7 +46,8 @@ namespace WindowsFormsApp1
         public static Activity activity = new Activity();
         public static ChromiumWebBrowser chromeBrowser;
         public static ChromiumWebBrowser chromePopup;
-        public static string apiKey = "0a36fe1f051303b2029b25fd7a699cfcafb8e4619ddc10657ef8b32ba159e674";
+        public static string apiKey = CSTool.settings.apiKey;
+        public static string salt = CSTool.settings.salt;
         public static int LAST_SUCCESS_ID;
         public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds 600
         public static int SIXTY_MINUTES_IDLE_TIME = 60;//60 minutes 
@@ -80,6 +81,7 @@ namespace WindowsFormsApp1
         public static UserAccount user_account = new UserAccount();
         public static TimeSpan timeOffset = new TimeSpan();
 
+        public static string device_identifier = "";
         public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;

@@ -1,9 +1,11 @@
 ﻿using CSTool;
 using CSTool.Class;
+using CSTool.Handlers;
 using CSTool.Handlers.ErrorsHandler;
 using CSTool.Handlers.Interfaces;
 using CSTool.Models;
 using CSTool.Properties;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +13,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Management;
 using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
@@ -25,6 +28,7 @@ namespace WindowsFormsApp1
         {
             InitializeComponent();
             lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());
+            GenerateDeviceIdentifier();
         }
         private void FrmLogin_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -228,6 +232,32 @@ namespace WindowsFormsApp1
             eyeViewPictureBox.Image = CSTool.Properties.Resources.eye_view;
             seePass = true;
             txtPwd.UseSystemPasswordChar = false;
+        }
+
+        private void GenerateDeviceIdentifier()
+        {
+            var diskDrive = new ManagementObjectSearcher("select SerialNumber from Win32_DiskDrive");
+            var processor = new ManagementObjectSearcher("select ProcessorId from Win32_Processor");
+
+            string diskSerialNumber = "";
+            string processorId = "";
+
+            foreach (ManagementObject share in diskDrive.Get())
+            {
+                diskSerialNumber = share["SerialNumber"].ToString();
+            }
+
+            foreach (ManagementObject share in processor.Get())
+            {
+                processorId = share["ProcessorId"].ToString();
+            }
+
+            RegistryKey localMachine = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
+            RegistryKey windowsNTKey = localMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion");
+            var productID = windowsNTKey.GetValue("ProductId");
+
+            var deviceId = $"{processorId}-{diskSerialNumber}-{productID}";
+            Globals.device_identifier = HashHandler.GetHash(deviceId);
         }
     }
 }

@@ -3,6 +3,7 @@ using CSTool.Class;
 using CSTool.Handlers.ErrorsHandler;
 using CSTool.Handlers.Interfaces;
 using CSTool.Models;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -102,6 +103,8 @@ namespace CSTool.Handlers
             {
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
+
+            DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
         }
     }
 }

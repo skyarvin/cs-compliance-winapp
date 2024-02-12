@@ -8,6 +8,7 @@ using WindowsFormsApp1;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Security.Claims;
+using CSTool.Models;
 
 namespace CSTool.Handlers
 {
@@ -32,7 +33,7 @@ namespace CSTool.Handlers
 
         private static double GetTokenAgeMinutes(long issuedAt)
         {
-            DateTime dateTimeNow = DateTime.Now;
+            DateTime dateTimeNow = ServerTime.Now();
             DateTime dateTimeOffset = UnixTimeStampToDateTime(issuedAt);
             return (dateTimeNow - dateTimeOffset).TotalMinutes;
         }

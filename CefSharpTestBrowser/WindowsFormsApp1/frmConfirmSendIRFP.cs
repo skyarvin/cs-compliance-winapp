@@ -30,7 +30,7 @@ namespace CSTool
             {
                 url = Globals.CurrentUrl,
                 agent_id = Globals.Profile.AgentID,
-                duration = (int)((DateTime.Now - (DateTime)start_time).TotalSeconds),
+                duration = (int)((ServerTime.Now() - (DateTime)start_time).TotalSeconds),
             };
 
             var result = irfp.Save();

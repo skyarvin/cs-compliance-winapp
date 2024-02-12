@@ -64,7 +64,7 @@ namespace WindowsFormsApp1
         public static bool ForceHideComliance = true;
         public static int max_room_duration = 48;
         public static int room_duration;
-        public static DateTime? StartTime_LastAction;
+        public static DateTime? StartTime_LastAction = new DateTime();
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
         public static InternalRequestFacePhoto INTERNAL_IRFP = new InternalRequestFacePhoto();
         public static InternalIdentificationChecker INTERNAL_IIDC = new InternalIdentificationChecker();
@@ -79,6 +79,8 @@ namespace WindowsFormsApp1
         public static object sharedRefreshLock = new object();
         public static object sharedRequestLock = new object();
         public static UserAccount user_account = new UserAccount();
+        public static TimeSpan timeOffset = new TimeSpan();
+
         public static string device_identifier = "";
         public static bool ShouldResizeImage(long fileLength)
         {
@@ -130,7 +132,7 @@ namespace WindowsFormsApp1
             try
             {
                 string logFilePath = "";
-                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/CsTool/logs/", DateTime.Now.ToString("MM-dd-yyyy"), "/"));
+                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("/CsTool/logs/", ServerTime.Now().ToString("MM-dd-yyyy"), "/"));
                 switch (logtype)
                 {
                     case (int)LogType.Action:
@@ -151,6 +153,9 @@ namespace WindowsFormsApp1
                     case (int)LogType.Request_Handler:
                         logFilePath = @path + "request_handler.txt";
                         break;
+                    case (int)LogType.DateTime_Handler:
+                        logFilePath = path + "datetime_handler.txt";
+                        break;
                 }
 
                 FileInfo logFileInfo = new FileInfo(logFilePath);
@@ -160,7 +165,7 @@ namespace WindowsFormsApp1
                 {
                     using (StreamWriter log = new StreamWriter(fileStream))
                     {
-                        log.WriteLine(DateTime.Now.ToString());
+                        log.WriteLine(ServerTime.Now().ToString());
                         log.WriteLine(logText);
                         log.Write(System.Environment.NewLine);
                         log.Close();
@@ -210,9 +215,9 @@ namespace WindowsFormsApp1
         {
             try
             {
-                Globals.activity.start_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                Globals.activity.start_time = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss");
                 Globals.activity.agent_id = Globals.ComplianceAgent.id;
-                Globals.activity.work_date = DateTime.Now.Date.ToString("yyyy-MM-dd"); //Globals.ComplianceAgent.review_date;
+                Globals.activity.work_date = ServerTime.Now().Date.ToString("yyyy-MM-dd"); //Globals.ComplianceAgent.review_date;
                 Globals.activity.Save();
             }
             catch (AggregateException e)
@@ -236,7 +241,7 @@ namespace WindowsFormsApp1
             {
                 if (Globals.activity.id.HasValue)
                 {
-                    Globals.activity.end_time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                    Globals.activity.end_time = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss");
                     Globals.activity.Update();
                 }
                 else
@@ -297,8 +302,6 @@ namespace WindowsFormsApp1
             if (Globals.IsServer())
             {
                 ServerAsync.SendToAll(new PairCommand { Action = "PARTNER_LIST", Message = Globals.PartnerAgents });
-               
-           
             }
             else if (Globals.IsClient())
             {
@@ -376,9 +379,12 @@ namespace WindowsFormsApp1
             Settings.Default.tier_level = Convert.ToInt32(Globals.ComplianceAgent.tier_level);
             Settings.Default.Save();
         }
-    }
 
-  
+        public static void ServerTimeSync()
+        {
+            Globals.timeOffset = new ServerTime().GetTimeOffset();
+        }
+    }
 
     public enum LogType:int
     {
@@ -388,6 +394,7 @@ namespace WindowsFormsApp1
         Activity = 4,
         UserClick = 5,
         Request_Handler = 6,
+        DateTime_Handler = 7,
     }
 
     public enum FormType

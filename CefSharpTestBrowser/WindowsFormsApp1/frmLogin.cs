@@ -14,7 +14,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Management;
-using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using WindowsFormsApp1.Models;
@@ -258,7 +257,10 @@ namespace WindowsFormsApp1
             var productID = windowsNTKey.GetValue("ProductId");
 
             var deviceId = $"{processorId}-{diskSerialNumber}-{productID}";
+            var operatingSystem = windowsNTKey.GetValue("ProductName");
+
             Globals.device_identifier = HashHandler.GetHash(deviceId);
+            Globals.operating_system = operatingSystem.ToString();
         }
     }
 }

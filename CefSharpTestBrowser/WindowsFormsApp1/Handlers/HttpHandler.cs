@@ -104,12 +104,8 @@ namespace CSTool.Handlers
                 DefaultRequestHeaders.Add("Authorization", Globals.UserToken.access_token);
             }
 
-            RegistryKey localMachine = RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, RegistryView.Registry64);
-            RegistryKey windowsNTKey = localMachine.OpenSubKey(@"Software\Microsoft\Windows NT\CurrentVersion");
-            var productID = windowsNTKey.GetValue("ProductId");
-            var operatingSystem = windowsNTKey.GetValue("ProductName");
-            DefaultRequestHeaders.Add("Device-Id", $"{productID}");
-            DefaultRequestHeaders.Add("OS", $"{operatingSystem}");
+            DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
+            DefaultRequestHeaders.Add("OS", $"{Globals.operating_system}");
         }
     }
 }

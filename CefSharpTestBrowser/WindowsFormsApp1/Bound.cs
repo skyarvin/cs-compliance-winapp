@@ -48,6 +48,10 @@ namespace CSTool
 
             browser.ExecuteScriptAsync(@"
                    window.onload = function(e) {
+                        if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
+                            bound.displayTierBtn();
+                        }
+
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                             $(this).attr('buttonClicked', true);
 

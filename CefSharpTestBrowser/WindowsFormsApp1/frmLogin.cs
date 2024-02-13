@@ -28,10 +28,6 @@ namespace WindowsFormsApp1
         public frmLogin()
         {
             InitializeComponent();
-            var hostname = Dns.GetHostName();
-            IPAddress[] addresses = Dns.GetHostAddresses(hostname);
-            Console.WriteLine($"GetHostAddresses({hostname}) returns:", addresses[0]);
-
             lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());
             GenerateDeviceIdentifier();
         }

@@ -1646,29 +1646,32 @@ namespace WindowsFormsApp1
             }
         }
 
-        private bool isTierLevelNumeric()
+        private bool isTierLevelNumeric(string url)
         {
             return int.TryParse(getUrlSegment().TrimEnd('/'), out _);
         }
 
-        private int getCurrentTier()
+        private int getCurrentTier(string url)
         {
             return int.Parse(getUrlSegment().TrimEnd('/'));
         }
 
-        public void showNextTierLevelBtn()
+        public void showNextTierLevelBtn(string url)
         {
-            if (isTierLevelNumeric())
+            if (isTierLevelNumeric(url))
             {
-                bool should_show_button = getCurrentTier() != 1;
+                bool should_show_button = getCurrentTier(url) != 1;
                 this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = should_show_button);
             }
         }
 
         private void btnDecreaseTierLevel_Click(object sender, EventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", getCurrentTier() - 1));
+            if (isTierLevelNumeric(Globals.CurrentUrl))
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", getCurrentTier(Globals.CurrentUrl) - 1));
+                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
+            }
         }
 
         public void ShowRequestPhotoAndApproveButton()

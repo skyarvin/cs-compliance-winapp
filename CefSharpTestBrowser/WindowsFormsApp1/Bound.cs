@@ -49,7 +49,7 @@ namespace CSTool
             browser.ExecuteScriptAsync(@"
                    window.onload = function(e) {
                         if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
-                            bound.displayTierBtn();
+                            bound.displayTierBtn(window.location.href);
                         }
 
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
@@ -194,10 +194,6 @@ namespace CSTool
 
             browser.GetMainFrame().EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
-                    if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
-                        bound.displayTierBtn();
-                    }
-
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                         $(this).attr('buttonClicked', true);
 
@@ -415,9 +411,9 @@ namespace CSTool
                 Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
             }
         }
-        public void DisplayTierBtn()
+        public void DisplayTierBtn(string url)
         {
-            Globals.frmMain.showNextTierLevelBtn();
+            Globals.frmMain.showNextTierLevelBtn(url);
         }
 
         public void OnClicked(string id)

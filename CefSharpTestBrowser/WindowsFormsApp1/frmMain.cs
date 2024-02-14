@@ -32,6 +32,7 @@ namespace WindowsFormsApp1
     public partial class frmMain : Form
     {
         private const int DISABLE_CLOSE_BUTTON = 0x200;
+        private int current_tier = (int)Globals.ComplianceAgent.tier_level;
         private Timer _timer;
         private string LastSucessAction;
         public DateTime StartTime_BrowserChanged;
@@ -617,6 +618,7 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
+            this.current_tier = (int)Globals.ComplianceAgent.tier_level;
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
@@ -1632,46 +1634,17 @@ namespace WindowsFormsApp1
                 bgWorkAnnouncement.RunWorkerAsync();
         }
 
-        public string getUrlSegment()
+        public void showNextTierLevelBtn()
         {
-            try
-            {
-                Uri uri = new Uri(Globals.CurrentUrl);
-                string[] segments = uri.Segments;
-                return segments[2];
-            }
-            catch
-            {
-                return "";
-            }
-        }
-
-        private bool isTierLevelNumeric(string url)
-        {
-            return int.TryParse(getUrlSegment().TrimEnd('/'), out _);
-        }
-
-        private int getCurrentTier(string url)
-        {
-            return int.Parse(getUrlSegment().TrimEnd('/'));
-        }
-
-        public void showNextTierLevelBtn(string url)
-        {
-            if (isTierLevelNumeric(url))
-            {
-                bool should_show_button = getCurrentTier(url) != 1;
-                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = should_show_button);
-            }
+            this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = true);
         }
 
         private void btnDecreaseTierLevel_Click(object sender, EventArgs e)
         {
-            if (isTierLevelNumeric(Globals.CurrentUrl))
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", getCurrentTier(Globals.CurrentUrl) - 1));
-                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
-            }
+            if (this.current_tier != 1)
+                this.current_tier = this.current_tier - 1;
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+            this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
         }
 
         public void ShowRequestPhotoAndApproveButton()

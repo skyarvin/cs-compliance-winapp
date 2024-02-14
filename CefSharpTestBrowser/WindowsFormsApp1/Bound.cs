@@ -49,7 +49,7 @@ namespace CSTool
             browser.ExecuteScriptAsync(@"
                    window.onload = function(e) {
                         if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
-                            bound.displayTierBtn(window.location.href);
+                            bound.displayTierBtn();
                         }
 
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
@@ -411,9 +411,9 @@ namespace CSTool
                 Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
             }
         }
-        public void DisplayTierBtn(string url)
+        public void DisplayTierBtn()
         {
-            Globals.frmMain.showNextTierLevelBtn(url);
+            Globals.frmMain.showNextTierLevelBtn();
         }
 
         public void OnClicked(string id)

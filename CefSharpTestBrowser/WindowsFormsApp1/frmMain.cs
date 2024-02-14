@@ -619,7 +619,7 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", Globals.ComplianceAgent.tier_level));
+            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -1636,14 +1636,14 @@ namespace WindowsFormsApp1
 
         public void showNextTierLevelBtn()
         {
-            this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = true);
+            if (this.current_tier != 1)
+                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = true);
         }
 
         private void btnDecreaseTierLevel_Click(object sender, EventArgs e)
         {
-            if (this.current_tier != 1)
-                this.current_tier = this.current_tier - 1;
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+            this.current_tier = this.current_tier - 1;
+            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
             this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
         }
 

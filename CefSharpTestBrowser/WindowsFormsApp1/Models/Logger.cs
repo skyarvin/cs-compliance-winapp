@@ -70,10 +70,16 @@ namespace WindowsFormsApp1.Models
                     }
                 }
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException || e.InnerException is ForbiddenException)
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
                 this.SaveLogAction("Save");
                 Globals.SessionExpired();
+                throw e;
+            }
+            catch(AggregateException e) when (e.InnerException is ForbiddenException)
+            {
+                this.SaveLogAction("Save");
+                Globals.RestrictedIP();
                 throw e;
             }
             catch
@@ -100,10 +106,16 @@ namespace WindowsFormsApp1.Models
                     }
                 }
             }
-            catch (AggregateException e) when (e.InnerException is UnauthorizeException || e.InnerException is ForbiddenException)
+            catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
                 this.SaveLogAction("Update");
                 Globals.SessionExpired();
+                throw e;
+            }
+            catch (AggregateException e) when (e.InnerException is ForbiddenException)
+            {
+                this.SaveLogAction("Update");
+                Globals.RestrictedIP();
                 throw e;
             }
             catch

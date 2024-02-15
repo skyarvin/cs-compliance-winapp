@@ -385,6 +385,16 @@ namespace WindowsFormsApp1
         {
             Globals.timeOffset = new ServerTime().GetTimeOffset();
         }
+
+        public static void RestrictedIP()
+        {
+            DialogResult result = MessageBox.Show("IP Restricted", "Error");
+            if (result == DialogResult.OK)
+            {
+                Process.Start(Application.StartupPath + "\\" + typeof(Program).Assembly.GetName().Name + ".exe");
+                Process.GetCurrentProcess().Kill();
+            }
+        }
     }
 
     public enum LogType:int

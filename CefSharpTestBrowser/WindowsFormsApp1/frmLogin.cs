@@ -130,7 +130,7 @@ namespace WindowsFormsApp1
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
                 if (e.InnerException is ForbiddenException)
                 {
-                    MessageBox.Show("IP Restricted", "Error");
+                    Globals.RestrictedIP();
                 }
                 else
                 {

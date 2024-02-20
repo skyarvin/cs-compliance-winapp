@@ -264,10 +264,9 @@ namespace WindowsFormsApp1
             var productID = windowsNTKey.GetValue("ProductId");
 
             var deviceId = $"{processorId}-{diskSerialNumber}-{productID}";
-            var operatingSystem = windowsNTKey.GetValue("ProductName");
 
             Globals.device_identifier = HashHandler.GetHash(deviceId);
-            Globals.operating_system = operatingSystem.ToString();
+            Globals.operating_system = windowsNTKey.GetValue("ProductName").ToString();
         }
     }
 }

@@ -34,6 +34,7 @@ namespace WindowsFormsApp1
         private const int DISABLE_CLOSE_BUTTON = 0x200;
         private int current_tier = (int)Globals.ComplianceAgent.tier_level;
         private Timer _timer;
+        private Boolean _timer_reset = false;
         private string LastSucessAction;
         public DateTime StartTime_BrowserChanged;
         public DateTime? StartTime_LastAction = null;
@@ -346,6 +347,7 @@ namespace WindowsFormsApp1
             Globals.room_duration = 0;
             this.StartTime_BrowserChanged = ServerTime.Now();
             this.WindowState = FormWindowState.Maximized;
+            this._timer_reset = true;
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
@@ -705,9 +707,10 @@ namespace WindowsFormsApp1
                 }
 
                 var actual_start_time = Globals.StartTime_LastAction;
-                if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
+                if (_timer_reset)
                 {
                     actual_start_time = StartTime_BrowserChanged;
+                    _timer_reset = false;
                 }
 
                 var actual_end_time = ServerTime.Now();
@@ -1888,7 +1891,7 @@ namespace WindowsFormsApp1
             TimeZoneInfo.ClearCachedData();
             Globals.ServerTimeSync();
 
-            if (!Globals.StartTime_LastAction.ToString().Contains("01/01/0001"))
+            if (Globals.StartTime_LastAction.HasValue)
             {
                 if (last_action.TotalMilliseconds > 0)
                 {

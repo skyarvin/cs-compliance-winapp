@@ -388,7 +388,7 @@ namespace WindowsFormsApp1
 
         public static void RestrictedIP()
         {
-            DialogResult result = MessageBox.Show(String.Concat("Your IP Address is restricted from accessing StaffMe.\n", "If you believe this is a mistake, please contact the StaffMe authorities immediately."), "Error - Restricted Access"); ;
+            DialogResult result = MessageBox.Show(String.Concat("Your IP Address is restricted from accessing StaffMe.\n", "If you believe this is a mistake, please contact the dev team immediately."), "Error - Restricted Access"); ;
             if (result == DialogResult.OK)
             {
                 Process.Start(Application.StartupPath + "\\" + typeof(Program).Assembly.GetName().Name + ".exe");

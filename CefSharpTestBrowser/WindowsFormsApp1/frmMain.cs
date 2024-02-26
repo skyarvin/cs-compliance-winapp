@@ -1886,6 +1886,7 @@ namespace WindowsFormsApp1
         {
             TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
             TimeZoneInfo.ClearCachedData();
+            TimeSpan previous_offset = Globals.timeOffset;
             Globals.ServerTimeSync();
 
             if (!Globals.StartTime_LastAction.ToString().Contains("01/01/0001"))
@@ -1900,14 +1901,17 @@ namespace WindowsFormsApp1
                 }
             }
 
-            Emailer email = new Emailer();
-            email.subject = "Agent Date/Time has been changed";
-            email.message = string.Concat("Agent Name: ", Globals.ComplianceAgent.name,
-                "\nAgent ID: ", Globals.ComplianceAgent.id,
-                "\nAgent Time: ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
-            email.Send();
+            if (Math.Abs(Math.Abs(previous_offset.TotalMinutes) - Math.Abs(Globals.timeOffset.TotalMinutes)) >= 60)
+            {
+                Emailer email = new Emailer();
+                email.subject = "Agent Date/Time has been changed";
+                email.message = string.Concat("Agent Name: ", Globals.ComplianceAgent.name,
+                    "\nAgent ID: ", Globals.ComplianceAgent.id,
+                    "\nAgent Time: ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
+                email.Send();
 
-            Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
+                Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
+            }
         }
     }
 }

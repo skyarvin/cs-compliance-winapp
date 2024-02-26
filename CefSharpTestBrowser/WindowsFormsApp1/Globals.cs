@@ -82,6 +82,7 @@ namespace WindowsFormsApp1
         public static TimeSpan timeOffset = new TimeSpan();
 
         public static string device_identifier = "";
+        public static string operating_system = "";
         public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;
@@ -383,6 +384,16 @@ namespace WindowsFormsApp1
         public static void ServerTimeSync()
         {
             Globals.timeOffset = new ServerTime().GetTimeOffset();
+        }
+
+        public static void RestrictedIP()
+        {
+            DialogResult result = MessageBox.Show(String.Concat("Your IP Address is restricted from accessing StaffMe.\n", "If you believe this is a mistake, please contact the dev team immediately."), "Error - Restricted Access"); ;
+            if (result == DialogResult.OK)
+            {
+                Process.Start(Application.StartupPath + "\\" + typeof(Program).Assembly.GetName().Name + ".exe");
+                Process.GetCurrentProcess().Kill();
+            }
         }
     }
 

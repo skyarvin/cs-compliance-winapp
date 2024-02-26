@@ -128,8 +128,15 @@ namespace WindowsFormsApp1
             catch (AggregateException e)
             {
                 Globals.SaveToLogFile(e.ToString(), (int)LogType.Error);
-                MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
+                if (e.InnerException is ForbiddenException)
+                {
+                    Globals.RestrictedIP();
+                }
+                else
+                {
+                    MessageBox.Show(String.Concat("Error connecting to Compliance servers", System.Environment.NewLine, "Please refresh and try again.",
                 System.Environment.NewLine, "If internet is NOT down and you are still getting the error, Please contact dev team"), "Error");
+                }
             }
             catch (Exception e)
             {
@@ -257,7 +264,9 @@ namespace WindowsFormsApp1
             var productID = windowsNTKey.GetValue("ProductId");
 
             var deviceId = $"{processorId}-{diskSerialNumber}-{productID}";
+
             Globals.device_identifier = HashHandler.GetHash(deviceId);
+            Globals.operating_system = windowsNTKey.GetValue("ProductName").ToString();
         }
     }
 }

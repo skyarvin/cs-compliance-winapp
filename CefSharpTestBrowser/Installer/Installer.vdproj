@@ -33,6 +33,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_022268CE667F4E8FAE14B2E4C8394C03"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_0354372F72F34A7E8723AB3DAC7B5B4A"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -238,6 +244,12 @@
         "Entry"
         {
         "MsmKey" = "8:_2CAB5B0FFD8F4B2AA1B6B5B3EA4D5194"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_2E0AA31676CD42F093F84F1A5108180F"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -676,6 +688,12 @@
         "Entry"
         {
         "MsmKey" = "8:_A3F421F7371439F21FC8FDF9F1BEC279"
+        "OwnerKey" = "8:_022268CE667F4E8FAE14B2E4C8394C03"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A3F421F7371439F21FC8FDF9F1BEC279"
         "OwnerKey" = "8:_22E31B7F93941021B5E2E1D7B47782F3"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -857,6 +875,12 @@
         {
         "MsmKey" = "8:_D8AAE0768BEA3A1F98A9105980263AF3"
         "OwnerKey" = "8:_FED9E810F53548D49DAE1ED908E8AC96"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D8AAE0768BEA3A1F98A9105980263AF3"
+        "OwnerKey" = "8:_2E0AA31676CD42F093F84F1A5108180F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1072,6 +1096,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2E0AA31676CD42F093F84F1A5108180F"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_978A82BCEB1B410E96C720A048CD7FD4"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1097,6 +1127,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_21FCE984A3B8461C97071A34AA469322"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_022268CE667F4E8FAE14B2E4C8394C03"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1432,6 +1468,37 @@
             "TargetName" = "8:id.pak"
             "Tag" = "8:"
             "Folder" = "8:_722958B6EDDE44E594818578CC29F357"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_022268CE667F4E8FAE14B2E4C8394C03"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:AForge.Video.DirectShow, Version=2.2.5.0, Culture=neutral, PublicKeyToken=61ea4348d43881b7, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_022268CE667F4E8FAE14B2E4C8394C03"
+                    {
+                    "Name" = "8:AForge.Video.DirectShow.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\packages\\AForge.Video.DirectShow.2.2.5\\lib\\AForge.Video.DirectShow.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EDFE66F231834335B8E1EF82506919EC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -1827,9 +1894,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:COMPLIANCE_TOOL, Version=6.0.0.4, Culture=neutral, processorArchitecture=x86"
+            "AssemblyAsmDisplayName" = "8:COMPLIANCE_TOOL, Version=6.1.0.0, Culture=neutral, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_21FCE984A3B8461C97071A34AA469322"
+                    {
+                    "Name" = "8:COMPLIANCE_TOOL.exe"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\WindowsFormsApp1\\bin\\x86\\Release\\app.publish\\COMPLIANCE_TOOL.exe"
             "TargetName" = "8:"
@@ -1937,6 +2009,37 @@
             "TargetName" = "8:resources.pak"
             "Tag" = "8:"
             "Folder" = "8:_0CDCD8ED2B364C83BAF51C37929BF68A"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2E0AA31676CD42F093F84F1A5108180F"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Data.SQLite.Linq, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_2E0AA31676CD42F093F84F1A5108180F"
+                    {
+                    "Name" = "8:System.Data.SQLite.Linq.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:..\\WindowsFormsApp1\\System.Data.SQLite.Linq.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_EDFE66F231834335B8E1EF82506919EC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2455,6 +2558,11 @@
             "AssemblyAsmDisplayName" = "8:UserInactivityMonitoring, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_68DBEB5104A34E42A45A5B4D5D24E55F"
+                    {
+                    "Name" = "8:UserInactivityMonitoring.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\WindowsFormsApp1\\bin\\x86\\Release\\UserInactivityMonitoring.dll"
             "TargetName" = "8:"
@@ -2834,6 +2942,11 @@
             "AssemblyAsmDisplayName" = "8:CefSharp.BrowserSubprocess, Version=119.4.30.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_85DBED10A6BC45368802F49AFD91A307"
+                    {
+                    "Name" = "8:CefSharp.BrowserSubprocess.exe"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:..\\WindowsFormsApp1\\bin\\x86\\Release\\CefSharp.BrowserSubprocess.exe"
             "TargetName" = "8:"
@@ -3011,6 +3124,11 @@
             "AssemblyAsmDisplayName" = "8:CefSharp.BrowserSubprocess.Core, Version=119.4.30.0, Culture=neutral, PublicKeyToken=40c4b6fc221f4138, processorArchitecture=x86"
                 "ScatterAssemblies"
                 {
+                    "_9B34530E71A845E06CE5E7276E26717C"
+                    {
+                    "Name" = "8:CefSharp.BrowserSubprocess.Core.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CefSharp.BrowserSubprocess.Core.dll"
             "TargetName" = "8:"
@@ -4115,15 +4233,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:CSTool"
-        "ProductCode" = "8:{4D3108E3-28EE-4165-8941-CB4FCB16CD9D}"
-        "PackageCode" = "8:{86AD9EB8-D5C0-496A-90C2-3EF67B948A8B}"
+        "ProductCode" = "8:{FF3A6F79-F652-45A9-B0AB-7175E5500BD3}"
+        "PackageCode" = "8:{8378D88E-CEDA-427D-BD3D-C36FE6AEB113}"
         "UpgradeCode" = "8:{E3D5D40B-6234-4CCB-832E-98F8206BE10A}"
         "AspNetVersion" = "8:"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:6.1.0"
+        "ProductVersion" = "8:6.1.1"
         "Manufacturer" = "8:Staffme"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

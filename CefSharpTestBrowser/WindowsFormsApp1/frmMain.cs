@@ -34,7 +34,6 @@ namespace WindowsFormsApp1
         private const int DISABLE_CLOSE_BUTTON = 0x200;
         private int current_tier = (int)Globals.ComplianceAgent.tier_level;
         private Timer _timer;
-        private Boolean _timer_reset = false;
         private string LastSucessAction;
         public DateTime StartTime_BrowserChanged;
         public DateTime? StartTime_LastAction = null;
@@ -345,9 +344,9 @@ namespace WindowsFormsApp1
         public void ResetRoomDurationTimer()
         {
             Globals.room_duration = 0;
+            Globals.StartTime_LastAction = ServerTime.Now();
             this.StartTime_BrowserChanged = ServerTime.Now();
             this.WindowState = FormWindowState.Maximized;
-            this._timer_reset = true;
         }
         private void Application_OnIdle(object sender, EventArgs e)
         {
@@ -707,11 +706,6 @@ namespace WindowsFormsApp1
                 }
 
                 var actual_start_time = Globals.StartTime_LastAction;
-                if (_timer_reset)
-                {
-                    actual_start_time = StartTime_BrowserChanged;
-                    _timer_reset = false;
-                }
 
                 var actual_end_time = ServerTime.Now();
                 var logData = new Logger

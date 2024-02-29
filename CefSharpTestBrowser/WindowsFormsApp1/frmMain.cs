@@ -930,11 +930,14 @@ namespace WindowsFormsApp1
 
         private void UpdateWorkactivity_Tick(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(Globals.activity.start_time))
+            Task.Factory.StartNew(() =>
             {
-                Globals.UpdateActivity();
-                Globals.activity.start_time = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss");
-            }
+                if (!string.IsNullOrEmpty(Globals.activity.start_time))
+                {
+                    Globals.UpdateActivity();
+                    Globals.activity.start_time = ServerTime.Now().ToString("yyyy-MM-dd HH:mm:ss");
+                }
+            });
         }
 
 

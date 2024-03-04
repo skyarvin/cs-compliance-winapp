@@ -344,6 +344,7 @@ namespace WindowsFormsApp1
         public void ResetRoomDurationTimer()
         {
             Globals.room_duration = 0;
+            Globals.StartTime_LastAction = ServerTime.Now();
             this.StartTime_BrowserChanged = ServerTime.Now();
             this.WindowState = FormWindowState.Maximized;
         }
@@ -705,11 +706,6 @@ namespace WindowsFormsApp1
                 }
 
                 var actual_start_time = Globals.StartTime_LastAction;
-                if ((StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds > 30)
-                {
-                    actual_start_time = StartTime_BrowserChanged;
-                }
-
                 var actual_end_time = ServerTime.Now();
                 var logData = new Logger
                 {
@@ -1892,7 +1888,7 @@ namespace WindowsFormsApp1
             TimeSpan previous_offset = Globals.timeOffset;
             Globals.ServerTimeSync();
 
-            if (!Globals.StartTime_LastAction.ToString().Contains("01/01/0001"))
+            if (Globals.StartTime_LastAction.HasValue)
             {
                 if (last_action.TotalMilliseconds > 0)
                 {

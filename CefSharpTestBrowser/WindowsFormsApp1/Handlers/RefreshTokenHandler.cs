@@ -30,7 +30,7 @@ namespace CSTool.Handlers
                         client.DefaultRequestHeaders.Add("Authorization", Globals.UserToken.refresh_token);
                         for (int i = 0; i < MaxRetries; i++)
                         {
-                            using (HttpResponseMessage refreshResponse = client.PostAsync(Url.AUTH_URL + "/refresh", null).Result)
+                            using (HttpResponseMessage refreshResponse = client.PostAsync(Url.AUTH_URL + "/refresh/", null).Result)
                             {
                                 if (refreshResponse.IsSuccessStatusCode)
                                 {

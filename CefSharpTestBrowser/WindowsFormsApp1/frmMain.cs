@@ -1883,22 +1883,9 @@ namespace WindowsFormsApp1
 
         public static void OnDateTimeChanged(object sender, EventArgs e)
         {
-            TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
             TimeZoneInfo.ClearCachedData();
             TimeSpan previous_offset = Globals.timeOffset;
             Globals.ServerTimeSync();
-
-            if (Globals.StartTime_LastAction.HasValue)
-            {
-                if (last_action.TotalMilliseconds > 0)
-                {
-                    Globals.StartTime_LastAction = ServerTime.Now() - last_action;
-                }
-                else
-                {
-                    Globals.StartTime_LastAction = ServerTime.Now() + last_action;
-                }
-            }
 
             if (Math.Abs(Math.Abs(previous_offset.TotalMinutes) - Math.Abs(Globals.timeOffset.TotalMinutes)) >= 60)
             {

@@ -421,7 +421,11 @@ namespace CSTool
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
             if (HtmlItemClicked != null)
             {
-                HtmlItemClicked(this, new HtmlItemClickedEventArgs() { Id = id });
+                HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
+                    Id = id,
+                    Start_Time = Globals.frmMain.StartTime_BrowserChanged,
+                    End_Time = ServerTime.Now()
+                });
             }
         }
 
@@ -502,6 +506,8 @@ namespace CSTool
         public class HtmlItemClickedEventArgs : EventArgs
         {
             public string Id { get; set; }
+            public DateTime Start_Time { get; set; }
+            public DateTime End_Time { get; set; }
         }
 
         public void SendToIdChecking()

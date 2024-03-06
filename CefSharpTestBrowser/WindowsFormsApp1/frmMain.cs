@@ -707,7 +707,7 @@ namespace WindowsFormsApp1
 
                 var actual_start_time = last_action;
                 var allowable_wasted_time = 30;
-                if((actual_start_time - last_action).TotalSeconds  >= allowable_wasted_time)
+                if((start_time - last_action).TotalSeconds  >= allowable_wasted_time)
                 {
                     actual_start_time = start_time;
                 }

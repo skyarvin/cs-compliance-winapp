@@ -424,7 +424,9 @@ namespace CSTool
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
                     Id = id,
                     Start_Time = Globals.frmMain.StartTime_BrowserChanged,
-                    End_Time = ServerTime.Now()
+                    End_Time = ServerTime.Now(),
+                    Last_Action = (DateTime)Globals.StartTime_LastAction,
+                    Url = Globals.CurrentUrl
                 });
             }
         }
@@ -508,6 +510,8 @@ namespace CSTool
             public string Id { get; set; }
             public DateTime Start_Time { get; set; }
             public DateTime End_Time { get; set; }
+            public DateTime Last_Action { get; set; }
+            public string Url { get; set; }
         }
 
         public void SendToIdChecking()

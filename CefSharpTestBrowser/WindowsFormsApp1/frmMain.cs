@@ -470,7 +470,7 @@ namespace WindowsFormsApp1
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.Start_Time, e.End_Time));
+            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.Start_Time, e.End_Time, e.Last_Action, e.Url));
         }
 
         private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
@@ -659,7 +659,7 @@ namespace WindowsFormsApp1
 
         #region Actions
 
-        private void ProcessActionButtons(string element_id, DateTime start_time, DateTime end_time)
+        private void ProcessActionButtons(string element_id, DateTime start_time, DateTime end_time, DateTime last_action, string url)
         { 
             Task.Factory.StartNew(() =>
             {
@@ -671,7 +671,7 @@ namespace WindowsFormsApp1
                 }
 
                 this.send_id_checker = true;
-                var urlToSave = Globals.CurrentUrl;
+                var urlToSave = url;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
                 string violation = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
                 string notes = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
@@ -705,7 +705,12 @@ namespace WindowsFormsApp1
                     last_photo = (string)Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
 
-                var actual_start_time = start_time;
+                var actual_start_time = last_action;
+                var allowable_wasted_time = 30;
+                if((actual_start_time - last_action).TotalSeconds  >= allowable_wasted_time)
+                {
+                    actual_start_time = start_time;
+                }
                 var actual_end_time = end_time;
                 var logData = new Logger
                 {

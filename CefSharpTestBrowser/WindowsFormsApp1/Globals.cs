@@ -80,6 +80,7 @@ namespace WindowsFormsApp1
         public static object sharedRequestLock = new object();
         public static UserAccount user_account = new UserAccount();
         public static TimeSpan timeOffset = new TimeSpan();
+        public static int action_counter = 0;
 
         public static string device_identifier = "";
         public static string operating_system = "";

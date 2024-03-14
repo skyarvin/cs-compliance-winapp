@@ -425,7 +425,7 @@ namespace CSTool
                     Id = id,
                     StartTime = Globals.action_counter++ == 0 ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
                     EndTime = ServerTime.Now(),
-                    RoomName = Globals.CurrentUrl
+                    RoomUrl = Globals.CurrentUrl
                 });
             }
         }
@@ -509,7 +509,7 @@ namespace CSTool
             public string Id { get; set; }
             public DateTime StartTime { get; set; }
             public DateTime EndTime { get; set; }
-            public string RoomName { get; set; }
+            public string RoomUrl { get; set; }
         }
 
         public void SendToIdChecking()

@@ -423,10 +423,11 @@ namespace CSTool
             {
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
                     Id = id,
-                    StartTime = Globals.action_counter++ == 0 ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
+                    StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
                     EndTime = ServerTime.Now(),
                     RoomUrl = Globals.CurrentUrl
                 });
+                Globals.first_room = false;
             }
         }
 

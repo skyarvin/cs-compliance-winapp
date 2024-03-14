@@ -470,7 +470,7 @@ namespace WindowsFormsApp1
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomName));
+            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomUrl));
         }
 
         private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)

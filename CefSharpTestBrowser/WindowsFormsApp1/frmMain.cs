@@ -470,7 +470,7 @@ namespace WindowsFormsApp1
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id));
+            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomUrl));
         }
 
         private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
@@ -659,7 +659,7 @@ namespace WindowsFormsApp1
 
         #region Actions
 
-        private void ProcessActionButtons(string element_id)
+        private void ProcessActionButtons(string element_id, DateTime actual_start_time, DateTime actual_end_time, string urlToSave)
         { 
             Task.Factory.StartNew(() =>
             {
@@ -671,7 +671,6 @@ namespace WindowsFormsApp1
                 }
 
                 this.send_id_checker = true;
-                var urlToSave = Globals.CurrentUrl;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
                 string violation = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
                 string notes = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
@@ -705,8 +704,6 @@ namespace WindowsFormsApp1
                     last_photo = (string)Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
                 }
 
-                var actual_start_time = Globals.StartTime_LastAction;
-                var actual_end_time = ServerTime.Now();
                 var logData = new Logger
                 {
                     url = urlToSave,
@@ -720,7 +717,7 @@ namespace WindowsFormsApp1
                     workshift = "DS",
                     last_chatlog = last_chatlog != "" ? last_chatlog : null,
                     last_photo = last_photo != "" ? last_photo : null,
-                    actual_start_time = actual_start_time.Value.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
+                    actual_start_time = actual_start_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     hash = HashMembers(),
                     members = Globals.Profiles,

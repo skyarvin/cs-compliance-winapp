@@ -470,7 +470,7 @@ namespace WindowsFormsApp1
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomUrl));
+            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomUrl, e.Notes, e.Violation));
         }
 
         private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
@@ -659,7 +659,7 @@ namespace WindowsFormsApp1
 
         #region Actions
 
-        private void ProcessActionButtons(string element_id, DateTime actual_start_time, DateTime actual_end_time, string urlToSave)
+        private void ProcessActionButtons(string element_id, DateTime actual_start_time, DateTime actual_end_time, string urlToSave, string notes, string violation)
         { 
             Task.Factory.StartNew(() =>
             {
@@ -672,20 +672,19 @@ namespace WindowsFormsApp1
 
                 this.send_id_checker = true;
                 Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
-                string violation = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_violation option:selected').text()").Result.Result);
-                string notes = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_description').val()").Result.Result);
                 string reply = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
                 string remarks = String.Concat(violation, notes);
                 if (!string.IsNullOrEmpty(reply))
                 {
                     reply = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#thread_container').html()").Result.Result) + "<div>" + reply + "</div>";
                 }
-                if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes)) return;
-                if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation)) return;
-                if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
+                if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes))
                 {
-                    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
-                    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
+                    return;
+                }
+                if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation))
+                {
+                    return;
                 }
                 if (element_id == Action.ChatReply.Value) notes = reply;
                 if (element_id == Action.SetExpiration.Value) notes = "Set ID Expiration Date";

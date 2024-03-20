@@ -68,10 +68,12 @@ namespace CSTool
 
                         if (e.target.id != undefined && e.target.id != null || e.target.id.length > 0 || e.target.value) {
                             var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button'];
+                            var violation = $('#id_violation option:selected').text();
+                            var notes = $('#id_description').val();
 
                             if (element_ids.includes(e.target.id)) {
                                 console.log(e.target.id);
-                                bound.onClicked(e.target.id);
+                                bound.onClicked(e.target.id, notes, violation);
                                 return;
                             }
 
@@ -82,7 +84,7 @@ namespace CSTool
                             }
 
                             if (element_values.hasOwnProperty(e.target.value)) {
-                                    bound.onClicked(element_values[e.target.value][0]);
+                                    bound.onClicked(element_values[e.target.value][0], notes, violation);
                             }
                         }
                     }
@@ -416,16 +418,24 @@ namespace CSTool
             Globals.frmMain.showNextTierLevelBtn();
         }
 
-        public void OnClicked(string id)
+        public void OnClicked(string id, string notes, string violation)
         {
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
+            if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
+            {
+                browser.GetMainFrame().EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
+                browser.GetMainFrame().EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
+            }
+
             if (HtmlItemClicked != null)
             {
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
                     Id = id,
                     StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
                     EndTime = ServerTime.Now(),
-                    RoomUrl = Globals.CurrentUrl
+                    RoomUrl = Globals.CurrentUrl,
+                    Notes = notes,
+                    Violation = violation
                 });
                 Globals.first_room = false;
             }
@@ -511,6 +521,8 @@ namespace CSTool
             public DateTime StartTime { get; set; }
             public DateTime EndTime { get; set; }
             public string RoomUrl { get; set; }
+            public string Notes { get; set; }
+            public string Violation { get; set; }
         }
 
         public void SendToIdChecking()

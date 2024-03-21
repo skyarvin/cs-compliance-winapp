@@ -667,6 +667,7 @@ namespace WindowsFormsApp1
                 var mutex = new Mutex(true, Globals.CurrentUrl, out createdNew);
                 if (!createdNew)
                 {
+                    Globals.SaveToLogFile(String.Concat("Process Action Failed - Ongoing Process: ", element_id), (int)LogType.Activity);
                     return;
                 }
 
@@ -680,10 +681,12 @@ namespace WindowsFormsApp1
                 }
                 if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes))
                 {
+                    Globals.SaveToLogFile(String.Concat("Process Action Failed - No Notes: ", element_id), (int)LogType.Activity);
                     return;
                 }
                 if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation))
                 {
+                    Globals.SaveToLogFile(String.Concat("Process Action Failed - No Violation Selected ", element_id), (int)LogType.Activity);
                     return;
                 }
                 if (element_id == Action.ChatReply.Value) notes = reply;

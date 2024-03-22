@@ -672,7 +672,7 @@ namespace WindowsFormsApp1
                 }
 
                 this.send_id_checker = true;
-                Globals.SaveToLogFile(String.Concat("Process Action: ", element_id), (int)LogType.Activity);
+                Globals.SaveToLogFile(String.Concat("Processing Action: ", element_id), (int)LogType.Activity);
                 string reply = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
                 string remarks = String.Concat(violation, notes);
                 if (!string.IsNullOrEmpty(reply))
@@ -865,7 +865,7 @@ namespace WindowsFormsApp1
                 {
                     this.RefreshBrowser();
                 }
-
+                Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
                 mutex.Dispose();
             });
         }

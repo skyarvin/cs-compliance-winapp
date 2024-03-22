@@ -684,9 +684,9 @@ namespace WindowsFormsApp1
                     Globals.SaveToLogFile(String.Concat("Process Action Failed - No Notes: ", element_id), (int)LogType.Activity);
                     return;
                 }
-                if (element_id == Action.Violation.Value && string.IsNullOrEmpty(violation))
+                if (element_id == Action.Violation.Value && violation.ToString() == "--")
                 {
-                    Globals.SaveToLogFile(String.Concat("Process Action Failed - No Violation Selected ", element_id), (int)LogType.Activity);
+                    Globals.SaveToLogFile(String.Concat("Process Action Failed - No Violation Selected: ", element_id), (int)LogType.Activity);
                     return;
                 }
                 if (element_id == Action.ChatReply.Value) notes = reply;

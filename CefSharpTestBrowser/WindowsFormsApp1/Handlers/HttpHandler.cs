@@ -105,6 +105,7 @@ namespace CSTool.Handlers
             }
 
             string user_agent = $"Mozilla/5.0 ({Globals.operating_system}; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36";
+            DefaultRequestHeaders.Add("CsTool-Version", $"{Globals.CurrentVersion()}");
             DefaultRequestHeaders.Add("Device-Id", $"{Globals.device_identifier}");
             DefaultRequestHeaders.Add("User-Agent", user_agent);
         }

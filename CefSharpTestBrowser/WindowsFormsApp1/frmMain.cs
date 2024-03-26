@@ -1695,14 +1695,24 @@ namespace WindowsFormsApp1
 
         private void retryUpload(string path)
         {
-            for (int i = 0; i < 3; i++)
+            try
             {
-                if (uploadImage(path))
+                using (var bmp = new Bitmap(path))
                 {
-                    break;
-                }
+                    for (int i = 0; i < 3; i++)
+                    {
+                        if (uploadImage(path))
+                        {
+                            break;
+                        }
 
-                Thread.Sleep(30000);
+                        Thread.Sleep(30000);
+                    }
+                }
+            }
+            catch
+            {
+                FileUtil.deleteFile(path);
             }
         }
 

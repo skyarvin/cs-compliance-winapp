@@ -41,6 +41,7 @@ namespace WindowsFormsApp1.Models
         public string room_photos_end_time { get; set; }
         public string room_chatlog_start_time { get; set; }
         public string room_chatlog_end_time { get; set; }
+        public double waiting_time { get; set; }
 
         public Logger Save()
         {

@@ -437,7 +437,7 @@ namespace CSTool
                     RoomUrl = Globals.CurrentUrl,
                     Notes = notes,
                     Violation = violation,
-                    Waiting_Time = waiting_time >= 5 ? waiting_time : 0.00
+                    Waiting_Time = waiting_time >= 5 ? waiting_time : 0.00 // 5 seconds is the maximum allowable wasted time and record only wasted time that is >= 5 seconds
                 });
                 Globals.first_room = false;
             }

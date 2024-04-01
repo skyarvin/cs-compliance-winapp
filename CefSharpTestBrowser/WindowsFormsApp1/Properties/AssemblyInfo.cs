@@ -32,8 +32,8 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("6.1.5")]
-[assembly: AssemblyFileVersion("6.1.5")]
+[assembly: AssemblyVersion("6.1.6")]
+[assembly: AssemblyFileVersion("6.1.6")]
 
 //History Publish Version
 //1.0.0.0   Initial working installer with auto update

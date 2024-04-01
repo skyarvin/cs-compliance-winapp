@@ -1714,7 +1714,7 @@ namespace WindowsFormsApp1
             {
                 Monitor.Enter(path, ref lockWasTaken);
 
-                if (Globals.activity.PostScreenshot(path))
+                if (this.isImageValid(path) && Globals.activity.PostScreenshot(path))
                 {
                     FileUtil.deleteFile(path);
                     return true;
@@ -1726,6 +1726,22 @@ namespace WindowsFormsApp1
             }
 
             return false;
+        }
+
+        private bool isImageValid(string path)
+        {
+            try
+            {
+                using (var bmp = new Bitmap(path))
+                {
+                    return true;
+                }
+            }
+            catch (ArgumentException)
+            {
+                FileUtil.deleteFile(path);
+                return false;
+            }
         }
 
         private void findAndUploadFailedImages()
@@ -1812,7 +1828,7 @@ namespace WindowsFormsApp1
                     staffCam.captureImage(camFileName);
                     Thread.Sleep(1000);
                     staffCam.stopCamera();
-                    if (Globals.activity.PostCameraCapture(camFileName))
+                    if (this.isImageValid(camFileName) && Globals.activity.PostCameraCapture(camFileName))
                     {
                         FileUtil.deleteFile(camFileName);
                     }

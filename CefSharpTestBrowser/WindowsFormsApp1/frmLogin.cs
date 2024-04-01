@@ -158,7 +158,8 @@ namespace WindowsFormsApp1
         private void FrmLogin_Load(object sender, EventArgs e)
         {
             txtPwd.Controls.Add(eyeViewPictureBox);
-            eyeViewPictureBox.Location = new Point(300, 4);
+            eyeViewPictureBox.Size = new Size(eyeViewPictureBox.ClientSize.Width, txtPwd.ClientSize.Height - 2);
+            eyeViewPictureBox.Location = new Point(txtPwd.ClientSize.Width - eyeViewPictureBox.ClientSize.Width - 7, (txtPwd.ClientSize.Height - eyeViewPictureBox.ClientSize.Height) / 2);
 
             //workshift_list.DataSource = new BindingSource(Globals.workshifts, null);
             //workshift_list.DisplayMember = "Value";

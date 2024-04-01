@@ -670,6 +670,7 @@ namespace WindowsFormsApp1
                     Globals.SaveToLogFile(String.Concat("Process Action Failed - Ongoing Process: ", element_id), (int)LogType.Activity);
                     return;
                 }
+
                 this.send_id_checker = true;
                 Globals.SaveToLogFile(String.Concat("Processing Action: ", element_id), (int)LogType.Activity);
                 string reply = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");

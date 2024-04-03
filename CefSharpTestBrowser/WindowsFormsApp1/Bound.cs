@@ -50,6 +50,9 @@ namespace CSTool
                    window.onload = function(e) {
                         if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
                             bound.displayTierBtn();
+                            setTimeout(() => {
+                                bound.clickLevelDownTierBtn();
+                            }, 10000)
                         }
 
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
@@ -416,6 +419,11 @@ namespace CSTool
         public void DisplayTierBtn()
         {
             Globals.frmMain.showNextTierLevelBtn();
+        }
+
+        public void ClickLevelDownTierBtn()
+        {
+            Globals.frmMain.ClickNextTierLevelBtn();
         }
 
         public void OnClicked(string id, string notes, string violation)

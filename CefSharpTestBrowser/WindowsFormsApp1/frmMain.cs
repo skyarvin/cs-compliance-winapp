@@ -1928,5 +1928,11 @@ namespace WindowsFormsApp1
                 Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
             }
         }
+
+        public void ClickNextTierLevelBtn()
+        {
+            if (this.current_tier != 1)
+                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.PerformClick());
+        }
     }
 }

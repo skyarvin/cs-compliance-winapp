@@ -429,13 +429,15 @@ namespace CSTool
 
             if (HtmlItemClicked != null)
             {
+                double waiting_time = (Globals.frmMain.StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
                     Id = id,
                     StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
                     EndTime = ServerTime.Now(),
                     RoomUrl = Globals.CurrentUrl,
                     Notes = notes,
-                    Violation = violation
+                    Violation = violation,
+                    Waiting_Time = waiting_time >= 5 ? waiting_time : 0.00 // 5 seconds is the maximum allowable wasted time
                 });
                 Globals.first_room = false;
             }
@@ -523,6 +525,7 @@ namespace CSTool
             public string RoomUrl { get; set; }
             public string Notes { get; set; }
             public string Violation { get; set; }
+            public double Waiting_Time { get; set; }
         }
 
         public void SendToIdChecking()

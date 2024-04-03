@@ -176,9 +176,9 @@
             // 
             this.eyeViewPictureBox.BackColor = System.Drawing.Color.Transparent;
             this.eyeViewPictureBox.Image = global::CSTool.Properties.Resources.eye_hidden;
-            this.eyeViewPictureBox.Location = new System.Drawing.Point(336, 252);
+            this.eyeViewPictureBox.Location = new System.Drawing.Point(329, 251);
             this.eyeViewPictureBox.Name = "eyeViewPictureBox";
-            this.eyeViewPictureBox.Size = new System.Drawing.Size(29, 22);
+            this.eyeViewPictureBox.Size = new System.Drawing.Size(24, 17);
             this.eyeViewPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.eyeViewPictureBox.TabIndex = 12;
             this.eyeViewPictureBox.TabStop = false;

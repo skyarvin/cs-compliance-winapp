@@ -470,7 +470,7 @@ namespace WindowsFormsApp1
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomUrl, e.Notes, e.Violation));
+            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomUrl, e.Notes, e.Violation, e.Waiting_Time));
         }
 
         private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
@@ -659,7 +659,7 @@ namespace WindowsFormsApp1
 
         #region Actions
 
-        private void ProcessActionButtons(string element_id, DateTime actual_start_time, DateTime actual_end_time, string urlToSave, string notes, string violation)
+        private void ProcessActionButtons(string element_id, DateTime actual_start_time, DateTime actual_end_time, string urlToSave, string notes, string violation, double waiting_time)
         { 
             Task.Factory.StartNew(() =>
             {
@@ -728,6 +728,7 @@ namespace WindowsFormsApp1
                     room_photos_end_time = Globals.room_photos_end_time,
                     room_chatlog_start_time = Globals.room_chatlog_start_time,
                     room_chatlog_end_time = Globals.room_chatlog_end_time,
+                    waiting_time = waiting_time
                 };
                 if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
                     logData.idc_id = this.ID_CHECKER.id;

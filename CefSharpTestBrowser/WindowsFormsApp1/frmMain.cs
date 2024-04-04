@@ -1633,17 +1633,10 @@ namespace WindowsFormsApp1
                 bgWorkAnnouncement.RunWorkerAsync();
         }
 
-        public void showNextTierLevelBtn()
-        {
-            if (this.current_tier != 1)
-                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = true);
-        }
-
-        private void btnDecreaseTierLevel_Click(object sender, EventArgs e)
+        public void TierLevelDown()
         {
             this.current_tier = this.current_tier - 1;
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
-            this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.Visible = false);
         }
 
         public void ShowRequestPhotoAndApproveButton()
@@ -1927,12 +1920,6 @@ namespace WindowsFormsApp1
 
                 Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
             }
-        }
-
-        public void ClickNextTierLevelBtn()
-        {
-            if (this.current_tier != 1)
-                this.InvokeOnUiThreadIfRequired(() => btnDecreaseTierLevel.PerformClick());
         }
     }
 }

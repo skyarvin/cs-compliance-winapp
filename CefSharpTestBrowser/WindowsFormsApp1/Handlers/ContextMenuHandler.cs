@@ -41,12 +41,15 @@ public class MyCustomMenuHandler : IContextMenuHandler
         model.AddItem((CefMenuCommand)26515, "Send Internal Identification Checker");
         model.AddItem((CefMenuCommand)26504, "Translate");
 
-        model.AddSeparator();
-        model.AddItem((CefMenuCommand)26505, "View User");
-        model.AddItem((CefMenuCommand)26507, "Log Viewer");
-        model.AddSeparator();
-        model.AddItem((CefMenuCommand)26506, "Devtools");
-        //model.AddItem((CefMenuCommand)26513, "Set Preference");
+        if (Url.DEBUG)
+        {
+            model.AddSeparator();
+            model.AddItem((CefMenuCommand)26505, "View User");
+            model.AddItem((CefMenuCommand)26507, "Log Viewer");
+            model.AddSeparator();
+            model.AddItem((CefMenuCommand)26506, "Devtools");
+            //model.AddItem((CefMenuCommand)26513, "Set Preference");
+        }
 
         if (Globals.IsClient())
         {

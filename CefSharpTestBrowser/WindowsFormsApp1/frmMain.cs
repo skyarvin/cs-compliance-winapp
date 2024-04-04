@@ -26,6 +26,7 @@ using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WindowsFormsApp1
 {
@@ -1654,17 +1655,6 @@ namespace WindowsFormsApp1
             }
         }
 
-        private void startScreenCapture(string scFileName)
-        {
-            Task.Run(() =>
-            {
-                StaffScreenshot staffscreenshot = new StaffScreenshot();
-                staffscreenshot.captureScreenshot(scFileName);
-                if (!uploadImage(scFileName)) {
-                    retryUpload(scFileName);
-                }
-            });
-        }
 
         private void monitorActivity()
         {
@@ -1673,60 +1663,96 @@ namespace WindowsFormsApp1
             int nowUnixTime = (int)ts.TotalSeconds;
             if (scheduledCaptureTimeList.Contains(nowUnixTime))
             {
-                string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", ServerTime.Now().ToString("MM-dd-yyyy"), "\\"));
-                FileInfo logFileInfo = new FileInfo(path);
-                DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
-                if (!logDirInfo.Exists) logDirInfo.Create();
-                string nowStr = ServerTime.Now().ToString("yyyy-dd-M--HH-mm-ss");
-                string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
-                startScreenCapture(scFileName);
-                if (Globals.ComplianceAgent.webcam_capture)
-                {
-                    string camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
-                    startCamCapture(camFileName);
-                }
-                findAndUploadFailedImages();
+                startCapture();
+                //findAndUploadFailedImages();
             }
         }
 
-        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void startCapture()
         {
-            this.Close();
+            string path = String.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", ServerTime.Now().ToString("MM-dd-yyyy"), "\\"));
+            FileInfo logFileInfo = new FileInfo(path);
+            DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
+            if (!logDirInfo.Exists) logDirInfo.Create();
+            string nowStr = ServerTime.Now().ToString("yyyy-dd-M--HH-mm-ss");
+            string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
+            string camFileName = "";
+
+            Task.Factory.StartNew(() =>
+            {
+                StaffScreenshot staffscreenshot = new StaffScreenshot();
+                staffscreenshot.captureScreenshot(scFileName);
+                if (Globals.ComplianceAgent.webcam_capture)
+                {
+                    camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
+                    StaffCam staffCam = new StaffCam();
+                    staffCam.startCamera(Settings.Default.cam_source);
+                    Thread.Sleep(5000);
+                    if (staffCam.isRunning())
+                    {
+                        staffCam.captureImage(camFileName);
+                        Thread.Sleep(1000);
+                        staffCam.stopCamera();
+                    }
+                    else
+                    {
+                        Globals.frmMain.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(Globals.frmMain, "Please set your camera"));
+                    }
+                }
+
+                if(!isImageValid(scFileName))
+                {
+                    return;
+                }
+                if (Globals.ComplianceAgent.webcam_capture && !isImageValid(camFileName))
+                {
+                    camFileName = "";
+                }
+
+                if (!uploadImage(scFileName, camFileName))
+                {
+                    retryUpload(scFileName, camFileName);
+                }
+            });
         }
 
-        private void retryUpload(string path)
+        private bool uploadImage(string scCapturePath, string camCapturePath = "")
+        {
+            bool lockWasTaken = false;
+
+            try
+            {
+                Monitor.Enter(scCapturePath, ref lockWasTaken);
+
+                if (Globals.activity.PostCapture(scCapturePath, camCapturePath))
+                {
+                    FileUtil.deleteFile(scCapturePath);
+                    if (!String.IsNullOrEmpty(camCapturePath))
+                    {
+                        FileUtil.deleteFile(camCapturePath);
+                    }
+                    return true;
+                }
+            }
+            finally
+            {
+                if (lockWasTaken) Monitor.Exit(scCapturePath);
+            }
+
+            return false;
+        }
+
+        private void retryUpload(string scCapturePath, string camCapturePath = "")
         {
             for (int i = 0; i < 3; i++)
             {
-                if (uploadImage(path))
+                if (uploadImage(scCapturePath, camCapturePath))
                 {
                     break;
                 }
 
                 Thread.Sleep(30000);
             }
-        }
-
-        private bool uploadImage(string path)
-        {
-            bool lockWasTaken = false;
-
-            try
-            {
-                Monitor.Enter(path, ref lockWasTaken);
-
-                if (this.isImageValid(path) && Globals.activity.PostScreenshot(path))
-                {
-                    FileUtil.deleteFile(path);
-                    return true;
-                }
-            }
-            finally
-            {
-                if (lockWasTaken) Monitor.Exit(path);
-            }
-
-            return false;
         }
 
         private bool isImageValid(string path)
@@ -1756,6 +1782,11 @@ namespace WindowsFormsApp1
                     retryUpload(file);
                 }
             });
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         public void StartbgWorkIRFP()
@@ -1815,30 +1846,6 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkIRFP.RunWorkerAsync();
-        }
-
-        private void startCamCapture(string camFileName)
-        {
-            Task.Factory.StartNew(() =>
-            {
-                StaffCam staffCam = new StaffCam();
-                staffCam.startCamera(Settings.Default.cam_source);
-                Thread.Sleep(5000);
-                if (staffCam.isRunning())
-                {
-                    staffCam.captureImage(camFileName);
-                    Thread.Sleep(1000);
-                    staffCam.stopCamera();
-                    if (this.isImageValid(camFileName) && Globals.activity.PostCameraCapture(camFileName))
-                    {
-                        FileUtil.deleteFile(camFileName);
-                    }
-                }
-                else
-                {
-                    Globals.frmMain.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(Globals.frmMain, "Please set your camera"));
-                }
-            });
         }
 
         private void cameraToolStripMenuItem_Click(object sender, EventArgs e)

@@ -26,7 +26,6 @@ using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
-using Microsoft.IdentityModel.Tokens;
 
 namespace WindowsFormsApp1
 {

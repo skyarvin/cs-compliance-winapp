@@ -49,7 +49,7 @@ namespace CSTool.Class
                 BASE_URL = "https://cscb-dev1.staffme.online";
                 DOMAIN = "http://127.0.0.1:8000/compliance";
             }
-            else if (!DEBUG && DEV_API)
+            else if (DEV_API)
             {
                 // ## Dev Testing with Live Rooms
                 BASE_URL = "https://cscb-dev1.staffme.online";

@@ -18,7 +18,7 @@ namespace CSTool.Class
         // ## Production CSCB-Staff Me
         public static string CB_HOME = "https://chaturbate.com/";
         public static string CB_COMPLIANCE_URL = CB_HOME + "compliance";
-        public static string CB_COMPLIANCE_SET_ID_EXP_URL = CB_HOME + "compliance/update_expiration_date_form";
+        public static string CB_COMPLIANCE_SET_ID_EXP_URL = CB_COMPLIANCE_URL + "/update_expiration_date_form";
         public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
         public static string BASE_URL = "https://cscb.staffme.online";
         public static string API_URL = BASE_URL + "/api";
@@ -28,7 +28,7 @@ namespace CSTool.Class
         // ## Production Volume
         //public static string CB_HOME = "https://volume.com/";
         //public static string CB_COMPLIANCE_URL = CB_HOME + "compliance";
-        //public static string CB_COMPLIANCE_SET_ID_EXP_URL = CB_HOME + "compliance/update_expiration_date_form";
+        //public static string CB_COMPLIANCE_SET_ID_EXP_URL = CB_COMPLIANCE_URL + "/update_expiration_date_form";
         //public static string GOOGLE_TRANSLATE_URL = "https://translate.google.com?text=";
         //public static string API_URL = "https://csvolume.skydev.solutions/api";
         //public static string DOMAIN = "volume.com";
@@ -56,7 +56,7 @@ namespace CSTool.Class
             }
 
             CB_COMPLIANCE_URL = CB_HOME + "compliance";
-            CB_COMPLIANCE_SET_ID_EXP_URL = CB_HOME + "compliance/update_expiration_date_form";
+            CB_COMPLIANCE_SET_ID_EXP_URL = CB_COMPLIANCE_URL + "/update_expiration_date_form";
             API_URL = BASE_URL + "/api";
             AUTH_URL = BASE_URL + "/security";
         }

@@ -92,9 +92,6 @@ namespace CSTool.Models
         {
             try
             {
-
-                Console.WriteLine("ASDASDASDASD");
-
                 IHttpHandler client = new HttpHandler();
                 MultipartFormDataContent form = new MultipartFormDataContent();
                 form.Add(new StringContent(agent_id.ToString(), Encoding.UTF8, MediaTypeNames.Text.Plain), "agent");

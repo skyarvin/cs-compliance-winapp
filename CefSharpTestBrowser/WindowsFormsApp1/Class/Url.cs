@@ -35,28 +35,20 @@ namespace CSTool.Class
 
         static Url()
         {
-            if (DEBUG && !DEV_API)
+            if (DEBUG)
             {
-                // ## Pure Local Testing with MockSite
                 CB_HOME = "http://127.0.0.1:8000/";
+                CB_COMPLIANCE_URL = CB_HOME + "compliance";
+                CB_COMPLIANCE_SET_ID_EXP_URL = CB_COMPLIANCE_URL + "/update_expiration_date_form";
                 BASE_URL = "http://127.0.0.1:9000";
                 DOMAIN = "http://127.0.0.1:8000/compliance";
             }
-            else if (DEBUG && DEV_API)
+            
+            if (DEV_API)
             {
-                // ## Dev Testing with MockSite
-                CB_HOME = "http://127.0.0.1:8000/";
-                BASE_URL = "https://cscb-dev1.staffme.online";
-                DOMAIN = "http://127.0.0.1:8000/compliance";
-            }
-            else if (DEV_API)
-            {
-                // ## Dev Testing with Live Rooms
                 BASE_URL = "https://cscb-dev1.staffme.online";
             }
-
-            CB_COMPLIANCE_URL = CB_HOME + "compliance";
-            CB_COMPLIANCE_SET_ID_EXP_URL = CB_COMPLIANCE_URL + "/update_expiration_date_form";
+            
             API_URL = BASE_URL + "/api";
             AUTH_URL = BASE_URL + "/security";
         }

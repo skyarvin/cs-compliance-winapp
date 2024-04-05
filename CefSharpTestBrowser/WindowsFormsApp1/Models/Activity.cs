@@ -115,7 +115,7 @@ namespace CSTool.Models
                     form.Add(camCaptureContent);
                 }
                 HttpResponseMessage response = null;
-                var _url = string.Concat(Url.API_URL, "/agent/capture2/");
+                var _url = string.Concat(Url.API_URL, "/agent/capture/v2");
                 response = (client.CustomPostAsync(_url, form)).Result;
                 if (response.IsSuccessStatusCode)
                 {

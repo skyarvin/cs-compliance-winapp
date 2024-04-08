@@ -1701,6 +1701,7 @@ namespace WindowsFormsApp1
 
                 if(!isImageValid(scCapturePath))
                 {
+                    FileUtil.deleteFile(camCapturePath);
                     return;
                 }
                 if (Globals.ComplianceAgent.webcam_capture && !isImageValid(camCapturePath))

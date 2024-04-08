@@ -122,16 +122,23 @@ namespace CSTool.Models
                     return true;
                 }
             }
-            // add cam capture to error
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
                 Globals.SaveToLogFile(string.Concat("Failed to upload: ", scCapturePath), (int)LogType.Error);
+                if (!String.IsNullOrEmpty(camCapturePath))
+                {
+                    Globals.SaveToLogFile(string.Concat("Failed to upload: ", camCapturePath), (int)LogType.Error);
+                }
                 Globals.SessionExpired();
                 return false;
             }
             catch
             {
                 Globals.SaveToLogFile(string.Concat("Failed to upload: ", scCapturePath), (int)LogType.Error);
+                if (!String.IsNullOrEmpty(camCapturePath))
+                {
+                    Globals.SaveToLogFile(string.Concat("Failed to upload: ", camCapturePath), (int)LogType.Error);
+                }
                 return false;
             }
             return false;

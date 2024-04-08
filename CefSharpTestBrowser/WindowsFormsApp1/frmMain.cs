@@ -1674,22 +1674,22 @@ namespace WindowsFormsApp1
             DirectoryInfo logDirInfo = new DirectoryInfo(logFileInfo.DirectoryName);
             if (!logDirInfo.Exists) logDirInfo.Create();
             string nowStr = ServerTime.Now().ToString("yyyy-dd-M--HH-mm-ss");
-            string scFileName = string.Concat(path, "sc_", nowStr, ".jpeg");
-            string camFileName = "";
+            string scCapturePath = string.Concat(path, "sc_", nowStr, ".jpeg");
+            string camCapturePath = "";
 
             Task.Factory.StartNew(() =>
             {
                 StaffScreenshot staffscreenshot = new StaffScreenshot();
-                staffscreenshot.captureScreenshot(scFileName);
+                staffscreenshot.captureScreenshot(scCapturePath);
                 if (Globals.ComplianceAgent.webcam_capture)
                 {
-                    camFileName = string.Concat(path, "cam_", nowStr, ".jpeg");
+                    camCapturePath = string.Concat(path, "cam_", nowStr, ".jpeg");
                     StaffCam staffCam = new StaffCam();
                     staffCam.startCamera(Settings.Default.cam_source);
                     Thread.Sleep(5000);
                     if (staffCam.isRunning())
                     {
-                        staffCam.captureImage(camFileName);
+                        staffCam.captureImage(camCapturePath);
                         Thread.Sleep(1000);
                         staffCam.stopCamera();
                     }
@@ -1699,18 +1699,18 @@ namespace WindowsFormsApp1
                     }
                 }
 
-                if(!isImageValid(scFileName))
+                if(!isImageValid(scCapturePath))
                 {
                     return;
                 }
-                if (Globals.ComplianceAgent.webcam_capture && !isImageValid(camFileName))
+                if (Globals.ComplianceAgent.webcam_capture && !isImageValid(camCapturePath))
                 {
-                    camFileName = "";
+                    camCapturePath = "";
                 }
 
-                if (!uploadImage(scFileName, camFileName))
+                if (!uploadImage(scCapturePath, camCapturePath))
                 {
-                    retryUpload(scFileName, camFileName);
+                    retryUpload(scCapturePath, camCapturePath);
                 }
             });
         }

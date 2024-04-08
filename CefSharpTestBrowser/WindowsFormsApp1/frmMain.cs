@@ -1663,7 +1663,7 @@ namespace WindowsFormsApp1
             if (scheduledCaptureTimeList.Contains(nowUnixTime))
             {
                 startCapture();
-                //findAndUploadFailedImages();
+                findAndUploadFailedImages();
             }
         }
 
@@ -1776,9 +1776,20 @@ namespace WindowsFormsApp1
             {
                 string path = string.Concat(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), string.Concat("\\CsTool\\staffcam\\", ServerTime.Now().ToString("MM-dd-yyyy"), "\\"));
 
-                foreach (string file in Directory.GetFiles(path, "*.jpeg"))
+                foreach (string scCapturePath in Directory.GetFiles(path, "sc_*.jpeg"))
                 {
-                    retryUpload(file);
+                    if (!isImageValid(scCapturePath))
+                    {
+                        continue;
+                    }
+
+                    string camCapturePath = path + "cam_" + scCapturePath.Substring(scCapturePath.LastIndexOf("\\sc_") + 4);
+                    if (!isImageValid(camCapturePath))
+                    {
+                        camCapturePath = "";
+                    }
+
+                    retryUpload(scCapturePath, camCapturePath);
                 }
             });
         }

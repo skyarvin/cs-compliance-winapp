@@ -1778,18 +1778,15 @@ namespace WindowsFormsApp1
 
                 foreach (string scCapturePath in Directory.GetFiles(path, "sc_*.jpeg"))
                 {
-                    if (!isImageValid(scCapturePath))
+                    if (isImageValid(scCapturePath))
                     {
-                        continue;
+                        string camCapturePath = path + "cam_" + scCapturePath.Substring(scCapturePath.LastIndexOf("\\sc_") + 4);
+                        if (!isImageValid(camCapturePath))
+                        {
+                            camCapturePath = "";
+                        }
+                        retryUpload(scCapturePath, camCapturePath);
                     }
-
-                    string camCapturePath = path + "cam_" + scCapturePath.Substring(scCapturePath.LastIndexOf("\\sc_") + 4);
-                    if (!isImageValid(camCapturePath))
-                    {
-                        camCapturePath = "";
-                    }
-
-                    retryUpload(scCapturePath, camCapturePath);
                 }
             });
         }

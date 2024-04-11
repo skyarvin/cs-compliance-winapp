@@ -49,7 +49,6 @@
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.btnKb = new System.Windows.Forms.Button();
             this.btnAnnouncement = new System.Windows.Forms.Button();
-            this.btnDecreaseTierLevel = new System.Windows.Forms.Button();
             this.pnlUser = new System.Windows.Forms.Panel();
             this.lblProfile = new System.Windows.Forms.Label();
             this.lblUser = new System.Windows.Forms.Label();
@@ -114,7 +113,6 @@
             this.pnlSearch.Controls.Add(this.pnlLoader);
             this.pnlSearch.Controls.Add(this.btnKb);
             this.pnlSearch.Controls.Add(this.btnAnnouncement);
-            this.pnlSearch.Controls.Add(this.btnDecreaseTierLevel);
             this.pnlSearch.Controls.Add(this.pnlUser);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlSearch.Location = new System.Drawing.Point(180, 0);
@@ -330,24 +328,6 @@
             this.btnAnnouncement.TabIndex = 18;
             this.btnAnnouncement.UseVisualStyleBackColor = false;
             this.btnAnnouncement.Click += new System.EventHandler(this.btnAnnouncement_Click_1);
-            // 
-            // btnDecreaseTierLevel
-            // 
-            this.btnDecreaseTierLevel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnDecreaseTierLevel.BackgroundImage = global::CSTool.Properties.Resources.tierlvl_change;
-            this.btnDecreaseTierLevel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnDecreaseTierLevel.Dock = System.Windows.Forms.DockStyle.Right;
-            this.btnDecreaseTierLevel.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(137)))), ((int)(((byte)(239)))));
-            this.btnDecreaseTierLevel.FlatAppearance.BorderSize = 0;
-            this.btnDecreaseTierLevel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnDecreaseTierLevel.ImageKey = "(none)";
-            this.btnDecreaseTierLevel.Location = new System.Drawing.Point(649, 0);
-            this.btnDecreaseTierLevel.Name = "btnDecreaseTierLevel";
-            this.btnDecreaseTierLevel.Size = new System.Drawing.Size(49, 40);
-            this.btnDecreaseTierLevel.TabIndex = 19;
-            this.btnDecreaseTierLevel.UseVisualStyleBackColor = false;
-            this.btnDecreaseTierLevel.Visible = false;
-            this.btnDecreaseTierLevel.Click += new System.EventHandler(this.btnDecreaseTierLevel_Click);
             // 
             // pnlUser
             // 
@@ -664,7 +644,6 @@
         private System.Windows.Forms.FlowLayoutPanel flpAnnouncementList;
         private System.Windows.Forms.Label lblTierLvlBanner;
         private System.Windows.Forms.Button btnKb;
-        private System.Windows.Forms.Button btnDecreaseTierLevel;
         private System.Windows.Forms.Button btnAnnouncement;
         private System.ComponentModel.BackgroundWorker bgWorkerActivityMonitor;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;

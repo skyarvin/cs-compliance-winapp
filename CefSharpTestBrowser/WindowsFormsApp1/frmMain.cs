@@ -1692,6 +1692,11 @@ namespace WindowsFormsApp1
                         staffCam.captureImage(camCapturePath);
                         Thread.Sleep(1000);
                         staffCam.stopCamera();
+
+                        if (!isImageValid(camCapturePath))
+                        {
+                            camCapturePath = "";
+                        }
                     }
                     else
                     {
@@ -1703,10 +1708,6 @@ namespace WindowsFormsApp1
                 {
                     FileUtil.deleteFile(camCapturePath);
                     return;
-                }
-                if (Globals.ComplianceAgent.webcam_capture && !isImageValid(camCapturePath))
-                {
-                    camCapturePath = "";
                 }
 
                 if (!uploadImage(scCapturePath, camCapturePath))

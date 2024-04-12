@@ -420,6 +420,14 @@ namespace CSTool
 
         public void OnClicked(string id, string notes, string violation)
         {
+            double waiting_time = ((DateTime)Globals.waiting_end - (DateTime)Globals.waiting_start).TotalSeconds;
+            if (Globals.waiting_end == null)
+            {
+                waiting_time = (ServerTime.Now() - (DateTime)Globals.waiting_start).TotalSeconds;
+            }
+            Globals.waiting_start = null;
+            Globals.waiting_end = null;
+
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
             if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
             {
@@ -429,7 +437,6 @@ namespace CSTool
 
             if (HtmlItemClicked != null)
             {
-                double waiting_time = (Globals.frmMain.StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
                     Id = id,
                     StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,

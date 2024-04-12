@@ -479,10 +479,18 @@ namespace WindowsFormsApp1
                 if (e.IsLoading)
                 {
                     this.pnlLoader.Visible = true;
+                    if(Globals.waiting_start == null)
+                    {
+                        Globals.waiting_start = ServerTime.Now();
+                    }
                 }
                 else
                 {
                     this.pnlLoader.Visible = false;
+                    if(Globals.waiting_end == null)
+                    {
+                        Globals.waiting_end = ServerTime.Now();
+                    }
                 }
             });
         }

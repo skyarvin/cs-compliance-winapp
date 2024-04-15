@@ -1601,7 +1601,8 @@ namespace WindowsFormsApp1
                     ctrl_announcement.Width = AnnouncementCount > 3 ? ctrl_announcement.Width - 10 : ctrl_announcement.Width + 5;
                     flpAnnouncementList.Controls.Add(ctrl_announcement);
                 }
-            } else
+            } 
+            else
             {
                 Label lblNoAnnouncements = new Label();
                 lblNoAnnouncements.AutoSize = true;

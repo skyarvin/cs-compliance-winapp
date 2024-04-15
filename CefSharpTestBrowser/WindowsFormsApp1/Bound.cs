@@ -429,7 +429,6 @@ namespace CSTool
 
             if (HtmlItemClicked != null)
             {
-                double waiting_time = (Globals.frmMain.StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
                     Id = id,
                     StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
@@ -437,7 +436,7 @@ namespace CSTool
                     RoomUrl = Globals.CurrentUrl,
                     Notes = notes,
                     Violation = violation,
-                    Waiting_Time = waiting_time
+                    Waiting_Time = Globals.waiting_time
                 });
                 Globals.first_room = false;
             }

@@ -434,6 +434,7 @@ namespace WindowsFormsApp1
                     Globals.SaveToLogFile(splitAddress[0], (int)LogType.Url_Change);
                     Globals.CurrentUrl = splitAddress[0];
                     StartTime_BrowserChanged = ServerTime.Now();
+                    Globals.waiting_time = (Globals.frmMain.StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
                     Globals.SKYPE_COMPLIANCE = false;
                     lblCountdown.Text = Globals.room_duration.ToString();
                     setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
@@ -1918,6 +1919,7 @@ namespace WindowsFormsApp1
                 if (last_action.TotalMilliseconds > 0)
                 {
                     Globals.StartTime_LastAction = ServerTime.Now() - last_action;
+
                 }
                 else
                 {

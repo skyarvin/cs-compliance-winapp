@@ -420,13 +420,16 @@ namespace CSTool
 
         public void OnClicked(string id, string notes, string violation)
         {
-            double waiting_time = ((DateTime)Globals.waiting_end - (DateTime)Globals.waiting_start).TotalSeconds;
+            double waiting_time;
             if (Globals.waiting_end == null)
             {
                 waiting_time = (ServerTime.Now() - (DateTime)Globals.waiting_start).TotalSeconds;
             }
-            Globals.waiting_start = null;
-            Globals.waiting_end = null;
+            else
+            {
+                waiting_time = ((DateTime)Globals.waiting_end - (DateTime)Globals.waiting_start).TotalSeconds;
+            }
+
 
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
             if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
@@ -446,6 +449,8 @@ namespace CSTool
                     Violation = violation,
                     Waiting_Time = waiting_time
                 });
+                Globals.waiting_start = null;
+                Globals.waiting_end = null;
                 Globals.first_room = false;
             }
         }

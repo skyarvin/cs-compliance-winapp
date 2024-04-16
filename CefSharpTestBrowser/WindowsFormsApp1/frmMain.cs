@@ -536,11 +536,11 @@ namespace WindowsFormsApp1
                     Globals.FrmInternalRequestReview.Show();
                 });
             }
-            
-            var agent_irfp = InternalRequestFacePhoto.GetAgentIRFP(Globals.Profile.AgentID);
-            if (agent_irfp != null)
+
+            var agent_internal_review_info = InternalReview.GetInternalReviewInfo();
+            if (agent_internal_review_info.irfp_info != null)
             {
-                Globals.INTERNAL_IRFP = agent_irfp;
+                Globals.INTERNAL_IRFP = agent_internal_review_info.irfp_info;
                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
                     if (Globals.FrmInternalRequestFacePhoto == null || Globals.FrmInternalRequestFacePhoto.IsDisposed)
@@ -550,10 +550,9 @@ namespace WindowsFormsApp1
                 });
             }
 
-            var agent_iidc = InternalIdentificationChecker.GetAgentIIDC(Globals.Profile.AgentID);
-            if (agent_iidc != null)
+            if (agent_internal_review_info.iidc_info != null)
             {
-                Globals.INTERNAL_IIDC = agent_iidc;
+                Globals.INTERNAL_IIDC = agent_internal_review_info.iidc_info;
                 Globals.frmMain.InvokeOnUiThreadIfRequired(() =>
                 {
                     if (Globals.FrmInternalIdentificationChecker == null || Globals.FrmInternalIdentificationChecker.IsDisposed)

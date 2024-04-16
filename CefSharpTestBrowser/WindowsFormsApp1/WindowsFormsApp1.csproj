@@ -377,6 +377,7 @@
     <Compile Include="Models\InternalIdentificationChecker.cs" />
     <Compile Include="Models\InternalRequestFacePhoto.cs" />
     <Compile Include="Models\InternalRequestReview.cs" />
+    <Compile Include="Models\InternalReview.cs" />
     <Compile Include="Models\Logger.cs" />
     <Compile Include="Models\TFA.cs" />
     <Compile Include="Models\Seed.cs" />

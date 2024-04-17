@@ -491,7 +491,7 @@
             // updateWorkactivity
             // 
             this.updateWorkactivity.Enabled = true;
-            this.updateWorkactivity.Interval = 300000;
+            this.updateWorkactivity.Interval = 60000;
             this.updateWorkactivity.Tick += new System.EventHandler(this.UpdateWorkactivity_Tick);
             // 
             // bgWorkIRR

@@ -863,16 +863,8 @@ namespace WindowsFormsApp1
                     ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
 
-                if (this.current_tier == 5 && ++Globals.action_count % 5 == 0)
-                {
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
-                }
-                else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
-                {
-                    this.RefreshBrowser();
-                }
-
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
+                this.NextRoom();
 
                 mutex.Dispose();
             });
@@ -1942,6 +1934,27 @@ namespace WindowsFormsApp1
                 email.Send();
 
                 Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
+            }
+        }
+
+        private void NextRoom()
+        {
+            Globals.action_count++;
+            if (Globals.ComplianceAgent.is_virtual_room_agent && Globals.action_count % 5 == 0)
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
+            }
+            else if (this.current_tier == 5 && Globals.action_count % 5 == 0)
+            {   
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
+            }
+            else if (this.current_tier != 5 && Globals.action_count % 3 == 0)
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
+            }
+            else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+            {
+                this.RefreshBrowser();
             }
         }
     }

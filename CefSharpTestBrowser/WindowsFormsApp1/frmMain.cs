@@ -862,11 +862,18 @@ namespace WindowsFormsApp1
                 {
                     ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
-                if (!Globals.CurrentUrl.Contains(Globals.ComplianceAgent.tier_level.ToString()))
+
+                if (this.current_tier == 5 && ++Globals.action_count % 5 == 0)
+                {
+                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
+                }
+                else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
                 {
                     this.RefreshBrowser();
                 }
+
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
+
                 mutex.Dispose();
             });
         }

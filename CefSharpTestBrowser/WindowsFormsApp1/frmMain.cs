@@ -868,7 +868,7 @@ namespace WindowsFormsApp1
                 }
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
 
-                if (this.current_tier == 5 && ++Globals.action_count % 10 == 0)
+                if (this.current_tier == 5 && ++Globals.action_count % 5 == 0)
                 {
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
                 }

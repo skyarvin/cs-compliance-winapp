@@ -867,11 +867,11 @@ namespace WindowsFormsApp1
                 {
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
                 }
-
-                if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
                 {
                     this.RefreshBrowser();
                 }
+
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
 
                 mutex.Dispose();

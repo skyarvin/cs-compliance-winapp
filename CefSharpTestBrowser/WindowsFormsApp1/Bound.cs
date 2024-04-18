@@ -203,8 +203,8 @@ namespace CSTool
                 document.addEventListener('DOMContentLoaded', function(){
                     if (window.location.href.includes('/free_photos/'))
                     {
-                        document.querySelector('input[value=""CP/NCMEC""]').remove();
-                        document.querySelector('input[value=""Next""]').remove();
+                        $('input[value=""CP/NCMEC""]').remove();
+                        $('input[value=""Next""]').remove();
                     }
 
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {

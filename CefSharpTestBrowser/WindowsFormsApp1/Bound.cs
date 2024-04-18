@@ -207,6 +207,12 @@ namespace CSTool
 
             browser.GetMainFrame().EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
+                    if (window.location.href.includes('/free_photos/'))
+                    {
+                        document.querySelector('input[value=""CP/NCMEC""]').remove();
+                        document.querySelector('input[value=""Next""]').remove();
+                    }
+
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                         $(this).attr('buttonClicked', true);
 

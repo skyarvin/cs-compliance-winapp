@@ -54,6 +54,7 @@ namespace WindowsFormsApp1
             {Action.Approve.Value, "AP" },
             {Action.ChatReply.Value, "AP" },
             {Action.RequestFacePhoto.Value, "RFP" },
+            {Action.Reject.Value, "RJ"},
         };
 
         private List<string> Violations = new List<string>
@@ -901,6 +902,7 @@ namespace WindowsFormsApp1
             public static Action SetExpiration { get { return new Action("set_expr"); } }
             public static Action ChatReply { get { return new Action("reply_button"); } }
             public static Action RequestFacePhoto { get { return new Action("request_photo_button"); } }
+            public static Action Reject { get { return new Action("reject"); } }
         }
 
         private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)

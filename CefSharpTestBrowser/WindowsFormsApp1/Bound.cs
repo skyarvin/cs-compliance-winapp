@@ -61,7 +61,19 @@ namespace CSTool
                         });
                    }
 
-                   window.onclick = function(e) { 
+                   window.onclick = function(e) {
+                        var free_photos_element_values = {
+                            'Approve': ['approve_button'], 
+                            'Reject': ['reject'], 
+                            'Submit': ['request-review-submit']
+                        }
+
+                        if (free_photos_element_values.hasOwnProperty(e.target.value)) {
+                            var notes = document.getElementById('review_reason').value;
+                            bound.onClicked(free_photos_element_values[e.target.value][0], notes, violation);
+                            return;
+                        }
+
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
                         }
@@ -70,7 +82,6 @@ namespace CSTool
                             var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button'];
                             var violation = $('#id_violation option:selected').text();
                             var notes = $('#id_description').val();
-
                             if (element_ids.includes(e.target.id)) {
                                 console.log(e.target.id);
                                 bound.onClicked(e.target.id, notes, violation);

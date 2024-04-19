@@ -620,25 +620,7 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-            this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-
-            if (Globals.ComplianceAgent.room_type == "CHATMEDIA")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "EXHIBITIONIST")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "PHOTOSET")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
-            }
-
+            this.ProceedToRoom();
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -1957,6 +1939,28 @@ namespace WindowsFormsApp1
                 email.Send();
 
                 Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
+            }
+        }
+
+        private void ProceedToRoom()
+        {
+            this.current_tier = (int)Globals.ComplianceAgent.tier_level;
+
+            if (Globals.ComplianceAgent.room_type == "CHATMEDIA")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "EXHIBITIONIST")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "PHOTOSET")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
             }
         }
     }

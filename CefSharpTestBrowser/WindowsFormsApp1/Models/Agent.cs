@@ -22,7 +22,7 @@ namespace WindowsFormsApp1.Models
         public string role { get; set; }
         public bool id_checking { get; set; }
         public bool webcam_capture { get; set; }
-        public bool is_virtual_room_agent { get; set; }
+        public string room_type { get; set; }
         public string profile
         {
             get

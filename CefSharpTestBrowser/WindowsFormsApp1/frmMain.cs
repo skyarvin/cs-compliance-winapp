@@ -621,7 +621,24 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+
+            if (Globals.ComplianceAgent.room_type == "CHATMEDIA")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "EXHIBITIONIST")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "PHOTOSET")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+            }
+
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -1941,20 +1958,7 @@ namespace WindowsFormsApp1
 
         private void NextRoom()
         {
-            Globals.action_count++;
-            if (Globals.ComplianceAgent.is_virtual_room_agent && Globals.action_count % 5 == 0)
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
-            }
-            else if (this.current_tier == 5 && Globals.action_count % 5 == 0)
-            {   
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
-            }
-            else if (this.current_tier != 5 && Globals.action_count % 3 == 0)
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
-            }
-            else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+            if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
             {
                 this.RefreshBrowser();
             }

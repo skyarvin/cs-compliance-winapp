@@ -32,5 +32,8 @@
     <Setting Name="cam_source" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="room_type" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

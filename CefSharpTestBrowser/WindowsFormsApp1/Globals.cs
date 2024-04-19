@@ -380,6 +380,7 @@ namespace WindowsFormsApp1
             Settings.Default.preference = null;
             Settings.Default.email = Globals.user_account.username;
             Settings.Default.tier_level = Convert.ToInt32(Globals.ComplianceAgent.tier_level);
+            Settings.Default.room_type = Globals.ComplianceAgent.room_type;
             Settings.Default.Save();
         }
 

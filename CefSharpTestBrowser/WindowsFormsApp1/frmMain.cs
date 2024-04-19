@@ -54,6 +54,7 @@ namespace WindowsFormsApp1
             {Action.Approve.Value, "AP" },
             {Action.ChatReply.Value, "AP" },
             {Action.RequestFacePhoto.Value, "RFP" },
+            {Action.Reject.Value, "RJ"},
         };
 
         private List<string> Violations = new List<string>
@@ -619,8 +620,7 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-            this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+            this.ProceedToRoom();
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -863,16 +863,12 @@ namespace WindowsFormsApp1
                     ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
 
-                if (this.current_tier == 5 && ++Globals.action_count % 5 == 0)
-                {
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
-                }
-                else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
+
+                if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
                 {
                     this.RefreshBrowser();
                 }
-
-                Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
 
                 mutex.Dispose();
             });
@@ -909,6 +905,7 @@ namespace WindowsFormsApp1
             public static Action SetExpiration { get { return new Action("set_expr"); } }
             public static Action ChatReply { get { return new Action("reply_button"); } }
             public static Action RequestFacePhoto { get { return new Action("request_photo_button"); } }
+            public static Action Reject { get { return new Action("reject"); } }
         }
 
         private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -1942,6 +1939,28 @@ namespace WindowsFormsApp1
                 email.Send();
 
                 Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
+            }
+        }
+
+        private void ProceedToRoom()
+        {
+            this.current_tier = (int)Globals.ComplianceAgent.tier_level;
+
+            if (Globals.ComplianceAgent.room_type == "CHATMEDIA")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "EXHIBITIONIST")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "PHOTOSET")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
+            }
+            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
+            {
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
             }
         }
     }

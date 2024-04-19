@@ -61,7 +61,7 @@ namespace CSTool
                         });
                    }
 
-                   window.onclick = function(e) { 
+                   window.onclick = function(e) {
                         if (e.target.id != null || e.target.id.length > 0 || e.target.name || e.target.value) { 
                             bound.windowOnClicked(e.target.id + '::[name]='+e.target.name+'::[value]='+e.target.value+'::[url]='+ window.location.href ); 
                         }
@@ -78,13 +78,18 @@ namespace CSTool
                             }
 
                             var element_values = {
-                                  'Update Expiration Date': ['set_expr'],
-                                  'Report Identification Missing Problem': ['id-missing'],
-                                  'Change Gender': ['change_gender']
+                                'Update Expiration Date': 'set_expr',
+                                'Report Identification Missing Problem': 'id-missing',
+                                'Change Gender': 'change_gender',
+                                'Approve': 'approve_button', 
+                                'Reject': 'reject', 
+                                'Submit': 'request-review-submit'
                             }
 
                             if (element_values.hasOwnProperty(e.target.value)) {
-                                    bound.onClicked(element_values[e.target.value][0], notes, violation);
+                                if (e.target.value === 'Submit')
+                                    notes = $('#review_reason').val();
+                                bound.onClicked(element_values[e.target.value], notes, violation);
                             }
                         }
                     }
@@ -196,6 +201,12 @@ namespace CSTool
 
             browser.GetMainFrame().EvaluateScriptAsync(@"
                 document.addEventListener('DOMContentLoaded', function(){
+                    if (window.location.href.includes('/free_photos/'))
+                    {
+                        $('input[value=""CP/NCMEC""]').remove();
+                        $('input[value=""Next""]').remove();
+                    }
+
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                         $(this).attr('buttonClicked', true);
 

@@ -882,7 +882,11 @@ namespace WindowsFormsApp1
                 }
 
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
-                this.NextRoom();
+
+                if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                {
+                    this.RefreshBrowser();
+                }
 
                 mutex.Dispose();
             });
@@ -1953,14 +1957,6 @@ namespace WindowsFormsApp1
                 email.Send();
 
                 Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
-            }
-        }
-
-        private void NextRoom()
-        {
-            if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
-            {
-                this.RefreshBrowser();
             }
         }
     }

@@ -88,33 +88,34 @@ namespace CSTool.Models
             }
         }
 
-        public bool PostScreenshot(string filename)
-        {
-            return post("/agent/capture/sc/", filename); 
-        }
-        public bool PostCameraCapture(string filename)
-        {
-            return post("/agent/capture/wc/", filename); 
-        }
-        private bool post(string url, string fileAddress)
+        public bool PostCapture(string scCapturePath, string camCapturePath = "")
         {
             try
             {
                 IHttpHandler client = new HttpHandler();
                 MultipartFormDataContent form = new MultipartFormDataContent();
-                HttpContent content = new StringContent("fileToUpload");
                 form.Add(new StringContent(agent_id.ToString(), Encoding.UTF8, MediaTypeNames.Text.Plain), "agent");
-                form.Add(content, "fileToUpload");
-                var stream = new FileStream(fileAddress, FileMode.Open);
-                content = new StreamContent(stream);
-                var fileName = content.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                var screenCaptureStream = new FileStream(scCapturePath, FileMode.Open);
+                HttpContent screenCaptureContent = new StreamContent(screenCaptureStream);
+                screenCaptureContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
                 {
-                    Name = "snapshot",
-                    FileName = Path.GetFileName(fileAddress),
+                    Name = "screen_capture",
+                    FileName = Path.GetFileName(scCapturePath)
                 };
-                form.Add(content);
+                form.Add(screenCaptureContent);
+                if(!String.IsNullOrEmpty(camCapturePath))
+                {
+                    var camCaptureStream = new FileStream(camCapturePath, FileMode.Open);
+                    HttpContent camCaptureContent = new StreamContent(camCaptureStream);
+                    camCaptureContent.Headers.ContentDisposition = new ContentDispositionHeaderValue("form-data")
+                    {
+                        Name = "cam_capture",
+                        FileName = Path.GetFileName(camCapturePath)
+                    };
+                    form.Add(camCaptureContent);
+                }
                 HttpResponseMessage response = null;
-                var _url = string.Concat(Url.API_URL, url);
+                var _url = string.Concat(Url.API_URL, "/agent/add_captures");
                 response = (client.CustomPostAsync(_url, form)).Result;
                 if (response.IsSuccessStatusCode)
                 {
@@ -123,13 +124,21 @@ namespace CSTool.Models
             }
             catch (AggregateException e) when (e.InnerException is UnauthorizeException)
             {
-                Globals.SaveToLogFile(string.Concat("Failed to upload: ", fileAddress), (int)LogType.Error);
+                Globals.SaveToLogFile(string.Concat("Failed to upload: ", scCapturePath), (int)LogType.Error);
+                if (!String.IsNullOrEmpty(camCapturePath))
+                {
+                    Globals.SaveToLogFile(string.Concat("Failed to upload: ", camCapturePath), (int)LogType.Error);
+                }
                 Globals.SessionExpired();
                 return false;
             }
             catch
             {
-                Globals.SaveToLogFile(string.Concat("Failed to upload: ", fileAddress), (int)LogType.Error);
+                Globals.SaveToLogFile(string.Concat("Failed to upload: ", scCapturePath), (int)LogType.Error);
+                if (!String.IsNullOrEmpty(camCapturePath))
+                {
+                    Globals.SaveToLogFile(string.Concat("Failed to upload: ", camCapturePath), (int)LogType.Error);
+                }
                 return false;
             }
             return false;

@@ -64,6 +64,7 @@ namespace WindowsFormsApp1
         public static bool ForceHideComliance = true;
         public static int max_room_duration = 48;
         public static int room_duration;
+        public static int action_count = 0;
         public static DateTime? StartTime_LastAction;
         public static InternalRequestReview INTERNAL_RR = new InternalRequestReview();
         public static InternalRequestFacePhoto INTERNAL_IRFP = new InternalRequestFacePhoto();
@@ -381,6 +382,7 @@ namespace WindowsFormsApp1
             Settings.Default.preference = null;
             Settings.Default.email = Globals.user_account.username;
             Settings.Default.tier_level = Convert.ToInt32(Globals.ComplianceAgent.tier_level);
+            Settings.Default.room_type = Globals.ComplianceAgent.room_type;
             Settings.Default.Save();
         }
 

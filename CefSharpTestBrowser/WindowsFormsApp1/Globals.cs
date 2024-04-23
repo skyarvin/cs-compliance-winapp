@@ -82,8 +82,7 @@ namespace WindowsFormsApp1
         public static UserAccount user_account = new UserAccount();
         public static TimeSpan timeOffset = new TimeSpan();
         public static bool first_room = true;
-        public static DateTime? waiting_start = null;
-        public static DateTime? waiting_end = null;
+        public static DateTime? loading_end = null;
 
         public static string device_identifier = "";
         public static string operating_system = "";

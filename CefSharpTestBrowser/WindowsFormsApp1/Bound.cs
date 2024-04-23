@@ -431,22 +431,21 @@ namespace CSTool
 
         public void OnClicked(string id, string notes, string violation)
         {
-            double waiting_time;
-            if (Globals.waiting_end == null)
-            {
-                waiting_time = (ServerTime.Now() - (DateTime)Globals.waiting_start).TotalSeconds;
-            }
-            else
-            {
-                waiting_time = ((DateTime)Globals.waiting_end - (DateTime)Globals.waiting_start).TotalSeconds;
-            }
-
-
             Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
             if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
             {
                 browser.GetMainFrame().EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
                 browser.GetMainFrame().EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
+            }
+
+            double waiting_time;
+            if (Globals.loading_end == null)
+            {
+                waiting_time = (ServerTime.Now() - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
+            }
+            else
+            {
+                waiting_time = ((DateTime)Globals.loading_end - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
             }
 
             if (HtmlItemClicked != null)
@@ -460,8 +459,7 @@ namespace CSTool
                     Violation = violation,
                     Waiting_Time = waiting_time
                 });
-                Globals.waiting_start = null;
-                Globals.waiting_end = null;
+                Globals.loading_end = null;
                 Globals.first_room = false;
             }
         }

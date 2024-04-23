@@ -480,17 +480,13 @@ namespace WindowsFormsApp1
                 if (e.IsLoading)
                 {
                     this.pnlLoader.Visible = true;
-                    if(Globals.waiting_start == null)
-                    {
-                        Globals.waiting_start = ServerTime.Now();
-                    }
                 }
                 else
                 {
                     this.pnlLoader.Visible = false;
-                    if(Globals.waiting_end == null)
+                    if(Globals.loading_end == null)
                     {
-                        Globals.waiting_end = ServerTime.Now();
+                        Globals.loading_end = ServerTime.Now();
                     }
                 }
             });
@@ -1605,8 +1601,7 @@ namespace WindowsFormsApp1
                     ctrl_announcement.Width = AnnouncementCount > 3 ? ctrl_announcement.Width - 10 : ctrl_announcement.Width + 5;
                     flpAnnouncementList.Controls.Add(ctrl_announcement);
                 }
-            } 
-            else
+            } else
             {
                 Label lblNoAnnouncements = new Label();
                 lblNoAnnouncements.AutoSize = true;
@@ -1946,9 +1941,9 @@ namespace WindowsFormsApp1
                     "\nAgent ID: ", Globals.ComplianceAgent.id,
                     "\nAgent Time: ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
                 email.Send();
-
-                Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
             }
+
+            Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
         }
 
         private void ProceedToRoom()

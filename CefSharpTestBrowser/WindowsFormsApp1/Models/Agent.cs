@@ -97,5 +97,20 @@ namespace WindowsFormsApp1.Models
                 throw unauthorize;
             }
         }
+
+        public string HumanizedRoomType()
+        {
+            switch (this.room_type)
+            {
+                case "CHATMEDIA":
+                    return "Chat Media Room";
+                case "EXHIBITIONIST":
+                    return "Exhibitionist Room";
+                case "PHOTOSET":
+                    return "Photoset Room";
+                default:
+                    return "Compliance Room";
+            }
+        }
     }
 }

@@ -865,9 +865,35 @@ namespace WindowsFormsApp1
 
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
 
+                var currentTierLevel = Globals.ComplianceAgent.tier_level;
+                var currentRoomType = Globals.ComplianceAgent.room_type;
+                Globals.ComplianceAgent = Agent.Get(Globals.ComplianceAgent.name);
+
+                if (Globals.ComplianceAgent != null)
+                {
+                    if (Globals.ComplianceAgent.tier_level is null)
+                    {
+                        MessageBox.Show("Tier level is not registered! Please contact admin.", "Error" );
+                        return;
+                    }
+
+                    Globals.SaveUserSettings();
+                }
+
+                this.ProceedToRoom();
                 if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
                 {
                     this.RefreshBrowser();
+                }
+
+                if (currentTierLevel != Globals.ComplianceAgent.tier_level && Globals.ComplianceAgent.room_type == "COMPLIANCE")
+                {
+                    MessageBox.Show($"Your tier level will be moved to Tier {Globals.ComplianceAgent.tier_level}");
+                }
+
+                if (currentRoomType != Globals.ComplianceAgent.room_type)
+                {
+                    MessageBox.Show($"Your room type will be moved to {Globals.ComplianceAgent.HumanizedRoomType()}");
                 }
 
                 mutex.Dispose();
@@ -1030,7 +1056,12 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance") && url.Contains("show") || url.Contains("compliance") && url.Contains("photoset"))
+            if (
+                url.Contains("compliance") && url.Contains("show") || 
+                url.Contains("compliance") && url.Contains("photoset") || 
+                url.Contains("compliance") && url.Contains("chat_media") ||
+                url.Contains("compliance") && url.Contains("exhibitionist")
+            )
                 return true;
 
             return false;

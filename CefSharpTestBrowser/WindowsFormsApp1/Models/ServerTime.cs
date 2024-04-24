@@ -18,7 +18,7 @@ namespace CSTool.Models
             {
                 try
                 {
-                    var uri = string.Concat(Url.API_URL, "/get_server_time");
+                    var uri = string.Concat(Url.API_URL, "/get_server_time_isoformat");
                     var response = client.CustomGetAsync(uri).Result;
                     HttpContent data = response.Content;
                     var jsonString = data.ReadAsStringAsync();

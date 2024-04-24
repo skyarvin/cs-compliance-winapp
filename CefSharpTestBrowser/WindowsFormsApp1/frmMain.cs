@@ -867,7 +867,7 @@ namespace WindowsFormsApp1
 
                 var currentTierLevel = Globals.ComplianceAgent.tier_level;
                 var currentRoomType = Globals.ComplianceAgent.room_type;
-                Globals.ComplianceAgent = Agent.Get(Globals.ComplianceAgent.name);
+                Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
 
                 if (Globals.ComplianceAgent != null)
                 {

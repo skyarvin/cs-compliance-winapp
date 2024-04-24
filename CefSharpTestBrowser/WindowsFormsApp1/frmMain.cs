@@ -26,6 +26,7 @@ using System.Security.Cryptography;
 using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
 
 namespace WindowsFormsApp1
 {
@@ -1056,12 +1057,7 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (
-                url.Contains("compliance") && url.Contains("show") || 
-                url.Contains("compliance") && url.Contains("photoset") || 
-                url.Contains("compliance") && url.Contains("chat_media") ||
-                url.Contains("compliance") && url.Contains("exhibitionist")
-            )
+            if (url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist")) 
                 return true;
 
             return false;

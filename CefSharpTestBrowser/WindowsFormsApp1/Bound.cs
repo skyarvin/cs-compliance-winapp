@@ -204,7 +204,6 @@ namespace CSTool
                     if (window.location.href.includes('/free_photos/'))
                     {
                         $('input[value=""CP/NCMEC""]').remove();
-                        $('input[value=""Next""]').remove();
                     }
 
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {

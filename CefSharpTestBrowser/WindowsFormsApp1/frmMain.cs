@@ -885,18 +885,17 @@ namespace WindowsFormsApp1
                     Globals.SaveUserSettings();
                 }
 
-                this.ProceedToRoom();
-
                 if (previousTierLevel != Globals.ComplianceAgent.tier_level && Globals.ComplianceAgent.room_type == "COMPLIANCE")
                 {
                     MessageBox.Show($"Your tier level will be moved to Tier {Globals.ComplianceAgent.tier_level}");
+                    this.ProceedToRoom();
                 }
-
-                if (previousRoomType != Globals.ComplianceAgent.room_type)
+                else if (previousRoomType != Globals.ComplianceAgent.room_type)
                 {
                     MessageBox.Show($"Your room type will be moved to {Globals.ComplianceAgent.HumanizedRoomType()}");
+                    this.ProceedToRoom();
                 }
-
+                
                 mutex.Dispose();
             });
         }

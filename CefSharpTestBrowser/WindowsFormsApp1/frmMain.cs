@@ -1059,7 +1059,7 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist")) 
+            if (url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset")) 
                 return true;
 
             return false;
@@ -1992,7 +1992,7 @@ namespace WindowsFormsApp1
                 Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
             }
             else if (Globals.ComplianceAgent.room_type == "NOTIFICATION_PHOTOSET")
-            {   
+            {
                 Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
             }
         }

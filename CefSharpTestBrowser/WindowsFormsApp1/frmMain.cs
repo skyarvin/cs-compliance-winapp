@@ -395,8 +395,20 @@ namespace WindowsFormsApp1
 
                     try
                     {
-                        var RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3];
-                        var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3] : "";
+                        string RoomName;
+                        string OldRoomName;
+
+                        if (sCurrAddress.Contains("notification_photoset"))
+                        {
+                            RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[2];
+                            OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[2] : "";
+                        }
+                        else
+                        {
+                            RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3];
+                            OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3] : "";
+                        }
+
                         if (OldRoomName == RoomName)
                         {
                             this.send_id_checker = false;

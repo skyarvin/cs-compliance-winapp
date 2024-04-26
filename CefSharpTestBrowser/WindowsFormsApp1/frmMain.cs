@@ -56,6 +56,7 @@ namespace WindowsFormsApp1
             {Action.ChatReply.Value, "AP" },
             {Action.RequestFacePhoto.Value, "RFP" },
             {Action.Reject.Value, "RJ"},
+            {Action.RejectHasNudity.Value, "RN"},
         };
 
         private List<string> Violations = new List<string>
@@ -933,6 +934,7 @@ namespace WindowsFormsApp1
             public static Action ChatReply { get { return new Action("reply_button"); } }
             public static Action RequestFacePhoto { get { return new Action("request_photo_button"); } }
             public static Action Reject { get { return new Action("reject"); } }
+            public static Action RejectHasNudity { get { return new Action("nudity_verifyer_reject"); } }
         }
 
         private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -1988,6 +1990,10 @@ namespace WindowsFormsApp1
             else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
             {
                 Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+            }
+            else if (Globals.ComplianceAgent.room_type == "NOTIFICATION_PHOTOSET")
+            {   
+                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
             }
         }
     }

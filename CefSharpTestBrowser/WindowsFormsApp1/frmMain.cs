@@ -485,6 +485,10 @@ namespace WindowsFormsApp1
                 else
                 {
                     this.pnlLoader.Visible = false;
+                    if(Globals.loading_end == null)
+                    {
+                        Globals.loading_end = ServerTime.Now();
+                    }
                 }
             });
         }
@@ -866,8 +870,8 @@ namespace WindowsFormsApp1
 
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
 
-                var currentTierLevel = Globals.ComplianceAgent.tier_level;
-                var currentRoomType = Globals.ComplianceAgent.room_type;
+                var previousTierLevel = Globals.ComplianceAgent.tier_level;
+                var previousRoomType = Globals.ComplianceAgent.room_type;
                 Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
 
                 if (Globals.ComplianceAgent != null)
@@ -881,20 +885,23 @@ namespace WindowsFormsApp1
                     Globals.SaveUserSettings();
                 }
 
-                this.ProceedToRoom();
-                if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
                 {
-                    this.RefreshBrowser();
+                    if (previousTierLevel != Globals.ComplianceAgent.tier_level)
+                    {
+                        MessageBox.Show($"Your tier level will be moved to Tier {Globals.ComplianceAgent.tier_level}");
+                        this.ProceedToRoom();
+                    }
+                    // bring back url to original tier when agent is leveled down
+                    else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                    {
+                        this.ProceedToRoom();
+                    }
                 }
-
-                if (currentTierLevel != Globals.ComplianceAgent.tier_level && Globals.ComplianceAgent.room_type == "COMPLIANCE")
-                {
-                    MessageBox.Show($"Your tier level will be moved to Tier {Globals.ComplianceAgent.tier_level}");
-                }
-
-                if (currentRoomType != Globals.ComplianceAgent.room_type)
+                else if (previousRoomType != Globals.ComplianceAgent.room_type)
                 {
                     MessageBox.Show($"Your room type will be moved to {Globals.ComplianceAgent.HumanizedRoomType()}");
+                    this.ProceedToRoom();
                 }
 
                 mutex.Dispose();
@@ -1939,22 +1946,9 @@ namespace WindowsFormsApp1
 
         public static void OnDateTimeChanged(object sender, EventArgs e)
         {
-            TimeSpan last_action = (TimeSpan)(Globals.StartTime_LastAction - ServerTime.Now());
             TimeZoneInfo.ClearCachedData();
             TimeSpan previous_offset = Globals.timeOffset;
             Globals.ServerTimeSync();
-
-            if (Globals.StartTime_LastAction.HasValue)
-            {
-                if (last_action.TotalMilliseconds > 0)
-                {
-                    Globals.StartTime_LastAction = ServerTime.Now() - last_action;
-                }
-                else
-                {
-                    Globals.StartTime_LastAction = ServerTime.Now() + last_action;
-                }
-            }
 
             if (Math.Abs(Math.Abs(previous_offset.TotalMinutes) - Math.Abs(Globals.timeOffset.TotalMinutes)) >= 60)
             {
@@ -1964,9 +1958,9 @@ namespace WindowsFormsApp1
                     "\nAgent ID: ", Globals.ComplianceAgent.id,
                     "\nAgent Time: ", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fffffff"));
                 email.Send();
-
-                Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
             }
+
+            Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
         }
 
         private void ProceedToRoom()

@@ -204,7 +204,6 @@ namespace CSTool
                     if (window.location.href.includes('/free_photos/'))
                     {
                         $('input[value=""CP/NCMEC""]').remove();
-                        $('input[value=""Next""]').remove();
                     }
 
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
@@ -438,9 +437,18 @@ namespace CSTool
                 browser.GetMainFrame().EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
             }
 
+            double waiting_time;
+            if (Globals.loading_end == null)
+            {
+                waiting_time = (ServerTime.Now() - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
+            }
+            else
+            {
+                waiting_time = ((DateTime)Globals.loading_end - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
+            }
+
             if (HtmlItemClicked != null)
             {
-                double waiting_time = (Globals.frmMain.StartTime_BrowserChanged - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
                 HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
                     Id = id,
                     StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
@@ -450,6 +458,7 @@ namespace CSTool
                     Violation = violation,
                     Waiting_Time = waiting_time
                 });
+                Globals.loading_end = null;
                 Globals.first_room = false;
             }
         }

@@ -10,7 +10,7 @@ namespace CSTool.Models
 {
     internal class ServerTime
     {
-        public DateTime server_datetime { get; set; }
+        public string server_datetime { get; set; }
 
         public DateTime FetchServerTime()
         {
@@ -18,13 +18,13 @@ namespace CSTool.Models
             {
                 try
                 {
-                    var uri = string.Concat(Url.API_URL, "/get_server_time");
+                    var uri = string.Concat(Url.API_URL, "/get-server-time-isoformat");
                     var response = client.CustomGetAsync(uri).Result;
                     HttpContent data = response.Content;
                     var jsonString = data.ReadAsStringAsync();
                     jsonString.Wait();
                     ServerTime time = JsonConvert.DeserializeObject<ServerTime>(jsonString.Result);
-                    return time.server_datetime;
+                    return DateTimeOffset.Parse(time.server_datetime).DateTime;
                 }
                 catch(Exception e)
                 {

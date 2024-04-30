@@ -890,14 +890,14 @@ namespace WindowsFormsApp1
                 if (previousRoomType != Globals.ComplianceAgent.room_type)
                 {
                     this.ProceedToRoom();
-                    MessageBox.Show($"Room moved to {Globals.ComplianceAgent.HumanizedRoomType()}");
+                    MessageBox.Show($"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.", "Information");
                 }
                 else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
                 {
                     if (previousTierLevel != Globals.ComplianceAgent.tier_level)
                     {
                         this.ProceedToRoom();
-                        MessageBox.Show($"Tier level moved to Tier {Globals.ComplianceAgent.tier_level}");
+                        MessageBox.Show($"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.", "Information");
                     }
                     // bring back url to original tier when agent is leveled down
                     else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))

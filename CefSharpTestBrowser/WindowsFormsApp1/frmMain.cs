@@ -393,33 +393,21 @@ namespace WindowsFormsApp1
                         return;
                     }
 
-                    try
-                    {
-                        string RoomName;
-                        string OldRoomName;
+                    //try
+                    //{
+                    //    var RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3];
+                    //    var OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3] : "";
 
-                        if (sCurrAddress.Contains("notification_photoset"))
-                        {
-                            RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[2];
-                            OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[2] : "";
-                        }
-                        else
-                        {
-                            RoomName = sCurrAddress.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3];
-                            OldRoomName = Globals.CurrentUrl != null ? Globals.CurrentUrl.Replace(Url.CB_COMPLIANCE_URL, "").Split('/')[3] : "";
-                        }
+                    //    if (OldRoomName == RoomName)
+                    //    {
+                    //        this.send_id_checker = false;
+                    //    }
+                    //}
 
-                        if (OldRoomName == RoomName)
-                        {
-                            this.send_id_checker = false;
-                        }
-                    }
-
-                    catch (IndexOutOfRangeException ie)
-                    {
-                        Globals.SaveToLogFile(ie.ToString(), (int)LogType.Error);
-                        return;
-                    }
+                    //catch
+                    //{
+                    //    return;
+                    //}
 
                     //Emailer for missed seed
                     if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
@@ -903,8 +891,13 @@ namespace WindowsFormsApp1
                 {
                     if (previousTierLevel != Globals.ComplianceAgent.tier_level)
                     {
-                        MessageBox.Show($"Your tier level will be moved to Tier {Globals.ComplianceAgent.tier_level}");
                         this.ProceedToRoom();
+                        MessageBox.Show($"Your tier level will be moved to Tier {Globals.ComplianceAgent.tier_level}");
+                    }
+                    else if (previousRoomType != Globals.ComplianceAgent.room_type)
+                    {
+                        this.ProceedToRoom();
+                        MessageBox.Show($"Your room type will be moved to {Globals.ComplianceAgent.HumanizedRoomType()}");
                     }
                     // bring back url to original tier when agent is leveled down
                     else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
@@ -914,8 +907,8 @@ namespace WindowsFormsApp1
                 }
                 else if (previousRoomType != Globals.ComplianceAgent.room_type)
                 {
-                    MessageBox.Show($"Your room type will be moved to {Globals.ComplianceAgent.HumanizedRoomType()}");
                     this.ProceedToRoom();
+                    MessageBox.Show($"Your room type will be moved to {Globals.ComplianceAgent.HumanizedRoomType()}");
                 }
 
                 mutex.Dispose();

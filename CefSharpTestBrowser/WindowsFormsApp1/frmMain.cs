@@ -415,8 +415,9 @@ namespace WindowsFormsApp1
                         }
                     }
 
-                    catch
+                    catch (IndexOutOfRangeException ie)
                     {
+                        Globals.SaveToLogFile(ie.ToString(), (int)LogType.Error);
                         return;
                     }
 

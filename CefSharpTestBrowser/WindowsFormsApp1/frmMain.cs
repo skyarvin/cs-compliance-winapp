@@ -1948,29 +1948,26 @@ namespace WindowsFormsApp1
         {
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
 
-            if (Globals.ComplianceAgent.room_type == "CHATMEDIA")
+            switch (Globals.ComplianceAgent.room_type)
             {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "EXHIBITIONIST")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "PHOTOSET")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
-            }
-            else if (Globals.ComplianceAgent.room_type == "NOTIFICATION_PHOTOSET")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "CHAT") 
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/chat/"));
+                case "CHATMEDIA":
+                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
+                    break;
+                case "EXHIBITIONIST":
+                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
+                    break;
+                case "PHOTOSET":
+                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
+                    break;
+                case "NOTIFICATION_PHOTOSET":
+                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
+                    break;
+                case "CHAT":
+                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/chat/"));
+                    break;
+                default:
+                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+                    break;
             }
         }
 

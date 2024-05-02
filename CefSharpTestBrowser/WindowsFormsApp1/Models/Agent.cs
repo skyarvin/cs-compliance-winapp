@@ -102,15 +102,15 @@ namespace WindowsFormsApp1.Models
         {
             switch (this.room_type)
             {
-                case "CHATMEDIA":
+                case RoomType.ChatMedia:
                     return "Chat Media Room";
-                case "EXHIBITIONIST":
+                case RoomType.Exhibitionist:
                     return "Exhibitionist Room";
-                case "PHOTOSET":
+                case RoomType.Photoset:
                     return "Photoset Room";
-                case "NOTIFICATION_PHOTOSET":
+                case RoomType.NotificationPhotoset:
                     return "Notification Photoset Room";
-                case "CHAT":
+                case RoomType.Chat:
                     return "Chat Room";
                 default:
                     return "Compliance Room";

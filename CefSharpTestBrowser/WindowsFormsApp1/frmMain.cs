@@ -1950,26 +1950,26 @@ namespace WindowsFormsApp1
 
             switch (Globals.ComplianceAgent.room_type)
             {
-                case "CHATMEDIA":
+                case RoomType.ChatMedia:
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
                     break;
-                case "EXHIBITIONIST":
+                case RoomType.Exhibitionist:
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
                     break;
-                case "PHOTOSET":
+                case RoomType.Photoset:
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
                     break;
-                case "NOTIFICATION_PHOTOSET":
+                case RoomType.NotificationPhotoset:
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
                     break;
-                case "CHAT":
+                case RoomType.Chat:
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/chat/"));
                     break;
                 default:
                     Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
                     break;
             }
-        }
+    }
 
         private void CheckAgentDetailsUpdate()
         {

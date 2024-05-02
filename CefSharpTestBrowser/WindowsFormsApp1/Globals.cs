@@ -85,7 +85,7 @@ namespace WindowsFormsApp1
         public static DateTime? loading_end = null;
 
         public static string device_identifier = "";
-        public static string operating_system = "";
+        public static string operating_system = "";        
         public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;
@@ -416,5 +416,15 @@ namespace WindowsFormsApp1
     {
         LoginForm,
         MainForm
+    }
+
+    public class RoomType
+    {
+        public const string Compliance = "COMPLIANCE";
+        public const string ChatMedia = "CHATMEDIA";
+        public const string Exhibitionist = "EXHIBITIONIST";
+        public const string Photoset = "PHOTOSET";
+        public const string NotificationPhotoset = "NOTIFICATION_PHOTOSET";
+        public const string Chat = "CHAT";
     }
 }

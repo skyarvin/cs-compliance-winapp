@@ -67,7 +67,7 @@ namespace CSTool
                         }
 
                         if (e.target.id != undefined && e.target.id != null || e.target.id.length > 0 || e.target.value) {
-                            var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button'];
+                            var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button', 'nudity_verifyer_reject'];
                             var violation = $('#id_violation option:selected').text();
                             var notes = $('#id_description').val();
 

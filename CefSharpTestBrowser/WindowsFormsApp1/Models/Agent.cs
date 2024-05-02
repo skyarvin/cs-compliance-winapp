@@ -108,6 +108,8 @@ namespace WindowsFormsApp1.Models
                     return "Exhibitionist Room";
                 case "PHOTOSET":
                     return "Photoset Room";
+                case "NOTIFICATION_PHOTOSET":
+                    return "Notification Photoset Room";
                 default:
                     return "Compliance Room";
             }

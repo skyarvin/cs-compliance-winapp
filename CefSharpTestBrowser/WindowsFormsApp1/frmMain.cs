@@ -627,7 +627,12 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-            this.CheckAgentDetailsUpdate();
+
+            if (Globals.CurrentUrl == Url.CB_HOME)
+                this.ProceedToRoom();
+            else
+                this.CheckAgentDetailsUpdate();
+
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {

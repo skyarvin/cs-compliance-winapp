@@ -56,7 +56,7 @@ namespace WindowsFormsApp1
             {Action.ChatReply.Value, "AP" },
             {Action.RequestFacePhoto.Value, "RFP" },
             {Action.Reject.Value, "RJ"},
-            {Action.RejectHasNudity.Value, "RN"},
+            {Action.RejectHasNudity.Value, "RHN"},
         };
 
         private List<string> Violations = new List<string>

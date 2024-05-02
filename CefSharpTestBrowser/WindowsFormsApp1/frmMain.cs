@@ -627,7 +627,7 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-            this.ProceedToRoom();
+            this.CheckAgentDetailsUpdate();
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -872,39 +872,7 @@ namespace WindowsFormsApp1
 
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
 
-                var previousTierLevel = Globals.ComplianceAgent.tier_level;
-                var previousRoomType = Globals.ComplianceAgent.room_type;
-                Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
-
-                if (Globals.ComplianceAgent != null)
-                {
-                    if (Globals.ComplianceAgent.tier_level is null)
-                    {
-                        MessageBox.Show("Tier level is not registered! Please contact admin.", "Error" );
-                        return;
-                    }
-
-                    Globals.SaveUserSettings();
-                }
-
-                if (previousRoomType != Globals.ComplianceAgent.room_type)
-                {
-                    this.ProceedToRoom();
-                    MessageBox.Show($"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.", "Information");
-                }
-                else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
-                {
-                    if (previousTierLevel != Globals.ComplianceAgent.tier_level)
-                    {
-                        this.ProceedToRoom();
-                        MessageBox.Show($"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.", "Information");
-                    }
-                    // bring back url to original tier when agent is leveled down
-                    else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
-                    {
-                        this.ProceedToRoom();
-                    }
-                }
+                this.CheckAgentDetailsUpdate();
 
                 mutex.Dispose();
             });
@@ -1989,6 +1957,43 @@ namespace WindowsFormsApp1
             else if (Globals.ComplianceAgent.room_type == "NOTIFICATION_PHOTOSET")
             {
                 Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
+            }
+        }
+
+        private void CheckAgentDetailsUpdate()
+        {
+            var previousTierLevel = Globals.ComplianceAgent.tier_level;
+            var previousRoomType = Globals.ComplianceAgent.room_type;
+            Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
+
+            if (Globals.ComplianceAgent != null)
+            {
+                if (Globals.ComplianceAgent.tier_level is null)
+                {
+                    MessageBox.Show("Tier level is not registered! Please contact admin.", "Error");
+                    return;
+                }
+
+                Globals.SaveUserSettings();
+            }
+
+            if (previousRoomType != Globals.ComplianceAgent.room_type)
+            {
+                this.ProceedToRoom();
+                MessageBox.Show($"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.", "Information");
+            }
+            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
+            {
+                if (previousTierLevel != Globals.ComplianceAgent.tier_level)
+                {
+                    this.ProceedToRoom();
+                    MessageBox.Show($"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.", "Information");
+                }
+                // bring back url to original tier when agent is leveled down
+                else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                {
+                    this.ProceedToRoom();
+                }
             }
         }
     }

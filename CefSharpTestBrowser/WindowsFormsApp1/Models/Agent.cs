@@ -110,8 +110,6 @@ namespace WindowsFormsApp1.Models
                     return "Photoset Room";
                 case "NOTIFICATION_PHOTOSET":
                     return "Notification Photoset Room";
-                case "CHAT":
-                    return "Chat Room";
                 default:
                     return "Compliance Room";
             }

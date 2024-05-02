@@ -67,10 +67,10 @@ namespace CSTool
                         }
 
                         if (e.target.id != undefined && e.target.id != null || e.target.id.length > 0 || e.target.value) {
-                            var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button', 'nudity_verifyer_reject', 'ghost_spammer'];
+                            var element_ids = ['approve_button','violation-submit','spammer-submit','request-review-submit','agree_button','disagree_button','reply_button','request_photo_button', 'nudity_verifyer_reject'];
                             var violation = $('#id_violation option:selected').text();
                             var notes = $('#id_description').val();
-                            
+
                             if (element_ids.includes(e.target.id)) {
                                 console.log(e.target.id);
                                 bound.onClicked(e.target.id, notes, violation);
@@ -83,16 +83,12 @@ namespace CSTool
                                 'Change Gender': 'change_gender',
                                 'Approve': 'approve_button', 
                                 'Reject': 'reject', 
-                                'Submit': 'request-review-submit',
-                                'Add note and mark as hacked': 'mark_hacked',
+                                'Submit': 'request-review-submit'
                             }
 
                             if (element_values.hasOwnProperty(e.target.value)) {
                                 if (e.target.value === 'Submit')
                                     notes = $('#review_reason').val();
-                                if (e.target.value === 'Add note and mark as hacked') {
-                                    notes = $('#facebox').find('input[name=\'note\']').val();
-                                }
                                 bound.onClicked(element_values[e.target.value], notes, violation);
                             }
                         }

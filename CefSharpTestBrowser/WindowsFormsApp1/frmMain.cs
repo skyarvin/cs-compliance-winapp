@@ -56,9 +56,7 @@ namespace WindowsFormsApp1
             {Action.ChatReply.Value, "AP" },
             {Action.RequestFacePhoto.Value, "RFP" },
             {Action.Reject.Value, "RJ"},
-            {Action.RejectHasNudity.Value, "RHN"},
-            {Action.MarkAsHacked.Value, "MH" },
-            {Action.GhostSpammer.Value, "GS" }
+            {Action.RejectHasNudity.Value, "RN"},
         };
 
         private List<string> Violations = new List<string>
@@ -67,8 +65,7 @@ namespace WindowsFormsApp1
            Action.IdMissing.Value,
            Action.SpammerSubmit.Value,
            Action.RequestReview.Value,
-           Action.RequestFacePhoto.Value,
-           Action.MarkAsHacked.Value,
+           Action.RequestFacePhoto.Value
         };
 
         #region Init
@@ -946,8 +943,6 @@ namespace WindowsFormsApp1
             public static Action RequestFacePhoto { get { return new Action("request_photo_button"); } }
             public static Action Reject { get { return new Action("reject"); } }
             public static Action RejectHasNudity { get { return new Action("nudity_verifyer_reject"); } }
-            public static Action MarkAsHacked { get { return new Action("mark_hacked"); } }
-            public static Action GhostSpammer { get { return new Action("ghost_spammer"); } }
         }
 
         private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -1072,7 +1067,7 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset|chat")) 
+            if (url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset")) 
                 return true;
 
             return false;
@@ -1994,10 +1989,6 @@ namespace WindowsFormsApp1
             else if (Globals.ComplianceAgent.room_type == "NOTIFICATION_PHOTOSET")
             {
                 Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "CHAT") 
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/chat/"));
             }
         }
     }

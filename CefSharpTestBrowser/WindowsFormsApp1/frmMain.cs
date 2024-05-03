@@ -1968,7 +1968,7 @@ namespace WindowsFormsApp1
             return true;
     }
 
-        private bool CheckAgentDetailsUpdate() 
+        private bool CheckAgentDetailsUpdate()
         {
             var previousTierLevel = Globals.ComplianceAgent.tier_level;
             var previousRoomType = Globals.ComplianceAgent.room_type;

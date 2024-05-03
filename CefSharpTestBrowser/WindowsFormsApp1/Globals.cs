@@ -85,7 +85,7 @@ namespace WindowsFormsApp1
         public static DateTime? loading_end = null;
 
         public static string device_identifier = "";
-        public static string operating_system = "";        
+        public static string operating_system = "";
         public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;

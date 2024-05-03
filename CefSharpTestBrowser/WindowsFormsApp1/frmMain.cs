@@ -630,16 +630,8 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-
             this.FetchAgentDetails();
-
-            if (Globals.room_tier_changed)
-                Globals.ShowMessage(this, $"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.");
-            else if (Globals.room_type_changed)
-                Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.");
-            
             this.ProceedToRoom();
-
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -888,14 +880,12 @@ namespace WindowsFormsApp1
 
                 if (Globals.room_type_changed)
                 {
-                    this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}."));
                     this.ProceedToRoom();
                 }
-                else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
+                else if (Globals.ComplianceAgent.room_type == RoomType.Compliance)
                 {
                     if (Globals.room_tier_changed)
                     {
-                        this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, $"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}."));
                         this.ProceedToRoom();
                     }
                     // bring back url to original tier when agent is leveled down
@@ -1068,10 +1058,7 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset|chat")) 
-                return true;
-
-            return false;
+            return url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset|chat");
         }
 
         private void setHeaderColor(Color backcolor, Color darkBackColor)
@@ -1969,6 +1956,11 @@ namespace WindowsFormsApp1
 
         private void ProceedToRoom()
         {
+            if (Globals.room_tier_changed)
+                Globals.ShowMessage(this, $"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.");
+            else if (Globals.room_type_changed)
+                Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.");
+
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
             string url = string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier);
             switch (Globals.ComplianceAgent.room_type)

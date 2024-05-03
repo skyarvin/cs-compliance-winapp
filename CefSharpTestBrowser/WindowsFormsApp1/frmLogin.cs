@@ -33,6 +33,7 @@ namespace WindowsFormsApp1
             }
             catch (ConfigurationErrorsException ex)
             {
+                Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
                 FileUtil.deleteFile(ex.Filename);
             }
             InitializeComponent();

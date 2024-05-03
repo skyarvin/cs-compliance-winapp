@@ -631,10 +631,8 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
 
-            if (Globals.CurrentUrl == Url.CB_HOME)
+            if (!this.CheckAgentDetailsUpdate())
                 this.ProceedToRoom();
-            else
-                this.CheckAgentDetailsUpdate();
 
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
@@ -1944,37 +1942,37 @@ namespace WindowsFormsApp1
             Globals.SaveToLogFile(String.Concat("Local Time Changed To: ", DateTime.Now), (int)LogType.DateTime_Handler);
         }
 
-        private void ProceedToRoom()
+        private bool ProceedToRoom()
         {
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-
+            string url = string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier);
             switch (Globals.ComplianceAgent.room_type)
             {
                 case RoomType.ChatMedia:
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/");
                     break;
                 case RoomType.Exhibitionist:
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/");
                     break;
                 case RoomType.Photoset:
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/");
                     break;
                 case RoomType.NotificationPhotoset:
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/");
                     break;
                 case RoomType.Chat:
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/chat/"));
-                    break;
-                default:
-                    Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/chat/");
                     break;
             }
+            Globals.chromeBrowser.Load(url);
+            return true;
     }
 
-        private void CheckAgentDetailsUpdate()
+        private bool CheckAgentDetailsUpdate() 
         {
             var previousTierLevel = Globals.ComplianceAgent.tier_level;
             var previousRoomType = Globals.ComplianceAgent.room_type;
+
             Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
 
             if (Globals.ComplianceAgent != null)
@@ -1982,7 +1980,7 @@ namespace WindowsFormsApp1
                 if (Globals.ComplianceAgent.tier_level is null)
                 {
                     MessageBox.Show("Tier level is not registered! Please contact admin.", "Error");
-                    return;
+                    return false;
                 }
 
                 Globals.SaveUserSettings();
@@ -1990,22 +1988,23 @@ namespace WindowsFormsApp1
 
             if (previousRoomType != Globals.ComplianceAgent.room_type)
             {
-                this.ProceedToRoom();
                 MessageBox.Show($"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.", "Information");
+                return this.ProceedToRoom();
             }
             else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
             {
                 if (previousTierLevel != Globals.ComplianceAgent.tier_level)
                 {
-                    this.ProceedToRoom();
                     MessageBox.Show($"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.", "Information");
+                    return this.ProceedToRoom();
                 }
                 // bring back url to original tier when agent is leveled down
                 else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
                 {
-                    this.ProceedToRoom();
+                    return this.ProceedToRoom();
                 }
             }
+            return false;
         }
     }
 }

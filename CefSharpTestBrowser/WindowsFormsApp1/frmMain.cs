@@ -57,6 +57,8 @@ namespace WindowsFormsApp1
             {Action.RequestFacePhoto.Value, "RFP" },
             {Action.Reject.Value, "RJ"},
             {Action.RejectHasNudity.Value, "RHN"},
+            {Action.MarkAsHacked.Value, "MH" },
+            {Action.GhostSpammer.Value, "GS" }
         };
 
         private List<string> Violations = new List<string>
@@ -65,7 +67,8 @@ namespace WindowsFormsApp1
            Action.IdMissing.Value,
            Action.SpammerSubmit.Value,
            Action.RequestReview.Value,
-           Action.RequestFacePhoto.Value
+           Action.RequestFacePhoto.Value,
+           Action.MarkAsHacked.Value,
         };
 
         #region Init
@@ -627,12 +630,8 @@ namespace WindowsFormsApp1
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
-
-            if (Globals.CurrentUrl == Url.CB_HOME)
-                this.ProceedToRoom();
-            else
-                this.CheckAgentDetailsUpdate();
-
+            this.FetchAgentDetails();
+            this.ProceedToRoom();
             PairCommand refreshCommand = new PairCommand { Action = "REFRESH" };
             if (Globals.IsServer())
             {
@@ -877,7 +876,24 @@ namespace WindowsFormsApp1
 
                 Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
 
-                this.CheckAgentDetailsUpdate();
+                this.FetchAgentDetails();
+
+                if (Globals.room_type_changed)
+                {
+                    this.ProceedToRoom();
+                }
+                else if (Globals.ComplianceAgent.room_type == RoomType.Compliance)
+                {
+                    if (Globals.room_tier_changed)
+                    {
+                        this.ProceedToRoom();
+                    }
+                    // bring back url to original tier when agent is leveled down
+                    else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                    {
+                        this.ProceedToRoom();
+                    }
+                }
 
                 mutex.Dispose();
             });
@@ -916,6 +932,8 @@ namespace WindowsFormsApp1
             public static Action RequestFacePhoto { get { return new Action("request_photo_button"); } }
             public static Action Reject { get { return new Action("reject"); } }
             public static Action RejectHasNudity { get { return new Action("nudity_verifyer_reject"); } }
+            public static Action MarkAsHacked { get { return new Action("mark_hacked"); } }
+            public static Action GhostSpammer { get { return new Action("ghost_spammer"); } }
         }
 
         private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -1040,10 +1058,7 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            if (url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset")) 
-                return true;
-
-            return false;
+            return url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset|chat");
         }
 
         private void setHeaderColor(Color backcolor, Color darkBackColor)
@@ -1941,34 +1956,41 @@ namespace WindowsFormsApp1
 
         private void ProceedToRoom()
         {
+            if (Globals.room_tier_changed)
+                Globals.ShowMessage(this, $"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.");
+            else if (Globals.room_type_changed)
+                Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.");
+
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
+            string url = string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier);
+            switch (Globals.ComplianceAgent.room_type)
+            {
+                case RoomType.ChatMedia:
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/");
+                    break;
+                case RoomType.Exhibitionist:
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/");
+                    break;
+                case RoomType.Photoset:
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/");
+                    break;
+                case RoomType.NotificationPhotoset:
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/");
+                    break;
+                case RoomType.Chat:
+                    url = string.Concat(Url.CB_COMPLIANCE_URL, "/chat/");
+                    break;
+            }
+            Globals.chromeBrowser.Load(url);
+            Globals.room_type_changed = false;
+            Globals.room_tier_changed = false;
+        } 
 
-            if (Globals.ComplianceAgent.room_type == "CHATMEDIA")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/chat_media/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "EXHIBITIONIST")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/exhibitionist/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "PHOTOSET")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/free_photos/photoset/"));
-            }
-            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
-            }
-            else if (Globals.ComplianceAgent.room_type == "NOTIFICATION_PHOTOSET")
-            {
-                Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/notification_photoset/"));
-            }
-        }
-
-        private void CheckAgentDetailsUpdate()
+        private void FetchAgentDetails()
         {
             var previousTierLevel = Globals.ComplianceAgent.tier_level;
             var previousRoomType = Globals.ComplianceAgent.room_type;
+
             Globals.ComplianceAgent = Agent.Get(Globals.user_account.username);
 
             if (Globals.ComplianceAgent != null)
@@ -1983,23 +2005,9 @@ namespace WindowsFormsApp1
             }
 
             if (previousRoomType != Globals.ComplianceAgent.room_type)
-            {
-                this.ProceedToRoom();
-                MessageBox.Show($"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.", "Information");
-            }
-            else if (Globals.ComplianceAgent.room_type == "COMPLIANCE")
-            {
-                if (previousTierLevel != Globals.ComplianceAgent.tier_level)
-                {
-                    this.ProceedToRoom();
-                    MessageBox.Show($"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.", "Information");
-                }
-                // bring back url to original tier when agent is leveled down
-                else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
-                {
-                    this.ProceedToRoom();
-                }
-            }
+                Globals.room_type_changed = true;
+            else if (previousTierLevel != Globals.ComplianceAgent.tier_level)
+                Globals.room_tier_changed = true;
         }
     }
 }

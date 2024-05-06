@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Configuration;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
@@ -26,6 +27,15 @@ namespace WindowsFormsApp1
         private bool seePass = false;
         public frmLogin()
         {
+            try
+            {
+                ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.PerUserRoamingAndLocal);
+            }
+            catch (ConfigurationErrorsException ex)
+            {
+                Globals.SaveToLogFile(ex.ToString(), (int)LogType.Error);
+                FileUtil.deleteFile(ex.Filename);
+            }
             InitializeComponent();
             lblVersion.Text = string.Concat("v.",Globals.CurrentVersion());
             GenerateDeviceIdentifier();

@@ -83,6 +83,8 @@ namespace WindowsFormsApp1
         public static TimeSpan timeOffset = new TimeSpan();
         public static bool first_room = true;
         public static DateTime? loading_end = null;
+        public static bool room_type_changed = false;
+        public static bool room_tier_changed = false;
 
         public static string device_identifier = "";
         public static string operating_system = "";
@@ -416,5 +418,15 @@ namespace WindowsFormsApp1
     {
         LoginForm,
         MainForm
+    }
+
+    public class RoomType
+    {
+        public const string Compliance = "COMPLIANCE";
+        public const string ChatMedia = "CHATMEDIA";
+        public const string Exhibitionist = "EXHIBITIONIST";
+        public const string Photoset = "PHOTOSET";
+        public const string NotificationPhotoset = "NOTIFICATION_PHOTOSET";
+        public const string Chat = "CHAT";
     }
 }

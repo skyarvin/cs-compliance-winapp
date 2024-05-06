@@ -1957,9 +1957,9 @@ namespace WindowsFormsApp1
         private void ProceedToRoom()
         {
             if (Globals.room_tier_changed)
-                Globals.ShowMessage(this, $"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}.");
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, $"Your tier level has been moved to {Globals.ComplianceAgent.tier_level}."));
             else if (Globals.room_type_changed)
-                Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}.");
+                this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}."));
 
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
             string url = string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier);

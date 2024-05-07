@@ -11,6 +11,7 @@ using CSTool.Properties;
 using CSTool.Models;
 using CefSharp.WinForms.Internals;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 public class MyCustomMenuHandler : IContextMenuHandler
 {
@@ -90,9 +91,15 @@ public class MyCustomMenuHandler : IContextMenuHandler
 
         if (commandId == (CefMenuCommand)26502)
         {
-            if (parameters.MediaType == CefSharp.ContextMenuMediaType.None && !String.IsNullOrEmpty(parameters.LinkUrl))
+            try
             {
-                Process.Start("chrome.exe", string.Concat("--app=", parameters.LinkUrl));
+                if (parameters.MediaType == CefSharp.ContextMenuMediaType.None && !String.IsNullOrEmpty(parameters.LinkUrl))
+                {
+                    Process.Start("chrome.exe", string.Concat("--app=", parameters.LinkUrl));
+                }
+            } catch(Win32Exception e)
+            {
+                MessageBox.Show("Error opening room in chrome. Please make sure Google chrome is installed properly", "Information");
             }
             return true;
         }

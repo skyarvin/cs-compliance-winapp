@@ -308,6 +308,10 @@ namespace CSTool
                     bound.showRPB_Button();
 
                     //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
+
+                    setInterval(function () {
+                        bound.checkLastSuccessUrl();
+                    }, 3000);
                 });
             ");
 
@@ -357,6 +361,21 @@ namespace CSTool
         {
             Globals.frmMain.CheckIRFP_status();
         }
+
+        public void CheckLastSuccessUrl()
+        {
+            for (var i = 0; i < Globals.SuccessUrls.Count; i++)
+            {
+                if (Globals.SuccessUrls[i] == Globals.LastSuccessUrl)
+                {
+                    browser.GetMainFrame().EvaluateScriptAsync($@"
+                        if (document.getElementsByTagName('body')[0].innerText.indexOf('locked to another bouncer') >= 0) bound.saveAsBounce();
+                    ");
+                    Globals.SuccessUrls.RemoveAt(i);
+                }
+            }
+        }
+
         public void StoreImages(string images)
         {
             this.prevImage = images;

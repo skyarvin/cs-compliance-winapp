@@ -85,9 +85,10 @@ namespace WindowsFormsApp1
         public static DateTime? loading_end = null;
         public static bool room_type_changed = false;
         public static bool room_tier_changed = false;
-
         public static string device_identifier = "";
         public static string operating_system = "";
+        public static List<string> SuccessUrls = new List<string>();
+        public static Dictionary<string, Logger> logData = new Dictionary<string, Logger>();
         public static bool ShouldResizeImage(long fileLength)
         {
             int one_mega_byte = 1024;

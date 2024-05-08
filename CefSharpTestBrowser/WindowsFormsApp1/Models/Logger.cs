@@ -42,6 +42,7 @@ namespace WindowsFormsApp1.Models
         public string room_chatlog_start_time { get; set; }
         public string room_chatlog_end_time { get; set; }
         public double waiting_time { get; set; }
+        public string element_id { get; set; }
 
         public Logger Save()
         {
@@ -61,6 +62,7 @@ namespace WindowsFormsApp1.Models
                         {
                             var jsonString = data.ReadAsStringAsync();
                             jsonString.Wait();
+                            Globals.SuccessUrls.Add(this.url);
                             return JsonConvert.DeserializeObject<Logger>(jsonString.Result);
                         }
                     }
@@ -128,8 +130,8 @@ namespace WindowsFormsApp1.Models
 
         private void SaveLogAction(string type)
         {
-            Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
             Resync.SavetoDB(JsonConvert.SerializeObject(this), type);
+            Globals.SaveToLogFile(JsonConvert.SerializeObject(this), (int)LogType.Error);
         }
 
         public static Logger FetchLastAgentLog(int agent_id)

@@ -232,10 +232,17 @@
     <Compile Include="Bound.cs" />
     <Compile Include="Class\ClientAsync.cs" />
     <Compile Include="Class\ControlExtensions.cs" />
+    <Compile Include="Class\Debouncer.cs" />
     <Compile Include="Class\StaffCam.cs" />
     <Compile Include="Class\StaffScreenshot.cs" />
     <Compile Include="Class\FileUtil.cs" />
     <Compile Include="Class\WindowsActivityMonitor.cs" />
+    <Compile Include="frmCaptcha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCaptcha.Designer.cs">
+      <DependentUpon>frmCaptcha.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmRecoveryCode.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -403,6 +410,9 @@
     <Content Include="cscb.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="frmCaptcha.resx">
+      <DependentUpon>frmCaptcha.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmRecoveryCode.resx">
       <DependentUpon>frmRecoveryCode.cs</DependentUpon>
     </EmbeddedResource>
@@ -432,8 +442,13 @@
     <None Include="Resources\announcement-unread-icon.png" />
     <None Include="Resources\announcement-icon.png" />
     <None Include="Resources\tierlvl_change.png" />
+    <None Include="Resources\captchaLoader.gif" />
+    <None Include="Resources\captchaRight.png" />
+    <None Include="Resources\captchaWrong.png" />
+    <None Include="Resources\captchaWrong.bmp" />
     <Content Include="Resources\eye-hidden.png" />
     <Content Include="Resources\eye-view.png" />
+    <None Include="Resources\test.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

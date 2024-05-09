@@ -47,7 +47,7 @@ namespace CSTool
 
         public void checkCaptcha()
         {
-            if (angle == 360f)
+            if (Math.Abs(angle) == 360f)
             {
                 angle = 0;
             }

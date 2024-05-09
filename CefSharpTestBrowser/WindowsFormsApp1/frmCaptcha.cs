@@ -1,15 +1,9 @@
 ﻿using CSTool.Class;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web;
 using System.Windows.Forms;
-using WindowsFormsApp1;
 
 namespace CSTool
 {
@@ -18,17 +12,23 @@ namespace CSTool
         private Bitmap captchaImgBitmap;
         private float angle = 0f;
         private Debouncer debouncer = new Debouncer(750);
+        Stopwatch stopwatch = new Stopwatch();
+
+        public double idleTime { get; set; }
 
         public frmCaptcha()
         {
             InitializeComponent();
             // make imgCaptcha transparent to imgProgress
             imgCaptcha.Parent = imgProgress;
+
             captchaImgBitmap = new Bitmap(imgCaptcha.Image);
             Random rnd = new Random();
             float randomAngle = rnd.Next(1, 7) * 45f;
             Bitmap rotatedImage = RotateImage(captchaImgBitmap, angle+=randomAngle);
             imgCaptcha.Image = rotatedImage;
+
+            stopwatch.Start();
         }
 
         private void rotateClockwise(object sender, EventArgs e)
@@ -57,8 +57,15 @@ namespace CSTool
                     if (angle == 0f)
                     {
                         imgProgress.Image = Properties.Resources.captchaRight;
-                        Globals.ShowMessageDialog(this, "RIGHT!");
-                        Close();
+                        stopwatch.Stop();
+                        if (stopwatch.Elapsed.TotalSeconds >= 30)
+                        {
+                            idleTime = stopwatch.Elapsed.Subtract(new TimeSpan(0, 0, 30)).TotalSeconds;
+                        }
+                        Task.Delay(300).ContinueWith(t =>
+                        {
+                            this.DialogResult = DialogResult.OK;
+                        });
                     }
                     else
                     {
@@ -79,6 +86,11 @@ namespace CSTool
                 graphics.DrawImage(bitmap, new Point(0, 0));
             }
             return returnBitmap;
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            
         }
     }
 }

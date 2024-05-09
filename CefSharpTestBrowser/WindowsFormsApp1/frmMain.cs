@@ -42,6 +42,7 @@ namespace WindowsFormsApp1
         public bool send_id_checker = true;
         public IdChecker ID_CHECKER = new IdChecker();
         private List<int> scheduledCaptureTimeList = new List<int>();
+        private DateTime nextCaptchaTime;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
             {Action.Violation.Value, "VR" },
@@ -270,9 +271,9 @@ namespace WindowsFormsApp1
             });
 
             if (++Globals.room_duration >= Globals.max_room_duration) {
-            setHeaderColor(Color.Red, Color.DarkRed);
-            if (isBrowserInitialized && Globals.ForceHideComliance)
-                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
+                setHeaderColor(Color.Red, Color.DarkRed);
+                if (isBrowserInitialized && Globals.ForceHideComliance)
+                    Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("document.querySelectorAll('#compliance_details, #id_photos').forEach(function(el){ el.style.display = 'none'; });");
             }
             else
             {
@@ -378,6 +379,7 @@ namespace WindowsFormsApp1
                     else
                     {
                         _timer.Start();
+                        setNextCaptchaTime();
                     }
 
                     //showIMAP();
@@ -518,6 +520,14 @@ namespace WindowsFormsApp1
                 now = end;
             }
         }
+
+        private void setNextCaptchaTime()
+        {
+            DateTime now = ServerTime.Now();
+            Random rnd = new Random();
+            nextCaptchaTime = now.AddSeconds(rnd.Next(540, 660));
+        }
+
         private void Form1_Load(object sender, EventArgs e)
         {
             if (!Globals.ComplianceAgent.webcam_capture)
@@ -596,6 +606,7 @@ namespace WindowsFormsApp1
         private void timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             monitorActivity();
+            showCaptcha();
         }
 
         private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -1813,6 +1824,24 @@ namespace WindowsFormsApp1
                     }
                 }
             });
+        }
+
+        private void showCaptcha()
+        {
+            DateTime now = ServerTime.Now();
+             if (Application.OpenForms["frmCaptcha"] == null && Globals.room_duration != 0 && now >= nextCaptchaTime)
+            {
+                using (var frmCaptcha = new frmCaptcha())
+                {
+                    var result = frmCaptcha.ShowDialog();
+                    if (result == DialogResult.OK)
+                    {
+                        // TODO: subtract start time with idle time
+                        Console.WriteLine(frmCaptcha.idleTime);
+                        setNextCaptchaTime();
+                    }
+                }
+            }
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)

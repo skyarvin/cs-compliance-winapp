@@ -22,6 +22,8 @@ namespace CSTool
         public frmCaptcha()
         {
             InitializeComponent();
+            // make imgCaptcha transparent to imgProgress
+            imgCaptcha.Parent = imgProgress;
             captchaImgBitmap = new Bitmap(imgCaptcha.Image);
             Random rnd = new Random();
             float randomAngle = rnd.Next(1, 7) * 45f;
@@ -29,14 +31,14 @@ namespace CSTool
             imgCaptcha.Image = rotatedImage;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void rotateClockwise(object sender, EventArgs e)
         {
             Bitmap rotatedImage = RotateImage(captchaImgBitmap, angle+=45f);
             imgCaptcha.Image = rotatedImage;
             checkCaptcha();
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void rotateCounterClockwise(object sender, EventArgs e)
         {
             Bitmap rotatedImage = RotateImage(captchaImgBitmap, angle-=45f);
             imgCaptcha.Image = rotatedImage;

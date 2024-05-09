@@ -445,10 +445,11 @@
     <None Include="Resources\captchaLoader.gif" />
     <None Include="Resources\captchaRight.png" />
     <None Include="Resources\captchaWrong.png" />
-    <None Include="Resources\captchaWrong.bmp" />
     <Content Include="Resources\eye-hidden.png" />
     <Content Include="Resources\eye-view.png" />
     <None Include="Resources\test.png" />
+    <None Include="Resources\rotate-clockwise.png" />
+    <None Include="Resources\rotate-counterclockwise.png" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -284,7 +284,7 @@ namespace WindowsFormsApp1
 
             ShowRequestPhotoAndApproveButton();
 
-            if (++Globals._idleTicks >= Globals.FIVE_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
+            if (++Globals._idleTicks >= Globals.TEN_MINUTES_IDLE_TIME && !string.IsNullOrEmpty(Globals.activity.start_time))
             {
                 Globals.UpdateActivity();
                 this.InvokeOnUiThreadIfRequired(() => {

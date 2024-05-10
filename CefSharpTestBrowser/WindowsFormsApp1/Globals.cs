@@ -49,7 +49,7 @@ namespace WindowsFormsApp1
         public static string apiKey = CSTool.settings.apiKey;
         public static string salt = CSTool.settings.salt;
         public static int LAST_SUCCESS_ID;
-        public static int FIVE_MINUTES_IDLE_TIME = 600;//Seconds 600
+        public static int TEN_MINUTES_IDLE_TIME = 600;//Seconds 600
         public static int SIXTY_MINUTES_IDLE_TIME = 60;//60 minutes 
         public static int NO_ACTIVITY_THRESHOLD_SECONDS = 60;
         public static DateTime _wentIdle;

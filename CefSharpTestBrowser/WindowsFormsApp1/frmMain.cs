@@ -42,6 +42,7 @@ namespace WindowsFormsApp1
         public bool send_id_checker = true;
         public IdChecker ID_CHECKER = new IdChecker();
         private List<int> scheduledCaptureTimeList = new List<int>();
+        private bool isIdleResetTimerDialogShown = false;
         private DateTime nextCaptchaTime;
         private Dictionary<string, string> Actions = new Dictionary<string, string>
         {
@@ -298,7 +299,7 @@ namespace WindowsFormsApp1
                 });
             }
 
-            if (WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS && Globals.INTERNAL_RR.id == 0)
+            if (Application.OpenForms["frmCaptcha"] == null && WindowsActivityMonitor.GetInactiveTime() == Globals.NO_ACTIVITY_THRESHOLD_SECONDS && Globals.INTERNAL_RR.id == 0)
             {
 
                 if (Globals.IsBuddySystem())
@@ -332,11 +333,14 @@ namespace WindowsFormsApp1
                     _timer.Stop();
                     this.InvokeOnUiThreadIfRequired(() =>
                     {
+                        isIdleResetTimerDialogShown = true;
                         var result = Globals.ShowMessageDialog(this, "You have been idle for more than a minute. Your timer will reset.");
                         if (result == DialogResult.OK)
                         {
+                            isIdleResetTimerDialogShown = false;
                             _timer.Start();
                             this.ResetRoomDurationTimer();
+                            setNextCaptchaTime();
                         }
                     });
                 }
@@ -1829,18 +1833,35 @@ namespace WindowsFormsApp1
         private void showCaptcha()
         {
             DateTime now = ServerTime.Now();
-             if (Application.OpenForms["frmCaptcha"] == null && Globals.room_duration != 0 && now >= nextCaptchaTime)
+            if (Application.OpenForms["frmCaptcha"] == null && !isIdleResetTimerDialogShown && Globals.room_duration != 0 && now >= nextCaptchaTime)
             {
-                using (var frmCaptcha = new frmCaptcha())
-                {
-                    var result = frmCaptcha.ShowDialog();
-                    if (result == DialogResult.OK)
+                this.InvokeOnUiThreadIfRequired(() => {
+                    using (var frmCaptcha = new frmCaptcha())
                     {
-                        // TODO: subtract start time with idle time
-                        Console.WriteLine(frmCaptcha.idleTime);
-                        setNextCaptchaTime();
+                        frmCaptcha.timer.Tick += (sender, e) =>
+                        {
+                            if (frmCaptcha.idleTime >= 10)
+                            {
+                                this.InvokeOnUiThreadIfRequired(() => setHeaderColor(Color.Red, Color.DarkRed));
+                                _timer.Stop();
+                            }
+                        };
+
+                        var result = frmCaptcha.ShowDialog(this);
+                        if (result == DialogResult.OK)
+                        {
+                            Globals.StartTime_LastAction = Globals.StartTime_LastAction.Value.AddSeconds(frmCaptcha.idleTime);
+                            this.StartTime_BrowserChanged = this.StartTime_BrowserChanged.AddSeconds(frmCaptcha.idleTime);
+                            Globals.loading_end = Globals.loading_end.Value.AddSeconds(frmCaptcha.idleTime);
+                            setNextCaptchaTime();
+                            if (Globals.room_duration < Globals.max_room_duration)
+                            {
+                                setHeaderColor(Color.FromArgb(45, 137, 239), Color.FromArgb(31, 95, 167));
+                            }
+                            _timer.Start();
+                        }
                     }
-                }
+                });
             }
         }
 

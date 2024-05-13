@@ -1,6 +1,5 @@
 ﻿using CSTool.Class;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,9 +11,9 @@ namespace CSTool
         private Bitmap captchaImgBitmap;
         private float angle = 0f;
         private Debouncer debouncer = new Debouncer(750);
-        Stopwatch stopwatch = new Stopwatch();
 
-        public double idleTime { get; set; }
+        public Timer timer = new Timer();
+        public int idleTime { get; set; }
 
         public frmCaptcha()
         {
@@ -28,7 +27,17 @@ namespace CSTool
             Bitmap rotatedImage = RotateImage(captchaImgBitmap, angle+=randomAngle);
             imgCaptcha.Image = rotatedImage;
 
-            stopwatch.Start();
+            timer.Interval = 1000;
+            timer.Tick += timer_Tick;
+            timer.Start();
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            if (++idleTime >= 30)
+            {
+                lblInstruction.Text = "You have been idle\nTurn the image upright";
+            }
         }
 
         private void rotateClockwise(object sender, EventArgs e)
@@ -57,10 +66,10 @@ namespace CSTool
                     if (angle == 0f)
                     {
                         imgProgress.Image = Properties.Resources.captchaRight;
-                        stopwatch.Stop();
-                        if (stopwatch.Elapsed.TotalSeconds >= 30)
+                        timer.Stop();
+                        if (idleTime >= 30)
                         {
-                            idleTime = stopwatch.Elapsed.Subtract(new TimeSpan(0, 0, 30)).TotalSeconds;
+                            idleTime -= 30;
                         }
                         Task.Delay(300).ContinueWith(t =>
                         {
@@ -86,11 +95,6 @@ namespace CSTool
                 graphics.DrawImage(bitmap, new Point(0, 0));
             }
             return returnBitmap;
-        }
-
-        private void timer_Tick(object sender, EventArgs e)
-        {
-            
         }
     }
 }

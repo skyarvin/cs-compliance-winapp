@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblInstruction = new System.Windows.Forms.Label();
             this.pnlCaptcha = new System.Windows.Forms.Panel();
             this.imgCaptcha = new System.Windows.Forms.PictureBox();
             this.imgProgress = new System.Windows.Forms.PictureBox();
@@ -49,7 +49,7 @@
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.tableLayoutPanel1.Controls.Add(this.label1, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.lblInstruction, 1, 0);
             this.tableLayoutPanel1.Controls.Add(this.pnlCaptcha, 1, 1);
             this.tableLayoutPanel1.Controls.Add(this.btnRotateClockwise, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.btnRotateCounterClockwise, 2, 1);
@@ -64,18 +64,18 @@
             this.tableLayoutPanel1.Size = new System.Drawing.Size(450, 318);
             this.tableLayoutPanel1.TabIndex = 4;
             // 
-            // label1
+            // lblInstruction
             // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.label1.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.label1.Location = new System.Drawing.Point(107, 16);
-            this.label1.Margin = new System.Windows.Forms.Padding(0, 0, 0, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(200, 21);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Turn the image upright";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.lblInstruction.AutoSize = true;
+            this.lblInstruction.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblInstruction.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.lblInstruction.Location = new System.Drawing.Point(107, 16);
+            this.lblInstruction.Margin = new System.Windows.Forms.Padding(0, 0, 0, 24);
+            this.lblInstruction.Name = "lblInstruction";
+            this.lblInstruction.Size = new System.Drawing.Size(200, 21);
+            this.lblInstruction.TabIndex = 4;
+            this.lblInstruction.Text = "Turn the image upright";
+            this.lblInstruction.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // pnlCaptcha
             // 
@@ -175,7 +175,7 @@
         private System.Windows.Forms.Button btnRotateClockwise;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.Panel pnlCaptcha;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblInstruction;
         private System.Windows.Forms.PictureBox imgCaptcha;
     }
 }

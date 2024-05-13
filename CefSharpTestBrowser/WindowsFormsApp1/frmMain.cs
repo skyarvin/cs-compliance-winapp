@@ -349,6 +349,11 @@ namespace WindowsFormsApp1
 
         public void ResetRoomDurationTimer()
         {
+            if (Globals.loading_end != null)
+            {
+                TimeSpan offset = ((DateTime)Globals.loading_end - (DateTime)Globals.StartTime_LastAction);
+                Globals.loading_end = ServerTime.Now().Add(offset);
+            }
             Globals.room_duration = 0;
             Globals.StartTime_LastAction = ServerTime.Now();
             this.StartTime_BrowserChanged = ServerTime.Now();

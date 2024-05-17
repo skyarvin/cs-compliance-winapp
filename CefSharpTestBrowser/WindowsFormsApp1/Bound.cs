@@ -71,9 +71,14 @@ namespace CSTool
                             var violation = $('#id_violation option:selected').text();
                             var notes = $('#id_description').val();
                             
+                            var last_chatlog = String($.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html()));
+                            var last_photo = String($(`#photos .image_container .image`).first().text().trim());
+                            var parts = location.href.split('#');
+                            var url = parts[0];
+                            
                             if (element_ids.includes(e.target.id)) {
                                 console.log(e.target.id);
-                                bound.onClicked(e.target.id, notes, violation);
+                                bound.onClicked(e.target.id, notes, violation, last_photo, last_chatlog, url);
                                 return;
                             }
 
@@ -85,6 +90,7 @@ namespace CSTool
                                 'Reject': 'reject', 
                                 'Submit': 'request-review-submit',
                                 'Add note and mark as hacked': 'mark_hacked',
+                                'Next': 'next'
                             }
 
                             if (element_values.hasOwnProperty(e.target.value)) {
@@ -93,7 +99,7 @@ namespace CSTool
                                 if (e.target.value === 'Add note and mark as hacked') {
                                     notes = $('#facebox').find('input[name=\'note\']').val();
                                 }
-                                bound.onClicked(element_values[e.target.value], notes, violation);
+                                bound.onClicked(element_values[e.target.value], notes, violation, last_photo, last_chatlog, url);
                             }
                         }
                     }
@@ -432,13 +438,24 @@ namespace CSTool
             Globals.frmMain.TierLevelDown();
         }
 
-        public void OnClicked(string id, string notes, string violation)
+        public void OnClicked(string id, string notes, string violation, string last_photo, string last_chatlog, string url)
         {
-            Globals.SaveToLogFile(String.Concat("Bound OnClicked: ", id), (int)LogType.Activity);
+            if (Globals.action_clicked)
+                return;
+
+            Globals.action_clicked = true;
+
+            Globals.SaveToLogFile($"Bound OnClicked: {id} \nRoom: {url}", (int)LogType.Activity);
             if (!string.IsNullOrEmpty(notes) || !string.IsNullOrEmpty(violation))
             {
                 browser.GetMainFrame().EvaluateScriptAsync(@"$('#violation-submit').prop('disabled', true);");
                 browser.GetMainFrame().EvaluateScriptAsync(@"$('#spammer-submit').prop('disabled', true);");
+            }
+
+            if (id != "approve_button")
+            {
+                last_chatlog = "";
+                last_photo = "";
             }
 
             double waiting_time;
@@ -451,20 +468,32 @@ namespace CSTool
                 waiting_time = ((DateTime)Globals.loading_end - (DateTime)Globals.StartTime_LastAction).TotalSeconds;
             }
 
+            var actual_end_time = ServerTime.Now();
+
             if (HtmlItemClicked != null)
             {
-                HtmlItemClicked(this, new HtmlItemClickedEventArgs() { 
+                HtmlItemClicked(this, new HtmlItemClickedEventArgs()
+                {
                     Id = id,
                     StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
-                    EndTime = ServerTime.Now(),
-                    RoomUrl = Globals.CurrentUrl,
+                    EndTime = actual_end_time,
+                    RoomUrl = url,
                     Notes = notes,
                     Violation = violation,
-                    Waiting_Time = waiting_time
+                    Waiting_Time = waiting_time,
+                    Is_Trainee = Globals.ComplianceAgent.is_trainee,
+                    RoomPhoto_StartTime = Globals.room_photos_start_time,
+                    RoomPhoto_EndTime = Globals.room_photos_end_time,
+                    RoomChatlog_StartTime = Globals.room_chatlog_start_time,
+                    RoomChatlog_EndTime = Globals.room_chatlog_end_time,
+                    Last_Chatlog = last_chatlog,
+                    Last_Photo = last_photo
                 });
                 Globals.loading_end = null;
                 Globals.first_room = false;
             }
+
+            Globals.StartTime_LastAction = actual_end_time;
         }
 
         //public void EvaluateMaxRoomDuration()
@@ -550,6 +579,14 @@ namespace CSTool
             public string Notes { get; set; }
             public string Violation { get; set; }
             public double Waiting_Time { get; set; }
+            public bool Is_Trainee { get; set; }
+            public string RoomPhoto_StartTime { get; set; }
+            public string RoomPhoto_EndTime { get; set; }
+            public string RoomChatlog_StartTime { get; set; }
+            public string RoomChatlog_EndTime { get; set; }
+            public string Last_Chatlog { get; set; }
+            public string Last_Photo { get; set; }
+
         }
 
         public void SendToIdChecking()

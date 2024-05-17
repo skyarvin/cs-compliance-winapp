@@ -58,7 +58,8 @@ namespace WindowsFormsApp1
             {Action.Reject.Value, "RJ"},
             {Action.RejectHasNudity.Value, "RHN"},
             {Action.MarkAsHacked.Value, "MH" },
-            {Action.GhostSpammer.Value, "GS" }
+            {Action.GhostSpammer.Value, "GS" },
+            {Action.Next.Value, "NXT" }
         };
 
         private List<string> Violations = new List<string>
@@ -375,6 +376,7 @@ namespace WindowsFormsApp1
                 string sCurrAddress = e.Address;
                 if (IsValidUrl(sCurrAddress))
                 {
+                    Globals.action_clicked = false;
                     if (!IsComplianceUrl(sCurrAddress))
                     {
                         _timer.Stop();
@@ -482,7 +484,22 @@ namespace WindowsFormsApp1
 
         private void Obj_HtmlItemClicked(object sender, BoundObject.HtmlItemClickedEventArgs e)
         {
-            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(e.Id, e.StartTime, e.EndTime, e.RoomUrl, e.Notes, e.Violation, e.Waiting_Time));
+            this.InvokeOnUiThreadIfRequired(() => ProcessActionButtons(
+                e.Id, 
+                e.StartTime, 
+                e.EndTime, 
+                e.RoomUrl, 
+                e.Notes,
+                e.Violation, 
+                e.Waiting_Time,
+                e.Is_Trainee,
+                e.RoomPhoto_StartTime,
+                e.RoomPhoto_EndTime,
+                e.RoomChatlog_StartTime,
+                e.RoomChatlog_EndTime,
+                e.Last_Chatlog,
+                e.Last_Photo
+                ));
         }
 
         private void OnLoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
@@ -675,20 +692,35 @@ namespace WindowsFormsApp1
 
         #region Actions
 
-        private void ProcessActionButtons(string element_id, DateTime actual_start_time, DateTime actual_end_time, string urlToSave, string notes, string violation, double waiting_time)
+        private void ProcessActionButtons(
+            string element_id, 
+            DateTime actual_start_time, 
+            DateTime actual_end_time, 
+            string urlToSave, 
+            string notes, 
+            string violation, 
+            double waiting_time,
+            bool agent_is_trainee,
+            string roomPhoto_startTime,
+            string roomPhoto_endTime,
+            string roomChatlog_startTime,
+            string roomChatlog_endTime,
+            string last_chatlog,
+            string last_photo
+            )
         { 
             Task.Factory.StartNew(() =>
             {
                 bool createdNew;
-                var mutex = new Mutex(true, Globals.CurrentUrl, out createdNew);
+                var mutex = new Mutex(true, urlToSave, out createdNew);
                 if (!createdNew)
                 {
-                    Globals.SaveToLogFile(String.Concat("Process Action Failed - Ongoing Process: ", element_id), (int)LogType.Activity);
+                    Globals.SaveToLogFile($"Process Action Failed - Ongoing Process: {element_id}\nRoom: {urlToSave}", (int)LogType.Activity);
                     return;
                 }
 
                 this.send_id_checker = true;
-                Globals.SaveToLogFile(String.Concat("Processing Action: ", element_id), (int)LogType.Activity);
+                Globals.SaveToLogFile($"Processing Action: {element_id}\nRoom: {urlToSave}", (int)LogType.Activity);
                 string reply = Globals.myStr(Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$('#id_reply').val()").Result.Result, "Agent Reply: ");
                 string remarks = String.Concat(violation, notes);
                 if (!string.IsNullOrEmpty(reply))
@@ -697,12 +729,12 @@ namespace WindowsFormsApp1
                 }
                 if (Violations.Contains(element_id) && element_id != Action.RequestFacePhoto.Value && string.IsNullOrEmpty(notes))
                 {
-                    Globals.SaveToLogFile(String.Concat("Process Action Failed - No Notes: ", element_id), (int)LogType.Activity);
+                    Globals.SaveToLogFile($"Process Action Failed - No Notes: {element_id}\nRoom: {urlToSave}", (int)LogType.Activity);
                     return;
                 }
                 if (element_id == Action.Violation.Value && violation.ToString() == "--")
                 {
-                    Globals.SaveToLogFile(String.Concat("Process Action Failed - No Violation Selected: ", element_id), (int)LogType.Activity);
+                    Globals.SaveToLogFile($"Process Action Failed - No Violation Selected: {element_id}\nRoom: {urlToSave}", (int)LogType.Activity);
                     return;
                 }
                 if (element_id == Action.ChatReply.Value) notes = reply;
@@ -714,13 +746,6 @@ namespace WindowsFormsApp1
                 int followers = 0;
                 if (element_id != Action.SetExpiration.Value && element_id != Action.ChangeGender.Value)
                     Int32.TryParse(followRaw, out followers);
-                string last_chatlog = "";
-                string last_photo = "";
-                if (element_id == Action.Approve.Value)
-                {
-                    last_chatlog = (string)Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"$.trim($(`#chatlog_user .chatlog tr:first-child td.chatlog_date`).html())").Result.Result;
-                    last_photo = (string)Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync("$(`#photos .image_container .image`).first().text().trim()").Result.Result;
-                }
 
                 var logData = new Logger
                 {
@@ -739,11 +764,11 @@ namespace WindowsFormsApp1
                     actual_end_time = actual_end_time.ToString("yyyy-MM-dd HH:mm:ss.ffffffzzz"),
                     hash = HashMembers(),
                     members = Globals.Profiles,
-                    is_trainee = Globals.ComplianceAgent.is_trainee,
-                    room_photos_start_time = Globals.room_photos_start_time,
-                    room_photos_end_time = Globals.room_photos_end_time,
-                    room_chatlog_start_time = Globals.room_chatlog_start_time,
-                    room_chatlog_end_time = Globals.room_chatlog_end_time,
+                    is_trainee = agent_is_trainee,
+                    room_photos_start_time = roomPhoto_startTime,
+                    room_photos_end_time = roomPhoto_endTime,
+                    room_chatlog_start_time = roomChatlog_startTime,
+                    room_chatlog_end_time = roomChatlog_endTime,
                     waiting_time = waiting_time
                 };
                 if (ExtractUsername(this.ID_CHECKER.url) == ExtractUsername(logData.url) && this.ID_CHECKER.id != 0)
@@ -793,11 +818,9 @@ namespace WindowsFormsApp1
                     email.Send();
                 }
 
-                Globals.StartTime_LastAction = actual_end_time;
-
                 try
                 {
-                    if (Globals.CurrentUrl == Globals.LastSuccessUrl)
+                    if (urlToSave == Globals.LastSuccessUrl)
                     {
                         logData.id = Globals.LAST_SUCCESS_ID;
                         if (logData.id != 0)
@@ -879,7 +902,7 @@ namespace WindowsFormsApp1
                     ServerAsync.SendToAll(new PairCommand { Action = "UPDATE_START_TIME", Message = Globals.StartTime_LastAction.ToString() });
                 }
 
-                Globals.SaveToLogFile(String.Concat("Process Action Successful: ", element_id), (int)LogType.Activity);
+                Globals.SaveToLogFile($"Process Action Successful: {element_id}\nRoom: {urlToSave}", (int)LogType.Activity);
 
                 this.FetchAgentDetails();
 
@@ -939,6 +962,7 @@ namespace WindowsFormsApp1
             public static Action RejectHasNudity { get { return new Action("nudity_verifyer_reject"); } }
             public static Action MarkAsHacked { get { return new Action("mark_hacked"); } }
             public static Action GhostSpammer { get { return new Action("ghost_spammer"); } }
+            public static Action Next { get { return new Action("next"); } }
         }
 
         private void BgWorkResync_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)

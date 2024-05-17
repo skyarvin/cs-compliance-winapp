@@ -85,7 +85,7 @@ namespace WindowsFormsApp1
         public static DateTime? loading_end = null;
         public static bool room_type_changed = false;
         public static bool room_tier_changed = false;
-
+        public static bool action_clicked = false;
         public static string device_identifier = "";
         public static string operating_system = "";
         public static bool ShouldResizeImage(long fileLength)

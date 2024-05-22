@@ -40,30 +40,7 @@ namespace WindowsFormsApp1.Models
                 return false;
             }
         }
-        public bool is_correct_follower(int followers)
-        {
-            if (this.tier_level == 1)
-            {
-                return followers >= 10000;
-            }
-            else if (this.tier_level == 2)
-            {
-                return followers >= 3000 && followers <= 9999;
-            }
-            else if (this.tier_level == 3)
-            {
-                return followers >= 1000 && followers <= 2999;
-            }
-            else if (this.tier_level == 4)
-            {
-                return followers >= 500 && followers <= 999;
-            }
-            else if (this.tier_level == 5)
-            {
-                return followers >= 0 && followers <= 499;
-            }
-            return false;
-        }
+
         public static Agent Get(string username)
         {
             try

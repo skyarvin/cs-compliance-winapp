@@ -1630,7 +1630,7 @@ namespace WindowsFormsApp1
             followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
             int followers = 0;
             Int32.TryParse(followRaw, out followers);
-            if (!Globals.ComplianceAgent.is_correct_follower(followers) && cmbURL.Items.Contains(Url.CB_COMPLIANCE_URL) && cmbURL.Items.Contains("show"))
+            if (cmbURL.Items.Contains(Url.CB_COMPLIANCE_URL) && cmbURL.Items.Contains("show"))
             {
                 this.InvokeOnUiThreadIfRequired(() => lblTierLvlBanner.Visible = true);
             }
@@ -1991,7 +1991,7 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}."));
 
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-            string url = string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier);
+            string url = string.Concat(Url.CB_COMPLIANCE_URL, "/show");
             switch (Globals.ComplianceAgent.room_type)
             {
                 case RoomType.ChatMedia:

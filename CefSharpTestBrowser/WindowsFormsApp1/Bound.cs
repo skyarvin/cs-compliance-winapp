@@ -51,6 +51,12 @@ namespace CSTool
                         if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
                             bound.refreshBrowser();
                         }
+                        else if (document.getElementsByTagName('body')[0].innerText.indexOf('No more chat reports available to review.') >= 0) {
+                            bound.changeRoomToCompliance()
+                        }
+                        else if (document.getElementsByTagName('body')[0].innerText.indexOf('No more notification photosets available to review. Check back in a minute.') >= 0) {
+                            bound.changeRoomToCompliance()
+                        }
 
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                             $(this).attr('buttonClicked', true);
@@ -436,6 +442,11 @@ namespace CSTool
         public void TierLevelDown()
         {
             Globals.frmMain.TierLevelDown();
+        }
+
+        public void ChangeRoomToCompliance()
+        {
+            Globals.frmMain.ChangeRoomToCompliance();
         }
 
         public void RefreshBrowser()

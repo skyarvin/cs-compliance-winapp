@@ -917,7 +917,14 @@ namespace WindowsFormsApp1
                         this.ProceedToRoom();
                     }
                     // bring back url to original tier when agent is leveled down
-                    else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                    else if (urlToSave.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
+                    {
+                        this.ProceedToRoom();
+                    }
+                }
+                else if (Globals.ComplianceAgent.room_type != RoomType.Compliance)
+                {
+                    if (urlToSave.Contains($"{Url.CB_COMPLIANCE_URL}/show/show") || urlToSave.Contains($"{Url.CB_COMPLIANCE_URL}/{Globals.ComplianceAgent.tier_level}/"))
                     {
                         this.ProceedToRoom();
                     }
@@ -2038,6 +2045,11 @@ namespace WindowsFormsApp1
                 Globals.room_type_changed = true;
             else if (previousTierLevel != Globals.ComplianceAgent.tier_level)
                 Globals.room_tier_changed = true;
+        }
+
+        public void ChangeRoomToCompliance()
+        {
+            Globals.chromeBrowser.Load($"{Url.CB_COMPLIANCE_URL}/show");
         }
     }
 }

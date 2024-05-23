@@ -222,6 +222,10 @@ namespace CSTool
                         $('input[value=""CP/NCMEC""]').remove();
                     }
 
+                    interval = setInterval(() => {
+                        bound.showApproveButtonForSpecialRooms();
+                    }, 1000)
+
                     $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
                         $(this).attr('buttonClicked', true);
 
@@ -292,12 +296,21 @@ namespace CSTool
                     //    bound.evaluateMaxRoomDuration();
                     //}
 
-                    document.getElementById('pre_request_photo_button').style.display='none';
+                    pre_request_photo_btn = document.getElementById('pre_request_photo_button');
+                    if (pre_request_photo_btn) {
+                        pre_request_photo_btn.style.display = 'none';
+                    }
+
                     approve_btn = document.getElementById('approve_button');
                     if (approve_btn) {
                         approve_btn.style.display = 'none';
                     }
-                    
+
+                    special_room_approve_btn = document.querySelectorAll('input[value=\'Approve\']');
+                    if (special_room_approve_btn) {
+                        document.querySelectorAll('input[value=\'Approve\']').forEach(el => el.style.display = 'none');
+                    }
+
                     window.onkeydown = function(e){
                         if (e.which == 112)
                         {
@@ -617,6 +630,11 @@ namespace CSTool
         {
             Globals.LogsTabButtonClicked = true;
             Globals.frmMain.ShowRequestPhotoAndApproveButton();
+        }
+
+        public void ShowApproveButtonForSpecialRooms()
+        {
+            Globals.frmMain.ShowApproveButtonForSpecialRooms();
         }
 
         public void SetDateTimeChatLog(String startDateTimeChatlog, String endDateTimeChatlog)

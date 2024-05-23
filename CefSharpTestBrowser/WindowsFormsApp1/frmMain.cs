@@ -2051,5 +2051,23 @@ namespace WindowsFormsApp1
         {
             Globals.chromeBrowser.Load($"{Url.CB_COMPLIANCE_URL}/show");
         }
+
+        public void ShowApproveButtonForSpecialRooms()
+        {
+            if (Globals.room_duration >= 10)
+            {
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
+                    approve_btn = document.getElementById('approve_button');
+                    if (approve_btn) {
+                        approve_btn.style.display = 'block';
+                    }
+
+                    special_room_approve_btn = document.querySelectorAll('input[value=\'Approve\']');
+                    if (special_room_approve_btn) {
+                        document.querySelectorAll('input[value=\'Approve\']').forEach(el => el.style.display = 'block');
+                    }
+                ");
+            }
+        }
     }
 }

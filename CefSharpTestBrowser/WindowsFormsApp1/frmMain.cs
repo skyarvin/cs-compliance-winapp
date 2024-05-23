@@ -648,7 +648,7 @@ namespace WindowsFormsApp1
             this.RefreshBrowser();
         }
 
-        private void RefreshBrowser()
+        public void RefreshBrowser()
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
@@ -1693,6 +1693,7 @@ namespace WindowsFormsApp1
 
         public void TierLevelDown()
         {
+            // TODO: add checking to avoid reaching tier level 0
             this.current_tier = this.current_tier - 1;
             Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
         }

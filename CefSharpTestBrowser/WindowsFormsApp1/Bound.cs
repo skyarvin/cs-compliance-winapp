@@ -49,7 +49,7 @@ namespace CSTool
             browser.ExecuteScriptAsync(@"
                    window.onload = function(e) {
                         if (document.getElementsByTagName('body')[0].innerText.indexOf('No more rooms available to review. Check back in a minute.') >= 0) {
-                            bound.tierLevelDown()
+                            bound.refreshBrowser();
                         }
 
                         $('#tab_chatlog_user, #tab_abuselog').on('click', function(event) {
@@ -436,6 +436,11 @@ namespace CSTool
         public void TierLevelDown()
         {
             Globals.frmMain.TierLevelDown();
+        }
+
+        public void RefreshBrowser()
+        {
+            Globals.frmMain.RefreshBrowser();
         }
 
         public void OnClicked(string id, string notes, string violation, string last_photo, string last_chatlog, string url)

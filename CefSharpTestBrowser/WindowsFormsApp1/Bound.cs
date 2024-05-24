@@ -150,41 +150,6 @@ namespace CSTool
                         });
                     }
 
-                    //function highlight(selector, last_chatlog)
-                    //{
-                                
-                    //    var chatlog_position = 0;
-                    //    if (selector == null || selector.length == 0)
-                    //        return; 
-                    //    var found = false
-                    //    var row_index = 0;
-                                
-                    //    if (last_chatlog == '' || last_chatlog == undefined || last_chatlog == null){
-                    //        return selector.length;
-                    //    }
-                                
-                    //    selector.forEach(function(el)
-                    //    {
-                    //        row_index++;
-                                    
-                    //        el.childNodes.forEach(function(td)
-                    //        {
-                    //            if ((td.className == 'chatlog_date') && (td.innerText.indexOf(last_chatlog) >= 0))
-                    //            {
-                    //                td.parentNode.style.background = '#da1b1b';
-                    //                chatlog_position = row_index;
-                    //            }
-                    //        })
-
-                    //    });
-
-                    //    if (chatlog_position == 0)
-                    //        return row_index 
-
-                    //    return chatlog_position;
-                                
-                    //}
-
                     function cacheBuster()
                     {
                         var timestamp = new Date();
@@ -279,23 +244,6 @@ namespace CSTool
                         }
                     }
 
-                    //var urlParams = new URLSearchParams(window.location.search);
-                    //if(urlParams.get('chatstart') != null && urlParams.get('chatend') != null){
-                    //    function qa_chatlog_highlight(){
-                    //        waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
-                    //        waitUntil('#data .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
-                    //        waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatstart')), (error) => console.log(error));
-                    //        waitUntil('#chatlog_user .chatlog tbody tr', 5000).then((element) => highlight(element, urlParams.get('chatend')), (error) => console.log(error));
-                    //    }
-                    //    qa_chatlog_highlight();
-                    //    document.getElementById('chatlog_user').addEventListener('DOMSubtreeModified', function()
-                    //    {
-                    //        qa_chatlog_highlight();
-                    //    });
-                    //} else {
-                    //    bound.evaluateMaxRoomDuration();
-                    //}
-
                     pre_request_photo_btn = document.getElementById('pre_request_photo_button');
                     if (pre_request_photo_btn) {
                         pre_request_photo_btn.style.display = 'none';
@@ -331,8 +279,6 @@ namespace CSTool
                     var followRaw = $('#room_info').children().eq(2).text();
                     bound.showTierLevelBanner(followRaw);
                     bound.showRPB_Button();
-
-                    //waitUntil(`#id_photos`,5000).then((el) => cacheBuster(), (err) => console.log(`img not found`));
                 });
             ");
 

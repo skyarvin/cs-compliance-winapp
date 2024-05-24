@@ -634,7 +634,21 @@ namespace CSTool
 
         public void ShowApproveButtonForSpecialRooms()
         {
-            Globals.frmMain.ShowApproveButtonForSpecialRooms();
+            if (Globals.room_duration >= 10)
+            {
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
+                    approve_btn = document.getElementById('approve_button');
+                    if (approve_btn) {
+                        approve_btn.style.display = 'block';
+                        clearInterval(interval);
+                    }
+
+                    special_room_approve_btn = document.querySelectorAll('input[value=\'Approve\']');
+                    if (special_room_approve_btn) {
+                        document.querySelectorAll('input[value=\'Approve\']').forEach(el => el.style.display = 'block');
+                    }
+                ");
+            }
         }
 
         public void SetDateTimeChatLog(String startDateTimeChatlog, String endDateTimeChatlog)

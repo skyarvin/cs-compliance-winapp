@@ -1999,7 +1999,7 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}."));
 
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-            string url = string.Concat(Url.CB_COMPLIANCE_URL, "/show");
+            string url = Url.CB_COMPLIANCE_URL;
             switch (Globals.ComplianceAgent.room_type)
             {
                 case RoomType.ChatMedia:

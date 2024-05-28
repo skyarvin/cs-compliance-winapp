@@ -187,7 +187,7 @@ namespace CSTool
                         $('input[value=""CP/NCMEC""]').remove();
                     }
 
-                    interval = setInterval(() => {
+                    showApproveButtonInterval = setInterval(() => {
                         bound.showApproveButtonForSpecialRooms();
                     }, 1000)
 
@@ -244,20 +244,14 @@ namespace CSTool
                         }
                     }
 
-                    pre_request_photo_btn = document.getElementById('pre_request_photo_button');
-                    if (pre_request_photo_btn) {
-                        pre_request_photo_btn.style.display = 'none';
-                    }
+                    $('#pre_request_photo_button').hide();
 
                     approve_btn = document.getElementById('approve_button');
                     if (approve_btn) {
                         approve_btn.style.display = 'none';
                     }
 
-                    special_room_approve_btn = document.querySelectorAll('input[value=\'Approve\']');
-                    if (special_room_approve_btn) {
-                        document.querySelectorAll('input[value=\'Approve\']').forEach(el => el.style.display = 'none');
-                    }
+                    $('input[value=\'Approve\']').hide();
 
                     window.onkeydown = function(e){
                         if (e.which == 112)
@@ -583,16 +577,14 @@ namespace CSTool
             if (Globals.room_duration >= 10)
             {
                 Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
-                    approve_btn = document.getElementById('approve_button');
-                    if (approve_btn) {
-                        approve_btn.style.display = 'block';
-                        clearInterval(interval);
+                    approve_btn = $('#approve_button');
+                    if (approve_btn.length) {
+                        approve_btn.show();
+                        clearInterval(showApproveButtonInterval);
                     }
 
-                    special_room_approve_btn = document.querySelectorAll('input[value=\'Approve\']');
-                    if (special_room_approve_btn) {
-                        document.querySelectorAll('input[value=\'Approve\']').forEach(el => el.style.display = 'block');
-                    }
+                    // show special room approve button
+                    $('input[value=\'Approve\']').show();
                 ");
             }
         }

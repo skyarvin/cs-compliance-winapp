@@ -574,7 +574,7 @@ namespace CSTool
 
         public void ShowApproveButtonForSpecialRooms()
         {
-            if (Globals.room_duration >= 10)
+            if (Globals.room_duration >= 10 && Globals.ComplianceAgent.room_type != RoomType.Compliance)
             {
                 Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
                     approve_btn = $('#approve_button');

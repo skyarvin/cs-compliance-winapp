@@ -421,7 +421,7 @@ namespace WindowsFormsApp1
 
                     //Emailer for missed seed
                     if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
-                    {
+                    {   
                         //Send to API
                         Seed seed = new Seed();
                         seed.log_id = Globals.LAST_SUCCESS_ID;
@@ -1094,7 +1094,8 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            return url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset|chat");
+            var roomUrl = url.Replace(Url.CB_HOME, "");
+            return url.Contains("compliance") && Regex.IsMatch(roomUrl, "show|photoset|chat_media|exhibitionist|notification_photoset|chat");
         }
 
         private void setHeaderColor(Color backcolor, Color darkBackColor)

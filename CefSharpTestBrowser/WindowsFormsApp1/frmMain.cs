@@ -916,11 +916,6 @@ namespace WindowsFormsApp1
                     {
                         this.ProceedToRoom();
                     }
-                    // bring back url to original tier when agent is leveled down
-                    else if (urlToSave.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
-                    {
-                        this.ProceedToRoom();
-                    }
                 }
 
                 mutex.Dispose();

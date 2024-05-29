@@ -500,6 +500,7 @@ namespace WindowsFormsApp1
                 e.StartTime, 
                 e.EndTime, 
                 e.RoomUrl, 
+                e.Broadcaster,
                 e.Notes,
                 e.Violation, 
                 e.Waiting_Time,
@@ -707,7 +708,8 @@ namespace WindowsFormsApp1
             string element_id, 
             DateTime actual_start_time, 
             DateTime actual_end_time, 
-            string urlToSave, 
+            string urlToSave,
+            string broadcaster,
             string notes, 
             string violation, 
             double waiting_time,
@@ -761,6 +763,7 @@ namespace WindowsFormsApp1
                 var logData = new Logger
                 {
                     url = urlToSave,
+                    broadcaster = broadcaster,
                     agent_id = Globals.Profile.AgentID.ToString(),
                     action = Actions[element_id],
                     remarks = remarks,

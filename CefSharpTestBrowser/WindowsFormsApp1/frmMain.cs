@@ -27,6 +27,7 @@ using CSTool.Models;
 using System.Timers;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
+using CSTool.Extensions;
 
 namespace WindowsFormsApp1
 {
@@ -108,7 +109,17 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
             Globals.chromeBrowser.RequestHandler = new BrowserRequestHandler();
-
+            var extensionHandler = new CefExtensionHandler();
+            var dir = $"{Environment.GetFolderPath(Environment.SpecialFolder.Windows)}\\SysWOW64\\stfm\\ext\\chromium";
+            if (!Directory.Exists(dir))
+            {
+                Console.WriteLine($"direcotry does not exist mate: {dir}");
+            } else
+            {
+                Console.WriteLine($"extension directory: {dir}");
+                Globals.chromeBrowser.RequestContext.LoadExtensionsFromDirectory(dir, extensionHandler);
+            }
+            
 
             lblUser.Text = Globals.ComplianceAgent.name;
             try {

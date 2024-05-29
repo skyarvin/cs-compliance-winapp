@@ -236,6 +236,7 @@
     <Compile Include="Class\StaffScreenshot.cs" />
     <Compile Include="Class\FileUtil.cs" />
     <Compile Include="Class\WindowsActivityMonitor.cs" />
+    <Compile Include="Extensions\CefExtensionHandler.cs" />
     <Compile Include="frmRecoveryCode.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -424,7 +425,22 @@
     <EmbeddedResource Include="UserControls\usrCtrlAnnouncement.resx">
       <DependentUpon>usrCtrlAnnouncement.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="Extensions\chromium\manifest.json" />
     <None Include="Resources\home.png" />
+    <Content Include="Extensions\chromium\background.js" />
+    <Content Include="Extensions\chromium\icons\128\gold.png" />
+    <Content Include="Extensions\chromium\icons\128\grey.png" />
+    <Content Include="Extensions\chromium\icons\32\gold.png" />
+    <Content Include="Extensions\chromium\icons\32\grey.png" />
+    <Content Include="Extensions\chromium\icons\48\gold.png" />
+    <Content Include="Extensions\chromium\icons\48\grey.png" />
+    <Content Include="Extensions\chromium\icons\64\gold.png" />
+    <Content Include="Extensions\chromium\icons\64\grey.png" />
+    <Content Include="Extensions\chromium\icons\browser\chrome.png" />
+    <Content Include="Extensions\chromium\icons\browser\firefox.png" />
+    <Content Include="Extensions\chromium\options\index.css" />
+    <Content Include="Extensions\chromium\options\index.html" />
+    <Content Include="Extensions\chromium\options\index.mjs" />
     <Content Include="favicon.ico" />
     <Content Include="logo_qa.ico" />
     <Content Include="logo_qa_qa.ico.png" />

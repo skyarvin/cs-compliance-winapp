@@ -109,17 +109,14 @@ namespace WindowsFormsApp1
             Globals.chromeBrowser.MenuHandler = new MyCustomMenuHandler();
             Globals.chromeBrowser.LifeSpanHandler = new BrowserLifeSpanHandler();
             Globals.chromeBrowser.RequestHandler = new BrowserRequestHandler();
+
             var extensionHandler = new CefExtensionHandler();
-            var dir = $"{Environment.GetFolderPath(Environment.SpecialFolder.Windows)}\\SysWOW64\\stfm\\ext\\chromium";
-            if (!Directory.Exists(dir))
+            var extensionsDirectory = $"{Environment.GetFolderPath(Environment.SpecialFolder.Windows)}\\SysWOW64\\stfm\\ext\\pp\\chromium";
+            if (Directory.Exists(extensionsDirectory))
             {
-                Console.WriteLine($"direcotry does not exist mate: {dir}");
-            } else
-            {
-                Console.WriteLine($"extension directory: {dir}");
-                Globals.chromeBrowser.RequestContext.LoadExtensionsFromDirectory(dir, extensionHandler);
+                Globals.chromeBrowser.RequestContext.LoadExtensionsFromDirectory(extensionsDirectory, extensionHandler);
             }
-            
+
 
             lblUser.Text = Globals.ComplianceAgent.name;
             try {

@@ -18,6 +18,7 @@ namespace WindowsFormsApp1.Models
         public int id { get; set; }
         public string agent_id { get; set; }
         public string url { get; set; }
+        public string broadcaster { get; set; }
         public string action { get; set; }
         public string remarks { get; set; }
         public double duration { get; set; }

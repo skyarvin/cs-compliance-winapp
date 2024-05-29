@@ -75,10 +75,11 @@ namespace CSTool
                             var last_photo = String($(`#photos .image_container .image`).first().text().trim());
                             var parts = location.href.split('#');
                             var url = parts[0];
+                            var broadcaster = $('#room_info > div > b:contains(Broadcaster:)').next().text()
                             
                             if (element_ids.includes(e.target.id)) {
                                 console.log(e.target.id);
-                                bound.onClicked(e.target.id, notes, violation, last_photo, last_chatlog, url);
+                                bound.onClicked(e.target.id, notes, violation, last_photo, last_chatlog, url, broadcaster);
                                 return;
                             }
 
@@ -99,7 +100,7 @@ namespace CSTool
                                 if (e.target.value === 'Add note and mark as hacked') {
                                     notes = $('#facebox').find('input[name=\'note\']').val();
                                 }
-                                bound.onClicked(element_values[e.target.value], notes, violation, last_photo, last_chatlog, url);
+                                bound.onClicked(element_values[e.target.value], notes, violation, last_photo, last_chatlog, url, broadcaster);
                             }
                         }
                     }
@@ -438,7 +439,7 @@ namespace CSTool
             Globals.frmMain.TierLevelDown();
         }
 
-        public void OnClicked(string id, string notes, string violation, string last_photo, string last_chatlog, string url)
+        public void OnClicked(string id, string notes, string violation, string last_photo, string last_chatlog, string url, string broadcaster)
         {
             if (Globals.action_clicked)
                 return;
@@ -478,6 +479,7 @@ namespace CSTool
                     StartTime = Globals.first_room ? Globals.frmMain.StartTime_BrowserChanged : (DateTime)Globals.StartTime_LastAction,
                     EndTime = actual_end_time,
                     RoomUrl = url,
+                    Broadcaster = broadcaster,
                     Notes = notes,
                     Violation = violation,
                     Waiting_Time = waiting_time,
@@ -576,6 +578,7 @@ namespace CSTool
             public DateTime StartTime { get; set; }
             public DateTime EndTime { get; set; }
             public string RoomUrl { get; set; }
+            public string Broadcaster { get; set; }
             public string Notes { get; set; }
             public string Violation { get; set; }
             public double Waiting_Time { get; set; }

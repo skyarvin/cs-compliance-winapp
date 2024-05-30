@@ -560,6 +560,18 @@ namespace CSTool
             Globals.frmMain.ShowRequestPhotoAndApproveButton();
         }
 
+        public void ShowApproveButtonForSpecialRooms()
+        {
+            if (Globals.room_duration >= 10 && Globals.ComplianceAgent.room_type != RoomType.Compliance)
+            {
+                Globals.chromeBrowser.GetMainFrame().EvaluateScriptAsync(@"
+                    approve_btn = $('#approve_button').show();
+                    $('input[value=\'Approve\']').show();
+                    clearInterval(showApproveButtonInterval);
+                ");
+            }
+        }
+
         public void SetDateTimeChatLog(String startDateTimeChatlog, String endDateTimeChatlog)
         {
             if (!string.IsNullOrWhiteSpace(startDateTimeChatlog) && !string.IsNullOrWhiteSpace(endDateTimeChatlog))

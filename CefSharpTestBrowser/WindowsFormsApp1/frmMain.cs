@@ -649,7 +649,7 @@ namespace WindowsFormsApp1
             this.RefreshBrowser();
         }
 
-        private void RefreshBrowser()
+        public void RefreshBrowser()
         {
             Globals.SaveToLogFile("Refresh Compliance Url", (int)LogType.Activity);
             this.send_id_checker = true;
@@ -919,11 +919,6 @@ namespace WindowsFormsApp1
                     {
                         this.ProceedToRoom();
                     }
-                    // bring back url to original tier when agent is leveled down
-                    else if (!Globals.CurrentUrl.Contains("/" + Globals.ComplianceAgent.tier_level.ToString() + "/"))
-                    {
-                        this.ProceedToRoom();
-                    }
                 }
 
                 mutex.Dispose();
@@ -1090,7 +1085,8 @@ namespace WindowsFormsApp1
 
         public bool IsComplianceUrl(string url)
         {
-            return url.Contains("compliance") && Regex.IsMatch(url, "show|photoset|chat_media|exhibitionist|notification_photoset|chat");
+            var roomUrl = url.Replace(Url.CB_HOME, "");
+            return url.Contains("compliance") && Regex.IsMatch(roomUrl, "show|photoset|chat_media|exhibitionist|notification_photoset|chat");
         }
 
         private void setHeaderColor(Color backcolor, Color darkBackColor)
@@ -1633,7 +1629,7 @@ namespace WindowsFormsApp1
             followRaw = new String(followRaw.Where(Char.IsDigit).ToArray());
             int followers = 0;
             Int32.TryParse(followRaw, out followers);
-            if (!Globals.ComplianceAgent.is_correct_follower(followers) && cmbURL.Items.Contains(Url.CB_COMPLIANCE_URL) && cmbURL.Items.Contains("show"))
+            if (cmbURL.Items.Contains(Url.CB_COMPLIANCE_URL) && cmbURL.Items.Contains("show"))
             {
                 this.InvokeOnUiThreadIfRequired(() => lblTierLvlBanner.Visible = true);
             }
@@ -1692,12 +1688,6 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkAnnouncement.RunWorkerAsync();
-        }
-
-        public void TierLevelDown()
-        {
-            this.current_tier = this.current_tier - 1;
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
         }
 
         public void ShowRequestPhotoAndApproveButton()
@@ -1994,7 +1984,7 @@ namespace WindowsFormsApp1
                 this.InvokeOnUiThreadIfRequired(() => Globals.ShowMessage(this, $"Your room has been moved to {Globals.ComplianceAgent.HumanizedRoomType()}."));
 
             this.current_tier = (int)Globals.ComplianceAgent.tier_level;
-            string url = string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier);
+            string url = Url.CB_COMPLIANCE_URL;
             switch (Globals.ComplianceAgent.room_type)
             {
                 case RoomType.ChatMedia:

@@ -387,10 +387,6 @@ namespace CSTool
                 Globals.showMessage(String.Concat(e.Message.ToString(), System.Environment.NewLine, "Please contact Admin."));
             }
         }
-        public void TierLevelDown()
-        {
-            Globals.frmMain.TierLevelDown();
-        }
 
         public void RefreshBrowser()
         {

@@ -421,7 +421,7 @@ namespace WindowsFormsApp1
 
                     //Emailer for missed seed
                     if (sCurrAddress.Contains("seed_failure") && !String.IsNullOrEmpty(Globals.LastSuccessUrl) && sCurrAddress.Contains(ExtractUsername(Globals.LastSuccessUrl)))
-                    {   
+                    {
                         //Send to API
                         Seed seed = new Seed();
                         seed.log_id = Globals.LAST_SUCCESS_ID;
@@ -1688,13 +1688,6 @@ namespace WindowsFormsApp1
                 Globals.showMessage(e.Error.Message);
             else
                 bgWorkAnnouncement.RunWorkerAsync();
-        }
-
-        public void TierLevelDown()
-        {
-            // TODO: add checking to avoid reaching tier level 0
-            this.current_tier = this.current_tier - 1;
-            Globals.chromeBrowser.Load(string.Concat(Url.CB_COMPLIANCE_URL, "/", this.current_tier));
         }
 
         public void ShowRequestPhotoAndApproveButton()
